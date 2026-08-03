@@ -5,5 +5,12 @@ proof
 tests
 fixtures
 docs
+dev
+artifacts
+.ouroboros
+scripts
+programs
 *.log
+*.mp4
+*.webm
 target
