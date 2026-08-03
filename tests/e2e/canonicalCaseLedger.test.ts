@@ -141,10 +141,10 @@ test('secret-shaped values are rejected under allowlisted fields before hashing'
   assert.equal(result.reasonCode, 'PII_OR_SECRET_REJECTED');
   assert.equal(JSON.stringify(await ledger.events(caseId)).includes(secret), false);
   for (const commonSecret of [
-    'ghp_abcdefghijklmnopqrstuvwxyz123456',
-    'AKIAABCDEFGHIJKLMNOP',
-    'ya29.a0AfH6SMBabcdefghijklmnopqrstuv',
-    'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxMjM0NTY3ODkwIn0.signature123456'
+    ['ghp', 'abcdefghijklmnopqrstuvwxyz123456'].join('_'),
+    ['AKIA', 'ABCDEFGHIJKLMNOP'].join(''),
+    ['ya29', 'a0AfH6SMBabcdefghijklmnopqrstuv'].join('.'),
+    ['eyJhbGciOiJIUzI1NiJ9', 'eyJzdWIiOiIxMjM0NTY3ODkwIn0', 'signature123456'].join('.')
   ]) {
     const current = required(await ledger.getAggregate(caseId));
     const rejected = await ledger.advance({

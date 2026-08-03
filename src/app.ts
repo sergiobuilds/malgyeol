@@ -697,10 +697,13 @@ function checkPublicCostLimit(
           : undefined;
   if (!route) return undefined;
   const forwarded = Array.isArray(request.headers['x-forwarded-for'])
-    ? request.headers['x-forwarded-for'][0]
+    ? request.headers['x-forwarded-for'].at(-1)
     : request.headers['x-forwarded-for'];
-  const client = (forwarded?.split(',')[0]?.trim() || request.socket.remoteAddress || 'unknown').slice(0, 128);
-  const result = limiter.consume(`${route.name}:${client}`, route.maximum);
+  const forwardedChain = forwarded?.split(',').map(value => value.trim()).filter(Boolean) ?? [];
+  const client = (forwardedChain.at(-1) || request.socket.remoteAddress || 'unknown').slice(0, 128);
+  const global = limiter.consume(`${route.name}:global`, route.maximum * 5);
+  const perClient = limiter.consume(`${route.name}:client:${client}`, route.maximum);
+  const result = global.allowed ? perClient : global;
   return result.allowed ? undefined : { error: 'RATE_LIMITED', retryAfterSeconds: result.retryAfterSeconds };
 }
 
