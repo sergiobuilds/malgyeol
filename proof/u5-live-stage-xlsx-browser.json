@@ -1,0 +1,29 @@
+{
+  "schemaVersion": "u5-live-stage-xlsx-browser-evidence-v1",
+  "unitId": "U5-live-stage-xlsx-browser",
+  "caseId": "case_9a7469600d31c5c5d9e2bb7c",
+  "status": "PASS",
+  "browser": {
+    "engine": "google-chrome-headless",
+    "assertion": {
+      "caseId": "case_9a7469600d31c5c5d9e2bb7c",
+      "state": "ORDERED",
+      "stages": ["CALL_CONNECTED", "INTERPRETED", "POLICY_CHECKING", "CONFIRMED", "PAID", "ORDERED"],
+      "exportCaseId": "case_9a7469600d31c5c5d9e2bb7c",
+      "exportHref": "/api/cases/case_9a7469600d31c5c5d9e2bb7c/export.xlsx"
+    },
+    "requiredStages": ["CALL_CONNECTED", "INTERPRETED", "POLICY_CHECKING", "CONFIRMED", "PAID", "ORDERED"]
+  },
+  "publicCase": { "caseId": "case_9a7469600d31c5c5d9e2bb7c", "state": "ORDERED", "sandbox": true },
+  "workbook": {
+    "sheets": ["참여자별 집행", "주문·판매자", "차단·검토", "증빙 참조"],
+    "caseIdsBySheet": {
+      "참여자별 집행": ["case_9a7469600d31c5c5d9e2bb7c"],
+      "주문·판매자": ["case_9a7469600d31c5c5d9e2bb7c"],
+      "차단·검토": [],
+      "증빙 참조": ["case_9a7469600d31c5c5d9e2bb7c"]
+    },
+    "sha256": "382f757db0eb5cdac7b6ce7bf5a775148b824d4563cbc85ffd7e77c6a11dafca"
+  },
+  "privacy": { "syntheticOnly": true, "publicContainsBeneficiaryRef": false, "publicContainsCallSidHash": false }
+}

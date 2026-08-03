@@ -1,0 +1,20 @@
+{
+  "schema": "synthetic-korean-audio-fixtures-v1",
+  "generated_at": "2026-07-30T18:50:00+09:00",
+  "generator": "edge-tts",
+  "contains_real_personal_data": false,
+  "fixtures": [
+    {
+      "file": "clear-meal-order.mp3",
+      "voice": "ko-KR-SunHiNeural",
+      "text": "도시락 하나 주세요. 다른 메뉴로 바꾸지 말아 주세요.",
+      "expected": "AWAITING_CONFIRMATION"
+    },
+    {
+      "file": "ambiguous-order.mp3",
+      "voice": "ko-KR-InJoonNeural",
+      "text": "그거 하나 보내 주세요. 없으면 아무거나 주세요.",
+      "expected": "NEEDS_CLARIFICATION"
+    }
+  ]
+}

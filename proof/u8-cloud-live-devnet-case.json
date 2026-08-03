@@ -1,0 +1,66 @@
+{
+  "schemaVersion": "cloud-agent-x402-devnet-e2e-v1",
+  "capturedAt": "2026-07-31T20:37:30.114Z",
+  "status": "PASS",
+  "claimBoundary": "Authenticated synthetic agent bridge on Cloud Run, not a real phone call.",
+  "caseId": "case_3a99c750e927777204905780",
+  "sameCaseIdAcrossEvents": true,
+  "states": [
+    "CALL_CONNECTED",
+    "AUDIO_CAPTURED",
+    "INTERPRETED",
+    "POLICY_CHECKING",
+    "AWAITING_CONFIRMATION",
+    "CONFIRMED",
+    "PAYMENT_AUTHORIZING",
+    "PAYMENT_REQUIRED",
+    "PAID",
+    "ORDER_SUBMITTING",
+    "ORDERED"
+  ],
+  "cloudRun": {
+    "baseUrl": "https://benefit-settlement-rail-164282963747.us-central1.run.app",
+    "health": {
+      "ok": true,
+      "mode": "vertex-enabled",
+      "externalEvidence": "credential-gated"
+    },
+    "revision": "benefit-settlement-rail-00011-bvf"
+  },
+  "payment": {
+    "paymentIntentId": "x402_devnet_b365df11935147091e482d03",
+    "settlementTransaction": "54qCy5me9uXHRY3QobrhFUPp6EiZ37dvUYXGw11KY4pKrmQF2Nff9dvfTHPE8vrNJtbDnaKFLFL2AynSVioNfMTQ",
+    "settlementProofBaseUnits": 1000000,
+    "explorerUrl": "https://explorer.solana.com/tx/54qCy5me9uXHRY3QobrhFUPp6EiZ37dvUYXGw11KY4pKrmQF2Nff9dvfTHPE8vrNJtbDnaKFLFL2AynSVioNfMTQ?cluster=devnet",
+    "cluster": "devnet",
+    "genesisHash": "EtWTRABZaYq6iMfeYKouRu166VU2xqa1wcaWoxPkrZBG",
+    "slot": 480286455,
+    "error": null,
+    "challengeSha256": "f6f2046df44e58f659b64850ca5bd46208f699df75d37f34cc02620bc3941475",
+    "paymentResponseSha256": "aeb61092040ae90dfffa1abab04c6f2263976dd2bce08d31e571f113ed4c8008",
+    "network": "solana:EtWTRABZaYq6iMfeYKouRu166VU2xqa1",
+    "asset": "4zMMC9srt5Ri5X14GAgXhaHii3GnPAEERYPJgZJDncDU",
+    "amount": "1000000",
+    "payTo": "4GGkNuGmvaBUkpnwiu8CCetLfUkkvmJ1hdBbZWRRwLe9",
+    "orderPda": "4GGkNuGmvaBUkpnwiu8CCetLfUkkvmJ1hdBbZWRRwLe9",
+    "vaultAta": "3X1KS1hP6uZAK2iEwZqo3pzSnH1doxvaFRS1wSJCkF9E",
+    "swigAccount": "74qaLyJoKL3bZnZwpP77d8tGB26xtmGcXRaNBrri7cCK",
+    "limitedAuthority": "6MnpiRnYQ3ZcGCYJWXjUuaMF3TsydghPnaSubtSRUtHX",
+    "initializeTransaction": "5QcbGQ4iKukDHhwCnfbZek2GsZt7Zx87fb7XgBUDvjtGX2uL1mxvK4uCPquqMxk5M7aNxF11tMF8TjZYj3PVqzVh"
+  },
+  "merchant": {
+    "providerOrderId": "SANDBOX-5EC375ACEE63FCF9",
+    "tracking": {
+      "sandbox": true,
+      "provider": "BENEFIT_RAIL_SELF_OWNED_SANDBOX",
+      "providerOrderId": "SANDBOX-5EC375ACEE63FCF9",
+      "state": "ORDERED"
+    },
+    "unauthorizedMutationStatus": 401
+  },
+  "privacy": {
+    "publicCaseContainsBeneficiaryRef": false,
+    "publicCaseContainsCallSidHash": false
+  },
+  "publicCaseSha256": "fdb9698add2e14ecdf7228f7ac95231d97635582b7515de35823f67703418e43"
+}

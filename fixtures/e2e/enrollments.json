@@ -1,0 +1,17 @@
+[
+  {
+    "beneficiaryRef": "P-2026-0031",
+    "programId": "kr-disability-personal-budget-demo",
+    "planId": "plan-stand-aid",
+    "planRevision": 1,
+    "active": true,
+    "monthlyLimitKrw": 420000,
+    "remainingKrw": 420000,
+    "approvedCategories": ["ASSISTIVE_EQUIPMENT"],
+    "approvedSkus": ["ASSISTIVE_STAND_AID_01"],
+    "approvedMerchants": ["DEMO_ACCESS_STORE"],
+    "maximumPurchaseKrw": 390000,
+    "validFrom": 1777551600000,
+    "validUntil": 1793458799000
+  }
+]

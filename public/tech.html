@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>말결 — 사람은 말하고, 시스템은 끝까지 증명합니다.</title>
+<meta name="description" content="말결은 사람의 의사를 구매와 결제로 실행하고, Solana가 AI의 권한과 정산을 통제·증명하도록 설계한 에이전트 결제 인프라입니다.">
+<meta property="og:title" content="말결 — 사람은 말하고, 시스템은 끝까지 증명합니다.">
+<link rel="icon" href="data:,">
+
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/sun-typeface/SUIT@2/fonts/variable/woff2/SUIT-Variable.css">
+<link rel="stylesheet" href="https://static.wanted.co.kr/fonts/wantedsans/WantedSansVariable.min.css">
+<style>
+  html { scroll-behavior: smooth; background: #FFFFFF; }
+  body { margin: 0; background: #FFFFFF; color: #171719; font-family: "Pretendard Variable", "SUIT Variable", "Noto Sans KR", -apple-system, "Apple SD Gothic Neo", sans-serif; -webkit-font-smoothing: antialiased; overflow-x: clip; }
+  * { box-sizing: border-box; }
+  img { display: block; max-width: 100%; }
+  a { color: inherit; text-decoration: none; }
+  a:hover { color: inherit; }
+  :focus-visible { outline: 3px solid #0066FF; outline-offset: 4px; border-radius: 6px; }
+  h1, h2, h3, h4 { margin: 0; font-weight: 700; letter-spacing: -0.035em; word-break: keep-all; text-wrap: pretty; }
+  p, li, dt, dd { margin: 0; word-break: keep-all; text-wrap: pretty; }
+  ol, ul { margin: 0; padding: 0; list-style: none; }
+  dl, dd { margin: 0; }
+  code { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; }
+  @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } * { animation: none !important; transition: none !important; } }
+</style>
+<script src="tech.js" defer></script>
+
+<style>.q1:focus{left: 12px !important;top: 12px !important}.q2:hover{color: #171719 !important}.q3:hover{background: #0054D1 !important}.q4:hover{background: #2E2F33 !important}.q5:hover{background: rgba(23,23,25,0.05) !important}.q6:hover{background: #2E2F33 !important}.q7:hover{background: #2E2F33 !important}.q8:hover{background: #0054D1 !important}</style>
+</head>
+<body>
+
+
+<div style="width: 100%; overflow-x: clip;">
+  <a href="#flow" style="position: absolute; left: -9999px; top: 0; z-index: 100; padding: 12px 18px; background: #0066FF; color: #fff; font-size: 15px; font-weight: 600;" class="q1">본문으로 건너뛰기</a>
+
+  <header style="position: sticky; top: 0; z-index: 80; display: flex; align-items: center; justify-content: space-between; gap: 12px; height: 60px; padding-inline: clamp(14px, 4vw, 40px); background: rgba(255,255,255,0.9); backdrop-filter: blur(32px); border-bottom: 1px solid rgba(23,23,25,0.09);">
+    <a href="/" style="display: inline-flex; align-items: center; gap: 9px; font-size: 15px; font-weight: 600; color: #46474C;" class="q2"><span aria-hidden="true">←</span>말결 메인으로</a>
+    <a href="#proof" style="display: inline-flex; align-items: center; min-height: 40px; padding: 9px 17px; border-radius: 12px; background: #0066FF; color: #fff; font-size: 14px; font-weight: 600; white-space: nowrap;" class="q3">실제 작동 근거</a>
+  </header>
+
+  <section style="border-bottom: 1px solid rgba(23,23,25,0.1);">
+    <div style="max-width: 1200px; margin-inline: auto; padding: clamp(56px, 9vw, 132px) clamp(20px, 5vw, 56px) clamp(40px, 6vw, 72px);">
+      <p style="font-size: 12px; font-weight: 700; letter-spacing: 0.14em; color: #0066FF;">TECHNICAL IMPLEMENTATION</p>
+      <h1 style="margin-top: clamp(14px, 2vw, 20px); max-width: 22ch; font-size: clamp(1.875rem, 4.6vw, 3.75rem); line-height: 1.22;">사람은 말하고,<br>시스템은 끝까지 증명합니다.</h1>
+      <p style="margin-top: clamp(18px, 2.4vw, 28px); max-width: 52ch; font-size: clamp(1rem, 1.3vw, 1.1875rem); line-height: 1.8; color: #46474C;">입력에서 정산까지 일곱 단계입니다. 각 단계가 무엇을 결정하고 무엇을 결정하지 않는지, 그리고 현재 어디까지 실제로 확인됐는지를 그대로 적었습니다.</p>
+      <p style="margin-top: clamp(18px, 2.2vw, 26px); padding: clamp(16px, 2vw, 20px); border-radius: 12px; background: #FEF4E6; max-width: 66ch; font-size: 15px; line-height: 1.78; font-weight: 600; color: #46474C;">전화 인터페이스, 실제 식품 주문, Devnet 제한권한은 각각 작동 근거가 있지만 아직 하나의 동일 caseId로 끝까지 이어진 사건은 아닙니다.</p>
+    </div>
+  </section>
+
+  <div style="display: grid; grid-template-columns: minmax(0, 1fr); max-width: 1200px; margin-inline: auto; padding-inline: clamp(20px, 5vw, 56px);">
+    <nav data-index aria-label="목차" style="position: fixed; left: clamp(16px, 2vw, 32px); top: 50%; transform: translateY(-50%); z-index: 60; display: none; gap: 9px; max-width: 190px;">
+      <a href="#flow" style="font-size: 13px; line-height: 1.4; color: #6B6B70;">1 전체 구조</a>
+      <a href="#gemini" style="font-size: 13px; line-height: 1.4; color: #6B6B70;">2 Gemini</a>
+      <a href="#policy" style="font-size: 13px; line-height: 1.4; color: #6B6B70;">3 정책 · 동의</a>
+      <a href="#exec" style="font-size: 13px; line-height: 1.4; color: #6B6B70;">4 실행</a>
+      <a href="#solana" style="font-size: 13px; line-height: 1.4; color: #6B6B70;">5 제한권한</a>
+      <a href="#settle" style="font-size: 13px; line-height: 1.4; color: #6B6B70;">6 정산</a>
+      <a href="#proof" style="font-size: 13px; line-height: 1.4; color: #6B6B70;">7 작동 근거</a>
+    </nav>
+
+    <section id="flow" data-ch style="padding-block: clamp(48px, 7vw, 104px); border-bottom: 1px solid rgba(23,23,25,0.1);">
+      <p style="font-size: 12px; font-weight: 700; letter-spacing: 0.12em; color: #6B6B70;">01</p>
+      <h2 style="margin-top: 10px; font-size: clamp(1.5rem, 3vw, 2.25rem); line-height: 1.3;">전체 구조</h2>
+      <ol style="display: grid; gap: 1px; margin-top: clamp(24px, 3.4vw, 40px); border-radius: 12px; overflow: hidden; background: rgba(23,23,25,0.12);">
+        <li data-rise="0" style="display: grid; grid-template-columns: 46px 1fr; gap: 12px; padding: clamp(16px, 2.2vw, 24px); background: #FFFFFF;"><span style="font-size: 13px; font-weight: 700; color: #0066FF;">01</span><span><strong style="display: block; font-size: clamp(1rem, 1.4vw, 1.125rem);">전화 · 웹 입력</strong><span style="display: block; margin-top: 5px; font-size: 15px; line-height: 1.7; color: #46474C;">일반 전화(070-5275-3884)와 웹이 각각 독립된 입구입니다. 전화는 등록 발신번호로 이용자를 식별합니다.</span></span></li>
+        <li data-rise="1" style="display: grid; grid-template-columns: 46px 1fr; gap: 12px; padding: clamp(16px, 2.2vw, 24px); background: #FFFFFF;"><span style="font-size: 13px; font-weight: 700; color: #0066FF;">02</span><span><strong style="display: block; font-size: clamp(1rem, 1.4vw, 1.125rem);">Gemini intent</strong><span style="display: block; margin-top: 5px; font-size: 15px; line-height: 1.7; color: #46474C;">일상어와 맥락을 실행 가능한 거래 의도로 변환합니다.</span></span></li>
+        <li data-rise="2" style="display: grid; grid-template-columns: 46px 1fr; gap: 12px; padding: clamp(16px, 2.2vw, 24px); background: #FFFFFF;"><span style="font-size: 13px; font-weight: 700; color: #0066FF;">03</span><span><strong style="display: block; font-size: clamp(1rem, 1.4vw, 1.125rem);">결정론적 정책</strong><span style="display: block; margin-top: 5px; font-size: 15px; line-height: 1.7; color: #46474C;">목적·품목·예산·중복·위험을 코드로 판정합니다. 모델이 아니라 규칙이 결정합니다.</span></span></li>
+        <li data-rise="3" style="display: grid; grid-template-columns: 46px 1fr; gap: 12px; padding: clamp(16px, 2.2vw, 24px); background: #FFFFFF;"><span style="font-size: 13px; font-weight: 700; color: #0066FF;">04</span><span><strong style="display: block; font-size: clamp(1rem, 1.4vw, 1.125rem);">동의 · 역할 토큰</strong><span style="display: block; margin-top: 5px; font-size: 15px; line-height: 1.7; color: #46474C;">누가 무엇을 할 수 있는지, 이용자가 무엇에 동의했는지를 사건 단위로 묶습니다.</span></span></li>
+        <li data-rise="4" style="display: grid; grid-template-columns: 46px 1fr; gap: 12px; padding: clamp(16px, 2.2vw, 24px); background: #FFFFFF;"><span style="font-size: 13px; font-weight: 700; color: #0066FF;">05</span><span><strong style="display: block; font-size: clamp(1rem, 1.4vw, 1.125rem);">제한권한 결제</strong><span style="display: block; margin-top: 5px; font-size: 15px; line-height: 1.7; color: #46474C;">지갑 전체가 아니라 자산·목적지·누적 금액이 묶인 권한만 위임합니다.</span></span></li>
+        <li data-rise="5" style="display: grid; grid-template-columns: 46px 1fr; gap: 12px; padding: clamp(16px, 2.2vw, 24px); background: #FFFFFF;"><span style="font-size: 13px; font-weight: 700; color: #0066FF;">06</span><span><strong style="display: block; font-size: clamp(1rem, 1.4vw, 1.125rem);">판매처 주문</strong><span style="display: block; margin-top: 5px; font-size: 15px; line-height: 1.7; color: #46474C;">실제 공급망 API로 주문하고 주문번호와 상태를 회신받습니다.</span></span></li>
+        <li data-rise="6" style="display: grid; grid-template-columns: 46px 1fr; gap: 12px; padding: clamp(16px, 2.2vw, 24px); background: #FFFFFF;"><span style="font-size: 13px; font-weight: 700; color: #0066FF;">07</span><span><strong style="display: block; font-size: clamp(1rem, 1.4vw, 1.125rem);">대사 · 정산</strong><span style="display: block; margin-top: 5px; font-size: 15px; line-height: 1.7; color: #46474C;">정상 거래는 프로그램이 맞추고, 사람은 예외·분쟁만 봅니다.</span></span></li>
+      </ol>
+    </section>
+
+    <section id="gemini" data-ch style="padding-block: clamp(48px, 7vw, 104px); border-bottom: 1px solid rgba(23,23,25,0.1);">
+      <p style="font-size: 12px; font-weight: 700; letter-spacing: 0.12em; color: #6B6B70;">02</p>
+      <h2 style="margin-top: 10px; font-size: clamp(1.5rem, 3vw, 2.25rem); line-height: 1.3;">Gemini — 해석과 정책 경계</h2>
+      <p style="margin-top: clamp(16px, 2vw, 22px); max-width: 56ch; font-size: 15.5px; line-height: 1.82; color: #46474C;">사람은 검색어처럼 말하지 않습니다. Gemini는 모호한 표현·지역어·맥락을 상품·수량·조건으로 옮깁니다. 품목 허용, 예산 집행, 결제 권한은 Gemini가 결정하지 않습니다.</p>
+      <dl data-rise="0" style="display: grid; gap: 1px; margin-top: clamp(22px, 3vw, 32px); border-radius: 12px; overflow: hidden; background: rgba(23,23,25,0.12);">
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 180px), 1fr)); gap: 4px 20px; padding: clamp(16px, 2vw, 22px); background: #F7F7F8;"><dt style="font-size: 14px; font-weight: 700;">정상 식품 질문</dt><dd style="font-size: 14px; line-height: 1.7; color: #46474C;"><code>VERTEX_GEMINI</code> · <code>gemini-2.5-flash</code></dd></div>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 180px), 1fr)); gap: 4px 20px; padding: clamp(16px, 2vw, 22px); background: #F7F7F8;"><dt style="font-size: 14px; font-weight: 700;">위험 요청</dt><dd style="font-size: 14px; line-height: 1.7; color: #46474C;"><code>SKIPPED_POLICY_BOUNDARY</code> — Gemini 호출 전 종료</dd></div>
+      </dl>
+      <p style="margin-top: clamp(14px, 1.8vw, 20px); font-size: 14px; line-height: 1.75; color: #6B6B70;">위험 요청은 모델에 도달하지 않습니다. 해석을 시도한 뒤 거절하는 것이 아니라, 경계에서 먼저 끊습니다.</p>
+    </section>
+
+    <section id="policy" data-ch style="padding-block: clamp(48px, 7vw, 104px); border-bottom: 1px solid rgba(23,23,25,0.1);">
+      <p style="font-size: 12px; font-weight: 700; letter-spacing: 0.12em; color: #6B6B70;">03</p>
+      <h2 style="margin-top: 10px; font-size: clamp(1.5rem, 3vw, 2.25rem); line-height: 1.3;">정책 · 동의</h2>
+      <div data-rise="0" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 230px), 1fr)); gap: clamp(14px, 2vw, 20px); margin-top: clamp(22px, 3vw, 32px);">
+        <p style="padding: clamp(16px, 2vw, 22px); border-radius: 12px; background: #F7F7F8; font-size: 15px; line-height: 1.72;"><strong style="display: block; margin-bottom: 6px;">목적 · 품목</strong>허용 목적과 허용 품목 목록 안에 있는지 판정합니다.</p>
+        <p style="padding: clamp(16px, 2vw, 22px); border-radius: 12px; background: #F7F7F8; font-size: 15px; line-height: 1.72;"><strong style="display: block; margin-bottom: 6px;">예산</strong>남은 예산과 이번 총액을 비교합니다. 배송비를 포함합니다.</p>
+        <p style="padding: clamp(16px, 2vw, 22px); border-radius: 12px; background: #F7F7F8; font-size: 15px; line-height: 1.72;"><strong style="display: block; margin-bottom: 6px;">중복</strong>같은 요청이 두 번 주문되지 않도록 사건 단위로 잠급니다.</p>
+        <p style="padding: clamp(16px, 2vw, 22px); border-radius: 12px; background: #F7F7F8; font-size: 15px; line-height: 1.72;"><strong style="display: block; margin-bottom: 6px;">위험</strong>허용 범위를 벗어난 요청은 실행 경로에 들어가지 않습니다.</p>
+      </div>
+      <p style="margin-top: clamp(18px, 2.4vw, 26px); max-width: 56ch; font-size: 15.5px; line-height: 1.82; color: #46474C;">모든 판정과 동의는 하나의 <code>caseId</code>에 묶입니다. 최종 확인 시점에 읽어 준 상품·수량·가격·배송비·총액이 조건이며, 이 조건이 그대로일 때만 주문이 진행됩니다. 조건이 달라지면 다시 확인합니다.</p>
+    </section>
+
+    <section id="exec" data-ch style="padding-block: clamp(48px, 7vw, 104px); border-bottom: 1px solid rgba(23,23,25,0.1);">
+      <p style="font-size: 12px; font-weight: 700; letter-spacing: 0.12em; color: #6B6B70;">04</p>
+      <h2 style="margin-top: 10px; font-size: clamp(1.5rem, 3vw, 2.25rem); line-height: 1.3;">실행</h2>
+      <ul data-rise="0" style="display: grid; margin-top: clamp(20px, 2.6vw, 28px); max-width: 62ch;">
+        <li style="padding-block: clamp(13px, 1.7vw, 18px); border-top: 1px solid rgba(23,23,25,0.12); font-size: 15.5px; line-height: 1.75;">실제 판매처에서 상품명·가격·배송비·재고를 읽어 옵니다. 값을 발명하지 않습니다.</li>
+        <li style="padding-block: clamp(13px, 1.7vw, 18px); border-top: 1px solid rgba(23,23,25,0.12); font-size: 15.5px; line-height: 1.75;">읽어 온 값으로 총액을 만들고 이용자에게 그대로 확인받습니다.</li>
+        <li style="padding-block: clamp(13px, 1.7vw, 18px); border-top: 1px solid rgba(23,23,25,0.12); font-size: 15.5px; line-height: 1.75;">확인 이후 가격·재고·배송비가 바뀌면 주문하지 않고 다시 확인합니다.</li>
+        <li style="padding-block: clamp(13px, 1.7vw, 18px); border-top: 1px solid rgba(23,23,25,0.12); border-bottom: 1px solid rgba(23,23,25,0.12); font-size: 15.5px; line-height: 1.75;">중복 주문은 사건 단위 잠금으로 차단합니다.</li>
+      </ul>
+    </section>
+
+    <section id="solana" data-ch style="padding-block: clamp(48px, 7vw, 104px); border-bottom: 1px solid rgba(23,23,25,0.1);">
+      <p style="font-size: 12px; font-weight: 700; letter-spacing: 0.12em; color: #6B6B70;">05</p>
+      <h2 style="margin-top: 10px; font-size: clamp(1.5rem, 3vw, 2.25rem); line-height: 1.3;">Solana 제한권한</h2>
+      <dl data-rise="0" style="display: grid; gap: 1px; margin-top: clamp(22px, 3vw, 32px); border-radius: 12px; overflow: hidden; background: rgba(23,23,25,0.12);">
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 170px), 1fr)); gap: 4px 20px; padding: clamp(15px, 1.9vw, 20px); background: #F7F7F8;"><dt style="font-size: 14px; font-weight: 700;">자산</dt><dd style="font-size: 14px; line-height: 1.7; color: #46474C;">Circle Devnet USDC</dd></div>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 170px), 1fr)); gap: 4px 20px; padding: clamp(15px, 1.9vw, 20px); background: #F7F7F8;"><dt style="font-size: 14px; font-weight: 700;">제한권한</dt><dd style="font-size: 14px; line-height: 1.7; color: #46474C;">Swig</dd></div>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 170px), 1fr)); gap: 4px 20px; padding: clamp(15px, 1.9vw, 20px); background: #F7F7F8;"><dt style="font-size: 14px; font-weight: 700;">결제 프로토콜</dt><dd style="font-size: 14px; line-height: 1.7; color: #46474C;">x402 · 주문별 에스크로</dd></div>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 170px), 1fr)); gap: 4px 20px; padding: clamp(15px, 1.9vw, 20px); background: #F7F7F8;"><dt style="font-size: 14px; font-weight: 700;">금액</dt><dd style="font-size: 14px; line-height: 1.7; color: #46474C;">정확히 1 USDC</dd></div>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 170px), 1fr)); gap: 4px 20px; padding: clamp(15px, 1.9vw, 20px); background: #F7F7F8;"><dt style="font-size: 14px; font-weight: 700;">온체인 제한</dt><dd style="font-size: 14px; line-height: 1.7; color: #46474C;">자산 · 목적지 · 누적 금액</dd></div>
+      </dl>
+      <p style="margin-top: clamp(16px, 2.2vw, 24px); max-width: 58ch; font-size: 15.5px; line-height: 1.82; color: #46474C;">사용자·목적·품목·판매자·시간·횟수는 결정론적 정책, 동의, 역할 토큰, 사건 원장이 함께 제한합니다. 전부 온체인이라고 말하지 않습니다.</p>
+      <p style="margin-top: 12px; padding: clamp(14px, 1.8vw, 18px); border-radius: 12px; background: #FEF4E6; max-width: 58ch; font-size: 14.5px; line-height: 1.75; font-weight: 600; color: #46474C;">Devnet은 실가치 결제가 아닙니다. Mainnet 실결제나 정부 농식품바우처 카드 실결제는 주장하지 않습니다.</p>
+    </section>
+
+    <section id="settle" data-ch style="padding-block: clamp(48px, 7vw, 104px); border-bottom: 1px solid rgba(23,23,25,0.1);">
+      <p style="font-size: 12px; font-weight: 700; letter-spacing: 0.12em; color: #6B6B70;">06</p>
+      <h2 style="margin-top: 10px; font-size: clamp(1.5rem, 3vw, 2.25rem); line-height: 1.3;">정산</h2>
+      <div data-rise="0" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr)); gap: clamp(14px, 2vw, 20px); margin-top: clamp(22px, 3vw, 32px);">
+        <p style="padding: clamp(18px, 2.2vw, 24px); border-radius: 12px; background: #0066FF; color: #FFFFFF; font-size: 15.5px; line-height: 1.72;"><strong style="display: block; margin-bottom: 6px;">자동</strong>정상 거래는 프로그램이 주문·결제·수령 기록을 대사하고 정산합니다.</p>
+        <p style="padding: clamp(18px, 2.2vw, 24px); border-radius: 12px; background: #F7F7F8; font-size: 15.5px; line-height: 1.72;"><strong style="display: block; margin-bottom: 6px;">사람</strong>예외·분쟁·통제만 사람과 회계 전문가에게 갑니다.</p>
+      </div>
+      <p style="margin-top: clamp(16px, 2.2vw, 24px); max-width: 56ch; font-size: 15.5px; line-height: 1.82; color: #46474C;">이용자는 영수증을 모으지 않습니다. 하나의 사건 번호에 요청부터 수령까지가 순서대로 쌓이고, 기관은 그 순서를 열람합니다.</p>
+    </section>
+
+    <section id="proof" data-ch style="padding-block: clamp(48px, 7vw, 104px) clamp(64px, 10vw, 140px);">
+      <p style="font-size: 12px; font-weight: 700; letter-spacing: 0.12em; color: #6B6B70;">07</p>
+      <h2 style="margin-top: 10px; font-size: clamp(1.5rem, 3vw, 2.25rem); line-height: 1.3;">실제 작동 근거 — 네 레일</h2>
+      <p style="margin-top: clamp(14px, 1.8vw, 20px); padding: clamp(16px, 2vw, 20px); border-radius: 12px; background: #FEF4E6; max-width: 66ch; font-size: 15px; line-height: 1.78; font-weight: 600; color: #46474C;">전화 인터페이스, 실제 식품 주문, Devnet 제한권한은 각각 작동 근거가 있지만 아직 하나의 동일 caseId로 끝까지 이어진 사건은 아닙니다.</p>
+
+      <article data-rise="0" style="display: grid; gap: 12px; margin-top: clamp(24px, 3.4vw, 40px); padding: clamp(20px, 2.8vw, 30px); border-radius: 12px; background: #FFFFFF; box-shadow: inset 0 0 0 1px rgba(23,23,25,0.14);">
+        <p style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;"><span style="font-size: 12px; font-weight: 700; letter-spacing: 0.12em; color: #6B6B70;">RAIL A</span><strong style="font-size: clamp(1.0625rem, 1.5vw, 1.25rem);">전화 주문 인터페이스</strong></p>
+        <p style="display: inline-grid; justify-self: start; gap: 3px; padding: 10px 15px; border-radius: 12px; background: #FEF4E6; font-size: 13.5px; line-height: 1.6;"><span style="font-weight: 700;">확인된 사실</span><span style="color: #46474C;">코드 · 배포 · 070 연결 확인</span><span style="font-weight: 700;">아직 검증되지 않은 사실</span><span style="color: #46474C;">새 실제 인바운드 음성 재검증 대기 — 이 먹거리 요청의 실통화는 아직 재검증되지 않았습니다</span></p>
+        <dl style="display: grid; gap: 8px;">
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 150px), 1fr)); gap: 2px 18px;"><dt style="font-size: 14px; font-weight: 700;">번호</dt><dd style="font-size: 14px; line-height: 1.7; color: #46474C;">070-5275-3884</dd></div>
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 150px), 1fr)); gap: 2px 18px;"><dt style="font-size: 14px; font-weight: 700;">흐름</dt><dd style="font-size: 14px; line-height: 1.7; color: #46474C;">등록 발신번호 조회 → 일상어 요청 → 종류·실상품 후보 → 총액 재확인 → DTMF 1번 → 판매처 직접주문</dd></div>
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 150px), 1fr)); gap: 2px 18px;"><dt style="font-size: 14px; font-weight: 700;">증적 이벤트 기준</dt><dd style="font-size: 14px; line-height: 1.7; color: #46474C;"><code>CALL_CONNECTED</code> 또는 <code>AUDIO_CAPTURED</code></dd></div>
+        </dl>
+        <div style="display: flex; flex-wrap: wrap; gap: 8px;">
+          <a href="tel:07052753884" style="display: inline-flex; align-items: center; min-height: 46px; padding: 12px 20px; border-radius: 12px; background: #171719; color: #F7F7F8; font-size: 14px; font-weight: 600;" class="q4">070-5275-3884 전화하기</a>
+          <a href="https://benefit-settlement-rail-tbauoylpra-uc.a.run.app/?v=demo&s=phone" target="_blank" rel="noopener" style="display: inline-flex; align-items: center; gap: 7px; min-height: 46px; padding: 12px 20px; border-radius: 12px; font-size: 14px; font-weight: 600; box-shadow: inset 0 0 0 1px rgba(23,23,25,0.3);" class="q5">전화 시나리오·증적 보기 <span aria-hidden="true">↗</span></a>
+        </div>
+      </article>
+
+      <article data-rise="1" style="display: grid; gap: 12px; margin-top: 14px; padding: clamp(20px, 2.8vw, 30px); border-radius: 12px; background: #FFFFFF; box-shadow: inset 0 0 0 1px rgba(23,23,25,0.14);">
+        <p style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;"><span style="font-size: 12px; font-weight: 700; letter-spacing: 0.12em; color: #6B6B70;">RAIL B</span><strong style="font-size: clamp(1.0625rem, 1.5vw, 1.25rem);">Gemini 해석 · 정책 경계</strong></p>
+        <p style="display: inline-grid; justify-self: start; gap: 3px; padding: 10px 15px; border-radius: 12px; background: #EAF2FE; font-size: 13.5px; line-height: 1.6;"><span style="font-weight: 700;">확인된 사실</span><span style="color: #46474C;">정상 질문 해석 · 위험 요청 사전 차단</span></p>
+        <dl style="display: grid; gap: 8px;">
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 150px), 1fr)); gap: 2px 18px;"><dt style="font-size: 14px; font-weight: 700;">정상 식품 질문</dt><dd style="font-size: 14px; line-height: 1.7; color: #46474C;"><code>VERTEX_GEMINI</code> · <code>gemini-2.5-flash</code></dd></div>
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 150px), 1fr)); gap: 2px 18px;"><dt style="font-size: 14px; font-weight: 700;">위험 요청</dt><dd style="font-size: 14px; line-height: 1.7; color: #46474C;"><code>SKIPPED_POLICY_BOUNDARY</code> · Gemini 호출 전 종료</dd></div>
+        </dl>
+        <p style="font-size: 14px; line-height: 1.75; color: #6B6B70;">Gemini는 말과 맥락을 거래 의도로 바꾸지만 품목 허용·예산·결제 권한은 결정하지 않습니다.</p>
+      </article>
+
+      <article data-rise="2" style="display: grid; gap: 12px; margin-top: 14px; padding: clamp(20px, 2.8vw, 30px); border-radius: 12px; background: #FFFFFF; box-shadow: inset 0 0 0 1px rgba(23,23,25,0.14);">
+        <p style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;"><span style="font-size: 12px; font-weight: 700; letter-spacing: 0.12em; color: #6B6B70;">RAIL C</span><strong style="font-size: clamp(1.0625rem, 1.5vw, 1.25rem);">실제 공급망 주문</strong></p>
+        <p style="display: inline-grid; justify-self: start; gap: 3px; padding: 10px 15px; border-radius: 12px; background: #D9FFE6; font-size: 13.5px; line-height: 1.6;"><span style="font-weight: 700;">확인된 사실</span><span style="color: #46474C;">실제 공급자 주문 확인 · PREPARING</span><span style="font-weight: 700;">아직 검증되지 않은 사실</span><span style="color: #46474C;">송장 대기</span></p>
+        <dl style="display: grid; gap: 8px;">
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 150px), 1fr)); gap: 2px 18px;"><dt style="font-size: 14px; font-weight: 700;">SpecialOffer 주문</dt><dd style="font-size: 14px; line-height: 1.7; color: #46474C;"><code>585492</code></dd></div>
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 150px), 1fr)); gap: 2px 18px;"><dt style="font-size: 14px; font-weight: 700;">외부 주문번호</dt><dd style="font-size: 14px; line-height: 1.7; color: #46474C;"><code>26080121204025</code></dd></div>
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 150px), 1fr)); gap: 2px 18px;"><dt style="font-size: 14px; font-weight: 700;">식품 주문 case</dt><dd style="font-size: 14px; line-height: 1.7; color: #46474C;"><code>web_real_food_20260801_01</code></dd></div>
+        </dl>
+        <p style="font-size: 14px; line-height: 1.75; color: #6B6B70;">이 주문은 RAIL A 전화 인터페이스, RAIL D Devnet 기술 사건과 서로 다른 사건입니다.</p>
+        <a href="https://benefit-settlement-rail-tbauoylpra-uc.a.run.app/api/demo/food-order-proof" target="_blank" rel="noopener" style="display: inline-flex; justify-self: start; align-items: center; gap: 7px; min-height: 46px; padding: 12px 20px; border-radius: 12px; background: #171719; color: #F7F7F8; font-size: 14px; font-weight: 600;" class="q6">공급자 주문 회신 보기 <span aria-hidden="true">↗</span></a>
+      </article>
+
+      <article data-rise="3" style="display: grid; gap: 12px; margin-top: 14px; padding: clamp(20px, 2.8vw, 30px); border-radius: 12px; background: #FFFFFF; box-shadow: inset 0 0 0 1px rgba(23,23,25,0.14);">
+        <p style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;"><span style="font-size: 12px; font-weight: 700; letter-spacing: 0.12em; color: #6B6B70;">RAIL D</span><strong style="font-size: clamp(1.0625rem, 1.5vw, 1.25rem);">Solana Devnet 제한권한</strong></p>
+        <p style="display: inline-grid; justify-self: start; gap: 3px; padding: 10px 15px; border-radius: 12px; background: #EAF2FE; font-size: 13.5px; line-height: 1.6;"><span style="font-weight: 700;">확인된 사실</span><span style="color: #46474C;">Devnet 거래 증거 확인</span><span style="font-weight: 700;">경계</span><span style="color: #46474C;">Devnet은 실가치 결제가 아닙니다</span></p>
+        <dl style="display: grid; gap: 8px;">
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 150px), 1fr)); gap: 2px 18px;"><dt style="font-size: 14px; font-weight: 700;">Devnet 기술 사건</dt><dd style="font-size: 14px; line-height: 1.7; color: #46474C; word-break: break-all;"><code>case_3f561b18f138a1c737893401</code></dd></div>
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 150px), 1fr)); gap: 2px 18px;"><dt style="font-size: 14px; font-weight: 700;">자산</dt><dd style="font-size: 14px; line-height: 1.7; color: #46474C;">Circle Devnet USDC</dd></div>
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 150px), 1fr)); gap: 2px 18px;"><dt style="font-size: 14px; font-weight: 700;">제한권한 · 결제</dt><dd style="font-size: 14px; line-height: 1.7; color: #46474C;">Swig · x402 · 주문별 에스크로 · 정확히 1 USDC</dd></div>
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 150px), 1fr)); gap: 2px 18px;"><dt style="font-size: 14px; font-weight: 700;">tx</dt><dd style="font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 12.5px; line-height: 1.7; color: #46474C; word-break: break-all;">52ythTGiyTLbsQVQRmHJmHtVVDzVW9UrPxvjcF1Mq3Sb9bGZD7gZyHsawr5RaY7PMfL5URdsSF2T6mBTejqUCXBX</dd></div>
+        </dl>
+        <p style="font-size: 14px; line-height: 1.75; color: #6B6B70;">현행 온체인 제한은 자산·목적지·누적 금액입니다. 나머지는 결정론적 정책·동의·역할 토큰·사건 원장이 제한합니다. 전부 온체인이 아닙니다.</p>
+        <a href="https://explorer.solana.com/tx/52ythTGiyTLbsQVQRmHJmHtVVDzVW9UrPxvjcF1Mq3Sb9bGZD7gZyHsawr5RaY7PMfL5URdsSF2T6mBTejqUCXBX?cluster=devnet" target="_blank" rel="noopener" style="display: inline-flex; justify-self: start; align-items: center; gap: 7px; min-height: 46px; padding: 12px 20px; border-radius: 12px; background: #171719; color: #F7F7F8; font-size: 14px; font-weight: 600;" class="q7">Solana Devnet 거래 보기 <span aria-hidden="true">↗</span></a>
+      </article>
+
+      <p data-rise="4" style="margin-top: clamp(24px, 3vw, 34px); font-size: 13.5px; line-height: 1.85; color: #6B6B70;">Mainnet 실결제나 정부 농식품바우처 카드 실결제는 주장하지 않습니다. 메인 페이지의 인물 사진은 제작된 스토리 이미지입니다.</p>
+      <a data-rise="5" href="/" style="display: inline-flex; justify-self: start; align-items: center; gap: 8px; margin-top: clamp(20px, 2.6vw, 30px); min-height: 52px; padding: 14px 24px; border-radius: 12px; background: #0066FF; color: #fff; font-size: 15px; font-weight: 600;" class="q8"><span aria-hidden="true">←</span>말결 메인으로 돌아가기</a>
+    </section>
+  </div>
+</div>
+
+</body>
+</html>
