@@ -474,7 +474,7 @@
   /* 지원 조건 확인 → 가려진 미리보기. 조건이 서면 미리보기를 부르지 않는다. */
   async function loadReview() {
     if (!ORDER.product) return;
-    SECURE.loading = true; SECURE.error = null; APPROVAL.error = null; render();
+    SECURE.loading = true; SECURE.error = null; render();
     try {
       if (!await ensureFoodSession()) throw Object.assign(new Error('no-session'), { status: 403 });
       var base = Object.assign({
@@ -666,8 +666,8 @@
       '<section>' +
       '<button type="button" class="link-row" data-go="help">' + ico('circle-question') +
       '<span>도움이 필요해요</span>' + ico('chevron-right', 'link-row__chev') + '</button>' +
-      '<p class="phone-note">' + ico('phone-fill') +
-      '<span>전화로도 주문할 수 있어요 <b>' + SUPPORT_PHONE + '</b></span></p>' +
+      '<a class="phone-note" href="' + SUPPORT_TEL + '">' + ico('phone-fill') +
+      '<span>전화로 바로 주문하기 <b>' + SUPPORT_PHONE + '</b></span></a>' +
       '</section>';
   }
 
@@ -1084,7 +1084,7 @@
       kvRow('연락처', masked(preview.maskedPhone)) +
       kvRow('주소', masked(preview.maskedAddress)) +
       '</div>' +
-      prov('가려지지 않은 값은 서버가 이 응답에 담지 않습니다. 승인 권한이 있는 담당자 경로에서만 사용됩니다.', 'lock-fill') +
+      prov('가려지지 않은 배송 정보는 주문 실행 순간에만 사용됩니다.', 'lock-fill') +
       '</div>' +
       '<div class="kv">' +
       kvRow('반품 조건', esc(preview.returnNotice || '확인 필요')) +
@@ -1141,20 +1141,12 @@
       card(spine([
         { state: 'done', owner: '이용자', title: '상품 선택', desc: '판매처에서 확인된 실제 상품과 금액을 골랐습니다.' },
         { state: previewUsable() ? 'done' : 'current', owner: '이용자', title: '가려진 미리보기', desc: '결제 없이 내용만 확인하는 단계입니다.' },
-        { state: 'blocked', owner: '담당자', title: '결제 집행', desc: '공개 화면에는 이 권한이 없습니다. 별도 자격 증명을 가진 담당자만 집행합니다.' }
+        { state: previewUsable() ? 'current' : 'blocked', owner: '이용자', title: '전화 주문', desc: '070-5275-3884에서 상품명과 배송비 포함 총액을 들은 뒤 1번으로 직접 확인합니다.' }
       ]), 'card--flat') + '</section>' +
-
-      (APPROVAL.error
-        ? '<div role="alert">' + notice('negative', esc(APPROVAL.error.title) + ' · ', esc(APPROVAL.error.body), 'triangle-exclamation-fill') + '</div>'
-        : '') +
-
       '<div class="actionbar">' +
       (previewUsable()
-        ? '<button type="button" class="btn btn--solid-primary btn--block btn--lg" data-act="request-approval"' +
-        (APPROVAL.loading ? ' disabled aria-disabled="true" aria-busy="true"' : '') + '>' +
-        (APPROVAL.loading
-          ? '<span class="spinner spinner--on-solid" aria-hidden="true"></span>승인 요청을 보내는 중이에요…'
-          : ico('verified-check-fill') + '담당자에게 승인 요청') + '</button>'
+        ? '<a class="btn btn--solid-primary btn--block btn--lg" href="' + SUPPORT_TEL + '">' +
+          ico('phone-fill') + '전화로 바로 주문하기</a>'
         : '<button type="button" class="btn btn--solid-primary btn--block btn--lg" disabled aria-disabled="true">' +
         (ready ? '미리보기를 먼저 받아 주세요' : '지원 조건 확인 후 진행할 수 있어요') + '</button>') +
       '<div class="btn-row btn-row--2">' +
@@ -3378,7 +3370,6 @@
     cart: { t: '주문서', nav: 'search', surface: 'ben', f: viewCart, back: 'product' },
     delivery: { t: '받는 곳', nav: 'search', surface: 'ben', f: viewDelivery, back: 'cart' },
     review: { t: '주문 전 확인', nav: 'search', surface: 'ben', f: viewReview, back: 'delivery' },
-    approval: { t: '승인 요청', nav: 'orders', surface: 'ben', f: viewApproval },
     orders: { t: '주문 내역', nav: 'orders', surface: 'ben', f: viewOrders },
     orderdetail: { t: '배송 확인', nav: 'orders', surface: 'ben', f: viewOrderDetail, back: 'orders' },
     help: { t: '도움', nav: 'help', surface: 'ben', f: viewHelp },
@@ -3589,7 +3580,6 @@
       say('고른 상품을 지웠습니다.', true); go('search'); return;
     }
     if (act === 'run-review') { loadReview(); return; }
-    if (act === 'request-approval') { requestApproval(); return; }
     if (act === 'receipt-open') { RECEIPT.open = true; RECEIPT.error = ''; render(); return; }
     if (act === 'receipt-issue') { chooseReceiptIssue(t.dataset.issue || ''); return; }
     if (act === 'receipt-clear-photo') { clearReceiptPhoto(); return; }
