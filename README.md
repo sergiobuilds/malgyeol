@@ -2,7 +2,7 @@
 
 사람이 의사를 표현하면 Gemini가 실행 가능한 거래 의도로 바꾸고, 결정론적 정책과 Solana가 AI의 권한을 제한하며 구매·결제·증빙·정산까지 잇는 에이전트 결제 기반시설입니다. 디지털 약자를 첫 권리자로 삼고, 지원금은 가장 엄격한 테스트베드, 식품지원은 첫 실제 공급망 사례, 전화와 음성은 첫 인터페이스로 사용합니다.
 
-현재 저장소에는 2026 농식품바우처 호환 품목 정책, Vertex Gemini 음성·웹 요청 해석, SpecialOffer 실상품·주문 어댑터, Firestore 사건·역할 원장, subject-bound read/act 권한, 이용자·기관 워크플로, x402·Solana Devnet 제한권한 증명, 모바일웹·PC 업무함·심사 데모가 있습니다. 195개 테스트와 typecheck를 통과한 최신 제품 프론트가 Cloud Run 리비전 `benefit-settlement-rail-00060-w98`에 배포됐습니다. 공개 루트는 5섹션 제품 스토리, `/tech`는 상세 구현과 증거, `/?v=home`과 `/?v=demo`는 실제 제품 화면을 제공합니다.
+현재 저장소에는 2026 농식품바우처 호환 품목 정책, Vertex Gemini 음성·웹 요청 해석, SpecialOffer 실상품·주문 어댑터, Firestore 사건·역할 원장, subject-bound read/act 권한, 이용자·기관 워크플로, x402·Solana Devnet 제한권한 증명, 모바일웹·PC 업무함·심사 데모가 있습니다. 195개 테스트와 typecheck를 통과한 최신 제품 프론트가 Cloud Run 리비전 `benefit-settlement-rail-00061-dtq`에 배포됐습니다. 공개 루트는 5섹션 제품 스토리, `/tech`는 상세 구현과 증거, `/?v=home`과 `/?v=demo`는 실제 제품 화면을 제공합니다.
 
 **목차** — 1 실행과 검증 · 2 실측 경계 · 3 이력
 
@@ -11,8 +11,9 @@
 - 제품 화면: https://benefit-settlement-rail-tbauoylpra-uc.a.run.app/?v=home
 - 심사 데모: https://benefit-settlement-rail-tbauoylpra-uc.a.run.app/?v=demo
 - 공개 상태 확인: https://benefit-settlement-rail-tbauoylpra-uc.a.run.app/health
-- 최신 Cloud Run 리비전: `benefit-settlement-rail-00060-w98`
+- 최신 Cloud Run 리비전: `benefit-settlement-rail-00061-dtq`
 - 제출 발표자료: [말결 프로젝트 소개서 PDF](pitch/malgyeol-submission-deck.pdf)
+- 제출 영상: [말결 2분 50초 데모](https://youtu.be/yS79FHbe5To)
 - 실제 070·Devnet 기술 사건: [`proof/u9-real-phone-success.json`](proof/u9-real-phone-success.json)
 - 실제 공급망 주문은 공개 서비스의 [`/api/demo/food-order-proof`](https://benefit-settlement-rail-tbauoylpra-uc.a.run.app/api/demo/food-order-proof)에서 최신 상태를 읽습니다.
 
