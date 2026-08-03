@@ -233,6 +233,9 @@ test('registered caller places the supplier order immediately after DTMF confirm
       if (callbacks.length === 1) {
         signalFirstStarted();
         await firstOrderGate;
+        const current = await cases.get(String(input.caseId));
+        assert.ok(current);
+        await cases.transition(String(input.caseId), current.state, 'ORDERED', { providerOrderId: 'supplier-order-001' }, 1_785_456_000_001);
         return { status: 'SUBMITTED', externalOrderId: 'supplier-order-001' };
       }
       return { status: 'ORDER_RECONCILIATION_REQUIRED', reason: 'IN_FLIGHT' };
@@ -280,6 +283,7 @@ test('registered caller places the supplier order immediately after DTMF confirm
   assert.equal((await cases.get(caseId))?.beneficiaryRef, 'beneficiary-01');
   assert.equal((await cases.get(caseId))?.planId, 'plan-01');
   assert.equal((await cases.get(caseId))?.state, 'ORDERED');
+  assert.equal((await cases.events(caseId)).filter(event => event.state === 'ORDERED').length, 1);
   const status = await handle({ method: 'GET', pathname: `/internal/food-agent/status/${caseId}`, authorization: auth });
   assert.equal((status.body as any).paymentExecuted, false);
   assert.equal((status.body as any).supplierOrderExecuted, true);

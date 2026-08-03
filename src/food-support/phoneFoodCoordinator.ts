@@ -409,7 +409,12 @@ export class PhoneFoodCoordinator {
   private async transition(caseId: string, next: CaseState, patch: Partial<BenefitCase>): Promise<void> {
     const value = await this.cases.get(caseId);
     if (!value) throw new PhoneFoodInputError('Case not found');
-    if (value.state === next && Object.keys(patch).length === 0) return;
+    if (value.state === next) {
+      for (const [key, expected] of Object.entries(patch)) {
+        if (value[key as keyof BenefitCase] !== expected) throw new PhoneFoodInputError(`Case ${next} replay mismatch`);
+      }
+      return;
+    }
     await this.cases.transition(caseId, value.state, next, patch, this.now());
   }
 
