@@ -1,0 +1,24 @@
+[extend]
+useDefault = true
+
+[[allowlists]]
+description = "Synthetic operator secret used in HTTP authorization tests"
+condition = "AND"
+regexTarget = "line"
+paths = [
+  '''tests/http/specialOfferOrderRoutes\.test\.ts''',
+]
+regexes = [
+  '''operatorSecret:\s*'operator-secret-1234567890'|Bearer operator-secret-1234567890''',
+]
+
+[[allowlists]]
+description = "Synthetic credential shapes used to verify ledger rejection"
+condition = "AND"
+regexTarget = "line"
+paths = [
+  '''tests/e2e/canonicalCaseLedger\.test\.ts''',
+]
+regexes = [
+  '''ghp|AKIA|eyJhbG''',
+]

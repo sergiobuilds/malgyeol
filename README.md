@@ -2,9 +2,9 @@
 
 사람이 의사를 표현하면 Gemini가 실행 가능한 거래 의도로 바꾸고, 결정론적 정책과 Solana가 AI의 권한을 제한하며 구매·결제·증빙·정산까지 잇는 에이전트 결제 기반시설입니다. 디지털 약자를 첫 권리자로 삼고, 지원금은 가장 엄격한 테스트베드, 식품지원은 첫 실제 공급망 사례, 전화와 음성은 첫 인터페이스로 사용합니다.
 
-현재 저장소에는 2026 농식품바우처 호환 품목 정책, Vertex Gemini 음성·웹 요청 해석, SpecialOffer 실상품·주문 어댑터, Firestore 사건·역할 원장, subject-bound read/act 권한, 이용자·기관 워크플로, x402·Solana Devnet 제한권한 증명, 모바일웹·PC 업무함·심사 데모가 있습니다. 195개 테스트와 typecheck를 통과한 최신 제품 프론트가 Cloud Run 리비전 `benefit-settlement-rail-00061-dtq`에 배포됐습니다. 공개 루트는 5섹션 제품 스토리, `/tech`는 상세 구현과 증거, `/?v=home`과 `/?v=demo`는 실제 제품 화면을 제공합니다.
+현재 저장소에는 2026 농식품바우처 호환 품목 정책, Vertex Gemini 음성·웹 요청 해석, SpecialOffer 실상품·주문 어댑터, Firestore 사건·역할 원장, subject-bound read/act 권한, 이용자·기관 워크플로, x402·Solana Devnet 제한권한 증명, 모바일웹·PC 업무함·심사 데모가 있습니다. 현행 소스는 Node 테스트 197개, Rust 테스트 9개와 typecheck를 통과합니다. 최신 공개 제품 프론트는 Cloud Run 리비전 `benefit-settlement-rail-00061-dtq`에 배포됐습니다. 공개 루트는 5섹션 제품 스토리, `/tech`는 상세 구현과 증거, `/?v=home`과 `/?v=demo`는 실제 제품 화면을 제공합니다.
 
-**목차** — 1 실행과 검증 · 2 실측 경계 · 3 이력
+**목차** — 1 실행과 검증 · 2 실측 경계 · 3 공동개발 · 4 이력
 
 - 공개 서비스: https://benefit-settlement-rail-tbauoylpra-uc.a.run.app/
 - 기술 구현: https://benefit-settlement-rail-tbauoylpra-uc.a.run.app/tech
@@ -21,8 +21,7 @@
 
 ```bash
 npm ci
-npm test
-npm run typecheck
+npm run check
 npm start
 ```
 
@@ -45,7 +44,16 @@ npm start
 
 품목 정책은 농식품바우처 공식 플랫폼의 공개 기준을 호환 규칙으로 사용합니다. 현 집행 자금은 정부 바우처가 아니라 기관·재단·기업의 자체 식품지원 예산을 가정하며, 공식 카드 결제나 지정몰 제휴로 표시하지 않습니다.
 
-## 3 이력
+## 3 공동개발
+
+- 구조와 현재·과거 경계: [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md)
+- 개발·검증·PR 규칙: [`CONTRIBUTING.md`](CONTRIBUTING.md)
+- 보안 제보와 비밀정보 처리: [`SECURITY.md`](SECURITY.md)
+- 사용권과 제3자 고지: [`LICENSE`](LICENSE), [`THIRD_PARTY_NOTICES`](THIRD_PARTY_NOTICES)
+
+저장소와 npm 패키지의 현행 이름은 `malgyeol`입니다. 배포 URL과 일부 증거의 `benefit-settlement-rail` 표기는 기존 공개 배포와 검증 해시를 가리키는 호환 식별자입니다. `G2`~`G6`, `U3`~`U9`는 개발 상태가 아니라 제출 당시 증거 단위이므로 이름을 유지합니다.
+
+## 4 이력
 
 - 2026-07-30 — 제한권한형 에이전트 결제 제품 구현을 시작했습니다.
 - 2026-07-31 — 비제휴 합성 전화 구매 E2E 데모를 추가했습니다.
