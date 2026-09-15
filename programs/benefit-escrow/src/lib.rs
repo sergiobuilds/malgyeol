@@ -53,10 +53,11 @@ pub mod benefit_escrow {
     }
 
     pub fn release(ctx: Context<Release>, event_commitment: [u8; 32]) -> Result<()> {
+        let _ = event_commitment;
         let now = Clock::get()?.unix_timestamp;
         let order = &mut ctx.accounts.order_escrow;
         let vault = &ctx.accounts.vault;
-        let surplus = vault.amount.checked_sub(order.amount).unwrap_or(0);
+        let surplus = vault.amount.saturating_sub(order.amount);
 
         validate_release(
             &order.state,
@@ -124,10 +125,11 @@ pub mod benefit_escrow {
     }
 
     pub fn refund_timeout(ctx: Context<RefundTimeout>, event_commitment: [u8; 32]) -> Result<()> {
+        let _ = event_commitment;
         let now = Clock::get()?.unix_timestamp;
         let order = &mut ctx.accounts.order_escrow;
         let vault = &ctx.accounts.vault;
-        let surplus = vault.amount.checked_sub(order.amount).unwrap_or(0);
+        let surplus = vault.amount.saturating_sub(order.amount);
 
         validate_refund(
             &order.state,

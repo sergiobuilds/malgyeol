@@ -1,10 +1,13 @@
 steps:
+  - name: node:22-bookworm
+    entrypoint: bash
+    args: ['-ceu', 'npm ci && npm run typecheck && npm test']
   - name: gcr.io/cloud-builders/docker
-    args: ['build', '-t', '${_REGION}-docker.pkg.dev/$PROJECT_ID/${_REPOSITORY}/benefit-settlement-rail:$COMMIT_SHA', '.']
+    args: ['build', '-t', '${_REGION}-docker.pkg.dev/$PROJECT_ID/${_REPOSITORY}/malgyeol:$COMMIT_SHA', '.']
   - name: gcr.io/cloud-builders/docker
-    args: ['push', '${_REGION}-docker.pkg.dev/$PROJECT_ID/${_REPOSITORY}/benefit-settlement-rail:$COMMIT_SHA']
+    args: ['push', '${_REGION}-docker.pkg.dev/$PROJECT_ID/${_REPOSITORY}/malgyeol:$COMMIT_SHA']
 images:
-  - '${_REGION}-docker.pkg.dev/$PROJECT_ID/${_REPOSITORY}/benefit-settlement-rail:$COMMIT_SHA'
+  - '${_REGION}-docker.pkg.dev/$PROJECT_ID/${_REPOSITORY}/malgyeol:$COMMIT_SHA'
 substitutions:
   _REGION: us-central1
   _REPOSITORY: cloud-run-source-deploy

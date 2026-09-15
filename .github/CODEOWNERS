@@ -1,0 +1,9 @@
+* @sergiobuilds
+
+/.github/ @sergiobuilds
+/cloudbuild.yaml @sergiobuilds
+/Dockerfile @sergiobuilds
+/programs/ @sergiobuilds
+/src/case-ledger/ @sergiobuilds
+/src/http/ @sergiobuilds
+/src/voice/ @sergiobuilds
