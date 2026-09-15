@@ -30,7 +30,7 @@
     "proof:food-phone-demo": "node scripts/capture-food-phone-demo.mjs"
   },
   "devDependencies": {
-    "@types/node": "24.13.3",
+    "@types/node": "26.5.1",
     "typescript": "5.9.3"
   },
   "dependencies": {
