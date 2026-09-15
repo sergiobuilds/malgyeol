@@ -48,7 +48,7 @@
     "@swig-wallet/kit": "2.1.0",
     "@x402/core": "2.16.0",
     "@x402/svm": "https://raw.githubusercontent.com/solana-foundation/pay-kit/2d7f605c08c1b32abad99b2e13c0960112d929b9/typescript/.x402-vendor/x402-svm-2.16.0-paykit.2.tgz",
-    "google-auth-library": "^10.9.1",
+    "google-auth-library": "^11.0.2",
     "tsx": "^4.20.5",
     "ws": "^8.21.1"
   },
