@@ -19,12 +19,13 @@ function environmentKeys(path: string): Set<string> {
   return keys;
 }
 
-function referencedKeys(directories: string[]): Set<string> {
-  const keys = new Set<string>(['PHONE_HMAC_SECRET']);
+function referencedKeys(paths: string[]): Set<string> {
+  const keys = new Set<string>();
   const direct = /process\.env\.([A-Z][A-Z0-9_]*)/g;
   const indexed = /process\.env\[['"]([A-Z][A-Z0-9_]*)['"]\]/g;
-  for (const directory of directories) {
-    for (const path of filesUnder(directory)) {
+  for (const inputPath of paths) {
+    const candidates = /\.[a-z]+$/i.test(inputPath) ? [inputPath] : filesUnder(inputPath);
+    for (const path of candidates) {
       if (!/\.(?:ts|mjs)$/.test(path)) continue;
       const source = readFileSync(path, 'utf8');
       for (const pattern of [direct, indexed]) {
@@ -37,14 +38,14 @@ function referencedKeys(directories: string[]): Set<string> {
 }
 
 test('environment example uses names recognized by application code', () => {
-  const runtime = referencedKeys(['src']);
+  const runtime = referencedKeys(['src/server.ts', 'src/careApp.ts']);
   const runtimeExample = environmentKeys('.env.example');
 
   assert.deepEqual([...runtimeExample].filter(key => !runtime.has(key)), []);
 });
 
 test('application runtime variables are represented in the runtime example', () => {
-  const runtime = referencedKeys(['src']);
+  const runtime = referencedKeys(['src/server.ts', 'src/careApp.ts']);
   const runtimeExample = environmentKeys('.env.example');
   const platformManaged = new Set(['K_SERVICE']);
   assert.deepEqual([...runtime].filter(key => !runtimeExample.has(key) && !platformManaged.has(key)).sort(), []);

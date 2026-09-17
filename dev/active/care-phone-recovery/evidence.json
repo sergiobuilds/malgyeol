@@ -1,0 +1,39 @@
+{
+  "capturedAt": "2026-09-17T12:10:00Z",
+  "projectMode": "observe-only",
+  "phone": {
+    "number": "07052767277",
+    "allocation": "GET empty -> POST 201 -> GET one number",
+    "allocationAt": "2026-09-17T11:50:19.978Z",
+    "controlConnection": "SDK control WebSocket connected; local SDK healthz HTTP 200. Does not verify PSTN or model audio.",
+    "controlObservedAt": "2026-09-17T12:10:00Z",
+    "allocationNumberMatch": "POST response and subsequent GET both returned 07052767277",
+    "actualInboundCall": "NOT_OBSERVED",
+    "actualAudioConversation": "NOT_VERIFIED"
+  },
+  "careProvider": {
+    "evidenceClass": "SANDBOX",
+    "actualApprovedInstitution": "NOT_CONNECTED",
+    "actualProvision": "NOT_OBSERVED"
+  },
+  "historicalSupplierReadback": {
+    "sourceEndpoint": "https://benefit-settlement-rail-164282963747.us-central1.run.app/api/demo/food-order-proof",
+    "source": "SPECIAL_OFFER_LIVE",
+    "sourceMeaning": "Classification returned by the existing deployment, not an independent delivery attestation",
+    "goodsName": "모듬잡곡 700g",
+    "quantity": 1,
+    "deliveryState": "PREPARING",
+    "hasTracking": false,
+    "claimBoundary": "Existing deployment readback only. Does not prove requested flat-barley order, public care provision, delivery or receipt. Order IDs and personal data omitted."
+  },
+  "localVerification": {
+    "class": "SYNTHETIC_TEST",
+    "tests": ["carePhone", "careApp", "careProvider", "carePersistence", "careAuthorization"],
+    "command": "npm run verify",
+    "executedAt": "2026-09-17T12:14:00Z",
+    "exitCode": 0,
+    "passedTests": 167,
+    "revision": "working tree based on f3f614f; final committed revision recorded in execution context",
+    "realWorldOutcome": false
+  }
+}

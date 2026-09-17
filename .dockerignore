@@ -1,5 +1,9 @@
 node_modules
 .git
+.private
+.secrets
+.ralph
+__pycache__
 .env*
 proof
 tests

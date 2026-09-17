@@ -26,12 +26,12 @@ test('HTTP app serves health, synthetic normal demo and privacy-safe public case
   }
   const landing = await fetch(`${base}/`).then(response => response.text());
   assert.match(landing, /말 한마디가/);
-  assert.match(landing, /AI가 아닌 사람이 최종 결정을/);
+  assert.match(landing, /AI가 신규 자격이나 급여를 결정하지 않습니다/);
   assert.equal((landing.match(/<section\b/g) ?? []).length, 4);
   const productApp = await fetch(`${base}/?v=home`).then(response => response.text());
-  assert.match(productApp, /id="app"/);
+  assert.match(productApp, /id="view"/);
   const technicalPage = await fetch(`${base}/tech`).then(response => response.text());
-  assert.match(technicalPage, /AI는 이해를 돕고,[\s\S]*규칙과 사람이 결정합니다\./);
+  assert.match(technicalPage, /AI는 말을 정리하고,[\s\S]*공공의 계획이 결정합니다\./);
   const storyPng = await fetch(`${base}/assets/story/elder-voice-hero.png`);
   assert.equal(storyPng.status, 200);
   assert.equal(storyPng.headers.get('content-type'), 'image/png');

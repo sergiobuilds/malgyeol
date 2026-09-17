@@ -62,6 +62,9 @@ import {
   PhoneEnrollmentService
 } from './food-support/phoneEnrollment.ts';
 import { createCanonicalCaseLedger } from './case-ledger/factory.ts';
+import { InMemoryCareRequestRepository } from './care-support/repository.ts';
+import { CareRequestService } from './care-support/service.ts';
+import { createCareRequestHandlers } from './http/careRequestRoutes.ts';
 
 class SyntheticInterpreter implements AudioPurchaseInterpreter {
   async analyzeAudio(bytes: Uint8Array): Promise<InterpretedPurchase> {
@@ -92,6 +95,9 @@ export function createApp() {
     production: canonicalProduction
   });
   const publicCostLimiter = new FixedWindowRateLimiter();
+  const careRequestHandlers = createCareRequestHandlers(
+    new CareRequestService(new InMemoryCareRequestRepository())
+  );
   const payment = new InMemoryPaymentExecutor();
   const interpreter = process.env.AI_INTERPRETER_ENDPOINT
     ? new HttpAudioInterpreter({
@@ -367,6 +373,14 @@ export function createApp() {
       }
       const publicCostLimit = checkPublicCostLimit(request, url, publicCostLimiter);
       if (publicCostLimit) return sendJson(response, 429, publicCostLimit);
+      if (url.pathname.startsWith('/api/demo/care/')) {
+        const result = await careRequestHandlers({
+          method: request.method ?? 'GET',
+          pathname: url.pathname,
+          ...(request.method === 'POST' ? { body: await readJson(request) } : {})
+        });
+        return sendJson(response, result.status, result.body);
+      }
       if (request.method === 'GET' && url.pathname === '/api/demo/food-order-proof') {
         if (!publicFoodOrderProof) return sendJson(response, 503, { error: 'SUPPLIER_READBACK_UNAVAILABLE' });
         const result = await publicFoodOrderProof();
@@ -665,7 +679,9 @@ function checkPublicCostLimit(
         ? { name: 'demo', maximum: 6 }
         : request.method === 'GET' && url.pathname === '/api/demo/food-order-proof'
           ? { name: 'supplier-proof', maximum: 30 }
-          : undefined;
+          : url.pathname.startsWith('/api/demo/care/')
+            ? { name: 'care-demo', maximum: request.method === 'GET' ? 60 : 20 }
+            : undefined;
   if (!route) return undefined;
   const forwarded = Array.isArray(request.headers['x-forwarded-for'])
     ? request.headers['x-forwarded-for'].at(-1)
