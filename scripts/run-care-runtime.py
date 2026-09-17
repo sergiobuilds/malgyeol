@@ -39,6 +39,9 @@ env['AGENT_API_BASE_URL'] = os.environ.get('CARE_API_BASE_URL', 'http://127.0.0.
 env['PORT'] = os.environ.get('CARE_PORT', '18081')
 env['HOST'] = '127.0.0.1'
 env['CARE_LEDGER_PATH'] = str(root / '.private/care-ledger.sqlite')
+env.setdefault('COORDINATION_ROUTING_PATH', str(root / '.private/coordination-routing.json'))
+env.setdefault('COORDINATION_VOICE_STATE_PATH', str(root / '.private/coordination-voice.sqlite'))
+env.setdefault('COORDINATION_HEALTH_PORT', '18083')
 env['CLAWOPS_READY_FILE'] = str(root / '.private/clawops-ready')
 (root / '.private').mkdir(mode=0o700, exist_ok=True)
 os.chdir(root)
@@ -46,6 +49,24 @@ if sys.argv[1:] == ['api']:
     command = ['node', '--import', 'tsx', 'src/server.ts']
 elif sys.argv[1:] == ['voice']:
     command = [str(Path.home() / '.local/bin/uv'), 'run', '--with', 'clawops[agent,gemini]==0.56.0', 'python', 'scripts/clawops-care-agent.py']
+elif sys.argv[1:] in (['coordination'], ['coordination-check']):
+    from coordination_config import load_routing, normalize_number
+    try:
+        routing = load_routing(env['COORDINATION_ROUTING_PATH'])
+        if not routing['citizenNumbers'] or not routing['institutionNumbers']:
+            raise ValueError('ROUTING_ROLES_REQUIRED')
+        citizens = set(routing['citizenNumbers'].values())
+        institutions = set(routing['institutionNumbers'].values())
+        if citizens & institutions:
+            raise ValueError('ROUTING_ROLES_MUST_BE_DISTINCT')
+        if normalize_number(env['CLAWOPS_PHONE_NUMBER']) in routing['allowedNumbers']:
+            raise ValueError('ROUTING_SELF_CALL_FORBIDDEN')
+    except ValueError as error:
+        raise SystemExit(str(error)) from None
+    if sys.argv[1:] == ['coordination-check']:
+        print('Coordination routing preflight PASS; roles=2; no network call performed')
+        raise SystemExit(0)
+    command = [str(Path.home() / '.local/bin/uv'), 'run', '--with', 'clawops[agent,gemini]==0.56.0', 'python', 'scripts/coordination_voice.py']
 else:
-    raise SystemExit('Usage: run-care-runtime.py api|voice|backup')
+    raise SystemExit('Usage: run-care-runtime.py api|voice|coordination|coordination-check|backup')
 os.execvpe(command[0], command, env)

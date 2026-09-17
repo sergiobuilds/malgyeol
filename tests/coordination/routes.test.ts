@@ -41,6 +41,19 @@ test('support network and protected multi-need requests share real HTTP storage'
   assert.equal(invalid.status,400);
   const invalidConsent=await fetch(base+`/api/coordination/requests/${request.id}/consent`,{method:'POST',headers,body:JSON.stringify({purpose:'문의',institutionIds:[],sharedFields:[],allowCoordination:'true'})});
   assert.equal(invalidConsent.status,400);
+  const network=await fetch(base+'/api/support/institutions?programId=foodbank-market').then(r=>r.json());
+  const institution=network.institutions[0];
+  const post=async (suffix:string,value:unknown)=>fetch(base+`/api/coordination/requests/${request.id}/${suffix}`,{method:'POST',headers,body:JSON.stringify(value)});
+  assert.equal((await post('consent',{purpose:'식사 지원 문의',institutionIds:[institution.id],sharedFields:['needs'],allowCoordination:false})).status,200);
+  const prepared=await post('inquiries',{needId:request.needs[0].id,institutionId:institution.id,programId:'foodbank-market',contactPurpose:institution.contacts[0].purpose,questions:['식사 지원 절차는 무엇인가요?']});
+  assert.equal(prepared.status,201);
+  const inquiry=(await prepared.json()).inquiry;
+  const started=await post(`inquiries/${inquiry.id}/attempts`,{idempotencyKey:'http-retry-first'});
+  const attempt=(await started.json()).attempt;
+  assert.equal((await post(`attempts/${attempt.id}/result`,{status:'no-answer'})).status,200);
+  const retry=await post(`inquiries/${inquiry.id}/retry`,{});
+  assert.equal(retry.status,200);
+  assert.equal((await retry.json()).request.inquiries[0].status,'prepared');
 });
 
 test('coordination reuses configured care ledger and survives HTTP server restart',async t=>{

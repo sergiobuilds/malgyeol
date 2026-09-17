@@ -50,3 +50,7 @@ GET `/:id/events`. 성공 응답 `{request}` / `{requests}` / `{inquiry}` / `{at
 문의별 `prepared | calling | answered | no-answer | failed | unknown | cancelled`.
 통화시도 `started | completed | no-answer | failed | unknown`.
 한 active attempt만, 동의 범위 확인, 요청 revision 바뀌면 prepared inquiry stale 실행 차단, 결과불명 attempt 자동 반복 차단. 기관 거절은 해당 need만 변경. 비용/일정/방식 중요변경 requiresChoice이면 시민 choice 전 connected 금지.
+
+## 명시 재시도
+
+POST `/:id/inquiries/:inquiryId/retry`는 확정 부재/실패만 prepared로 되돌림. worker는 prepared만 실행하며 failed/no-answer 자동재발신 금지. 결과불명/중단/오래된 revision은 재시도 금지. engine.retryInquiry(requestId,inquiryId):SupportRequest.

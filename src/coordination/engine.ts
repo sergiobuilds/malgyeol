@@ -232,6 +232,28 @@ export class CoordinationEngine {
       return a;
     });
   }
+  retryInquiry(id: string, inquiryId: string): SupportRequest {
+    return this.store.transaction((l) => {
+      const r = request(l, id);
+      const q = inquiry(r, inquiryId);
+      const n = liveNeed(r, q);
+      if (q.revision !== r.revision) fail("STALE_INQUIRY");
+      if (q.status === "unknown") fail("RESULT_UNKNOWN");
+      if (!["failed", "no-answer"].includes(q.status))
+        fail("RETRY_NOT_ALLOWED");
+      // A completed call can still be processing its answer. Do not race that work.
+      const busy = Object.values(l.requests).some(
+        (candidate) =>
+          candidate.attempts.some((attempt) => attempt.status === "started") ||
+          candidate.inquiries.some((item) => item.status === "calling"),
+      );
+      if (busy) fail("CALL_ACTIVE");
+      q.status = "prepared";
+      n.status = "open";
+      event(l, r, "retry-ready", q.id);
+      return r;
+    });
+  }
   finishAttempt(
     id: string,
     attemptId: string,

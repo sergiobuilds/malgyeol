@@ -11,11 +11,11 @@
   - [x] 복수 필요·동의·수정·중단·영속성 TDD
   - [x] 공통 조회/처리 API 및 실제 HTTP 검증
   - [x] executor 검증·self-check·CHRONICLE 확인
-- [ ] 섹션 3: 전화·회신
-  - [ ] 시민 접수·기관 발신·시민 회신 역할
-  - [ ] 조건 조율·부분 해결·재선택·재연락
-  - [ ] 허용 번호·한 통화·중복·결과 불명·수동 재시도
-  - [ ] executor 검증·self-check·CHRONICLE 확인
+- [x] 섹션 3: 전화·회신
+  - [x] 시민 접수·기관 발신·시민 회신 역할
+  - [x] 조건 조율·부분 해결·재선택·재연락
+  - [x] 허용 번호·한 통화·중복·결과 불명·수동 재시도
+  - [x] executor 검증·self-check·CHRONICLE 확인
 - [ ] 섹션 4: KRDS 프론트·제출물
   - [ ] Manyfast PRD 저장·재조회
   - [ ] Claude design-forge/KRDS MCP·화면/실제 API

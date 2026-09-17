@@ -74,6 +74,8 @@ export function createCoordinationRoutes(engine:CoordinationEngine, credentials:
       }
       const attempt=action.match(/^inquiries\/([^/]+)\/attempts$/);
       if(attempt) return reply(200,{attempt:engine.startAttempt(id,attempt[1]!,str(body.idempotencyKey,160))});
+      const retry=action.match(/^inquiries\/([^/]+)\/retry$/);
+      if(retry) return reply(200,{request:engine.retryInquiry(id,retry[1]!)});
       const result=action.match(/^attempts\/([^/]+)\/result$/);
       if(result) return reply(200,{request:engine.finishAttempt(id,result[1]!,{status:choice<AttemptResult['status']>(body.status,['completed','no-answer','failed','unknown']),...(body.providerCallId===undefined?{}:{providerCallId:str(body.providerCallId,160)})})});
       const answer=action.match(/^inquiries\/([^/]+)\/answer$/);

@@ -358,3 +358,99 @@ test("identical operational patch is a no-op while changed district reopens rout
     f.store.close();
   }
 });
+
+test("manual retry prepares definite failures and starts a fresh attempt", () => {
+  for (const status of ["failed", "no-answer"] as const) {
+    const f = fixture();
+    try {
+      consent(f);
+      const q = inquiry(f);
+      const a = f.engine.startAttempt(f.request.id, q.id, "first");
+      f.engine.finishAttempt(f.request.id, a.id, { status });
+      const r = f.engine.retryInquiry(f.request.id, q.id);
+      assert.equal(r.inquiries[0].status, "prepared");
+      assert.equal(r.needs[0].status, "open");
+      assert.equal(f.engine.events(r.id).at(-1)!.type, "retry-ready");
+      assert.notEqual(f.engine.startAttempt(r.id, q.id, "retry").id, a.id);
+    } finally {
+      f.store.close();
+    }
+  }
+});
+test("manual retry rejects all non-failure statuses and stale or stopped work", () => {
+  for (const status of [
+    "prepared",
+    "calling",
+    "answered",
+    "unknown",
+    "cancelled",
+    "stale",
+  ] as const) {
+    const f = fixture();
+    try {
+      consent(f);
+      const q = inquiry(f);
+      if (status !== "prepared") {
+        const a = f.engine.startAttempt(f.request.id, q.id, "first");
+        if (status === "unknown")
+          f.engine.finishAttempt(f.request.id, a.id, { status: "unknown" });
+        if (status === "answered") {
+          f.engine.finishAttempt(f.request.id, a.id, { status: "completed" });
+          f.engine.recordAnswer(f.request.id, q.id, {
+            outcome: "available",
+            summary: "가능",
+            conditions: [],
+            nextAction: "접수",
+            requiresChoice: false,
+          });
+        }
+        if (status === "cancelled" || status === "stale") {
+          f.engine.finishAttempt(f.request.id, a.id, { status: "failed" });
+          if (status === "cancelled") f.engine.stopNeed(f.request.id, q.needId);
+          else f.engine.reviseRequest(f.request.id, { district: "중구" });
+        }
+      }
+      const before = f.engine.getRequest(f.request.id);
+      assert.throws(
+        () => f.engine.retryInquiry(f.request.id, q.id),
+        /RETRY_NOT_ALLOWED|RESULT_UNKNOWN|NEED_STOPPED|STALE_INQUIRY|CALL_ACTIVE/,
+      );
+      assert.deepEqual(f.engine.getRequest(f.request.id), before);
+    } finally {
+      f.store.close();
+    }
+  }
+});
+test("manual retry waits for other active calls and completed calls pending answer", () => {
+  const f = fixture();
+  try {
+    consent(f);
+    const q = inquiry(f);
+    const a = f.engine.startAttempt(f.request.id, q.id, "first");
+    f.engine.finishAttempt(f.request.id, a.id, { status: "no-answer" });
+    const q2 = inquiry(f, 1);
+    const a2 = f.engine.startAttempt(f.request.id, q2.id, "other");
+    assert.throws(
+      () => f.engine.retryInquiry(f.request.id, q.id),
+      /CALL_ACTIVE/,
+    );
+    f.engine.finishAttempt(f.request.id, a2.id, { status: "completed" });
+    assert.throws(
+      () => f.engine.retryInquiry(f.request.id, q.id),
+      /CALL_ACTIVE/,
+    );
+    f.engine.recordAnswer(f.request.id, q2.id, {
+      outcome: "declined",
+      summary: "불가",
+      conditions: [],
+      nextAction: "다른 경로",
+      requiresChoice: false,
+    });
+    assert.equal(
+      f.engine.retryInquiry(f.request.id, q.id).inquiries[0].status,
+      "prepared",
+    );
+  } finally {
+    f.store.close();
+  }
+});
