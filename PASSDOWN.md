@@ -1,12 +1,15 @@
 ---
 handoff_schema: project-handoff/v1
 project_mode: observe-only
-verified_at: 2026-09-18T02:17:29.077052+09:00
+verified_at: 2026-09-17T17:43:01.661435+00:00
 canonical_ref: refs/heads/master
-verified_commit: 979c15c136017356725db45f63608b6e69889ed2
+verified_commit: 8d402eb13016103c517d06c875e1561a64f056fb
 ---
 
 ## Next
+
+- 최신 실행 입력은 [전체 goal 프롬프트](dev/active/care-coordination/full-product-goal-prompt.md)다. 사용자가 새 세션에 실행 지시로 전달하면 looprun --auto로 직렬 실행한다. 전화 원문은 [전화 goal 프롬프트](dev/active/care-coordination/phone-goal-prompt.md)에 보존했다. 이 세션은 프롬프트 작성만 완료했으며 실제 구현·Manyfast 복구·KRDS MCP 프론트·실통화는 실행하지 않았다.
+- 사용자 최신 합의: 전화 1~7번 확정, Manyfast PRD와 실제 KRDS MCP 기반 Claude 프론트 포함 전체 수행. 취침 중에는 정상 인증 복구와 통제된 실제 전화망 자동 역할극까지 수행하며, 실제 사람 검증과 구별한다. 전체 프롬프트가 아래 종전 인계의 계획 전용 범위와 전화 원문보다 최신 실행 계약이다.
 
 - Sergio가 MVP 계획을 거절해 삭제했다. 지원 경로/다음 행동 안내로 말결을 축소한 해석을 다시 사용하지 않는다.
 - 다음 작업자는 [계획 작성용 세션 인계](dev/active/care-coordination/planning-handoff.md)를 먼저 전체 읽는다. 사용자 인터뷰는 끝났다. Superpowers writing-plans로 기존 합의를 구체적인 계획에 옮기고 재인터뷰하지 않는다. 거절된 계획으로 구현하지 않는다.

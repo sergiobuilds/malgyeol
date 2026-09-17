@@ -1,7 +1,7 @@
 ---
 doc_kind: project-map
 status: working
-version: 2026-09-18_v4
+version: 2026-09-18_v5
 ---
 
 # 말결 — 지도 (MASTER-MAP)
@@ -22,6 +22,8 @@ version: 2026-09-18_v4
 - 비목표: 이번에 수요·구매의사·기관 협조 조사, 경제성·상용 운영, 실시간 재고 API 확보를 선행조건으로 요구하지 않는다. 결제·정산·배송 운영·새 공급자를 임의 추가하지 않는다.
 
 ## 2 Current Map
+
+최신 후속 세션 입력은 [전체 goal 프롬프트](../dev/active/care-coordination/full-product-goal-prompt.md)다. 전화 1~7번 합의, Manyfast PRD, 실제 KRDS MCP 기반 Claude 프론트, looprun --auto 직렬 실행, 취침 중 정상 인증 복구·실제 전화망 자동 역할극을 명시했다. [전화 전용 원문](../dev/active/care-coordination/phone-goal-prompt.md)은 별도 보존한다. 두 문서 작성만 완료했으며 제품 구현 완료 상태는 바꾸지 않는다. [D-20260918-07]
 
 다음 계획자의 첫 입력은 [계획 작성용 세션 인계](../dev/active/care-coordination/planning-handoff.md)다. 사용자가 재인터뷰 반복을 거절했으므로 승인·정정을 인계받아 writing-plans로 계획을 구체화한다.
 
@@ -94,6 +96,8 @@ version: 2026-09-18_v4
 - 다음은 사용자 의도를 기준으로 새 계획 수립이다. 거절된 계획으로 구현하지 않는다. 범위 확정 없이 코드 작성·운영 서비스 변경·발신으로 넘어가지 않는다.
 
 ## 8 이력
+
+- 2026-09-18 v5 — 전화 확정과 전체 직렬 실행 goal 프롬프트 등록. 실제 KRDS MCP·Manyfast PRD·취침 중 무인 검증 계약 반영. 구현 시작 없음.
 
 - 2026-09-18 v4 — 사용자 지시로 세션 합의와 정정을 단일 인계문에 정리. 반복 인터뷰 금지, 삭제된 계획과 에이전트 해석의 재사용 금지 명시.
 

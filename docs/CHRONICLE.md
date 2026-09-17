@@ -17,3 +17,5 @@
 - 2026-09-18T02:06:20.458540+09:00 | [direction] | D-20260918-05 | affects: charter,leaf:L1,leaf:L2,leaf:L3,leaf:L5 | Sergio가 작성된 MVP 계획의 제품 정의·범위 해석을 거절하고 즉시 삭제 및 obra/superpowers 설치를 지시. 해당 계획은 실행 기준에서 철회. Future는 보존 자료이며 기존 MVP 축소 해석을 승인 근거로 사용하지 않는다. 새 구현은 시작하지 않는다.
 
 - 2026-09-18T02:17:29.077052+09:00 | [direction] | D-20260918-06 | affects: leaf:L1 | Sergio가 이미 합의한 인터뷰를 반복하지 말고 이 세션 내용을 .md로 정리하라고 지시. planning-handoff.md에 승인·정정·권고·Future를 구분해 다음 writing-plans 입력으로 저장. 새 제품 정의나 구현 승인은 만들지 않는다.
+
+- 2026-09-18 | [direction] | D-20260918-07 | affects: leaf:L1,leaf:L2,leaf:L3,leaf:L4,leaf:L5 | Sergio가 전화 1~7번 동작을 확정하고 전화 원문 별도 저장 및 전체 상세 goal 프롬프트 작성을 지시. 후속 구현은 looprun --auto 직렬, Manyfast PRD·실제 KRDS MCP 기반 Claude 프론트 포함. 취침 중 인증·수신자 부재를 기본 보류 사유로 삼지 말고 의도에 따라 완수하도록 정정. 전체 프롬프트는 정상 OAuth 복구와 기존 승인 자원 안의 실제 전화망 자동 역할극을 실행 선택으로 명시하며 사람 검증과 구별한다. 이번 세션은 프롬프트 저장이며 실제 제품 구현·발신·배포는 수행하지 않음.
