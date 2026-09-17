@@ -67,3 +67,7 @@ project-doctor observe-only PASS. 저장 전 staged 실제 credential 값 및 pr
 SQLite backup API로 private snapshot을 만들고 integrity_check PASS를 두 차례 확인했다. 자동 스케줄·외부 기기 재해 복구는 아직 미완료다. 운영 원장의 실측은 calls=0, requests=0이며 합성 테스트와 브라우저 데모가 운영 원장을 채우지 않았다.
 
 저장·배포: 5fd3472 commit 직후 origin/feat/ai-for-good-product push 완료. Cloud Run 00062-rvt 배포 후 health 200 care-plan-execution/payment disabled/voice demo-only, catalog 200, 이전 주문 증거 endpoint 404, 영속 원장 없는 internal API 503, 이미지 asset 200 확인. production 브라우저 발표 화면 확인. 기존 승인 Vertex/Gemini realtime handshake 별도 PASS. 이 결과는 PSTN 수신이나 실제 음성 대화 증거가 아니다.
+
+최종 저장 실측 (12:30 UTC): 구현·회귀·백업 코드는 d994650으로 commit 직후 push했고 원격 HEAD와 일치했다. 최종 Cloud Run 리비전은 00063-x6z, 이미지 digest sha256:2efaa7ced78cd8eabd115ae0e337da2c5f22a1cf8e137d9e4f0b5d417b31db19, 최신 리비전 트래픽 100%, 배포 후 health 200이다. 최종 변경 42개 파일의 실제 보유 secret 값·private key 패턴 검사 PASS, project-doctor observe-only PASS, Git working tree clean을 확인했다. 이 문단 등 최종 증거 기록만 후속 commit한다. 최종 배포는 검증된 소스의 두 번째이자 마지막 배포다.
+
+운영 API와 voice unit은 active, NRestarts=0, SDK health ready로 남겼다. 이 세션의 preview 컨테이너와 QA 브라우저만 종료했다. 기존 18080 컨테이너 및 다른 세션 실행은 종료하지 않았다. 실제 수신 Call ID·승인 기관 제공·수령은 미확보이며 P0/P1 및 전체 완료를 선언하지 않는다.

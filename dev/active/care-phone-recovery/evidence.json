@@ -1,6 +1,15 @@
 {
   "capturedAt": "2026-09-17T12:10:00Z",
   "projectMode": "observe-only",
+  "verifiedSourceCommit": "d9946509a874a0e4eddbee95ce3cf5cd34c079b8",
+  "deployment": {
+    "revision": "benefit-settlement-rail-00063-x6z",
+    "imageDigest": "sha256:2efaa7ced78cd8eabd115ae0e337da2c5f22a1cf8e137d9e4f0b5d417b31db19",
+    "observedAt": "2026-09-17T12:29:57Z",
+    "healthStatus": 200,
+    "latestTrafficPercent": 100,
+    "mode": "PUBLIC_SYNTHETIC_DEMO; durable phone ledger remains on Campbell"
+  },
   "phone": {
     "number": "07052767277",
     "allocation": "GET empty -> POST 201 -> GET one number",
@@ -33,7 +42,7 @@
     "executedAt": "2026-09-17T12:26:00Z",
     "exitCode": 0,
     "passedTests": 170,
-    "revision": "5fd3472 plus final backup/cancellation regressions; final committed revision recorded in execution context",
+    "revision": "d9946509a874a0e4eddbee95ce3cf5cd34c079b8",
     "realWorldOutcome": false
   }
 }

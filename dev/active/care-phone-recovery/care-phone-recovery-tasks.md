@@ -12,4 +12,5 @@ TODO.md 전체를 아래 섹션에 대응시킨다. 실제 증거를 확보한 �
   - 문서·환경 계약·비식별 증거·전체 TODO 반영 완료. 실제 전화/제공과 자동 백업 운영은 미완료.
 - [ ] Section 5: 후순위 화면·데모·접근성·실증 제안 및 발표 자료
   - 기존 화면 요청→수락→제공→수령 브라우저 QA, 1440/768/390 overflow=false. 신규 디자인·최종 리허설은 후순위.
-- [ ] Section 6: 종합 리뷰·verify·doctor·secret/PII 검토·commit·push·최종 실측
+- [x] Section 6: 종합 리뷰·verify·doctor·secret/PII 검토·commit·push·최종 실측
+  - 170 tests PASS, doctor observe-only PASS, d994650 push, Cloud Run 00063-x6z 확인. 외부 blocked가 남아 전체 state=executing 유지.
