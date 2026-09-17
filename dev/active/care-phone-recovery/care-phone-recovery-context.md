@@ -2,6 +2,8 @@
 
 ## Host review follow-up (2026-09-17 12:15 UTC)
 
+Resolved after the single implementation worker exited: exact harmless greetings preserve OPEN; exact acknowledgments preserve PENDING and its token without creating a request. Mixed safety content still fails closed. Self-check at 12:32 UTC: npm run verify 171/171 PASS, audit zero known vulnerabilities. Focused independent Codex review found no new defect and independently ran all six phone tests successfully. Source/test SHA256 are recorded in evidence.json. This phone-only follow-up runs on Campbell; public synthetic demo remains 00063-x6z.
+
 Before final completion, reproduce ordinary conversational turns: begin → select('안녕하세요') → select('쌀이 필요해요'); and pending selection → select('네') → DTMF 1. Current classifyCareSpeech returns undefined for harmless greetings/acknowledgments and select turns them into terminal EXCEPTION, preventing subsequent valid requests. Separate clarification from actual risk/out-of-plan, never treat spoken '네' as approval, retain a valid pending confirmation for harmless acknowledgment. Add regression tests. Also ensure SDK ready is not claimed as a completed actual call. This is a read-only host review finding; implementation ownership remains the single looprun worker.
 
 ## 시작 상태

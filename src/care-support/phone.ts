@@ -51,6 +51,11 @@ export class CarePhoneCoordinator {
         return this.result(call);
       }
       if (!call || ['CONFIRMED', 'CANCELLED', 'EXCEPTION'].includes(call.state)) return this.result(call);
+      // Small talk is not a request, rejection, or approval. Only exact harmless
+      // turns preserve state; mixed risk/out-of-plan content still fails closed.
+      if (!digit && text.length <= 512 && /^(안녕하세요|안녕하십니까|여보세요|네|예|응|알겠습니다|고맙습니다|감사합니다)[.!?。！？]*$/.test(text.replaceAll(/\s/g, ''))) {
+        return this.result(call);
+      }
       const selection = classifyCareSpeech(text, digit);
       if (!selection) {
         call.state = 'EXCEPTION'; call.reason = 'RISK_OR_OUTSIDE_PLAN'; delete call.selection;
@@ -104,6 +109,7 @@ export class CarePhoneCoordinator {
 
   private result(call: CareCall | undefined): Partial<CareCall> & { state: CareCall['state']; message: string; synthetic: boolean } {
     const message = call?.state === 'CONFIRMED' ? '연습용 요청이 한 번 접수되었습니다. 실제 수행기관 전달이나 배송은 아직 이루어지지 않았습니다.'
+      : call?.state === 'OPEN' ? '말결 연습 전화입니다. 필요한 식품이나 생필품, 식사 지원을 말씀해 주세요. 말로 답하셔도 접수되지 않으며 내용을 확인한 뒤 숫자키로 승인합니다.'
       : call?.state === 'PENDING' ? `연습용 요청입니다. ${call.preferredDate}에 ${call.selection!.readback} 지원을 요청할까요? 맞으면 1번, 취소는 2번을 눌러 주세요.`
       : call?.state === 'CANCELLED' ? '요청을 취소했습니다.'
       : call?.reason?.startsWith('POST_CONFIRMATION_') ? '이미 접수된 요청을 담당자 확인 대상으로 보류했습니다. 실제 취소나 제공 중단 여부는 아직 확인되지 않았습니다.'

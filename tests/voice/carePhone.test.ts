@@ -45,6 +45,22 @@ test('cancellation digit after confirmation holds the case without creating anot
   assert.equal((await service.list()).length, 1);
 });
 
+test('greetings and acknowledgments preserve conversation without approving a request', async () => {
+  const service = new CareRequestService(new InMemoryCareRequestRepository());
+  const phone = new CarePhoneCoordinator(service);
+  phone.begin('ordinary-conversation');
+  assert.equal(phone.select('ordinary-conversation', '안녕하세요.').state, 'OPEN');
+  const selection = phone.select('ordinary-conversation', '쌀이 필요해요');
+  assert.equal(selection.state, 'PENDING');
+  const acknowledged = phone.select('ordinary-conversation', '네');
+  assert.equal(acknowledged.state, 'PENDING');
+  assert.equal(acknowledged.token, selection.token);
+  assert.equal((await service.list()).length, 0);
+  assert.equal((await phone.confirm('ordinary-conversation', selection.token!, '1')).state, 'CONFIRMED');
+  phone.begin('mixed-risk');
+  assert.equal(phone.select('mixed-risk', '네 숨이 안 쉬어져요').state, 'EXCEPTION');
+});
+
 test('spoken cancellation after confirmation normalizes spaces and holds the case', async () => {
   const service = new CareRequestService(new InMemoryCareRequestRepository());
   const phone = new CarePhoneCoordinator(service);
