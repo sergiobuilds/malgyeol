@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>말결 · 보조금 정산 운영 시연</title>
+  <meta name="description" content="말결 보조금 정산 운영 대시보드 (읽기 전용)" />
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
+  <link rel="stylesheet"
+        href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" />
+  <link rel="stylesheet" href="/dashboard.css" />
+</head>
+<body>
+  <a class="skip-link" href="#main">본문 바로가기</a>
+
+  <div class="app">
+    <!-- ============================================================
+         좌측 : 업무 네비게이션 (KRDS 스타일 · 절제된 남색 톤)
+         ============================================================ -->
+    <nav class="side" role="navigation" aria-label="보조금 정산 운영 메뉴">
+      <a href="/" class="brand" aria-label="말결 홈으로">
+        <svg class="brand-mark" viewBox="0 0 40 40" aria-hidden="true">
+          <path d="M4 22 Q12 8 20 22 T36 22" stroke="currentColor" stroke-width="2.4" fill="none" stroke-linecap="round"/>
+          <path d="M4 28 Q12 18 20 28 T36 28" stroke="currentColor" stroke-width="2.4" fill="none" stroke-linecap="round" opacity=".55"/>
+          <path d="M4 34 Q12 27 20 34 T36 34" stroke="currentColor" stroke-width="2.4" fill="none" stroke-linecap="round" opacity=".28"/>
+        </svg>
+        <span class="brand-word">말결<em>보조금 정산 운영</em></span>
+      </a>
+
+      <p class="side-label">업무</p>
+      <ul class="nav" role="tablist">
+        <li>
+          <button class="nav-btn active" data-view="overview" role="tab"
+                  aria-selected="true" aria-controls="view-overview" id="tab-overview">
+            <span class="nav-ico" aria-hidden="true">■</span>
+            <span>프로그램 현황</span>
+          </button>
+        </li>
+        <li>
+          <button class="nav-btn" data-view="cases" role="tab"
+                  aria-selected="false" aria-controls="view-cases" id="tab-cases">
+            <span class="nav-ico" aria-hidden="true">☎</span>
+            <span>전화 요청 사건</span>
+          </button>
+        </li>
+        <li>
+          <button class="nav-btn" data-view="suppliers" role="tab"
+                  aria-selected="false" aria-controls="view-suppliers" id="tab-suppliers">
+            <span class="nav-ico" aria-hidden="true">▤</span>
+            <span>지정 공급자</span>
+          </button>
+        </li>
+        <li>
+          <button class="nav-btn" data-view="settlement" role="tab"
+                  aria-selected="false" aria-controls="view-settlement" id="tab-settlement">
+            <span class="nav-ico" aria-hidden="true">✓</span>
+            <span>정산 증거</span>
+          </button>
+        </li>
+      </ul>
+
+      <div class="side-sep" aria-hidden="true"></div>
+
+      <div class="side-legend" aria-label="데이터 출처 범례">
+        <p class="side-label">데이터 출처</p>
+        <ul>
+          <li><span class="src-tag src--live"></span>실측 데이터 (API 응답)</li>
+          <li><span class="src-tag src--syn"></span>합성 시나리오 (시연용)</li>
+          <li><span class="src-tag src--proof"></span>고정 증거 (과거 1건)</li>
+          <li><span class="src-tag src--devnet"></span>Solana Devnet · 실 자금 아님</li>
+        </ul>
+      </div>
+
+      <div class="side-foot">
+        <button type="button" id="btn-refresh" class="btn-outline" aria-label="데이터 새로고침">
+          새로고침
+        </button>
+        <p class="side-note">최근 조회 <span id="last-updated">—</span></p>
+      </div>
+    </nav>
+
+    <!-- ============================================================
+         본문
+         ============================================================ -->
+    <main class="main" role="main" id="main">
+      <!-- 컨텍스트 바 (프로그램 · 기간 · 범례) -->
+      <header class="ctxbar" aria-label="업무 컨텍스트">
+        <nav class="crumb" aria-label="현재 위치">
+          <ol>
+            <li>말결</li>
+            <li aria-current="page">보조금 정산 운영</li>
+          </ol>
+        </nav>
+        <div class="ctxbar-row">
+          <div class="ctx-prog">
+            <p class="ctx-eyebrow">대상 프로그램</p>
+            <h1 id="ctx-program">확인 중…</h1>
+            <p class="ctx-sub">
+              <span id="ctx-status" class="badge b-neutral">integrationStatus 확인 중</span>
+              <span class="ctx-dot" aria-hidden="true">·</span>
+              <span>시연 기준일 <b id="ctx-asof">—</b></span>
+            </p>
+          </div>
+
+          <div class="ctx-legend" role="group" aria-label="화면 범례">
+            <span class="badge b-neutral">읽기 전용 시연</span>
+            <span class="badge b-live" id="program-badge">
+              <span class="badge-dot"></span>정책 API 확인 중
+            </span>
+            <span class="badge b-warn" title="시연용 합성 데이터가 포함되어 있음">
+              <span class="badge-dot"></span>예산·사건·공급자: 예시
+            </span>
+            <span class="badge b-devnet" title="Devnet 기술증명 · 실 자금 이동 아님">
+              <span class="badge-dot"></span>Solana Devnet
+            </span>
+          </div>
+        </div>
+      </header>
+
+      <!-- ============================================================
+           VIEW 1 · 프로그램 현황
+           ============================================================ -->
+      <section id="view-overview" class="view" role="tabpanel"
+               aria-labelledby="tab-overview" aria-hidden="false">
+
+        <!-- Row 1 · 예산 상태 (좌) + 지금 확인할 일 (우) -->
+        <div class="row row--budget">
+          <article class="panel panel--budget" aria-labelledby="p-budget">
+            <header class="panel-head">
+              <div>
+                <p class="panel-eyebrow">보조금 프로그램</p>
+                <h2 id="p-budget">예산 집행 현황</h2>
+              </div>
+              <span class="badge b-warn" title="시연을 위한 합성 예산 수치입니다.">
+                <span class="badge-dot"></span>합성 시나리오
+              </span>
+            </header>
+
+            <div class="budget-figures">
+              <div class="fig fig--primary">
+                <p class="fig-label">총 배정</p>
+                <p class="fig-value" id="fig-allocated">—</p>
+              </div>
+              <div class="fig">
+                <p class="fig-label">사용 가능</p>
+                <p class="fig-value" id="fig-available">—</p>
+                <p class="fig-sub"><span id="pct-available">—</span></p>
+              </div>
+              <div class="fig">
+                <p class="fig-label">예약</p>
+                <p class="fig-value" id="fig-reserved">—</p>
+                <p class="fig-sub"><span id="pct-reserved">—</span></p>
+              </div>
+              <div class="fig">
+                <p class="fig-label">집행</p>
+                <p class="fig-value" id="fig-committed">—</p>
+                <p class="fig-sub"><span id="pct-committed">—</span></p>
+              </div>
+            </div>
+
+            <div class="stackbar-wrap" role="img" aria-label="배정 대비 사용가능·예약·집행 비율">
+              <div class="stackbar">
+                <span class="seg seg--ok"   id="seg-avail"></span>
+                <span class="seg seg--warn" id="seg-resv"></span>
+                <span class="seg seg--info" id="seg-comm"></span>
+              </div>
+              <p class="axis-eq" id="budget-eq">
+                배정 = 사용 가능 + 예약 + 집행
+              </p>
+            </div>
+
+            <!-- 추이 -->
+            <div class="trend">
+              <div class="trend-head">
+                <h3>최근 7일 집행 추이</h3>
+                <div class="trend-legend" aria-hidden="true">
+                  <span><i class="sw sw--info"></i>일별 집행</span>
+                  <span><i class="sw sw--ok"></i>일평균 목표</span>
+                </div>
+              </div>
+              <div class="chart-holder">
+                <svg id="chart-trend" class="chart" viewBox="0 0 720 200"
+                     role="img" aria-labelledby="trend-title trend-desc"></svg>
+                <div id="trend-tooltip" class="tooltip" hidden></div>
+              </div>
+              <!-- 접근성 텍스트 표 -->
+              <details class="chart-table">
+                <summary>추이 데이터 표로 보기</summary>
+                <table class="tbl tbl--compact">
+                  <caption class="sr-only">일별 집행 데이터</caption>
+                  <thead><tr><th>일자</th><th class="num">집행액</th></tr></thead>
+                  <tbody id="trend-tbody"></tbody>
+                </table>
+              </details>
+            </div>
+          </article>
+
+          <aside class="stack" aria-label="지금 확인할 일">
+            <header class="stack-head">
+              <h2>지금 확인할 일</h2>
+              <p class="stack-sub">보류·배송 지연은 시연용 예시입니다.</p>
+            </header>
+
+            <article class="alert alert--danger" data-jump="cases" tabindex="0" role="button">
+              <div class="alert-top">
+                <span class="alert-tag">위험</span>
+                <span class="alert-count" id="alert-hold">—</span>
+              </div>
+              <p class="alert-title">정책 보류 요청</p>
+              <p class="alert-desc">품목·예산·동의 확인이 필요한 사건</p>
+              <p class="alert-oldest">가장 오래된 대기 <b id="alert-hold-oldest">—</b></p>
+            </article>
+
+            <article class="alert alert--warn" data-jump="suppliers" tabindex="0" role="button">
+              <div class="alert-top">
+                <span class="alert-tag">주의</span>
+                <span class="alert-count" id="alert-delay">—</span>
+              </div>
+              <p class="alert-title">공급자 배송 지연</p>
+              <p class="alert-desc">배송 24시간 초과 주문</p>
+              <p class="alert-oldest">가장 오래된 지연 <b id="alert-delay-oldest">—</b></p>
+            </article>
+
+            <article class="alert alert--info" data-jump="settlement" tabindex="0" role="button">
+              <div class="alert-top">
+                <span class="alert-tag">증거</span>
+                <span class="alert-count" id="alert-proof">—</span>
+              </div>
+              <p class="alert-title">정산 증거 상태</p>
+              <p class="alert-desc">과거 주문 증거 조회 · 현재 진행 사건 아님</p>
+              <p class="alert-oldest">조회 출처 <b id="alert-net">확인 중</b></p>
+            </article>
+          </aside>
+        </div>
+
+        <!-- Row 2 · 정책 요약 + 집행 병목 -->
+        <div class="row row--policy">
+          <article class="panel" aria-labelledby="p-policy">
+            <header class="panel-head">
+              <div>
+                <p class="panel-eyebrow">정책</p>
+                <h2 id="p-policy">허용/금지 품목 요약</h2>
+              </div>
+              <span class="badge b-live" id="policy-source-badge">
+                <span class="badge-dot"></span>실측 · /api/food-support/program
+              </span>
+            </header>
+
+            <div class="policy-grid">
+              <section aria-labelledby="pol-allow-h">
+                <h3 id="pol-allow-h" class="policy-title policy-title--ok">
+                  허용 품목 <span class="cnt" id="allow-count">0</span>
+                </h3>
+                <ul class="chiplist" id="allow-list"></ul>
+              </section>
+              <section aria-labelledby="pol-deny-h">
+                <h3 id="pol-deny-h" class="policy-title policy-title--danger">
+                  금지 품목 <span class="cnt" id="deny-count">0</span>
+                </h3>
+                <ul class="chiplist chiplist--deny" id="deny-list"></ul>
+              </section>
+            </div>
+            <p class="fallback-note" id="policy-fallback" hidden>
+              정책 API를 불러오지 못했습니다. 아래는 시연용 예시입니다.
+            </p>
+          </article>
+
+          <article class="panel" aria-labelledby="p-bottleneck">
+            <header class="panel-head">
+              <div>
+                <p class="panel-eyebrow">병목</p>
+                <h2 id="p-bottleneck">전화 → 정산 단계별 처리</h2>
+              </div>
+              <span class="badge b-warn"><span class="badge-dot"></span>합성 시나리오</span>
+            </header>
+            <div class="chart-holder">
+              <svg id="chart-funnel" class="chart" viewBox="0 0 720 200"
+                   role="img" aria-label="단계별 처리 건수 및 이탈률"></svg>
+              <div id="funnel-tooltip" class="tooltip" hidden></div>
+            </div>
+            <details class="chart-table">
+              <summary>퍼널 데이터 표로 보기</summary>
+              <table class="tbl tbl--compact">
+                <caption class="sr-only">단계별 건수</caption>
+                <thead><tr><th>단계</th><th class="num">건수</th><th class="num">이탈률</th></tr></thead>
+                <tbody id="funnel-tbody"></tbody>
+              </table>
+            </details>
+          </article>
+        </div>
+      </section>
+
+      <!-- ============================================================
+           VIEW 2 · 전화 요청 사건
+           ============================================================ -->
+      <section id="view-cases" class="view" role="tabpanel"
+               aria-labelledby="tab-cases" aria-hidden="true" hidden>
+
+        <div class="panel">
+          <header class="panel-head">
+            <div>
+              <p class="panel-eyebrow">사건 큐</p>
+              <h2>전화 요청 업무 목록</h2>
+            </div>
+            <span class="badge b-warn"><span class="badge-dot"></span>합성 시나리오</span>
+          </header>
+
+          <div class="filterbar" role="search">
+            <label class="sr-only" for="case-status">상태 필터</label>
+            <select id="case-status" aria-label="상태 필터">
+              <option value="all">전체 상태</option>
+              <option value="hold">정책 보류</option>
+              <option value="processing">진행 중</option>
+              <option value="delivering">배송 중</option>
+              <option value="done">완료</option>
+            </select>
+
+            <label class="sr-only" for="case-prio">우선도</label>
+            <select id="case-prio" aria-label="우선도">
+              <option value="all">전체 우선도</option>
+              <option value="high">높음</option>
+              <option value="mid">중간</option>
+              <option value="low">낮음</option>
+            </select>
+
+            <label class="sr-only" for="case-search">사건 검색</label>
+            <input class="search" type="search" id="case-search"
+                   placeholder="사건 ID · 품목 · 공급자 검색"
+                   aria-label="사건 검색" />
+
+            <span class="filter-result" id="case-result" aria-live="polite"></span>
+          </div>
+
+          <div class="cases-layout">
+            <div class="table-wrap">
+              <table class="tbl tbl--interactive">
+                <caption class="sr-only">전화 요청 사건 목록</caption>
+                <thead>
+                  <tr>
+                    <th scope="col">접수</th>
+                    <th scope="col">사건 ID</th>
+                    <th scope="col">요청 품목</th>
+                    <th scope="col">정책 판정</th>
+                    <th scope="col">지정 공급자</th>
+                    <th scope="col">주문 상태</th>
+                    <th scope="col">우선도</th>
+                  </tr>
+                </thead>
+                <tbody id="cases-tbody">
+                  <tr><td colspan="7" class="tbl-empty">로딩 중…</td></tr>
+                </tbody>
+              </table>
+            </div>
+
+            <aside class="detail" id="case-detail" aria-live="polite" aria-label="사건 상세">
+              <h3>사건 상세</h3>
+              <p class="muted">좌측 표에서 사건을 선택하세요.</p>
+            </aside>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============================================================
+           VIEW 3 · 지정 공급자
+           ============================================================ -->
+      <section id="view-suppliers" class="view" role="tabpanel"
+               aria-labelledby="tab-suppliers" aria-hidden="true" hidden>
+
+        <div class="panel">
+          <header class="panel-head">
+            <div>
+              <p class="panel-eyebrow">지정 공급자</p>
+              <h2>공급자 운영 현황</h2>
+            </div>
+            <span class="badge b-warn"><span class="badge-dot"></span>합성 시나리오</span>
+          </header>
+
+          <div class="table-wrap">
+            <table class="tbl">
+              <caption class="sr-only">공급자 운영 지표</caption>
+              <thead>
+                <tr>
+                  <th scope="col">공급자</th>
+                  <th scope="col">권역</th>
+                  <th scope="col">정책 적합</th>
+                  <th scope="col" class="num">활성 주문</th>
+                  <th scope="col" class="num">처리 금액</th>
+                  <th scope="col" class="num">평균 처리</th>
+                  <th scope="col" class="num">지연</th>
+                  <th scope="col" class="num">증거 누락</th>
+                  <th scope="col">상태</th>
+                </tr>
+              </thead>
+              <tbody id="supp-tbody"></tbody>
+            </table>
+          </div>
+
+          <p class="table-note">
+            평균 처리 시간은 접수 → 주문 확정까지의 시간을 의미합니다.
+            증거 누락은 완료 주문 중 정산 증거가 아직 연결되지 않은 건수입니다.
+          </p>
+        </div>
+      </section>
+
+      <!-- ============================================================
+           VIEW 4 · 정산 증거
+           ============================================================ -->
+      <section id="view-settlement" class="view" role="tabpanel"
+               aria-labelledby="tab-settlement" aria-hidden="true" hidden>
+
+        <article class="notice" role="note" aria-label="기술증명 고지">
+          <div class="notice-ico" aria-hidden="true">!</div>
+          <div>
+            <p class="notice-title">기술증명 고지 · Sandbox · Solana Devnet</p>
+            <p class="notice-body">
+              아래 정보는 <b>외부 공급자의 과거 주문 조회</b>입니다.
+              이 화면은 Devnet 거래 증거를 조회하지 않으며 실제 정부 자금의 정산을 증명하지 않습니다.
+              공급자 주문과 Devnet 기술증명의 연결 관계는 이 응답만으로 확인할 수 없습니다.
+            </p>
+          </div>
+        </article>
+
+        <div class="row row--stl">
+          <article class="panel panel--stl">
+            <header class="panel-head">
+              <div>
+                <p class="panel-eyebrow">고정 증거 · Provenance</p>
+                <h2>실제 공급자 주문 증거</h2>
+              </div>
+              <span class="badge b-live" id="proof-badge">
+                <span class="badge-dot"></span>주문 증거 확인 중
+              </span>
+            </header>
+            <p class="muted mp">
+              공개 API가 제공하는 <b>과거의 고정 1건</b>입니다. 현재 진행 중인 통화·주문을 대표하지 않습니다.
+            </p>
+            <dl class="proof-grid" id="proof-grid">
+              <dt>상태</dt><dd>로딩 중…</dd>
+            </dl>
+            <details class="proof-raw">
+              <summary>원본 JSON 보기</summary>
+              <pre id="proof-raw">—</pre>
+            </details>
+          </article>
+
+          <aside class="panel panel--stl-side">
+            <header class="panel-head">
+              <div>
+                <p class="panel-eyebrow">데이터 경계</p>
+                <h2>레일 구분</h2>
+              </div>
+            </header>
+            <ul class="rail-list">
+              <li>
+                <span class="src-tag src--live"></span>
+                <div>
+                  <p class="rail-title">실제 공급자 주문</p>
+                  <p class="rail-desc">외부 식품 공급자에 접수된 실주문. 공개 데모는 과거 1건만 제공.</p>
+                </div>
+              </li>
+              <li>
+                <span class="src-tag src--syn"></span>
+                <div>
+                  <p class="rail-title">합성 시나리오</p>
+                  <p class="rail-desc">화면 시연용 예시. 실제 배정액·사건이 아님.</p>
+                </div>
+              </li>
+              <li>
+                <span class="src-tag src--devnet"></span>
+                <div>
+                  <p class="rail-title">Solana Devnet 기술증명</p>
+                  <p class="rail-desc">실 자금이 아닌 별도 기술증명. 이 화면에서는 조회하지 않습니다.</p>
+                </div>
+              </li>
+              <li>
+                <span class="src-tag src--none"></span>
+                <div>
+                  <p class="rail-title">사건 연결 확인 범위</p>
+                  <p class="rail-desc">공개 주문 응답만으로 전화·주문·Devnet의 동일 사건 여부는 확인할 수 없습니다.</p>
+                </div>
+              </li>
+            </ul>
+          </aside>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
+  <div id="loading" class="loading" role="status" aria-live="polite" hidden>
+    <span class="spinner" aria-hidden="true"></span>불러오는 중…
+  </div>
+
+  <!-- SVG chart title/desc for a11y -->
+  <span id="trend-title" hidden>최근 7일 집행 추이</span>
+  <span id="trend-desc" hidden>일별 집행 금액과 일평균 목표선을 함께 표시합니다.</span>
+
+  <script src="/dashboard.js" defer></script>
+</body>
+</html>
