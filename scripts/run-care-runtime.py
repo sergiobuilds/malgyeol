@@ -2,8 +2,25 @@
 import os
 from pathlib import Path
 import sys
+import sqlite3
+from datetime import datetime, timezone
 
 root = Path(__file__).resolve().parent.parent
+if sys.argv[1:] == ['backup']:
+    source = root / '.private/care-ledger.sqlite'
+    if not source.is_file():
+        raise SystemExit('Care ledger does not exist; no empty backup created')
+    directory = root / '.private/backups'
+    directory.mkdir(mode=0o700, parents=True, exist_ok=True)
+    destination = directory / ('care-' + datetime.now(timezone.utc).strftime('%Y%m%dT%H%M%S%fZ') + '.sqlite')
+    with destination.open('xb'):
+        os.chmod(destination, 0o600)
+    with sqlite3.connect(source.as_uri() + '?mode=ro', uri=True) as src, sqlite3.connect(destination) as dst:
+        src.backup(dst)
+        if dst.execute('PRAGMA integrity_check').fetchone()[0] != 'ok':
+            raise SystemExit('Backup integrity failed')
+    print('Care ledger backup integrity PASS; private local snapshot created')
+    raise SystemExit(0)
 secrets = Path(os.environ.get('CARE_SECRET_DIR', str(root.parent / 'benefit-settlement-rail/.secrets')))
 env = dict(os.environ)
 for name in ('clawops', 'bridge'):
@@ -30,5 +47,5 @@ if sys.argv[1:] == ['api']:
 elif sys.argv[1:] == ['voice']:
     command = [str(Path.home() / '.local/bin/uv'), 'run', '--with', 'clawops[agent,gemini]==0.56.0', 'python', 'scripts/clawops-care-agent.py']
 else:
-    raise SystemExit('Usage: run-care-runtime.py api|voice')
+    raise SystemExit('Usage: run-care-runtime.py api|voice|backup')
 os.execvpe(command[0], command, env)

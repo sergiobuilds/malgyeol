@@ -106,6 +106,7 @@ export class CarePhoneCoordinator {
     const message = call?.state === 'CONFIRMED' ? '연습용 요청이 한 번 접수되었습니다. 실제 수행기관 전달이나 배송은 아직 이루어지지 않았습니다.'
       : call?.state === 'PENDING' ? `연습용 요청입니다. ${call.preferredDate}에 ${call.selection!.readback} 지원을 요청할까요? 맞으면 1번, 취소는 2번을 눌러 주세요.`
       : call?.state === 'CANCELLED' ? '요청을 취소했습니다.'
+      : call?.reason?.startsWith('POST_CONFIRMATION_') ? '이미 접수된 요청을 담당자 확인 대상으로 보류했습니다. 실제 취소나 제공 중단 여부는 아직 확인되지 않았습니다.'
       : '자동 접수하지 않았습니다. 담당자 확인이 필요합니다. 긴급한 건강 위험은 119에 연락해 주세요.';
     return { ...(call ? structuredClone(call) : { state: 'EXCEPTION' as const }), message, synthetic: true };
   }

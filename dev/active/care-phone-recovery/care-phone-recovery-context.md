@@ -61,3 +61,9 @@ self-check Section 3: SQLite 두 연결에서 누적 수량 2 초과 요청 차�
 sip: shower 독립 cold-read가 증거 시각·결과·제어 연결 범위가 불명확함을 지적하여 evidence.json에 반영했다. mandela는 합성 테스트를 실제 전화·제공 증거로 사용할 때 verifier=designer 문제가 생김을 확인하여 두 종류를 분리했다. ssotize 읽기 전용 점검에서 README·TODO·아키텍처의 인메모리/운영 설명을 현재 코드에 맞춰 갱신했다. factchk는 공식 돌봄SOS 안내가 기존 전화 상담을 명시함을 확인해 발표의 '전화 채널이 없다' 단정을 제거했다. detool은 운영 runbook이어서 비적용. re0는 TODO를 정책 기반 요청·기관 전달·원장·운영 순서로 재작성했다.
 
 project-doctor observe-only PASS. 저장 전 staged 실제 credential 값 및 private key 검사 PASS. 외부 blocked가 남으므로 state=executing과 미체크 섹션을 유지한다.
+
+2026-09-17 12:26 UTC 마감 검증: 전체 verify 170 tests PASS, 의존성 취약점 0. 추가 회귀는 영속 기관 영수증의 재시작 readback, 접수 후 음성·숫자키 취소 보류다. 이미 접수된 사건의 보류를 '미접수'라고 말하지 않도록 안내도 분리했다. 마지막 좁은 범위 독립 Codex 리뷰는 backup 및 확인 후 숫자키 취소에서 추가 차단 결함을 찾지 못했다.
+
+SQLite backup API로 private snapshot을 만들고 integrity_check PASS를 두 차례 확인했다. 자동 스케줄·외부 기기 재해 복구는 아직 미완료다. 운영 원장의 실측은 calls=0, requests=0이며 합성 테스트와 브라우저 데모가 운영 원장을 채우지 않았다.
+
+저장·배포: 5fd3472 commit 직후 origin/feat/ai-for-good-product push 완료. Cloud Run 00062-rvt 배포 후 health 200 care-plan-execution/payment disabled/voice demo-only, catalog 200, 이전 주문 증거 endpoint 404, 영속 원장 없는 internal API 503, 이미지 asset 200 확인. production 브라우저 발표 화면 확인. 기존 승인 Vertex/Gemini realtime handshake 별도 PASS. 이 결과는 PSTN 수신이나 실제 음성 대화 증거가 아니다.

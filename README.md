@@ -74,7 +74,7 @@ systemctl --user restart malgyeol-care-api malgyeol-care-voice
 
 장애 시에는 이 운영자가 소유한 voice unit만 중지해 자동 접수를 차단하고, `/api/care/inbox`의 예외를 담당자가 확인합니다. `SENDING`·`UNKNOWN`은 전송 여부가 불명확하므로 다시 submit하지 않고 readback 또는 수행기관 수동 확인으로 처리합니다. 담당자가 올린 예외는 늦은 응답으로 자동 해제되지 않습니다. 실제 담당자 연락처·통화 전환 회선은 아직 연결되지 않았으므로 시스템은 연결 완료를 안내하지 않습니다.
 
-SQLite는 트랜잭션 안에서 통화 확인·누적 수량·사건·이력을 함께 저장합니다. 프로세스가 멈춰도 같은 callId 확인은 다시 접수되지 않습니다. 운영 중 백업은 SQLite backup API로 일관된 snapshot을 만들고 별도 접근제한 저장소에 보관해야 합니다. WAL 파일을 제외한 실행 중 DB 단순 복사는 금지합니다. 자동 백업과 장기 보존·삭제 정책은 실증 전 미완료입니다.
+SQLite는 트랜잭션 안에서 통화 확인·누적 수량·사건·이력을 함께 저장합니다. 프로세스가 멈춰도 같은 callId 확인은 다시 접수되지 않습니다. `python3 scripts/run-care-runtime.py backup`은 SQLite backup API로 `.private/backups/`에 0600 snapshot을 만들고 integrity_check를 검사합니다. WAL 파일을 제외한 실행 중 DB 단순 복사는 금지합니다. 이 로컬 snapshot은 별도 기기 재해 복구를 보장하지 않습니다. 자동 스케줄·장기 보존·삭제 정책은 실증 전 미완료입니다.
 
 공개 `/api/demo/care/`는 별도 인메모리 합성 데이터만 사용합니다. 전화 사건은 인증된 `/internal/care-agent/`와 `/api/care/`에만 있습니다. production에서 `CARE_LEDGER_PATH`가 없으면 운영 API는 503으로 닫히며 공개 데모만 제공합니다. Cloud Run의 임시 파일시스템을 영속 원장으로 간주하지 않습니다.
 

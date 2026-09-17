@@ -50,7 +50,7 @@
 
 ## 최종 검증
 
-- [x] `npm run verify`: 167 tests PASS, dependency audit 취약점 0 (후속 변경 뒤 재실행 결과는 실행 기록).
+- [x] `npm run verify`: 170 tests PASS, dependency audit 취약점 0.
 - [x] `project-doctor`: observe-only PASS, dirty 경고는 저장 전 상태.
 - [ ] 실제 전화·제공·수령 1회 완료. 합성 테스트로 대체하지 않음.
-- [ ] 최종 독립 리뷰·비밀/PII 검사·commit 직후 push. 실행 기록에 최종 결과 반영.
+- [x] 최종 독립 리뷰·비밀/PII 검사·commit 직후 push. 5fd3472 및 후속 검증 저장은 실행 기록 참조.

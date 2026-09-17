@@ -67,3 +67,20 @@ test('roles reject wrong transitions and calendar dates are validated', async t 
   await service.act(request.caseId, 'CONFIRM_RECEIPT', undefined, 'RECIPIENT');
   assert.equal((await service.get(request.caseId))?.status, 'RECIPIENT_CONFIRMED');
 });
+
+test('sandbox provider readback survives adapter and ledger restart', async t => {
+  const dir = mkdtempSync(join(tmpdir(), 'care-provider-restart-'));
+  const path = join(dir, 'ledger.sqlite');
+  let repo = new SqliteCareRequestRepository(path);
+  const request = await new CareRequestService(repo).create(input);
+  let adapter = new SandboxCareProvider(request.providerName, repo);
+  await new CareProviderDispatcher(repo, adapter).submit(request.caseId);
+  repo.close();
+  repo = new SqliteCareRequestRepository(path);
+  t.after(() => { repo.close(); rmSync(dir, { recursive: true }); });
+  adapter = new SandboxCareProvider(request.providerName, repo);
+  assert.equal((await adapter.readback(request.caseId))?.providerRequestId, `sandbox:${request.caseId}`);
+  const result = await new CareProviderDispatcher(repo, adapter).readback(request.caseId);
+  assert.equal(result.status, 'PROVIDER_ACCEPTED');
+  assert.equal((await repo.events(request.caseId)).filter(e => e.type === 'PROVIDER_SUBMITTED').length, 1);
+});

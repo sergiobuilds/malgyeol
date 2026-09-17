@@ -34,12 +34,25 @@ test('cancellation digit after confirmation holds the case without creating anot
   phone.begin('late-cancel');
   const selection = phone.select('late-cancel', '쌀');
   const confirmed = await phone.confirm('late-cancel', selection.token!, '1');
-  assert.equal((await phone.confirm('late-cancel', selection.token!, '2')).state, 'EXCEPTION');
+  const cancellation = await phone.confirm('late-cancel', selection.token!, '2');
+  assert.equal(cancellation.state, 'EXCEPTION');
+  assert.match(cancellation.message, /이미 접수된 요청/);
+  assert.doesNotMatch(cancellation.message, /접수하지 않았습니다/);
   const request = await service.get(confirmed.caseId!);
   assert.equal(request?.status, 'EXCEPTION');
   assert.equal(request?.exceptionOrigin, 'RECIPIENT');
   await phone.confirm('late-cancel', selection.token!, '1');
   assert.equal((await service.list()).length, 1);
+});
+
+test('spoken cancellation after confirmation normalizes spaces and holds the case', async () => {
+  const service = new CareRequestService(new InMemoryCareRequestRepository());
+  const phone = new CarePhoneCoordinator(service);
+  phone.begin('spoken-cancel');
+  const selection = phone.select('spoken-cancel', '쌀');
+  await phone.confirm('spoken-cancel', selection.token!, '1');
+  assert.equal(phone.select('spoken-cancel', '쌀 필요 없어요').state, 'EXCEPTION');
+  assert.equal((await service.get(selection.caseId!))?.exceptionOrigin, 'RECIPIENT');
 });
 
 test('risk mixed with supported nouns, cancellation and expired approvals never execute', async () => {
