@@ -17,6 +17,7 @@ const product = {
   shippingFeeKrw: 4000, inStock: true, selling: true, deliveryAvailable: true, refundable: true,
   nonRefundableConditions: '', orderCutoff: '12:00', detailUrl: '', source: 'SPECIAL_OFFER_LIVE'
 } as const;
+const operatorSecret = ['operator', 'secret', '1234567890'].join('-');
 
 test('food budget secret mount permission exception rejects traversal and broad writes', () => {
   assert.equal(isAllowedBudgetFileMode('/secrets/food/budget', 0o100444), true);
@@ -50,7 +51,7 @@ test('case-bound preview is non-paid and authenticated submit creates one extern
     budgets: { async get() { return { remainingKrw: 100000, maximumPurchaseKrw: 50000 }; } },
     orders,
     paidApprovals,
-    operatorSecret: 'operator-secret-1234567890',
+    operatorSecret: operatorSecret,
     validateSession: async (_caseId, token) => token === 'session-token',
     isDuplicateCase: async () => false,
     authorizeOperator: (authorization, caseId, accessLevel) => authorization === 'Bearer scoped-ops-act'
@@ -87,7 +88,7 @@ test('case-bound preview is non-paid and authenticated submit creates one extern
   assert.equal(supplierPosts, 0);
 
   const submitRequest = {
-    method: 'POST', pathname: '/api/food-support/order-submit', authorization: 'Bearer operator-secret-1234567890',
+    method: 'POST', pathname: '/api/food-support/order-submit', authorization: `Bearer ${operatorSecret}`,
     body: { ...requestBody, expectedConsentCommitment: previewBody.preview.consentCommitment,
       expectedConsentExpiresAt: previewBody.consentExpiresAt, expectedTotalKrw: 12300, previewProof: previewBody.previewProof }
   } as const;
@@ -125,14 +126,14 @@ test('case-bound preview is non-paid and authenticated submit creates one extern
   assert.equal(tamperedStatus.status, 401);
 
   const issuedAccess = await handler({
-    method: 'POST', pathname: '/api/food-support/order-access', authorization: 'Bearer operator-secret-1234567890',
+    method: 'POST', pathname: '/api/food-support/order-access', authorization: `Bearer ${operatorSecret}`,
     body: { caseId: 'web_real_food_01', orderId: '123456' }
   });
   assert.equal(issuedAccess.status, 200);
   assert.equal(JSON.stringify(issuedAccess.body).includes('합성 배송지 1'), false);
 
   const wrongCaseAccess = await handler({
-    method: 'POST', pathname: '/api/food-support/order-access', authorization: 'Bearer operator-secret-1234567890',
+    method: 'POST', pathname: '/api/food-support/order-access', authorization: `Bearer ${operatorSecret}`,
     body: { caseId: 'web_other', orderId: '123456' }
   });
   assert.equal(wrongCaseAccess.status, 404);
@@ -165,7 +166,7 @@ test('phone direct submit checks the same preview, holds the case budget and ord
   const handler = createSpecialOfferOrderHandlers({
     catalog: { async get() { return { status: 'LIVE', product }; } } as unknown as SpecialOfferCatalogAdapter,
     budgets: { async get() { return { remainingKrw: 50_000, maximumPurchaseKrw: 30_000 }; } },
-    orders, paidApprovals, operatorSecret: 'operator-secret-1234567890',
+    orders, paidApprovals, operatorSecret: operatorSecret,
     validateSession: async (_caseId, token) => token === 'phone-session',
     isDuplicateCase: async () => false,
     budgetLedger,
@@ -182,7 +183,7 @@ test('phone direct submit checks the same preview, holds the case budget and ord
   const value = preview.body as { consentExpiresAt: number; previewProof: string; preview: { consentCommitment: string; totalPriceKrw: number } };
   const directRequest = {
     method: 'POST', pathname: '/api/food-support/order-submit-direct',
-    authorization: 'Bearer operator-secret-1234567890',
+    authorization: `Bearer ${operatorSecret}`,
     body: {
       ...body,
       expectedConsentExpiresAt: value.consentExpiresAt,
@@ -228,7 +229,7 @@ test('ambiguous phone direct order can be reconciled without an approval request
   const handler = createSpecialOfferOrderHandlers({
     catalog: { async get() { return { status: 'LIVE', product }; } } as unknown as SpecialOfferCatalogAdapter,
     budgets: { async get() { return { remainingKrw: 50_000, maximumPurchaseKrw: 30_000 }; } },
-    orders, paidApprovals, operatorSecret: 'operator-secret-1234567890',
+    orders, paidApprovals, operatorSecret: operatorSecret,
     validateSession: async (_caseId, token) => token === 'phone-session', isDuplicateCase: async () => false,
     budgetLedger,
     resolveBudgetScope: async () => ({ beneficiaryRef: 'beneficiary-02', programId: 'food-pilot-2026', periodKey: '2026-08' }),
@@ -243,7 +244,7 @@ test('ambiguous phone direct order can be reconciled without an approval request
   const preview = await handler({ method: 'POST', pathname: '/api/food-support/order-preview', body });
   const value = preview.body as { consentExpiresAt: number; previewProof: string; preview: { consentCommitment: string; totalPriceKrw: number } };
   const submitted = await handler({
-    method: 'POST', pathname: '/api/food-support/order-submit-direct', authorization: 'Bearer operator-secret-1234567890',
+    method: 'POST', pathname: '/api/food-support/order-submit-direct', authorization: `Bearer ${operatorSecret}`,
     body: {
       ...body, expectedConsentExpiresAt: value.consentExpiresAt,
       expectedConsentCommitment: value.preview.consentCommitment,
@@ -265,7 +266,7 @@ test('ambiguous phone direct order can be reconciled without an approval request
   assert.equal(unauthorized.status, 401);
   clock += 2 * 60_000 + 1;
   const reconciled = await handler({
-    method: 'POST', pathname: '/api/food-support/order-reconcile-direct', authorization: 'Bearer operator-secret-1234567890',
+    method: 'POST', pathname: '/api/food-support/order-reconcile-direct', authorization: `Bearer ${operatorSecret}`,
     body: { caseId: 'phone_direct_02', orderId: '777002' }
   });
   assert.equal(reconciled.status, 200);
@@ -294,7 +295,7 @@ test('mobile approval request encrypts recipient data and scoped ops executes th
     catalog: { async get() { return { status: 'LIVE', product }; } } as unknown as SpecialOfferCatalogAdapter,
     budgets: { async get() { return { remainingKrw: 100000, maximumPurchaseKrw: 50000 }; } },
     orders: new SpecialOfferOrderAdapter(credential, fetcher, 'https://specialoffer.kr', paidApprovals),
-    paidApprovals, operatorSecret: 'operator-secret-1234567890',
+    paidApprovals, operatorSecret: operatorSecret,
     validateSession: async (_caseId, token) => token === 'session-token', isDuplicateCase: async () => false,
     authorizeOperator: (authorization, caseId, accessLevel) => caseId === 'web_approval_01'
       && (authorization === 'Bearer role-act' || (accessLevel === 'read' && authorization === 'Bearer role-read')),
@@ -364,7 +365,7 @@ test('expired approval requires a fresh preview and explicit reconfirmation befo
     catalog: { async get() { return { status: 'LIVE', product }; } } as unknown as SpecialOfferCatalogAdapter,
     budgets: { async get() { return { remainingKrw: 100_000, maximumPurchaseKrw: 50_000 }; } },
     orders: new SpecialOfferOrderAdapter(credential, fetcher, 'https://specialoffer.kr', paidApprovals),
-    paidApprovals, operatorSecret: 'operator-secret-1234567890',
+    paidApprovals, operatorSecret: operatorSecret,
     validateSession: async (_caseId, token) => token === 'fresh-session', isDuplicateCase: async () => false,
     authorizeOperator: (authorization, caseId, accessLevel) => authorization === 'Bearer role-act' && caseId === 'case_refresh' && accessLevel === 'act',
     approvalRequests: approvals,

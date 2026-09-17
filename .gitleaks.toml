@@ -2,23 +2,27 @@
 useDefault = true
 
 [[allowlists]]
-description = "Synthetic operator secret used in HTTP authorization tests"
+description = "Historical synthetic operator secret in the original test fixture"
 condition = "AND"
-regexTarget = "line"
+commits = [
+  "fb98b1417091301e818670aae9727d1caeffd755",
+]
 paths = [
   '''tests/http/specialOfferOrderRoutes\.test\.ts''',
 ]
 regexes = [
-  '''operatorSecret:\s*'operator-secret-1234567890'|Bearer operator-secret-1234567890''',
+  '''operator-secret-1234567890''',
 ]
 
 [[allowlists]]
-description = "Synthetic credential shapes used to verify ledger rejection"
+description = "Historical synthetic credential shapes used to test ledger rejection"
 condition = "AND"
-regexTarget = "line"
+commits = [
+  "fb98b1417091301e818670aae9727d1caeffd755",
+]
 paths = [
   '''tests/e2e/canonicalCaseLedger\.test\.ts''',
 ]
 regexes = [
-  '''ghp|AKIA|eyJhbG''',
+  '''AKIA|eyJhbG''',
 ]
