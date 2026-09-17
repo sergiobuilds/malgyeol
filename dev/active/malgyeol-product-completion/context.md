@@ -106,3 +106,7 @@ Future 추적 과정에서 callback 초기 요청 본문 공개 위험 발견. p
 ### 최종 자체 검증 및 게이트 판정
 
 Future A01~A13/O01~O12/I01~I24 총49항목 보존, 현행 문서 정합성 반영. 최종 npm run verify Node198·typecheck·audit PASS, 설치SDK Python32 PASS. 정책6쪽·덱6장·편집원본·표셀누락0·페이지밖텍스트0 재검사 PASS. 외부Codex 리뷰는 승인된1회 실행했으나 bwrap loopback 권한 오류로 코드 미열람 종료. 리뷰 통과로 취급하지 않으며 추가 호출 없음. Supervisor는 자체검사 완료를 기록하되 실제 전화 수용조건 미충족으로 섹션5 최종완료 게이트를 통과시키지 않음. 필요한 A/B 비공개 라우팅 파일 및 기존 음성 런타임 전환 조건은 유지.
+
+### 재개 시 실행계약 점검
+
+Campbell·브랜치965bd6b·observe-only 재확인. 첨부 전체 실행계약 및 정본 looprun, executing-plans, verification-before-completion 재열람. EXECUTOR: coordination-check 재실행은 ROUTING_FILE_REQUIRED로 종료. 셀프체크: 실제 통화 증거와 허용 A/B 매핑 없음, 성공 판정 불가. CHRONICLE 확인: D-20260918-08~10 실행범위 유지. 이전 턴은 코드·문서·원격 저장이 진행된 progress로 분류. 본 재개에서는 누락된 통화 횟수·시간·중단 기준을 verification.md 6.1에 추가. 운용정책을 새로 확정한 것이 아니라 기존 전화계약 제10절의 시험 한도 명시. 섹션5 전체 PASS 또는 section_done 전이는 하지 않음.
