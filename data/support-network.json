@@ -1,0 +1,4687 @@
+{
+  "supplementalInstitutions": [
+    {
+      "id": "seoul-foodbank-mobile",
+      "name": "서울잇다푸드뱅크센터",
+      "address": "서울특별시 성동구 자동차시장3길 64",
+      "district": "서울 전체",
+      "roles": [
+        "광역 사업 운영",
+        "사업 운영·일정 문의"
+      ],
+      "contacts": [
+        {
+          "purpose": "이동푸드마켓 운영·일정 문의",
+          "phone": "02-905-1377"
+        }
+      ],
+      "programs": [
+        {
+          "programId": "mobile-market",
+          "categories": [
+            "식품",
+            "생필품",
+            "식사"
+          ],
+          "eligibility": [
+            "지리적 여건과 거동 제약으로 푸드마켓 이용이 어려운 취약계층",
+            "지역 사업별 대상·일정 상담"
+          ],
+          "steps": [
+            "거주 지역과 방문 제약을 기준으로 운영기관에 일정·대상 문의",
+            "자치구·지역 기관의 참여 방법 상담",
+            "지역별 나눔장터·꾸러미 전달 등 운영 방식에 따른 이용"
+          ],
+          "access": [
+            "나눔장터·꾸러미 전달·동 단위 미니마켓 등 사업별 운영",
+            "가정 배달은 개별 사업의 운영 조건에 따른 조율",
+            "센터 주소는 사업 운영 연락처이며 개인 방문 수령 예약 장소가 아님"
+          ],
+          "hours": "지역별 운영 일정 상담",
+          "sources": [
+            {
+              "url": "https://news.seoul.go.kr/welfare/archives/1355",
+              "title": "서울시 찾아가는 푸드마켓 운영",
+              "checkedAt": "2026-09-17T18:30:37.395792+00:00"
+            },
+            {
+              "url": "https://www.s-foodbank.or.kr/board/business/8",
+              "title": "서울잇다푸드뱅크 이동푸드마켓",
+              "checkedAt": "2026-09-17T18:30:37.395792+00:00"
+            }
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "url": "https://news.seoul.go.kr/welfare/archives/1355",
+          "title": "서울시 찾아가는 푸드마켓 운영",
+          "checkedAt": "2026-09-17T18:30:37.395792+00:00"
+        },
+        {
+          "url": "https://www.s-foodbank.or.kr/board/business/8",
+          "title": "서울잇다푸드뱅크 이동푸드마켓",
+          "checkedAt": "2026-09-17T18:30:37.395792+00:00"
+        }
+      ]
+    },
+    {
+      "id": "seoul-care-120",
+      "name": "서울시 안심돌봄120",
+      "address": "",
+      "district": "서울 전체",
+      "roles": [
+        "관할 접수창구 안내"
+      ],
+      "contacts": [
+        {
+          "purpose": "돌봄SOS 관할 창구 안내",
+          "phone": "1668-0120"
+        },
+        {
+          "purpose": "서울시 다산콜센터 안내",
+          "phone": "02-120"
+        }
+      ],
+      "programs": [
+        {
+          "programId": "care-sos",
+          "categories": [
+            "식사배달",
+            "일시재가",
+            "단기시설",
+            "동행지원",
+            "주거편의"
+          ],
+          "eligibility": [
+            "긴급하고 일시적인 돌봄이 필요한 서울시민",
+            "소득과 공적 돌봄 이용 상황에 따른 비용 지원 상담"
+          ],
+          "steps": [
+            "주소지 관할 동주민센터에 전화 또는 방문 신청",
+            "돌봄매니저의 생활 상황·긴급도·필요 확인",
+            "돌봄계획 수립 및 협약 제공기관 의뢰",
+            "기관별 서비스 제공과 이용 결과 점검"
+          ],
+          "access": [
+            "주소지 관할 동주민센터 신청",
+            "사업별 제공기관과 서비스 방식 조율"
+          ],
+          "hours": "관할 접수창구 운영시간 상담",
+          "sources": [
+            {
+              "url": "https://wis.seoul.go.kr/wfs/sos/guide.do",
+              "title": "서울복지포털 돌봄SOS 사업 안내",
+              "checkedAt": "2026-09-17T18:30:37.395792+00:00"
+            }
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "url": "https://wis.seoul.go.kr/wfs/sos/guide.do",
+          "title": "서울복지포털 돌봄SOS 사업 안내",
+          "checkedAt": "2026-09-17T18:30:37.395792+00:00"
+        }
+      ]
+    },
+    {
+      "id": "seongsu1ga2-community",
+      "name": "성수1가제2동주민센터",
+      "address": "서울특별시 성동구 왕십리로5길 3, 공공복합청사 2층",
+      "district": "성동구",
+      "roles": [
+        "신청·상담 창구"
+      ],
+      "contacts": [
+        {
+          "purpose": "돌봄SOS 신청·상담",
+          "phone": "02-2286-7729"
+        },
+        {
+          "purpose": "돌봄SOS 서비스 지원",
+          "phone": "02-2286-7454"
+        }
+      ],
+      "programs": [
+        {
+          "programId": "care-sos",
+          "categories": [
+            "식사배달",
+            "일시재가",
+            "단기시설",
+            "동행지원",
+            "주거편의"
+          ],
+          "eligibility": [
+            "긴급하고 일시적인 돌봄이 필요한 서울시민",
+            "소득과 공적 돌봄 이용 상황에 따른 비용 지원 상담"
+          ],
+          "steps": [
+            "주소지 관할 동주민센터에 전화 또는 방문 신청",
+            "돌봄매니저의 생활 상황·긴급도·필요 확인",
+            "돌봄계획 수립 및 협약 제공기관 의뢰",
+            "기관별 서비스 제공과 이용 결과 점검"
+          ],
+          "access": [
+            "성수1가제2동 거주지 관할 신청·상담",
+            "전화 또는 주민센터 방문 신청"
+          ],
+          "hours": "09:00~18:00",
+          "sources": [
+            {
+              "url": "https://wis.seoul.go.kr/wfs/sos/guide.do",
+              "title": "서울복지포털 돌봄SOS 사업 안내",
+              "checkedAt": "2026-09-17T18:30:37.395792+00:00"
+            },
+            {
+              "url": "https://www.sd.go.kr/seongsu1ga2/selectEmpList.do?deptCode=30300550000&key=2801",
+              "title": "성수1가제2동 직원 및 전화번호",
+              "checkedAt": "2026-09-17T18:30:37.395792+00:00"
+            },
+            {
+              "url": "https://www.sd.go.kr/seongsu1ga2/contents.do?key=2803",
+              "title": "성수1가제2동 청사안내",
+              "checkedAt": "2026-09-17T18:30:37.395792+00:00"
+            }
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "url": "https://www.sd.go.kr/seongsu1ga2/selectEmpList.do?deptCode=30300550000&key=2801",
+          "title": "성수1가제2동 직원 및 전화번호",
+          "checkedAt": "2026-09-17T18:30:37.395792+00:00"
+        },
+        {
+          "url": "https://www.sd.go.kr/seongsu1ga2/contents.do?key=2803",
+          "title": "성수1가제2동 청사안내",
+          "checkedAt": "2026-09-17T18:30:37.395792+00:00"
+        }
+      ]
+    }
+  ],
+  "schemaVersion": 1,
+  "sourceRecords": [
+    {
+      "name": "강동잇다푸드뱅크센터",
+      "address": "서울 강동구 동남로 926",
+      "district": "강동구",
+      "phone": "02-427-1377",
+      "hours": "월~금, 09:00 ~ 17:00",
+      "programId": "foodbank-market",
+      "source": {
+        "url": "https://www.s-foodbank.or.kr/board/market/marketList",
+        "title": "서울잇다푸드뱅크 기관 목록",
+        "checkedAt": "2026-09-17T18:30:37.395792+00:00"
+      }
+    },
+    {
+      "name": "송파잇다푸드뱅크센터",
+      "address": "서울 송파구 마천로 51길 2",
+      "district": "송파구",
+      "phone": "02-2043-1377",
+      "hours": "월~금, 09:00 ~ 17:00",
+      "programId": "foodbank-market",
+      "source": {
+        "url": "https://www.s-foodbank.or.kr/board/market/marketList",
+        "title": "서울잇다푸드뱅크 기관 목록",
+        "checkedAt": "2026-09-17T18:30:37.395792+00:00"
+      }
+    },
+    {
+      "name": "강남잇다푸드뱅크센터 수서세곡점",
+      "address": "서울 강남구 자곡로11길 28, 209동 1층",
+      "district": "강남구",
+      "phone": "02-562-5377",
+      "hours": "월~금, 09:00 ~ 17:00",
+      "programId": "foodbank-market",
+      "source": {
+        "url": "https://www.s-foodbank.or.kr/board/market/marketList",
+        "title": "서울잇다푸드뱅크 기관 목록",
+        "checkedAt": "2026-09-17T18:30:37.395792+00:00"
+      }
+    },
+    {
+      "name": "강남잇다푸드뱅크센터 대치점",
+      "address": "서울 강남구 삼성로 72길 7, 1층",
+      "district": "강남구",
+      "phone": "02-565-0377",
+      "hours": "월~금, 09:00 ~ 17:00",
+      "programId": "foodbank-market",
+      "source": {
+        "url": "https://www.s-foodbank.or.kr/board/market/marketList",
+        "title": "서울잇다푸드뱅크 기관 목록",
+        "checkedAt": "2026-09-17T18:30:37.395792+00:00"
+      }
+    },
+    {
+      "name": "강남잇다푸드뱅크센터 일원점",
+      "address": "서울 강남구 개포로 652, 1층",
+      "district": "강남구",
+      "phone": "02-3412-1377",
+      "hours": "월~금, 09:00 ~ 17:00",
+      "programId": "foodbank-market",
+      "source": {
+        "url": "https://www.s-foodbank.or.kr/board/market/marketList",
+        "title": "서울잇다푸드뱅크 기관 목록",
+        "checkedAt": "2026-09-17T18:30:37.395792+00:00"
+      }
+    },
+    {
+      "name": "서초잇다푸드뱅크센터",
+      "address": "서울 서초구 바우뫼로 43, 지하 2층",
+      "district": "서초구",
+      "phone": "02-577-5864",
+      "hours": "월~금, 09:00 ~ 17:00",
+      "programId": "foodbank-market",
+      "source": {
+        "url": "https://www.s-foodbank.or.kr/board/market/marketList",
+        "title": "서울잇다푸드뱅크 기관 목록",
+        "checkedAt": "2026-09-17T18:30:37.395792+00:00"
+      }
+    },
+    {
+      "name": "관악잇다푸드뱅크센터",
+      "address": "서울 관악구 신림로58길 13, 다이아몬드빌딩 5층 501호",
+      "district": "관악구",
+      "phone": "02-872-1377",
+      "hours": "월~금, 09:00 ~ 17:00",
+      "programId": "foodbank-market",
+      "source": {
+        "url": "https://www.s-foodbank.or.kr/board/market/marketList",
+        "title": "서울잇다푸드뱅크 기관 목록",
+        "checkedAt": "2026-09-17T18:30:37.395792+00:00"
+      }
+    },
+    {
+      "name": "동작잇다푸드뱅크센터",
+      "address": "서울 동작구 사당로17길 8, 대림프라자 107호, 206호",
+      "district": "동작구",
+      "phone": "02-817-1377",
+      "hours": "월~금, 10:00 ~ 17:00",
+      "programId": "foodbank-market",
+      "source": {
+        "url": "https://www.s-foodbank.or.kr/board/market/marketList",
+        "title": "서울잇다푸드뱅크 기관 목록",
+        "checkedAt": "2026-09-17T18:30:37.395792+00:00"
+      }
+    },
+    {
+      "name": "영등포구잇다푸드뱅크센터 3호점",
+      "address": "서울 영등포구 신길로8길 7",
+      "district": "영등포구",
+      "phone": "02-846-1377",
+      "hours": "월~금, 09:00 ~ 17:00",
+      "programId": "foodbank-market",
+      "source": {
+        "url": "https://www.s-foodbank.or.kr/board/market/marketList",
+        "title": "서울잇다푸드뱅크 기관 목록",
+        "checkedAt": "2026-09-17T18:30:37.395792+00:00"
+      }
+    },
+    {
+      "name": "영등포구잇다푸드뱅크센터 2호점",
+      "address": "서울 영등포구 도신로54길 9-17",
+      "district": "영등포구",
+      "phone": "02-843-1377",
+      "hours": "월~금, 09:00 ~ 17:00",
+      "programId": "foodbank-market",
+      "source": {
+        "url": "https://www.s-foodbank.or.kr/board/market/marketList",
+        "title": "서울잇다푸드뱅크 기관 목록",
+        "checkedAt": "2026-09-17T18:30:37.395792+00:00"
+      }
+    },
+    {
+      "name": "영등포구잇다푸드뱅크센터 1호점",
+      "address": "서울 영등포구 선유동1로 80, 영등포구청 별관",
+      "district": "영등포구",
+      "phone": "02-2632-1377",
+      "hours": "월~금, 09:00 ~ 17:00",
+      "programId": "foodbank-market",
+      "source": {
+        "url": "https://www.s-foodbank.or.kr/board/market/marketList?page=2",
+        "title": "서울잇다푸드뱅크 기관 목록",
+        "checkedAt": "2026-09-17T18:30:37.395792+00:00"
+      }
+    },
+    {
+      "name": "금천잇다푸드뱅크센터",
+      "address": "서울 금천구 탑골로 35",
+      "district": "금천구",
+      "phone": "02-3286-1377",
+      "hours": "월~금, 09:00 ~ 17:00",
+      "programId": "foodbank-market",
+      "source": {
+        "url": "https://www.s-foodbank.or.kr/board/market/marketList?page=2",
+        "title": "서울잇다푸드뱅크 기관 목록",
+        "checkedAt": "2026-09-17T18:30:37.395792+00:00"
+      }
+    },
+    {
+      "name": "구로잇다푸드뱅크센터",
+      "address": "서울 구로구 구로동로50길 10",
+      "district": "구로구",
+      "phone": "02-3283-1377",
+      "hours": "월~금, 09:00 ~ 17:00",
+      "programId": "foodbank-market",
+      "source": {
+        "url": "https://www.s-foodbank.or.kr/board/market/marketList?page=2",
+        "title": "서울잇다푸드뱅크 기관 목록",
+        "checkedAt": "2026-09-17T18:30:37.395792+00:00"
+      }
+    },
+    {
+      "name": "강서잇다푸드뱅크센터 등촌점",
+      "address": "서울 강서구 강서로62길 19, 1층",
+      "district": "강서구",
+      "phone": "02-2663-1377",
+      "hours": "월~금, 09:00 ~ 17:00",
+      "programId": "foodbank-market",
+      "source": {
+        "url": "https://www.s-foodbank.or.kr/board/market/marketList?page=2",
+        "title": "서울잇다푸드뱅크 기관 목록",
+        "checkedAt": "2026-09-17T18:30:37.395792+00:00"
+      }
+    },
+    {
+      "name": "강서잇다푸드뱅크센터 공항점",
+      "address": "서울 강서구 공항대로2가길 5, 통합복지센터 1층",
+      "district": "강서구",
+      "phone": "02-2635-1377",
+      "hours": "월~금, 09:00 ~ 17:00",
+      "programId": "foodbank-market",
+      "source": {
+        "url": "https://www.s-foodbank.or.kr/board/market/marketList?page=2",
+        "title": "서울잇다푸드뱅크 기관 목록",
+        "checkedAt": "2026-09-17T18:30:37.395792+00:00"
+      }
+    },
+    {
+      "name": "양천잇다푸드뱅크센터 2호점",
+      "address": "서울 양천구 곰달래로13길 73",
+      "district": "양천구",
+      "phone": "02-2644-1377",
+      "hours": "월~금, 09:00 ~ 17:00",
+      "programId": "foodbank-market",
+      "source": {
+        "url": "https://www.s-foodbank.or.kr/board/market/marketList?page=2",
+        "title": "서울잇다푸드뱅크 기관 목록",
+        "checkedAt": "2026-09-17T18:30:37.395792+00:00"
+      }
+    },
+    {
+      "name": "양천잇다푸드뱅크센터 1호점",
+      "address": "서울 양천구 중앙로 250, 양천나눔누리센터 1층",
+      "district": "양천구",
+      "phone": "02-2062-1377",
+      "hours": "월~금, 09:00 ~ 17:00",
+      "programId": "foodbank-market",
+      "source": {
+        "url": "https://www.s-foodbank.or.kr/board/market/marketList?page=2",
+        "title": "서울잇다푸드뱅크 기관 목록",
+        "checkedAt": "2026-09-17T18:30:37.395792+00:00"
+      }
+    },
+    {
+      "name": "마포잇다푸드뱅크센터 2호점",
+      "address": "서울 마포구 신촌로26길10, 우리마포복지관 지하1층",
+      "district": "마포구",
+      "phone": "02-703-1377",
+      "hours": "월~금, 09:00 ~ 17:00",
+      "programId": "foodbank-market",
+      "source": {
+        "url": "https://www.s-foodbank.or.kr/board/market/marketList?page=2",
+        "title": "서울잇다푸드뱅크 기관 목록",
+        "checkedAt": "2026-09-17T18:30:37.395792+00:00"
+      }
+    },
+    {
+      "name": "마포잇다푸드뱅크센터 1호점",
+      "address": "서울 마포구 월드컵로235, 마포농수산물시장 내 1층",
+      "district": "마포구",
+      "phone": "02-364-1377",
+      "hours": "월~금, 09:00 ~ 17:00",
+      "programId": "foodbank-market",
+      "source": {
+        "url": "https://www.s-foodbank.or.kr/board/market/marketList?page=2",
+        "title": "서울잇다푸드뱅크 기관 목록",
+        "checkedAt": "2026-09-17T18:30:37.395792+00:00"
+      }
+    },
+    {
+      "name": "서대문잇다푸드뱅크",
+      "address": "서울 서대문구 연희로 292",
+      "district": "서대문구",
+      "phone": "02-304-1376",
+      "hours": "월~금, 10:00 ~ 17:00",
+      "programId": "foodbank-market",
+      "source": {
+        "url": "https://www.s-foodbank.or.kr/board/market/marketList?page=2",
+        "title": "서울잇다푸드뱅크 기관 목록",
+        "checkedAt": "2026-09-17T18:30:37.395792+00:00"
+      }
+    },
+    {
+      "name": "서대문잇다푸드마켓",
+      "address": "서울 서대문구 독립문로 50",
+      "district": "서대문구",
+      "phone": "02-392-1377",
+      "hours": "월~금, 09:00 ~ 17:00",
+      "programId": "foodbank-market",
+      "source": {
+        "url": "https://www.s-foodbank.or.kr/board/market/marketList?page=3",
+        "title": "서울잇다푸드뱅크 기관 목록",
+        "checkedAt": "2026-09-17T18:30:37.395792+00:00"
+      }
+    },
+    {
+      "name": "은평잇다푸드뱅크센터",
+      "address": "서울 은평구 서오릉로 134-5",
+      "district": "은평구",
+      "phone": "02-354-1377",
+      "hours": "월~금, 09:00 ~ 17:00",
+      "programId": "foodbank-market",
+      "source": {
+        "url": "https://www.s-foodbank.or.kr/board/market/marketList?page=3",
+        "title": "서울잇다푸드뱅크 기관 목록",
+        "checkedAt": "2026-09-17T18:30:37.395792+00:00"
+      }
+    },
+    {
+      "name": "노원잇다푸드뱅크센터",
+      "address": "서울 노원구 동일로 1229, 노원구민의전당 지하1층",
+      "district": "노원구",
+      "phone": "02-975-1277",
+      "hours": "월~금, 09:00 ~ 17:00",
+      "programId": "foodbank-market",
+      "source": {
+        "url": "https://www.s-foodbank.or.kr/board/market/marketList?page=3",
+        "title": "서울잇다푸드뱅크 기관 목록",
+        "checkedAt": "2026-09-17T18:30:37.395792+00:00"
+      }
+    },
+    {
+      "name": "도봉잇다푸드뱅크센터",
+      "address": "서울 도봉구 도봉로170길 2, 도봉역 다가치센터 16구역",
+      "district": "도봉구",
+      "phone": "02-907-1377",
+      "hours": "월~금, 09:00 ~ 17:00",
+      "programId": "foodbank-market",
+      "source": {
+        "url": "https://www.s-foodbank.or.kr/board/market/marketList?page=3",
+        "title": "서울잇다푸드뱅크 기관 목록",
+        "checkedAt": "2026-09-17T18:30:37.395792+00:00"
+      }
+    },
+    {
+      "name": "강북잇다푸드뱅크센터",
+      "address": "서울 강북구 수유동 179-5, 칸타빌수유팰리스 상가동 2층",
+      "district": "강북구",
+      "phone": "02-991-1377",
+      "hours": "월~금, 09:30 ~ 17:00",
+      "programId": "foodbank-market",
+      "source": {
+        "url": "https://www.s-foodbank.or.kr/board/market/marketList?page=3",
+        "title": "서울잇다푸드뱅크 기관 목록",
+        "checkedAt": "2026-09-17T18:30:37.395792+00:00"
+      }
+    },
+    {
+      "name": "성북잇다푸드뱅크센터 2호점",
+      "address": "서울 성북구 오패산로4번지, 1층",
+      "district": "성북구",
+      "phone": "02-909-1377",
+      "hours": "월~금, 09:00 ~ 17:00",
+      "programId": "foodbank-market",
+      "source": {
+        "url": "https://www.s-foodbank.or.kr/board/market/marketList?page=3",
+        "title": "서울잇다푸드뱅크 기관 목록",
+        "checkedAt": "2026-09-17T18:30:37.395792+00:00"
+      }
+    },
+    {
+      "name": "성북잇다푸드뱅크센터 1호점",
+      "address": "서울 성북구 아리랑로4길 22, 301호",
+      "district": "성북구",
+      "phone": "02-981-1377",
+      "hours": "월~금, 09:00 ~ 17:00",
+      "programId": "foodbank-market",
+      "source": {
+        "url": "https://www.s-foodbank.or.kr/board/market/marketList?page=3",
+        "title": "서울잇다푸드뱅크 기관 목록",
+        "checkedAt": "2026-09-17T18:30:37.395792+00:00"
+      }
+    },
+    {
+      "name": "중랑잇다푸드뱅크센터 면목점",
+      "address": "서울 중랑구 면목로 242",
+      "district": "중랑구",
+      "phone": "02-6952-1376",
+      "hours": "월~금, 09:00 ~ 17:00",
+      "programId": "foodbank-market",
+      "source": {
+        "url": "https://www.s-foodbank.or.kr/board/market/marketList?page=3",
+        "title": "서울잇다푸드뱅크 기관 목록",
+        "checkedAt": "2026-09-17T18:30:37.395792+00:00"
+      }
+    },
+    {
+      "name": "중랑잇다푸드뱅크센터 신내점",
+      "address": "서울 중랑구 봉화산로56길 22",
+      "district": "중랑구",
+      "phone": "02-493-1582",
+      "hours": "월~금, 09:00 ~ 17:00",
+      "programId": "foodbank-market",
+      "source": {
+        "url": "https://www.s-foodbank.or.kr/board/market/marketList?page=3",
+        "title": "서울잇다푸드뱅크 기관 목록",
+        "checkedAt": "2026-09-17T18:30:37.395792+00:00"
+      }
+    },
+    {
+      "name": "동대문잇다푸드뱅크센터",
+      "address": "서울 동대문구 천호대로2길 23-9, 1층",
+      "district": "동대문구",
+      "phone": "02-2246-0036",
+      "hours": "월~금, 09:00 ~ 17:00",
+      "programId": "foodbank-market",
+      "source": {
+        "url": "https://www.s-foodbank.or.kr/board/market/marketList?page=3",
+        "title": "서울잇다푸드뱅크 기관 목록",
+        "checkedAt": "2026-09-17T18:30:37.395792+00:00"
+      }
+    },
+    {
+      "name": "광진잇다푸드뱅크센터",
+      "address": "서울 광진구 군자로34",
+      "district": "광진구",
+      "phone": "02-499-1377",
+      "hours": "월~금, 09:00 ~ 17:00",
+      "programId": "foodbank-market",
+      "source": {
+        "url": "https://www.s-foodbank.or.kr/board/market/marketList?page=4",
+        "title": "서울잇다푸드뱅크 기관 목록",
+        "checkedAt": "2026-09-17T18:30:37.395792+00:00"
+      }
+    },
+    {
+      "name": "성동잇다푸드뱅크센터",
+      "address": "서울 성동구 고산자로 323, 201호",
+      "district": "성동구",
+      "phone": "02-425-1377",
+      "hours": "월~금, 09:00 ~ 17:00",
+      "programId": "foodbank-market",
+      "source": {
+        "url": "https://www.s-foodbank.or.kr/board/market/marketList?page=4",
+        "title": "서울잇다푸드뱅크 기관 목록",
+        "checkedAt": "2026-09-17T18:30:37.395792+00:00"
+      }
+    },
+    {
+      "name": "용산잇다푸드뱅크센터",
+      "address": "서울 용산구 한강대로 345",
+      "district": "용산구",
+      "phone": "02-703-0129",
+      "hours": "월~금, 09:00 ~ 17:00",
+      "programId": "foodbank-market",
+      "source": {
+        "url": "https://www.s-foodbank.or.kr/board/market/marketList?page=4",
+        "title": "서울잇다푸드뱅크 기관 목록",
+        "checkedAt": "2026-09-17T18:30:37.395792+00:00"
+      }
+    },
+    {
+      "name": "중구잇다푸드뱅크센터",
+      "address": "서울 중구 퇴계로 460, 1층",
+      "district": "중구",
+      "phone": "02-2297-1377",
+      "hours": "월~금, 09:00 ~ 17:00",
+      "programId": "foodbank-market",
+      "source": {
+        "url": "https://www.s-foodbank.or.kr/board/market/marketList?page=4",
+        "title": "서울잇다푸드뱅크 기관 목록",
+        "checkedAt": "2026-09-17T18:30:37.395792+00:00"
+      }
+    },
+    {
+      "name": "종로잇다푸드뱅크센터 2호점",
+      "address": "서울 종로구 율곡로 89, 웰니스센터 B110호",
+      "district": "종로구",
+      "phone": "02-2148-4101",
+      "hours": "월~금, 09:00 ~ 17:00",
+      "programId": "foodbank-market",
+      "source": {
+        "url": "https://www.s-foodbank.or.kr/board/market/marketList?page=4",
+        "title": "서울잇다푸드뱅크 기관 목록",
+        "checkedAt": "2026-09-17T18:30:37.395792+00:00"
+      }
+    },
+    {
+      "name": "종로잇다푸드뱅크센터 1호점",
+      "address": "서울 종로구 지봉로 86, 숭인1동주민센터 4층",
+      "district": "종로구",
+      "phone": "02-762-1377",
+      "hours": "월~금, 09:00 ~ 17:00",
+      "programId": "foodbank-market",
+      "source": {
+        "url": "https://www.s-foodbank.or.kr/board/market/marketList?page=4",
+        "title": "서울잇다푸드뱅크 기관 목록",
+        "checkedAt": "2026-09-17T18:30:37.395792+00:00"
+      }
+    },
+    {
+      "name": "강남푸드지원센터 수서세곡점",
+      "address": "서울 강남구 자곡로11길 28, LH수서2단지 209동 1층",
+      "district": "강남구",
+      "phone": "02-562-5377",
+      "hours": "월~금 / 9:00~17:00",
+      "programId": "just-dream",
+      "source": {
+        "url": "https://www.s-foodbank.or.kr/board/map/mapList",
+        "title": "그냥드림 사업장 목록",
+        "checkedAt": "2026-09-17T18:30:37.395792+00:00"
+      }
+    },
+    {
+      "name": "강동구 푸드뱅크마켓센터",
+      "address": "서울 강동구 동남로 926, 1층",
+      "district": "강동구",
+      "phone": "02-427-1377",
+      "hours": "월~금 / 13:00~17:00",
+      "programId": "just-dream",
+      "source": {
+        "url": "https://www.s-foodbank.or.kr/board/map/mapList",
+        "title": "그냥드림 사업장 목록",
+        "checkedAt": "2026-09-17T18:30:37.395792+00:00"
+      }
+    },
+    {
+      "name": "강북잇다푸드뱅크마켓센터",
+      "address": "서울 강북구 한천로 148길 12-13, 상가동 2층",
+      "district": "강북구",
+      "phone": "02-991-1377",
+      "hours": "월~금 / 10:00~16:00",
+      "programId": "just-dream",
+      "source": {
+        "url": "https://www.s-foodbank.or.kr/board/map/mapList",
+        "title": "그냥드림 사업장 목록",
+        "checkedAt": "2026-09-17T18:30:37.395792+00:00"
+      }
+    },
+    {
+      "name": "강서푸드뱅크·마켓 등촌점",
+      "address": "서울 강서구 강서로62길 19",
+      "district": "강서구",
+      "phone": "02-2663-1377",
+      "hours": "월, 수, 금 / 15:00~17:00",
+      "programId": "just-dream",
+      "source": {
+        "url": "https://www.s-foodbank.or.kr/board/map/mapList",
+        "title": "그냥드림 사업장 목록",
+        "checkedAt": "2026-09-17T18:30:37.395792+00:00"
+      }
+    },
+    {
+      "name": "관악푸드뱅크마켓센터",
+      "address": "서울 관악구 신림로58길 13, 다이아몬드빌딩 501호",
+      "district": "관악구",
+      "phone": "02-872-1377",
+      "hours": "수, 목 / 13:00~16:00",
+      "programId": "just-dream",
+      "source": {
+        "url": "https://www.s-foodbank.or.kr/board/map/mapList",
+        "title": "그냥드림 사업장 목록",
+        "checkedAt": "2026-09-17T18:30:37.395792+00:00"
+      }
+    },
+    {
+      "name": "광진푸드뱅크마켓센터",
+      "address": "서울 광진구 군자로 34, 1층",
+      "district": "광진구",
+      "phone": "02-499-1377",
+      "hours": "월~금 / 14:00~17:00",
+      "programId": "just-dream",
+      "source": {
+        "url": "https://www.s-foodbank.or.kr/board/map/mapList",
+        "title": "그냥드림 사업장 목록",
+        "checkedAt": "2026-09-17T18:30:37.395792+00:00"
+      }
+    },
+    {
+      "name": "구로구 푸드뱅크마켓센터",
+      "address": "서울 구로구 구로동로50길 10, 1층",
+      "district": "구로구",
+      "phone": "02-3283-1377",
+      "hours": "월~금 / 9:00~17:00",
+      "programId": "just-dream",
+      "source": {
+        "url": "https://www.s-foodbank.or.kr/board/map/mapList",
+        "title": "그냥드림 사업장 목록",
+        "checkedAt": "2026-09-17T18:30:37.395792+00:00"
+      }
+    },
+    {
+      "name": "금천구 푸드뱅크마켓센터",
+      "address": "서울 금천구 탑골로 35",
+      "district": "금천구",
+      "phone": "02-3286-1377",
+      "hours": "월~금 / 10:00~16:00",
+      "programId": "just-dream",
+      "source": {
+        "url": "https://www.s-foodbank.or.kr/board/map/mapList",
+        "title": "그냥드림 사업장 목록",
+        "checkedAt": "2026-09-17T18:30:37.395792+00:00"
+      }
+    },
+    {
+      "name": "노원구 푸드뱅크마켓센터",
+      "address": "서울 노원구 동일로 1229, 노원구민의전당 지하 1층",
+      "district": "노원구",
+      "phone": "02-975-1277",
+      "hours": "월~금 15:00~17:00",
+      "programId": "just-dream",
+      "source": {
+        "url": "https://www.s-foodbank.or.kr/board/map/mapList",
+        "title": "그냥드림 사업장 목록",
+        "checkedAt": "2026-09-17T18:30:37.395792+00:00"
+      }
+    },
+    {
+      "name": "도봉구 푸드뱅크마켓센터",
+      "address": "서울 도봉구 도봉로170길 2, 도봉역 다가치센터 16구역",
+      "district": "도봉구",
+      "phone": "02-907-1377",
+      "hours": "화, 목 / 13:00~17:00",
+      "programId": "just-dream",
+      "source": {
+        "url": "https://www.s-foodbank.or.kr/board/map/mapList",
+        "title": "그냥드림 사업장 목록",
+        "checkedAt": "2026-09-17T18:30:37.395792+00:00"
+      }
+    },
+    {
+      "name": "동대문푸드뱅크마켓",
+      "address": "서울 동대문구 천호대로2길 23-9, 1층",
+      "district": "동대문구",
+      "phone": "02-2246-0036",
+      "hours": "월~금 / 13:00~17:00",
+      "programId": "just-dream",
+      "source": {
+        "url": "https://www.s-foodbank.or.kr/board/map/mapList?page=2",
+        "title": "그냥드림 사업장 목록",
+        "checkedAt": "2026-09-17T18:30:37.395792+00:00"
+      }
+    },
+    {
+      "name": "동작구 푸드뱅크·마켓센터",
+      "address": "서울 동작구 사당로17길 8, 대림프라자상가 107호",
+      "district": "동작구",
+      "phone": "02-817-1377",
+      "hours": "월~금 / 9:00~17:00",
+      "programId": "just-dream",
+      "source": {
+        "url": "https://www.s-foodbank.or.kr/board/map/mapList?page=2",
+        "title": "그냥드림 사업장 목록",
+        "checkedAt": "2026-09-17T18:30:37.395792+00:00"
+      }
+    },
+    {
+      "name": "마포행복나눔푸드(뱅크)마켓 1호점",
+      "address": "서울 마포구 월드컵로 235, 마포농수산물시장 2번 출입구",
+      "district": "마포구",
+      "phone": "02-712-1377",
+      "hours": "월~금 / 9:00~17:00",
+      "programId": "just-dream",
+      "source": {
+        "url": "https://www.s-foodbank.or.kr/board/map/mapList?page=2",
+        "title": "그냥드림 사업장 목록",
+        "checkedAt": "2026-09-17T18:30:37.395792+00:00"
+      }
+    },
+    {
+      "name": "마포행복나눔푸드마켓 2호점",
+      "address": "서울 마포구 신촌로26길 10, 우리마포복지관 지하 1층",
+      "district": "마포구",
+      "phone": "02-703-1377",
+      "hours": "월~금 / 9:00~17:00",
+      "programId": "just-dream",
+      "source": {
+        "url": "https://www.s-foodbank.or.kr/board/map/mapList?page=2",
+        "title": "그냥드림 사업장 목록",
+        "checkedAt": "2026-09-17T18:30:37.395792+00:00"
+      }
+    },
+    {
+      "name": "서대문정담은푸드마켓 2호점",
+      "address": "서울 서대문구 가좌로 84-1",
+      "district": "서대문구",
+      "phone": "02-3157-1377",
+      "hours": "화, 목, 금 / 13:00~17:00",
+      "programId": "just-dream",
+      "source": {
+        "url": "https://www.s-foodbank.or.kr/board/map/mapList?page=2",
+        "title": "그냥드림 사업장 목록",
+        "checkedAt": "2026-09-17T18:30:37.395792+00:00"
+      }
+    },
+    {
+      "name": "서초구 푸드뱅크마켓센터",
+      "address": "서울 서초구 바우뫼로 43 지하2층",
+      "district": "서초구",
+      "phone": "02-577-5864",
+      "hours": "수, 목, 금 / 10:00~16:00",
+      "programId": "just-dream",
+      "source": {
+        "url": "https://www.s-foodbank.or.kr/board/map/mapList?page=2",
+        "title": "그냥드림 사업장 목록",
+        "checkedAt": "2026-09-17T18:30:37.395792+00:00"
+      }
+    },
+    {
+      "name": "성동희망푸드나눔센터",
+      "address": "서울 성동구 고산자로 323, 201호",
+      "district": "성동구",
+      "phone": "02-425-1377",
+      "hours": "월~금 / 10:00~16:00",
+      "programId": "just-dream",
+      "source": {
+        "url": "https://www.s-foodbank.or.kr/board/map/mapList?page=2",
+        "title": "그냥드림 사업장 목록",
+        "checkedAt": "2026-09-17T18:30:37.395792+00:00"
+      }
+    },
+    {
+      "name": "성북구 푸드뱅크마켓센터",
+      "address": "서울 성북구 아리랑로4길 22, 301호",
+      "district": "성북구",
+      "phone": "02-981-1377",
+      "hours": "월, 수, 금 / 14:00~17:00",
+      "programId": "just-dream",
+      "source": {
+        "url": "https://www.s-foodbank.or.kr/board/map/mapList?page=2",
+        "title": "그냥드림 사업장 목록",
+        "checkedAt": "2026-09-17T18:30:37.395792+00:00"
+      }
+    },
+    {
+      "name": "송파푸드마켓·푸드뱅크",
+      "address": "서울 송파구 마천로51길 2, 1층",
+      "district": "송파구",
+      "phone": "02-2043-1377",
+      "hours": "월, 화, 수 / 13:00~16:00",
+      "programId": "just-dream",
+      "source": {
+        "url": "https://www.s-foodbank.or.kr/board/map/mapList?page=2",
+        "title": "그냥드림 사업장 목록",
+        "checkedAt": "2026-09-17T18:30:37.395792+00:00"
+      }
+    },
+    {
+      "name": "양천구 푸드뱅크·마켓센터 1호점",
+      "address": "서울 양천구 중앙로 250",
+      "district": "양천구",
+      "phone": "02-2062-1377",
+      "hours": "월~수 / 9:00~17:00",
+      "programId": "just-dream",
+      "source": {
+        "url": "https://www.s-foodbank.or.kr/board/map/mapList?page=2",
+        "title": "그냥드림 사업장 목록",
+        "checkedAt": "2026-09-17T18:30:37.395792+00:00"
+      }
+    },
+    {
+      "name": "영등포사랑나눔푸드뱅크·마켓 1호점",
+      "address": "서울 영등포구 선유동1로 80, 영등포구청 별관",
+      "district": "영등포구",
+      "phone": "02-2632-1377",
+      "hours": "월~금 / 9:00~18:00",
+      "programId": "just-dream",
+      "source": {
+        "url": "https://www.s-foodbank.or.kr/board/map/mapList?page=3",
+        "title": "그냥드림 사업장 목록",
+        "checkedAt": "2026-09-17T18:30:37.395792+00:00"
+      }
+    },
+    {
+      "name": "영등포사랑나눔푸드뱅크·마켓 2호점",
+      "address": "서울 영등포구 도신로54길 9-17",
+      "district": "영등포구",
+      "phone": "02-843-1377",
+      "hours": "월~금 / 9:00~18:00",
+      "programId": "just-dream",
+      "source": {
+        "url": "https://www.s-foodbank.or.kr/board/map/mapList?page=3",
+        "title": "그냥드림 사업장 목록",
+        "checkedAt": "2026-09-17T18:30:37.395792+00:00"
+      }
+    },
+    {
+      "name": "영등포사랑나눔푸드뱅크·마켓 3호점",
+      "address": "서울 영등포구 신길로8길 7",
+      "district": "영등포구",
+      "phone": "02-846-1377",
+      "hours": "월~금 / 9:00~18:00",
+      "programId": "just-dream",
+      "source": {
+        "url": "https://www.s-foodbank.or.kr/board/map/mapList?page=3",
+        "title": "그냥드림 사업장 목록",
+        "checkedAt": "2026-09-17T18:30:37.395792+00:00"
+      }
+    },
+    {
+      "name": "용산구 푸드뱅크마켓센터",
+      "address": "서울 용산구 한강대로 345",
+      "district": "용산구",
+      "phone": "02-703-0129",
+      "hours": "월, 화, 목 / 14:00~17:00",
+      "programId": "just-dream",
+      "source": {
+        "url": "https://www.s-foodbank.or.kr/board/map/mapList?page=3",
+        "title": "그냥드림 사업장 목록",
+        "checkedAt": "2026-09-17T18:30:37.395792+00:00"
+      }
+    },
+    {
+      "name": "은평푸드뱅크마켓",
+      "address": "서울 은평구 서오릉로 134-5",
+      "district": "은평구",
+      "phone": "02-354-1377",
+      "hours": "월~금 / 14:00~17:00",
+      "programId": "just-dream",
+      "source": {
+        "url": "https://www.s-foodbank.or.kr/board/map/mapList?page=3",
+        "title": "그냥드림 사업장 목록",
+        "checkedAt": "2026-09-17T18:30:37.395792+00:00"
+      }
+    },
+    {
+      "name": "종로구푸드뱅크마켓센터 가회점",
+      "address": "서울 종로구 율곡로 89, 웰니스센터 B110호",
+      "district": "종로구",
+      "phone": "02-2148-4101",
+      "hours": "월, 수, 금 / 13:00~17:00",
+      "programId": "just-dream",
+      "source": {
+        "url": "https://www.s-foodbank.or.kr/board/map/mapList?page=3",
+        "title": "그냥드림 사업장 목록",
+        "checkedAt": "2026-09-17T18:30:37.395792+00:00"
+      }
+    },
+    {
+      "name": "종로구푸드뱅크마켓센터 숭인점",
+      "address": "서울 종로구 지봉로86, 숭인1동주민센터 4층",
+      "district": "종로구",
+      "phone": "02-2148-4102",
+      "hours": "월, 수, 금 / 13:00~17:00",
+      "programId": "just-dream",
+      "source": {
+        "url": "https://www.s-foodbank.or.kr/board/map/mapList?page=3",
+        "title": "그냥드림 사업장 목록",
+        "checkedAt": "2026-09-17T18:30:37.395792+00:00"
+      }
+    },
+    {
+      "name": "중구 푸드뱅크마켓센터",
+      "address": "서울 중구 퇴계로 460",
+      "district": "중구",
+      "phone": "02-2297-1377",
+      "hours": "월, 수, 금 / 14:00~17:00",
+      "programId": "just-dream",
+      "source": {
+        "url": "https://www.s-foodbank.or.kr/board/map/mapList?page=3",
+        "title": "그냥드림 사업장 목록",
+        "checkedAt": "2026-09-17T18:30:37.395792+00:00"
+      }
+    },
+    {
+      "name": "중랑푸드마켓·뱅크센터",
+      "address": "서울 중랑구 봉화산로56길 22",
+      "district": "중랑구",
+      "phone": "02-493-1582",
+      "hours": "월, 수, 금 / 13:00~16:00",
+      "programId": "just-dream",
+      "source": {
+        "url": "https://www.s-foodbank.or.kr/board/map/mapList?page=3",
+        "title": "그냥드림 사업장 목록",
+        "checkedAt": "2026-09-17T18:30:37.395792+00:00"
+      }
+    }
+  ],
+  "captures": [
+    {
+      "url": "https://www.s-foodbank.or.kr/board/market/marketList",
+      "checkedAt": "2026-09-17T18:30:37.395792+00:00",
+      "sha256": "f2a845a6970e0ec4a89f6191d271eb6b28665147b618c95fa84fdab75889c76d",
+      "rows": 10
+    },
+    {
+      "url": "https://www.s-foodbank.or.kr/board/market/marketList?page=2",
+      "checkedAt": "2026-09-17T18:30:37.395792+00:00",
+      "sha256": "f85e0e5e802d91d56b4404425a130bb2834ad86ca4736c091e1ee8b8618c81df",
+      "rows": 10
+    },
+    {
+      "url": "https://www.s-foodbank.or.kr/board/market/marketList?page=3",
+      "checkedAt": "2026-09-17T18:30:37.395792+00:00",
+      "sha256": "d8b82595f4dd23397f20a1affe981a704b20e00a071c585e9011a63e33fde975",
+      "rows": 10
+    },
+    {
+      "url": "https://www.s-foodbank.or.kr/board/market/marketList?page=4",
+      "checkedAt": "2026-09-17T18:30:37.395792+00:00",
+      "sha256": "25047a63e0e78f20e20641458d68c5734290cfddc430dcdf690cc605c3c74288",
+      "rows": 6
+    },
+    {
+      "url": "https://www.s-foodbank.or.kr/board/map/mapList",
+      "checkedAt": "2026-09-17T18:30:37.395792+00:00",
+      "sha256": "19a3ff6aae0e864efcbde7ebdc7fec206018727c3a6dead3a9d4f4284c8c9f29",
+      "rows": 10
+    },
+    {
+      "url": "https://www.s-foodbank.or.kr/board/map/mapList?page=2",
+      "checkedAt": "2026-09-17T18:30:37.395792+00:00",
+      "sha256": "01bf9c969ffd1bc647d588d0192582edf0a39398e9913cdba92db236c07144cd",
+      "rows": 10
+    },
+    {
+      "url": "https://www.s-foodbank.or.kr/board/map/mapList?page=3",
+      "checkedAt": "2026-09-17T18:30:37.395792+00:00",
+      "sha256": "390d4d4b26d742c8ea04dd72f32103fd077d3c22ab52b5642d6f111113071591",
+      "rows": 9
+    }
+  ],
+  "institutions": [
+    {
+      "id": "institution-3cfa97944056",
+      "name": "강남잇다푸드뱅크센터 대치점",
+      "address": "서울 강남구 삼성로 72길 7, 1층",
+      "district": "강남구",
+      "roles": [
+        "사업 운영·이용 문의"
+      ],
+      "contacts": [
+        {
+          "purpose": "푸드뱅크·마켓 이용 문의",
+          "phone": "02-565-0377"
+        }
+      ],
+      "programs": [
+        {
+          "programId": "foodbank-market",
+          "categories": [
+            "식품",
+            "생필품"
+          ],
+          "eligibility": [
+            "경제적으로 어려운 개인 우선 지원",
+            "긴급지원·차상위·지원 중단 등 가구별 선정 상담"
+          ],
+          "steps": [
+            "거주지 동주민센터 또는 해당 자치구 사업장에 이용 상담",
+            "동주민센터·자치구 담당자의 이용자 선정",
+            "기관 안내에 따른 신분증 준비 및 이용 등록",
+            "선정된 제공처에서 물품 선택·수령"
+          ],
+          "access": [
+            "등록·선정 후 해당 제공처 이용",
+            "방문이 어려운 경우 수령 방법을 기관에 알아보기"
+          ],
+          "hours": "월~금, 09:00 ~ 17:00",
+          "sources": [
+            {
+              "url": "https://www.s-foodbank.or.kr/board/market/marketList",
+              "title": "서울잇다푸드뱅크 기관 목록",
+              "checkedAt": "2026-09-17T18:30:37.395792+00:00"
+            },
+            {
+              "url": "https://www.s-foodbank.or.kr/intro/intro03",
+              "title": "푸드뱅크·마켓 대상 및 이용절차",
+              "checkedAt": "2026-09-17T18:30:37.395792+00:00"
+            }
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "url": "https://www.s-foodbank.or.kr/board/market/marketList",
+          "title": "서울잇다푸드뱅크 기관 목록",
+          "checkedAt": "2026-09-17T18:30:37.395792+00:00"
+        }
+      ]
+    },
+    {
+      "id": "institution-7f4a383c5f52",
+      "name": "강남잇다푸드뱅크센터 수서세곡점",
+      "address": "서울 강남구 자곡로11길 28, 209동 1층",
+      "district": "강남구",
+      "roles": [
+        "사업 운영·이용 문의",
+        "그냥드림 제공처"
+      ],
+      "contacts": [
+        {
+          "purpose": "푸드뱅크·마켓 이용 문의",
+          "phone": "02-562-5377"
+        },
+        {
+          "purpose": "그냥드림 이용 문의",
+          "phone": "02-562-5377"
+        }
+      ],
+      "programs": [
+        {
+          "programId": "foodbank-market",
+          "categories": [
+            "식품",
+            "생필품"
+          ],
+          "eligibility": [
+            "경제적으로 어려운 개인 우선 지원",
+            "긴급지원·차상위·지원 중단 등 가구별 선정 상담"
+          ],
+          "steps": [
+            "거주지 동주민센터 또는 해당 자치구 사업장에 이용 상담",
+            "동주민센터·자치구 담당자의 이용자 선정",
+            "기관 안내에 따른 신분증 준비 및 이용 등록",
+            "선정된 제공처에서 물품 선택·수령"
+          ],
+          "access": [
+            "등록·선정 후 해당 제공처 이용",
+            "방문이 어려운 경우 수령 방법을 기관에 알아보기"
+          ],
+          "hours": "월~금, 09:00 ~ 17:00",
+          "sources": [
+            {
+              "url": "https://www.s-foodbank.or.kr/board/market/marketList",
+              "title": "서울잇다푸드뱅크 기관 목록",
+              "checkedAt": "2026-09-17T18:30:37.395792+00:00"
+            },
+            {
+              "url": "https://www.s-foodbank.or.kr/intro/intro03",
+              "title": "푸드뱅크·마켓 대상 및 이용절차",
+              "checkedAt": "2026-09-17T18:30:37.395792+00:00"
+            }
+          ]
+        },
+        {
+          "programId": "just-dream",
+          "categories": [
+            "식품",
+            "생필품"
+          ],
+          "eligibility": [
+            "위기 상황 등으로 식료품 지원이 필요한 개인",
+            "주소지 관할 사업장 이용 원칙, 긴급 상황은 지역 외 우선 지원 판단"
+          ],
+          "steps": [
+            "신분증 준비 및 거주지 관할 코너 방문",
+            "자가 점검·사업 안내·지원 대상 상담",
+            "이용 신청서 작성 및 패키지 수령",
+            "재방문 시 생활 상황 상담, 필요한 경우 동주민센터 복지상담 연계"
+          ],
+          "access": [
+            "사업장 운영시간 내 방문",
+            "방문이 어려운 경우 이용 방법을 기관에 알아보기"
+          ],
+          "hours": "월~금 / 9:00~17:00",
+          "sources": [
+            {
+              "url": "https://www.s-foodbank.or.kr/board/map/mapList",
+              "title": "그냥드림 사업장 목록",
+              "checkedAt": "2026-09-17T18:30:37.395792+00:00"
+            },
+            {
+              "url": "https://s-foodbank.or.kr/justdream/guide",
+              "title": "그냥드림 이용안내",
+              "checkedAt": "2026-09-17T18:30:37.395792+00:00"
+            }
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "url": "https://www.s-foodbank.or.kr/board/market/marketList",
+          "title": "서울잇다푸드뱅크 기관 목록",
+          "checkedAt": "2026-09-17T18:30:37.395792+00:00"
+        },
+        {
+          "url": "https://www.s-foodbank.or.kr/board/map/mapList",
+          "title": "그냥드림 사업장 목록",
+          "checkedAt": "2026-09-17T18:30:37.395792+00:00"
+        }
+      ]
+    },
+    {
+      "id": "institution-228f08064394",
+      "name": "강남잇다푸드뱅크센터 일원점",
+      "address": "서울 강남구 개포로 652, 1층",
+      "district": "강남구",
+      "roles": [
+        "사업 운영·이용 문의"
+      ],
+      "contacts": [
+        {
+          "purpose": "푸드뱅크·마켓 이용 문의",
+          "phone": "02-3412-1377"
+        }
+      ],
+      "programs": [
+        {
+          "programId": "foodbank-market",
+          "categories": [
+            "식품",
+            "생필품"
+          ],
+          "eligibility": [
+            "경제적으로 어려운 개인 우선 지원",
+            "긴급지원·차상위·지원 중단 등 가구별 선정 상담"
+          ],
+          "steps": [
+            "거주지 동주민센터 또는 해당 자치구 사업장에 이용 상담",
+            "동주민센터·자치구 담당자의 이용자 선정",
+            "기관 안내에 따른 신분증 준비 및 이용 등록",
+            "선정된 제공처에서 물품 선택·수령"
+          ],
+          "access": [
+            "등록·선정 후 해당 제공처 이용",
+            "방문이 어려운 경우 수령 방법을 기관에 알아보기"
+          ],
+          "hours": "월~금, 09:00 ~ 17:00",
+          "sources": [
+            {
+              "url": "https://www.s-foodbank.or.kr/board/market/marketList",
+              "title": "서울잇다푸드뱅크 기관 목록",
+              "checkedAt": "2026-09-17T18:30:37.395792+00:00"
+            },
+            {
+              "url": "https://www.s-foodbank.or.kr/intro/intro03",
+              "title": "푸드뱅크·마켓 대상 및 이용절차",
+              "checkedAt": "2026-09-17T18:30:37.395792+00:00"
+            }
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "url": "https://www.s-foodbank.or.kr/board/market/marketList",
+          "title": "서울잇다푸드뱅크 기관 목록",
+          "checkedAt": "2026-09-17T18:30:37.395792+00:00"
+        }
+      ]
+    },
+    {
+      "id": "institution-c522438e5b02",
+      "name": "강동잇다푸드뱅크센터",
+      "address": "서울 강동구 동남로 926",
+      "district": "강동구",
+      "roles": [
+        "사업 운영·이용 문의",
+        "그냥드림 제공처"
+      ],
+      "contacts": [
+        {
+          "purpose": "푸드뱅크·마켓 이용 문의",
+          "phone": "02-427-1377"
+        },
+        {
+          "purpose": "그냥드림 이용 문의",
+          "phone": "02-427-1377"
+        }
+      ],
+      "programs": [
+        {
+          "programId": "foodbank-market",
+          "categories": [
+            "식품",
+            "생필품"
+          ],
+          "eligibility": [
+            "경제적으로 어려운 개인 우선 지원",
+            "긴급지원·차상위·지원 중단 등 가구별 선정 상담"
+          ],
+          "steps": [
+            "거주지 동주민센터 또는 해당 자치구 사업장에 이용 상담",
+            "동주민센터·자치구 담당자의 이용자 선정",
+            "기관 안내에 따른 신분증 준비 및 이용 등록",
+            "선정된 제공처에서 물품 선택·수령"
+          ],
+          "access": [
+            "등록·선정 후 해당 제공처 이용",
+            "방문이 어려운 경우 수령 방법을 기관에 알아보기"
+          ],
+          "hours": "월~금, 09:00 ~ 17:00",
+          "sources": [
+            {
+              "url": "https://www.s-foodbank.or.kr/board/market/marketList",
+              "title": "서울잇다푸드뱅크 기관 목록",
+              "checkedAt": "2026-09-17T18:30:37.395792+00:00"
+            },
+            {
+              "url": "https://www.s-foodbank.or.kr/intro/intro03",
+              "title": "푸드뱅크·마켓 대상 및 이용절차",
+              "checkedAt": "2026-09-17T18:30:37.395792+00:00"
+            }
+          ]
+        },
+        {
+          "programId": "just-dream",
+          "categories": [
+            "식품",
+            "생필품"
+          ],
+          "eligibility": [
+            "위기 상황 등으로 식료품 지원이 필요한 개인",
+            "주소지 관할 사업장 이용 원칙, 긴급 상황은 지역 외 우선 지원 판단"
+          ],
+          "steps": [
+            "신분증 준비 및 거주지 관할 코너 방문",
+            "자가 점검·사업 안내·지원 대상 상담",
+            "이용 신청서 작성 및 패키지 수령",
+            "재방문 시 생활 상황 상담, 필요한 경우 동주민센터 복지상담 연계"
+          ],
+          "access": [
+            "사업장 운영시간 내 방문",
+            "방문이 어려운 경우 이용 방법을 기관에 알아보기"
+          ],
+          "hours": "월~금 / 13:00~17:00",
+          "sources": [
+            {
+              "url": "https://www.s-foodbank.or.kr/board/map/mapList",
+              "title": "그냥드림 사업장 목록",
+              "checkedAt": "2026-09-17T18:30:37.395792+00:00"
+            },
+            {
+              "url": "https://s-foodbank.or.kr/justdream/guide",
+              "title": "그냥드림 이용안내",
+              "checkedAt": "2026-09-17T18:30:37.395792+00:00"
+            }
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "url": "https://www.s-foodbank.or.kr/board/market/marketList",
+          "title": "서울잇다푸드뱅크 기관 목록",
+          "checkedAt": "2026-09-17T18:30:37.395792+00:00"
+        },
+        {
+          "url": "https://www.s-foodbank.or.kr/board/map/mapList",
+          "title": "그냥드림 사업장 목록",
+          "checkedAt": "2026-09-17T18:30:37.395792+00:00"
+        }
+      ]
+    },
+    {
+      "id": "institution-56ea86c7c187",
+      "name": "강북잇다푸드뱅크센터",
+      "address": "서울 강북구 수유동 179-5, 칸타빌수유팰리스 상가동 2층",
+      "district": "강북구",
+      "roles": [
+        "사업 운영·이용 문의",
+        "그냥드림 제공처"
+      ],
+      "contacts": [
+        {
+          "purpose": "푸드뱅크·마켓 이용 문의",
+          "phone": "02-991-1377"
+        },
+        {
+          "purpose": "그냥드림 이용 문의",
+          "phone": "02-991-1377"
+        }
+      ],
+      "programs": [
+        {
+          "programId": "foodbank-market",
+          "categories": [
+            "식품",
+            "생필품"
+          ],
+          "eligibility": [
+            "경제적으로 어려운 개인 우선 지원",
+            "긴급지원·차상위·지원 중단 등 가구별 선정 상담"
+          ],
+          "steps": [
+            "거주지 동주민센터 또는 해당 자치구 사업장에 이용 상담",
+            "동주민센터·자치구 담당자의 이용자 선정",
+            "기관 안내에 따른 신분증 준비 및 이용 등록",
+            "선정된 제공처에서 물품 선택·수령"
+          ],
+          "access": [
+            "등록·선정 후 해당 제공처 이용",
+            "방문이 어려운 경우 수령 방법을 기관에 알아보기"
+          ],
+          "hours": "월~금, 09:30 ~ 17:00",
+          "sources": [
+            {
+              "url": "https://www.s-foodbank.or.kr/board/market/marketList?page=3",
+              "title": "서울잇다푸드뱅크 기관 목록",
+              "checkedAt": "2026-09-17T18:30:37.395792+00:00"
+            },
+            {
+              "url": "https://www.s-foodbank.or.kr/intro/intro03",
+              "title": "푸드뱅크·마켓 대상 및 이용절차",
+              "checkedAt": "2026-09-17T18:30:37.395792+00:00"
+            }
+          ]
+        },
+        {
+          "programId": "just-dream",
+          "categories": [
+            "식품",
+            "생필품"
+          ],
+          "eligibility": [
+            "위기 상황 등으로 식료품 지원이 필요한 개인",
+            "주소지 관할 사업장 이용 원칙, 긴급 상황은 지역 외 우선 지원 판단"
+          ],
+          "steps": [
+            "신분증 준비 및 거주지 관할 코너 방문",
+            "자가 점검·사업 안내·지원 대상 상담",
+            "이용 신청서 작성 및 패키지 수령",
+            "재방문 시 생활 상황 상담, 필요한 경우 동주민센터 복지상담 연계"
+          ],
+          "access": [
+            "사업장 운영시간 내 방문",
+            "방문이 어려운 경우 이용 방법을 기관에 알아보기"
+          ],
+          "hours": "월~금 / 10:00~16:00",
+          "sources": [
+            {
+              "url": "https://www.s-foodbank.or.kr/board/map/mapList",
+              "title": "그냥드림 사업장 목록",
+              "checkedAt": "2026-09-17T18:30:37.395792+00:00"
+            },
+            {
+              "url": "https://s-foodbank.or.kr/justdream/guide",
+              "title": "그냥드림 이용안내",
+              "checkedAt": "2026-09-17T18:30:37.395792+00:00"
+            }
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "url": "https://www.s-foodbank.or.kr/board/market/marketList?page=3",
+          "title": "서울잇다푸드뱅크 기관 목록",
+          "checkedAt": "2026-09-17T18:30:37.395792+00:00"
+        },
+        {
+          "url": "https://www.s-foodbank.or.kr/board/map/mapList",
+          "title": "그냥드림 사업장 목록",
+          "checkedAt": "2026-09-17T18:30:37.395792+00:00"
+        }
+      ]
+    },
+    {
+      "id": "institution-bff28957b9af",
+      "name": "강서잇다푸드뱅크센터 공항점",
+      "address": "서울 강서구 공항대로2가길 5, 통합복지센터 1층",
+      "district": "강서구",
+      "roles": [
+        "사업 운영·이용 문의"
+      ],
+      "contacts": [
+        {
+          "purpose": "푸드뱅크·마켓 이용 문의",
+          "phone": "02-2635-1377"
+        }
+      ],
+      "programs": [
+        {
+          "programId": "foodbank-market",
+          "categories": [
+            "식품",
+            "생필품"
+          ],
+          "eligibility": [
+            "경제적으로 어려운 개인 우선 지원",
+            "긴급지원·차상위·지원 중단 등 가구별 선정 상담"
+          ],
+          "steps": [
+            "거주지 동주민센터 또는 해당 자치구 사업장에 이용 상담",
+            "동주민센터·자치구 담당자의 이용자 선정",
+            "기관 안내에 따른 신분증 준비 및 이용 등록",
+            "선정된 제공처에서 물품 선택·수령"
+          ],
+          "access": [
+            "등록·선정 후 해당 제공처 이용",
+            "방문이 어려운 경우 수령 방법을 기관에 알아보기"
+          ],
+          "hours": "월~금, 09:00 ~ 17:00",
+          "sources": [
+            {
+              "url": "https://www.s-foodbank.or.kr/board/market/marketList?page=2",
+              "title": "서울잇다푸드뱅크 기관 목록",
+              "checkedAt": "2026-09-17T18:30:37.395792+00:00"
+            },
+            {
+              "url": "https://www.s-foodbank.or.kr/intro/intro03",
+              "title": "푸드뱅크·마켓 대상 및 이용절차",
+              "checkedAt": "2026-09-17T18:30:37.395792+00:00"
+            }
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "url": "https://www.s-foodbank.or.kr/board/market/marketList?page=2",
+          "title": "서울잇다푸드뱅크 기관 목록",
+          "checkedAt": "2026-09-17T18:30:37.395792+00:00"
+        }
+      ]
+    },
+    {
+      "id": "institution-165b80a54d88",
+      "name": "강서잇다푸드뱅크센터 등촌점",
+      "address": "서울 강서구 강서로62길 19, 1층",
+      "district": "강서구",
+      "roles": [
+        "사업 운영·이용 문의",
+        "그냥드림 제공처"
+      ],
+      "contacts": [
+        {
+          "purpose": "푸드뱅크·마켓 이용 문의",
+          "phone": "02-2663-1377"
+        },
+        {
+          "purpose": "그냥드림 이용 문의",
+          "phone": "02-2663-1377"
+        }
+      ],
+      "programs": [
+        {
+          "programId": "foodbank-market",
+          "categories": [
+            "식품",
+            "생필품"
+          ],
+          "eligibility": [
+            "경제적으로 어려운 개인 우선 지원",
+            "긴급지원·차상위·지원 중단 등 가구별 선정 상담"
+          ],
+          "steps": [
+            "거주지 동주민센터 또는 해당 자치구 사업장에 이용 상담",
+            "동주민센터·자치구 담당자의 이용자 선정",
+            "기관 안내에 따른 신분증 준비 및 이용 등록",
+            "선정된 제공처에서 물품 선택·수령"
+          ],
+          "access": [
+            "등록·선정 후 해당 제공처 이용",
+            "방문이 어려운 경우 수령 방법을 기관에 알아보기"
+          ],
+          "hours": "월~금, 09:00 ~ 17:00",
+          "sources": [
+            {
+              "url": "https://www.s-foodbank.or.kr/board/market/marketList?page=2",
+              "title": "서울잇다푸드뱅크 기관 목록",
+              "checkedAt": "2026-09-17T18:30:37.395792+00:00"
+            },
+            {
+              "url": "https://www.s-foodbank.or.kr/intro/intro03",
+              "title": "푸드뱅크·마켓 대상 및 이용절차",
+              "checkedAt": "2026-09-17T18:30:37.395792+00:00"
+            }
+          ]
+        },
+        {
+          "programId": "just-dream",
+          "categories": [
+            "식품",
+            "생필품"
+          ],
+          "eligibility": [
+            "위기 상황 등으로 식료품 지원이 필요한 개인",
+            "주소지 관할 사업장 이용 원칙, 긴급 상황은 지역 외 우선 지원 판단"
+          ],
+          "steps": [
+            "신분증 준비 및 거주지 관할 코너 방문",
+            "자가 점검·사업 안내·지원 대상 상담",
+            "이용 신청서 작성 및 패키지 수령",
+            "재방문 시 생활 상황 상담, 필요한 경우 동주민센터 복지상담 연계"
+          ],
+          "access": [
+            "사업장 운영시간 내 방문",
+            "방문이 어려운 경우 이용 방법을 기관에 알아보기"
+          ],
+          "hours": "월, 수, 금 / 15:00~17:00",
+          "sources": [
+            {
+              "url": "https://www.s-foodbank.or.kr/board/map/mapList",
+              "title": "그냥드림 사업장 목록",
+              "checkedAt": "2026-09-17T18:30:37.395792+00:00"
+            },
+            {
+              "url": "https://s-foodbank.or.kr/justdream/guide",
+              "title": "그냥드림 이용안내",
+              "checkedAt": "2026-09-17T18:30:37.395792+00:00"
+            }
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "url": "https://www.s-foodbank.or.kr/board/market/marketList?page=2",
+          "title": "서울잇다푸드뱅크 기관 목록",
+          "checkedAt": "2026-09-17T18:30:37.395792+00:00"
+        },
+        {
+          "url": "https://www.s-foodbank.or.kr/board/map/mapList",
+          "title": "그냥드림 사업장 목록",
+          "checkedAt": "2026-09-17T18:30:37.395792+00:00"
+        }
+      ]
+    },
+    {
+      "id": "institution-3cb3892258d8",
+      "name": "관악잇다푸드뱅크센터",
+      "address": "서울 관악구 신림로58길 13, 다이아몬드빌딩 5층 501호",
+      "district": "관악구",
+      "roles": [
+        "사업 운영·이용 문의",
+        "그냥드림 제공처"
+      ],
+      "contacts": [
+        {
+          "purpose": "푸드뱅크·마켓 이용 문의",
+          "phone": "02-872-1377"
+        },
+        {
+          "purpose": "그냥드림 이용 문의",
+          "phone": "02-872-1377"
+        }
+      ],
+      "programs": [
+        {
+          "programId": "foodbank-market",
+          "categories": [
+            "식품",
+            "생필품"
+          ],
+          "eligibility": [
+            "경제적으로 어려운 개인 우선 지원",
+            "긴급지원·차상위·지원 중단 등 가구별 선정 상담"
+          ],
+          "steps": [
+            "거주지 동주민센터 또는 해당 자치구 사업장에 이용 상담",
+            "동주민센터·자치구 담당자의 이용자 선정",
+            "기관 안내에 따른 신분증 준비 및 이용 등록",
+            "선정된 제공처에서 물품 선택·수령"
+          ],
+          "access": [
+            "등록·선정 후 해당 제공처 이용",
+            "방문이 어려운 경우 수령 방법을 기관에 알아보기"
+          ],
+          "hours": "월~금, 09:00 ~ 17:00",
+          "sources": [
+            {
+              "url": "https://www.s-foodbank.or.kr/board/market/marketList",
+              "title": "서울잇다푸드뱅크 기관 목록",
+              "checkedAt": "2026-09-17T18:30:37.395792+00:00"
+            },
+            {
+              "url": "https://www.s-foodbank.or.kr/intro/intro03",
+              "title": "푸드뱅크·마켓 대상 및 이용절차",
+              "checkedAt": "2026-09-17T18:30:37.395792+00:00"
+            }
+          ]
+        },
+        {
+          "programId": "just-dream",
+          "categories": [
+            "식품",
+            "생필품"
+          ],
+          "eligibility": [
+            "위기 상황 등으로 식료품 지원이 필요한 개인",
+            "주소지 관할 사업장 이용 원칙, 긴급 상황은 지역 외 우선 지원 판단"
+          ],
+          "steps": [
+            "신분증 준비 및 거주지 관할 코너 방문",
+            "자가 점검·사업 안내·지원 대상 상담",
+            "이용 신청서 작성 및 패키지 수령",
+            "재방문 시 생활 상황 상담, 필요한 경우 동주민센터 복지상담 연계"
+          ],
+          "access": [
+            "사업장 운영시간 내 방문",
+            "방문이 어려운 경우 이용 방법을 기관에 알아보기"
+          ],
+          "hours": "수, 목 / 13:00~16:00",
+          "sources": [
+            {
+              "url": "https://www.s-foodbank.or.kr/board/map/mapList",
+              "title": "그냥드림 사업장 목록",
+              "checkedAt": "2026-09-17T18:30:37.395792+00:00"
+            },
+            {
+              "url": "https://s-foodbank.or.kr/justdream/guide",
+              "title": "그냥드림 이용안내",
+              "checkedAt": "2026-09-17T18:30:37.395792+00:00"
+            }
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "url": "https://www.s-foodbank.or.kr/board/market/marketList",
+          "title": "서울잇다푸드뱅크 기관 목록",
+          "checkedAt": "2026-09-17T18:30:37.395792+00:00"
+        },
+        {
+          "url": "https://www.s-foodbank.or.kr/board/map/mapList",
+          "title": "그냥드림 사업장 목록",
+          "checkedAt": "2026-09-17T18:30:37.395792+00:00"
+        }
+      ]
+    },
+    {
+      "id": "institution-fafab5e15a74",
+      "name": "광진잇다푸드뱅크센터",
+      "address": "서울 광진구 군자로34",
+      "district": "광진구",
+      "roles": [
+        "사업 운영·이용 문의",
+        "그냥드림 제공처"
+      ],
+      "contacts": [
+        {
+          "purpose": "푸드뱅크·마켓 이용 문의",
+          "phone": "02-499-1377"
+        },
+        {
+          "purpose": "그냥드림 이용 문의",
+          "phone": "02-499-1377"
+        }
+      ],
+      "programs": [
+        {
+          "programId": "foodbank-market",
+          "categories": [
+            "식품",
+            "생필품"
+          ],
+          "eligibility": [
+            "경제적으로 어려운 개인 우선 지원",
+            "긴급지원·차상위·지원 중단 등 가구별 선정 상담"
+          ],
+          "steps": [
+            "거주지 동주민센터 또는 해당 자치구 사업장에 이용 상담",
+            "동주민센터·자치구 담당자의 이용자 선정",
+            "기관 안내에 따른 신분증 준비 및 이용 등록",
+            "선정된 제공처에서 물품 선택·수령"
+          ],
+          "access": [
+            "등록·선정 후 해당 제공처 이용",
+            "방문이 어려운 경우 수령 방법을 기관에 알아보기"
+          ],
+          "hours": "월~금, 09:00 ~ 17:00",
+          "sources": [
+            {
+              "url": "https://www.s-foodbank.or.kr/board/market/marketList?page=4",
+              "title": "서울잇다푸드뱅크 기관 목록",
+              "checkedAt": "2026-09-17T18:30:37.395792+00:00"
+            },
+            {
+              "url": "https://www.s-foodbank.or.kr/intro/intro03",
+              "title": "푸드뱅크·마켓 대상 및 이용절차",
+              "checkedAt": "2026-09-17T18:30:37.395792+00:00"
+            }
+          ]
+        },
+        {
+          "programId": "just-dream",
+          "categories": [
+            "식품",
+            "생필품"
+          ],
+          "eligibility": [
+            "위기 상황 등으로 식료품 지원이 필요한 개인",
+            "주소지 관할 사업장 이용 원칙, 긴급 상황은 지역 외 우선 지원 판단"
+          ],
+          "steps": [
+            "신분증 준비 및 거주지 관할 코너 방문",
+            "자가 점검·사업 안내·지원 대상 상담",
+            "이용 신청서 작성 및 패키지 수령",
+            "재방문 시 생활 상황 상담, 필요한 경우 동주민센터 복지상담 연계"
+          ],
+          "access": [
+            "사업장 운영시간 내 방문",
+            "방문이 어려운 경우 이용 방법을 기관에 알아보기"
+          ],
+          "hours": "월~금 / 14:00~17:00",
+          "sources": [
+            {
+              "url": "https://www.s-foodbank.or.kr/board/map/mapList",
+              "title": "그냥드림 사업장 목록",
+              "checkedAt": "2026-09-17T18:30:37.395792+00:00"
+            },
+            {
+              "url": "https://s-foodbank.or.kr/justdream/guide",
+              "title": "그냥드림 이용안내",
+              "checkedAt": "2026-09-17T18:30:37.395792+00:00"
+            }
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "url": "https://www.s-foodbank.or.kr/board/market/marketList?page=4",
+          "title": "서울잇다푸드뱅크 기관 목록",
+          "checkedAt": "2026-09-17T18:30:37.395792+00:00"
+        },
+        {
+          "url": "https://www.s-foodbank.or.kr/board/map/mapList",
+          "title": "그냥드림 사업장 목록",
+          "checkedAt": "2026-09-17T18:30:37.395792+00:00"
+        }
+      ]
+    },
+    {
+      "id": "institution-aea58b3afd84",
+      "name": "구로잇다푸드뱅크센터",
+      "address": "서울 구로구 구로동로50길 10",
+      "district": "구로구",
+      "roles": [
+        "사업 운영·이용 문의",
+        "그냥드림 제공처"
+      ],
+      "contacts": [
+        {
+          "purpose": "푸드뱅크·마켓 이용 문의",
+          "phone": "02-3283-1377"
+        },
+        {
+          "purpose": "그냥드림 이용 문의",
+          "phone": "02-3283-1377"
+        }
+      ],
+      "programs": [
+        {
+          "programId": "foodbank-market",
+          "categories": [
+            "식품",
+            "생필품"
+          ],
+          "eligibility": [
+            "경제적으로 어려운 개인 우선 지원",
+            "긴급지원·차상위·지원 중단 등 가구별 선정 상담"
+          ],
+          "steps": [
+            "거주지 동주민센터 또는 해당 자치구 사업장에 이용 상담",
+            "동주민센터·자치구 담당자의 이용자 선정",
+            "기관 안내에 따른 신분증 준비 및 이용 등록",
+            "선정된 제공처에서 물품 선택·수령"
+          ],
+          "access": [
+            "등록·선정 후 해당 제공처 이용",
+            "방문이 어려운 경우 수령 방법을 기관에 알아보기"
+          ],
+          "hours": "월~금, 09:00 ~ 17:00",
+          "sources": [
+            {
+              "url": "https://www.s-foodbank.or.kr/board/market/marketList?page=2",
+              "title": "서울잇다푸드뱅크 기관 목록",
+              "checkedAt": "2026-09-17T18:30:37.395792+00:00"
+            },
+            {
+              "url": "https://www.s-foodbank.or.kr/intro/intro03",
+              "title": "푸드뱅크·마켓 대상 및 이용절차",
+              "checkedAt": "2026-09-17T18:30:37.395792+00:00"
+            }
+          ]
+        },
+        {
+          "programId": "just-dream",
+          "categories": [
+            "식품",
+            "생필품"
+          ],
+          "eligibility": [
+            "위기 상황 등으로 식료품 지원이 필요한 개인",
+            "주소지 관할 사업장 이용 원칙, 긴급 상황은 지역 외 우선 지원 판단"
+          ],
+          "steps": [
+            "신분증 준비 및 거주지 관할 코너 방문",
+            "자가 점검·사업 안내·지원 대상 상담",
+            "이용 신청서 작성 및 패키지 수령",
+            "재방문 시 생활 상황 상담, 필요한 경우 동주민센터 복지상담 연계"
+          ],
+          "access": [
+            "사업장 운영시간 내 방문",
+            "방문이 어려운 경우 이용 방법을 기관에 알아보기"
+          ],
+          "hours": "월~금 / 9:00~17:00",
+          "sources": [
+            {
+              "url": "https://www.s-foodbank.or.kr/board/map/mapList",
+              "title": "그냥드림 사업장 목록",
+              "checkedAt": "2026-09-17T18:30:37.395792+00:00"
+            },
+            {
+              "url": "https://s-foodbank.or.kr/justdream/guide",
+              "title": "그냥드림 이용안내",
+              "checkedAt": "2026-09-17T18:30:37.395792+00:00"
+            }
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "url": "https://www.s-foodbank.or.kr/board/market/marketList?page=2",
+          "title": "서울잇다푸드뱅크 기관 목록",
+          "checkedAt": "2026-09-17T18:30:37.395792+00:00"
+        },
+        {
+          "url": "https://www.s-foodbank.or.kr/board/map/mapList",
+          "title": "그냥드림 사업장 목록",
+          "checkedAt": "2026-09-17T18:30:37.395792+00:00"
+        }
+      ]
+    },
+    {
+      "id": "institution-d528b9ba11da",
+      "name": "금천잇다푸드뱅크센터",
+      "address": "서울 금천구 탑골로 35",
+      "district": "금천구",
+      "roles": [
+        "사업 운영·이용 문의",
+        "그냥드림 제공처"
+      ],
+      "contacts": [
+        {
+          "purpose": "푸드뱅크·마켓 이용 문의",
+          "phone": "02-3286-1377"
+        },
+        {
+          "purpose": "그냥드림 이용 문의",
+          "phone": "02-3286-1377"
+        }
+      ],
+      "programs": [
+        {
+          "programId": "foodbank-market",
+          "categories": [
+            "식품",
+            "생필품"
+          ],
+          "eligibility": [
+            "경제적으로 어려운 개인 우선 지원",
+            "긴급지원·차상위·지원 중단 등 가구별 선정 상담"
+          ],
+          "steps": [
+            "거주지 동주민센터 또는 해당 자치구 사업장에 이용 상담",
+            "동주민센터·자치구 담당자의 이용자 선정",
+            "기관 안내에 따른 신분증 준비 및 이용 등록",
+            "선정된 제공처에서 물품 선택·수령"
+          ],
+          "access": [
+            "등록·선정 후 해당 제공처 이용",
+            "방문이 어려운 경우 수령 방법을 기관에 알아보기"
+          ],
+          "hours": "월~금, 09:00 ~ 17:00",
+          "sources": [
+            {
+              "url": "https://www.s-foodbank.or.kr/board/market/marketList?page=2",
+              "title": "서울잇다푸드뱅크 기관 목록",
+              "checkedAt": "2026-09-17T18:30:37.395792+00:00"
+            },
+            {
+              "url": "https://www.s-foodbank.or.kr/intro/intro03",
+              "title": "푸드뱅크·마켓 대상 및 이용절차",
+              "checkedAt": "2026-09-17T18:30:37.395792+00:00"
+            }
+          ]
+        },
+        {
+          "programId": "just-dream",
+          "categories": [
+            "식품",
+            "생필품"
+          ],
+          "eligibility": [
+            "위기 상황 등으로 식료품 지원이 필요한 개인",
+            "주소지 관할 사업장 이용 원칙, 긴급 상황은 지역 외 우선 지원 판단"
+          ],
+          "steps": [
+            "신분증 준비 및 거주지 관할 코너 방문",
+            "자가 점검·사업 안내·지원 대상 상담",
+            "이용 신청서 작성 및 패키지 수령",
+            "재방문 시 생활 상황 상담, 필요한 경우 동주민센터 복지상담 연계"
+          ],
+          "access": [
+            "사업장 운영시간 내 방문",
+            "방문이 어려운 경우 이용 방법을 기관에 알아보기"
+          ],
+          "hours": "월~금 / 10:00~16:00",
+          "sources": [
+            {
+              "url": "https://www.s-foodbank.or.kr/board/map/mapList",
+              "title": "그냥드림 사업장 목록",
+              "checkedAt": "2026-09-17T18:30:37.395792+00:00"
+            },
+            {
+              "url": "https://s-foodbank.or.kr/justdream/guide",
+              "title": "그냥드림 이용안내",
+              "checkedAt": "2026-09-17T18:30:37.395792+00:00"
+            }
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "url": "https://www.s-foodbank.or.kr/board/market/marketList?page=2",
+          "title": "서울잇다푸드뱅크 기관 목록",
+          "checkedAt": "2026-09-17T18:30:37.395792+00:00"
+        },
+        {
+          "url": "https://www.s-foodbank.or.kr/board/map/mapList",
+          "title": "그냥드림 사업장 목록",
+          "checkedAt": "2026-09-17T18:30:37.395792+00:00"
+        }
+      ]
+    },
+    {
+      "id": "institution-0c8882f0bce6",
+      "name": "노원잇다푸드뱅크센터",
+      "address": "서울 노원구 동일로 1229, 노원구민의전당 지하1층",
+      "district": "노원구",
+      "roles": [
+        "사업 운영·이용 문의",
+        "그냥드림 제공처"
+      ],
+      "contacts": [
+        {
+          "purpose": "푸드뱅크·마켓 이용 문의",
+          "phone": "02-975-1277"
+        },
+        {
+          "purpose": "그냥드림 이용 문의",
+          "phone": "02-975-1277"
+        }
+      ],
+      "programs": [
+        {
+          "programId": "foodbank-market",
+          "categories": [
+            "식품",
+            "생필품"
+          ],
+          "eligibility": [
+            "경제적으로 어려운 개인 우선 지원",
+            "긴급지원·차상위·지원 중단 등 가구별 선정 상담"
+          ],
+          "steps": [
+            "거주지 동주민센터 또는 해당 자치구 사업장에 이용 상담",
+            "동주민센터·자치구 담당자의 이용자 선정",
+            "기관 안내에 따른 신분증 준비 및 이용 등록",
+            "선정된 제공처에서 물품 선택·수령"
+          ],
+          "access": [
+            "등록·선정 후 해당 제공처 이용",
+            "방문이 어려운 경우 수령 방법을 기관에 알아보기"
+          ],
+          "hours": "월~금, 09:00 ~ 17:00",
+          "sources": [
+            {
+              "url": "https://www.s-foodbank.or.kr/board/market/marketList?page=3",
+              "title": "서울잇다푸드뱅크 기관 목록",
+              "checkedAt": "2026-09-17T18:30:37.395792+00:00"
+            },
+            {
+              "url": "https://www.s-foodbank.or.kr/intro/intro03",
+              "title": "푸드뱅크·마켓 대상 및 이용절차",
+              "checkedAt": "2026-09-17T18:30:37.395792+00:00"
+            }
+          ]
+        },
+        {
+          "programId": "just-dream",
+          "categories": [
+            "식품",
+            "생필품"
+          ],
+          "eligibility": [
+            "위기 상황 등으로 식료품 지원이 필요한 개인",
+            "주소지 관할 사업장 이용 원칙, 긴급 상황은 지역 외 우선 지원 판단"
+          ],
+          "steps": [
+            "신분증 준비 및 거주지 관할 코너 방문",
+            "자가 점검·사업 안내·지원 대상 상담",
+            "이용 신청서 작성 및 패키지 수령",
+            "재방문 시 생활 상황 상담, 필요한 경우 동주민센터 복지상담 연계"
+          ],
+          "access": [
+            "사업장 운영시간 내 방문",
+            "방문이 어려운 경우 이용 방법을 기관에 알아보기"
+          ],
+          "hours": "월~금 15:00~17:00",
+          "sources": [
+            {
+              "url": "https://www.s-foodbank.or.kr/board/map/mapList",
+              "title": "그냥드림 사업장 목록",
+              "checkedAt": "2026-09-17T18:30:37.395792+00:00"
+            },
+            {
+              "url": "https://s-foodbank.or.kr/justdream/guide",
+              "title": "그냥드림 이용안내",
+              "checkedAt": "2026-09-17T18:30:37.395792+00:00"
+            }
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "url": "https://www.s-foodbank.or.kr/board/market/marketList?page=3",
+          "title": "서울잇다푸드뱅크 기관 목록",
+          "checkedAt": "2026-09-17T18:30:37.395792+00:00"
+        },
+        {
+          "url": "https://www.s-foodbank.or.kr/board/map/mapList",
+          "title": "그냥드림 사업장 목록",
+          "checkedAt": "2026-09-17T18:30:37.395792+00:00"
+        }
+      ]
+    },
+    {
+      "id": "institution-82223413adb3",
+      "name": "도봉잇다푸드뱅크센터",
+      "address": "서울 도봉구 도봉로170길 2, 도봉역 다가치센터 16구역",
+      "district": "도봉구",
+      "roles": [
+        "사업 운영·이용 문의",
+        "그냥드림 제공처"
+      ],
+      "contacts": [
+        {
+          "purpose": "푸드뱅크·마켓 이용 문의",
+          "phone": "02-907-1377"
+        },
+        {
+          "purpose": "그냥드림 이용 문의",
+          "phone": "02-907-1377"
+        }
+      ],
+      "programs": [
+        {
+          "programId": "foodbank-market",
+          "categories": [
+            "식품",
+            "생필품"
+          ],
+          "eligibility": [
+            "경제적으로 어려운 개인 우선 지원",
+            "긴급지원·차상위·지원 중단 등 가구별 선정 상담"
+          ],
+          "steps": [
+            "거주지 동주민센터 또는 해당 자치구 사업장에 이용 상담",
+            "동주민센터·자치구 담당자의 이용자 선정",
+            "기관 안내에 따른 신분증 준비 및 이용 등록",
+            "선정된 제공처에서 물품 선택·수령"
+          ],
+          "access": [
+            "등록·선정 후 해당 제공처 이용",
+            "방문이 어려운 경우 수령 방법을 기관에 알아보기"
+          ],
+          "hours": "월~금, 09:00 ~ 17:00",
+          "sources": [
+            {
+              "url": "https://www.s-foodbank.or.kr/board/market/marketList?page=3",
+              "title": "서울잇다푸드뱅크 기관 목록",
+              "checkedAt": "2026-09-17T18:30:37.395792+00:00"
+            },
+            {
+              "url": "https://www.s-foodbank.or.kr/intro/intro03",
+              "title": "푸드뱅크·마켓 대상 및 이용절차",
+              "checkedAt": "2026-09-17T18:30:37.395792+00:00"
+            }
+          ]
+        },
+        {
+          "programId": "just-dream",
+          "categories": [
+            "식품",
+            "생필품"
+          ],
+          "eligibility": [
+            "위기 상황 등으로 식료품 지원이 필요한 개인",
+            "주소지 관할 사업장 이용 원칙, 긴급 상황은 지역 외 우선 지원 판단"
+          ],
+          "steps": [
+            "신분증 준비 및 거주지 관할 코너 방문",
+            "자가 점검·사업 안내·지원 대상 상담",
+            "이용 신청서 작성 및 패키지 수령",
+            "재방문 시 생활 상황 상담, 필요한 경우 동주민센터 복지상담 연계"
+          ],
+          "access": [
+            "사업장 운영시간 내 방문",
+            "방문이 어려운 경우 이용 방법을 기관에 알아보기"
+          ],
+          "hours": "화, 목 / 13:00~17:00",
+          "sources": [
+            {
+              "url": "https://www.s-foodbank.or.kr/board/map/mapList",
+              "title": "그냥드림 사업장 목록",
+              "checkedAt": "2026-09-17T18:30:37.395792+00:00"
+            },
+            {
+              "url": "https://s-foodbank.or.kr/justdream/guide",
+              "title": "그냥드림 이용안내",
+              "checkedAt": "2026-09-17T18:30:37.395792+00:00"
+            }
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "url": "https://www.s-foodbank.or.kr/board/market/marketList?page=3",
+          "title": "서울잇다푸드뱅크 기관 목록",
+          "checkedAt": "2026-09-17T18:30:37.395792+00:00"
+        },
+        {
+          "url": "https://www.s-foodbank.or.kr/board/map/mapList",
+          "title": "그냥드림 사업장 목록",
+          "checkedAt": "2026-09-17T18:30:37.395792+00:00"
+        }
+      ]
+    },
+    {
+      "id": "institution-85eb930f46cb",
+      "name": "동대문잇다푸드뱅크센터",
+      "address": "서울 동대문구 천호대로2길 23-9, 1층",
+      "district": "동대문구",
+      "roles": [
+        "사업 운영·이용 문의",
+        "그냥드림 제공처"
+      ],
+      "contacts": [
+        {
+          "purpose": "푸드뱅크·마켓 이용 문의",
+          "phone": "02-2246-0036"
+        },
+        {
+          "purpose": "그냥드림 이용 문의",
+          "phone": "02-2246-0036"
+        }
+      ],
+      "programs": [
+        {
+          "programId": "foodbank-market",
+          "categories": [
+            "식품",
+            "생필품"
+          ],
+          "eligibility": [
+            "경제적으로 어려운 개인 우선 지원",
+            "긴급지원·차상위·지원 중단 등 가구별 선정 상담"
+          ],
+          "steps": [
+            "거주지 동주민센터 또는 해당 자치구 사업장에 이용 상담",
+            "동주민센터·자치구 담당자의 이용자 선정",
+            "기관 안내에 따른 신분증 준비 및 이용 등록",
+            "선정된 제공처에서 물품 선택·수령"
+          ],
+          "access": [
+            "등록·선정 후 해당 제공처 이용",
+            "방문이 어려운 경우 수령 방법을 기관에 알아보기"
+          ],
+          "hours": "월~금, 09:00 ~ 17:00",
+          "sources": [
+            {
+              "url": "https://www.s-foodbank.or.kr/board/market/marketList?page=3",
+              "title": "서울잇다푸드뱅크 기관 목록",
+              "checkedAt": "2026-09-17T18:30:37.395792+00:00"
+            },
+            {
+              "url": "https://www.s-foodbank.or.kr/intro/intro03",
+              "title": "푸드뱅크·마켓 대상 및 이용절차",
+              "checkedAt": "2026-09-17T18:30:37.395792+00:00"
+            }
+          ]
+        },
+        {
+          "programId": "just-dream",
+          "categories": [
+            "식품",
+            "생필품"
+          ],
+          "eligibility": [
+            "위기 상황 등으로 식료품 지원이 필요한 개인",
+            "주소지 관할 사업장 이용 원칙, 긴급 상황은 지역 외 우선 지원 판단"
+          ],
+          "steps": [
+            "신분증 준비 및 거주지 관할 코너 방문",
+            "자가 점검·사업 안내·지원 대상 상담",
+            "이용 신청서 작성 및 패키지 수령",
+            "재방문 시 생활 상황 상담, 필요한 경우 동주민센터 복지상담 연계"
+          ],
+          "access": [
+            "사업장 운영시간 내 방문",
+            "방문이 어려운 경우 이용 방법을 기관에 알아보기"
+          ],
+          "hours": "월~금 / 13:00~17:00",
+          "sources": [
+            {
+              "url": "https://www.s-foodbank.or.kr/board/map/mapList?page=2",
+              "title": "그냥드림 사업장 목록",
+              "checkedAt": "2026-09-17T18:30:37.395792+00:00"
+            },
+            {
+              "url": "https://s-foodbank.or.kr/justdream/guide",
+              "title": "그냥드림 이용안내",
+              "checkedAt": "2026-09-17T18:30:37.395792+00:00"
+            }
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "url": "https://www.s-foodbank.or.kr/board/market/marketList?page=3",
+          "title": "서울잇다푸드뱅크 기관 목록",
+          "checkedAt": "2026-09-17T18:30:37.395792+00:00"
+        },
+        {
+          "url": "https://www.s-foodbank.or.kr/board/map/mapList?page=2",
+          "title": "그냥드림 사업장 목록",
+          "checkedAt": "2026-09-17T18:30:37.395792+00:00"
+        }
+      ]
+    },
+    {
+      "id": "institution-15cb8a2c800d",
+      "name": "동작잇다푸드뱅크센터",
+      "address": "서울 동작구 사당로17길 8, 대림프라자 107호, 206호",
+      "district": "동작구",
+      "roles": [
+        "사업 운영·이용 문의",
+        "그냥드림 제공처"
+      ],
+      "contacts": [
+        {
+          "purpose": "푸드뱅크·마켓 이용 문의",
+          "phone": "02-817-1377"
+        },
+        {
+          "purpose": "그냥드림 이용 문의",
+          "phone": "02-817-1377"
+        }
+      ],
+      "programs": [
+        {
+          "programId": "foodbank-market",
+          "categories": [
+            "식품",
+            "생필품"
+          ],
+          "eligibility": [
+            "경제적으로 어려운 개인 우선 지원",
+            "긴급지원·차상위·지원 중단 등 가구별 선정 상담"
+          ],
+          "steps": [
+            "거주지 동주민센터 또는 해당 자치구 사업장에 이용 상담",
+            "동주민센터·자치구 담당자의 이용자 선정",
+            "기관 안내에 따른 신분증 준비 및 이용 등록",
+            "선정된 제공처에서 물품 선택·수령"
+          ],
+          "access": [
+            "등록·선정 후 해당 제공처 이용",
+            "방문이 어려운 경우 수령 방법을 기관에 알아보기"
+          ],
+          "hours": "월~금, 10:00 ~ 17:00",
+          "sources": [
+            {
+              "url": "https://www.s-foodbank.or.kr/board/market/marketList",
+              "title": "서울잇다푸드뱅크 기관 목록",
+              "checkedAt": "2026-09-17T18:30:37.395792+00:00"
+            },
+            {
+              "url": "https://www.s-foodbank.or.kr/intro/intro03",
+              "title": "푸드뱅크·마켓 대상 및 이용절차",
+              "checkedAt": "2026-09-17T18:30:37.395792+00:00"
+            }
+          ]
+        },
+        {
+          "programId": "just-dream",
+          "categories": [
+            "식품",
+            "생필품"
+          ],
+          "eligibility": [
+            "위기 상황 등으로 식료품 지원이 필요한 개인",
+            "주소지 관할 사업장 이용 원칙, 긴급 상황은 지역 외 우선 지원 판단"
+          ],
+          "steps": [
+            "신분증 준비 및 거주지 관할 코너 방문",
+            "자가 점검·사업 안내·지원 대상 상담",
+            "이용 신청서 작성 및 패키지 수령",
+            "재방문 시 생활 상황 상담, 필요한 경우 동주민센터 복지상담 연계"
+          ],
+          "access": [
+            "사업장 운영시간 내 방문",
+            "방문이 어려운 경우 이용 방법을 기관에 알아보기"
+          ],
+          "hours": "월~금 / 9:00~17:00",
+          "sources": [
+            {
+              "url": "https://www.s-foodbank.or.kr/board/map/mapList?page=2",
+              "title": "그냥드림 사업장 목록",
+              "checkedAt": "2026-09-17T18:30:37.395792+00:00"
+            },
+            {
+              "url": "https://s-foodbank.or.kr/justdream/guide",
+              "title": "그냥드림 이용안내",
+              "checkedAt": "2026-09-17T18:30:37.395792+00:00"
+            }
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "url": "https://www.s-foodbank.or.kr/board/market/marketList",
+          "title": "서울잇다푸드뱅크 기관 목록",
+          "checkedAt": "2026-09-17T18:30:37.395792+00:00"
+        },
+        {
+          "url": "https://www.s-foodbank.or.kr/board/map/mapList?page=2",
+          "title": "그냥드림 사업장 목록",
+          "checkedAt": "2026-09-17T18:30:37.395792+00:00"
+        }
+      ]
+    },
+    {
+      "id": "institution-b3a44da06608",
+      "name": "마포잇다푸드뱅크센터 1호점",
+      "address": "서울 마포구 월드컵로235, 마포농수산물시장 내 1층",
+      "district": "마포구",
+      "roles": [
+        "사업 운영·이용 문의",
+        "그냥드림 제공처"
+      ],
+      "contacts": [
+        {
+          "purpose": "푸드뱅크·마켓 이용 문의",
+          "phone": "02-364-1377"
+        },
+        {
+          "purpose": "그냥드림 이용 문의",
+          "phone": "02-712-1377"
+        }
+      ],
+      "programs": [
+        {
+          "programId": "foodbank-market",
+          "categories": [
+            "식품",
+            "생필품"
+          ],
+          "eligibility": [
+            "경제적으로 어려운 개인 우선 지원",
+            "긴급지원·차상위·지원 중단 등 가구별 선정 상담"
+          ],
+          "steps": [
+            "거주지 동주민센터 또는 해당 자치구 사업장에 이용 상담",
+            "동주민센터·자치구 담당자의 이용자 선정",
+            "기관 안내에 따른 신분증 준비 및 이용 등록",
+            "선정된 제공처에서 물품 선택·수령"
+          ],
+          "access": [
+            "등록·선정 후 해당 제공처 이용",
+            "방문이 어려운 경우 수령 방법을 기관에 알아보기"
+          ],
+          "hours": "월~금, 09:00 ~ 17:00",
+          "sources": [
+            {
+              "url": "https://www.s-foodbank.or.kr/board/market/marketList?page=2",
+              "title": "서울잇다푸드뱅크 기관 목록",
+              "checkedAt": "2026-09-17T18:30:37.395792+00:00"
+            },
+            {
+              "url": "https://www.s-foodbank.or.kr/intro/intro03",
+              "title": "푸드뱅크·마켓 대상 및 이용절차",
+              "checkedAt": "2026-09-17T18:30:37.395792+00:00"
+            }
+          ]
+        },
+        {
+          "programId": "just-dream",
+          "categories": [
+            "식품",
+            "생필품"
+          ],
+          "eligibility": [
+            "위기 상황 등으로 식료품 지원이 필요한 개인",
+            "주소지 관할 사업장 이용 원칙, 긴급 상황은 지역 외 우선 지원 판단"
+          ],
+          "steps": [
+            "신분증 준비 및 거주지 관할 코너 방문",
+            "자가 점검·사업 안내·지원 대상 상담",
+            "이용 신청서 작성 및 패키지 수령",
+            "재방문 시 생활 상황 상담, 필요한 경우 동주민센터 복지상담 연계"
+          ],
+          "access": [
+            "사업장 운영시간 내 방문",
+            "방문이 어려운 경우 이용 방법을 기관에 알아보기"
+          ],
+          "hours": "월~금 / 9:00~17:00",
+          "sources": [
+            {
+              "url": "https://www.s-foodbank.or.kr/board/map/mapList?page=2",
+              "title": "그냥드림 사업장 목록",
+              "checkedAt": "2026-09-17T18:30:37.395792+00:00"
+            },
+            {
+              "url": "https://s-foodbank.or.kr/justdream/guide",
+              "title": "그냥드림 이용안내",
+              "checkedAt": "2026-09-17T18:30:37.395792+00:00"
+            }
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "url": "https://www.s-foodbank.or.kr/board/market/marketList?page=2",
+          "title": "서울잇다푸드뱅크 기관 목록",
+          "checkedAt": "2026-09-17T18:30:37.395792+00:00"
+        },
+        {
+          "url": "https://www.s-foodbank.or.kr/board/map/mapList?page=2",
+          "title": "그냥드림 사업장 목록",
+          "checkedAt": "2026-09-17T18:30:37.395792+00:00"
+        }
+      ]
+    },
+    {
+      "id": "institution-6b74d26a844c",
+      "name": "마포잇다푸드뱅크센터 2호점",
+      "address": "서울 마포구 신촌로26길10, 우리마포복지관 지하1층",
+      "district": "마포구",
+      "roles": [
+        "사업 운영·이용 문의",
+        "그냥드림 제공처"
+      ],
+      "contacts": [
+        {
+          "purpose": "푸드뱅크·마켓 이용 문의",
+          "phone": "02-703-1377"
+        },
+        {
+          "purpose": "그냥드림 이용 문의",
+          "phone": "02-703-1377"
+        }
+      ],
+      "programs": [
+        {
+          "programId": "foodbank-market",
+          "categories": [
+            "식품",
+            "생필품"
+          ],
+          "eligibility": [
+            "경제적으로 어려운 개인 우선 지원",
+            "긴급지원·차상위·지원 중단 등 가구별 선정 상담"
+          ],
+          "steps": [
+            "거주지 동주민센터 또는 해당 자치구 사업장에 이용 상담",
+            "동주민센터·자치구 담당자의 이용자 선정",
+            "기관 안내에 따른 신분증 준비 및 이용 등록",
+            "선정된 제공처에서 물품 선택·수령"
+          ],
+          "access": [
+            "등록·선정 후 해당 제공처 이용",
+            "방문이 어려운 경우 수령 방법을 기관에 알아보기"
+          ],
+          "hours": "월~금, 09:00 ~ 17:00",
+          "sources": [
+            {
+              "url": "https://www.s-foodbank.or.kr/board/market/marketList?page=2",
+              "title": "서울잇다푸드뱅크 기관 목록",
+              "checkedAt": "2026-09-17T18:30:37.395792+00:00"
+            },
+            {
+              "url": "https://www.s-foodbank.or.kr/intro/intro03",
+              "title": "푸드뱅크·마켓 대상 및 이용절차",
+              "checkedAt": "2026-09-17T18:30:37.395792+00:00"
+            }
+          ]
+        },
+        {
+          "programId": "just-dream",
+          "categories": [
+            "식품",
+            "생필품"
+          ],
+          "eligibility": [
+            "위기 상황 등으로 식료품 지원이 필요한 개인",
+            "주소지 관할 사업장 이용 원칙, 긴급 상황은 지역 외 우선 지원 판단"
+          ],
+          "steps": [
+            "신분증 준비 및 거주지 관할 코너 방문",
+            "자가 점검·사업 안내·지원 대상 상담",
+            "이용 신청서 작성 및 패키지 수령",
+            "재방문 시 생활 상황 상담, 필요한 경우 동주민센터 복지상담 연계"
+          ],
+          "access": [
+            "사업장 운영시간 내 방문",
+            "방문이 어려운 경우 이용 방법을 기관에 알아보기"
+          ],
+          "hours": "월~금 / 9:00~17:00",
+          "sources": [
+            {
+              "url": "https://www.s-foodbank.or.kr/board/map/mapList?page=2",
+              "title": "그냥드림 사업장 목록",
+              "checkedAt": "2026-09-17T18:30:37.395792+00:00"
+            },
+            {
+              "url": "https://s-foodbank.or.kr/justdream/guide",
+              "title": "그냥드림 이용안내",
+              "checkedAt": "2026-09-17T18:30:37.395792+00:00"
+            }
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "url": "https://www.s-foodbank.or.kr/board/market/marketList?page=2",
+          "title": "서울잇다푸드뱅크 기관 목록",
+          "checkedAt": "2026-09-17T18:30:37.395792+00:00"
+        },
+        {
+          "url": "https://www.s-foodbank.or.kr/board/map/mapList?page=2",
+          "title": "그냥드림 사업장 목록",
+          "checkedAt": "2026-09-17T18:30:37.395792+00:00"
+        }
+      ]
+    },
+    {
+      "id": "institution-d11e90e0e4e5",
+      "name": "서대문잇다푸드마켓",
+      "address": "서울 서대문구 독립문로 50",
+      "district": "서대문구",
+      "roles": [
+        "사업 운영·이용 문의"
+      ],
+      "contacts": [
+        {
+          "purpose": "푸드뱅크·마켓 이용 문의",
+          "phone": "02-392-1377"
+        }
+      ],
+      "programs": [
+        {
+          "programId": "foodbank-market",
+          "categories": [
+            "식품",
+            "생필품"
+          ],
+          "eligibility": [
+            "경제적으로 어려운 개인 우선 지원",
+            "긴급지원·차상위·지원 중단 등 가구별 선정 상담"
+          ],
+          "steps": [
+            "거주지 동주민센터 또는 해당 자치구 사업장에 이용 상담",
+            "동주민센터·자치구 담당자의 이용자 선정",
+            "기관 안내에 따른 신분증 준비 및 이용 등록",
+            "선정된 제공처에서 물품 선택·수령"
+          ],
+          "access": [
+            "등록·선정 후 해당 제공처 이용",
+            "방문이 어려운 경우 수령 방법을 기관에 알아보기"
+          ],
+          "hours": "월~금, 09:00 ~ 17:00",
+          "sources": [
+            {
+              "url": "https://www.s-foodbank.or.kr/board/market/marketList?page=3",
+              "title": "서울잇다푸드뱅크 기관 목록",
+              "checkedAt": "2026-09-17T18:30:37.395792+00:00"
+            },
+            {
+              "url": "https://www.s-foodbank.or.kr/intro/intro03",
+              "title": "푸드뱅크·마켓 대상 및 이용절차",
+              "checkedAt": "2026-09-17T18:30:37.395792+00:00"
+            }
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "url": "https://www.s-foodbank.or.kr/board/market/marketList?page=3",
+          "title": "서울잇다푸드뱅크 기관 목록",
+          "checkedAt": "2026-09-17T18:30:37.395792+00:00"
+        }
+      ]
+    },
+    {
+      "id": "institution-42e6046492e9",
+      "name": "서대문잇다푸드뱅크",
+      "address": "서울 서대문구 연희로 292",
+      "district": "서대문구",
+      "roles": [
+        "사업 운영·이용 문의"
+      ],
+      "contacts": [
+        {
+          "purpose": "푸드뱅크·마켓 이용 문의",
+          "phone": "02-304-1376"
+        }
+      ],
+      "programs": [
+        {
+          "programId": "foodbank-market",
+          "categories": [
+            "식품",
+            "생필품"
+          ],
+          "eligibility": [
+            "경제적으로 어려운 개인 우선 지원",
+            "긴급지원·차상위·지원 중단 등 가구별 선정 상담"
+          ],
+          "steps": [
+            "거주지 동주민센터 또는 해당 자치구 사업장에 이용 상담",
+            "동주민센터·자치구 담당자의 이용자 선정",
+            "기관 안내에 따른 신분증 준비 및 이용 등록",
+            "선정된 제공처에서 물품 선택·수령"
+          ],
+          "access": [
+            "등록·선정 후 해당 제공처 이용",
+            "방문이 어려운 경우 수령 방법을 기관에 알아보기"
+          ],
+          "hours": "월~금, 10:00 ~ 17:00",
+          "sources": [
+            {
+              "url": "https://www.s-foodbank.or.kr/board/market/marketList?page=2",
+              "title": "서울잇다푸드뱅크 기관 목록",
+              "checkedAt": "2026-09-17T18:30:37.395792+00:00"
+            },
+            {
+              "url": "https://www.s-foodbank.or.kr/intro/intro03",
+              "title": "푸드뱅크·마켓 대상 및 이용절차",
+              "checkedAt": "2026-09-17T18:30:37.395792+00:00"
+            }
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "url": "https://www.s-foodbank.or.kr/board/market/marketList?page=2",
+          "title": "서울잇다푸드뱅크 기관 목록",
+          "checkedAt": "2026-09-17T18:30:37.395792+00:00"
+        }
+      ]
+    },
+    {
+      "id": "institution-fcecd557e4a2",
+      "name": "서대문정담은푸드마켓 2호점",
+      "address": "서울 서대문구 가좌로 84-1",
+      "district": "서대문구",
+      "roles": [
+        "사업 운영·이용 문의",
+        "그냥드림 제공처"
+      ],
+      "contacts": [
+        {
+          "purpose": "그냥드림 이용 문의",
+          "phone": "02-3157-1377"
+        }
+      ],
+      "programs": [
+        {
+          "programId": "just-dream",
+          "categories": [
+            "식품",
+            "생필품"
+          ],
+          "eligibility": [
+            "위기 상황 등으로 식료품 지원이 필요한 개인",
+            "주소지 관할 사업장 이용 원칙, 긴급 상황은 지역 외 우선 지원 판단"
+          ],
+          "steps": [
+            "신분증 준비 및 거주지 관할 코너 방문",
+            "자가 점검·사업 안내·지원 대상 상담",
+            "이용 신청서 작성 및 패키지 수령",
+            "재방문 시 생활 상황 상담, 필요한 경우 동주민센터 복지상담 연계"
+          ],
+          "access": [
+            "사업장 운영시간 내 방문",
+            "방문이 어려운 경우 이용 방법을 기관에 알아보기"
+          ],
+          "hours": "화, 목, 금 / 13:00~17:00",
+          "sources": [
+            {
+              "url": "https://www.s-foodbank.or.kr/board/map/mapList?page=2",
+              "title": "그냥드림 사업장 목록",
+              "checkedAt": "2026-09-17T18:30:37.395792+00:00"
+            },
+            {
+              "url": "https://s-foodbank.or.kr/justdream/guide",
+              "title": "그냥드림 이용안내",
+              "checkedAt": "2026-09-17T18:30:37.395792+00:00"
+            }
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "url": "https://www.s-foodbank.or.kr/board/map/mapList?page=2",
+          "title": "그냥드림 사업장 목록",
+          "checkedAt": "2026-09-17T18:30:37.395792+00:00"
+        }
+      ]
+    },
+    {
+      "id": "seoul-care-120",
+      "name": "서울시 안심돌봄120",
+      "address": "",
+      "district": "서울 전체",
+      "roles": [
+        "관할 접수창구 안내"
+      ],
+      "contacts": [
+        {
+          "purpose": "돌봄SOS 관할 창구 안내",
+          "phone": "1668-0120"
+        },
+        {
+          "purpose": "서울시 다산콜센터 안내",
+          "phone": "02-120"
+        }
+      ],
+      "programs": [
+        {
+          "programId": "care-sos",
+          "categories": [
+            "식사배달",
+            "일시재가",
+            "단기시설",
+            "동행지원",
+            "주거편의"
+          ],
+          "eligibility": [
+            "긴급하고 일시적인 돌봄이 필요한 서울시민",
+            "소득과 공적 돌봄 이용 상황에 따른 비용 지원 상담"
+          ],
+          "steps": [
+            "주소지 관할 동주민센터에 전화 또는 방문 신청",
+            "돌봄매니저의 생활 상황·긴급도·필요 확인",
+            "돌봄계획 수립 및 협약 제공기관 의뢰",
+            "기관별 서비스 제공과 이용 결과 점검"
+          ],
+          "access": [
+            "주소지 관할 동주민센터 신청",
+            "사업별 제공기관과 서비스 방식 조율"
+          ],
+          "hours": "관할 접수창구 운영시간 상담",
+          "sources": [
+            {
+              "url": "https://wis.seoul.go.kr/wfs/sos/guide.do",
+              "title": "서울복지포털 돌봄SOS 사업 안내",
+              "checkedAt": "2026-09-17T18:30:37.395792+00:00"
+            }
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "url": "https://wis.seoul.go.kr/wfs/sos/guide.do",
+          "title": "서울복지포털 돌봄SOS 사업 안내",
+          "checkedAt": "2026-09-17T18:30:37.395792+00:00"
+        }
+      ]
+    },
+    {
+      "id": "seoul-foodbank-mobile",
+      "name": "서울잇다푸드뱅크센터",
+      "address": "서울특별시 성동구 자동차시장3길 64",
+      "district": "서울 전체",
+      "roles": [
+        "광역 사업 운영",
+        "사업 운영·일정 문의"
+      ],
+      "contacts": [
+        {
+          "purpose": "이동푸드마켓 운영·일정 문의",
+          "phone": "02-905-1377"
+        }
+      ],
+      "programs": [
+        {
+          "programId": "mobile-market",
+          "categories": [
+            "식품",
+            "생필품",
+            "식사"
+          ],
+          "eligibility": [
+            "지리적 여건과 거동 제약으로 푸드마켓 이용이 어려운 취약계층",
+            "지역 사업별 대상·일정 상담"
+          ],
+          "steps": [
+            "거주 지역과 방문 제약을 기준으로 운영기관에 일정·대상 문의",
+            "자치구·지역 기관의 참여 방법 상담",
+            "지역별 나눔장터·꾸러미 전달 등 운영 방식에 따른 이용"
+          ],
+          "access": [
+            "나눔장터·꾸러미 전달·동 단위 미니마켓 등 사업별 운영",
+            "가정 배달은 개별 사업의 운영 조건에 따른 조율",
+            "센터 주소는 사업 운영 연락처이며 개인 방문 수령 예약 장소가 아님"
+          ],
+          "hours": "지역별 운영 일정 상담",
+          "sources": [
+            {
+              "url": "https://news.seoul.go.kr/welfare/archives/1355",
+              "title": "서울시 찾아가는 푸드마켓 운영",
+              "checkedAt": "2026-09-17T18:30:37.395792+00:00"
+            },
+            {
+              "url": "https://www.s-foodbank.or.kr/board/business/8",
+              "title": "서울잇다푸드뱅크 이동푸드마켓",
+              "checkedAt": "2026-09-17T18:30:37.395792+00:00"
+            }
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "url": "https://news.seoul.go.kr/welfare/archives/1355",
+          "title": "서울시 찾아가는 푸드마켓 운영",
+          "checkedAt": "2026-09-17T18:30:37.395792+00:00"
+        },
+        {
+          "url": "https://www.s-foodbank.or.kr/board/business/8",
+          "title": "서울잇다푸드뱅크 이동푸드마켓",
+          "checkedAt": "2026-09-17T18:30:37.395792+00:00"
+        }
+      ]
+    },
+    {
+      "id": "institution-06adcfc61bdb",
+      "name": "서초잇다푸드뱅크센터",
+      "address": "서울 서초구 바우뫼로 43, 지하 2층",
+      "district": "서초구",
+      "roles": [
+        "사업 운영·이용 문의",
+        "그냥드림 제공처"
+      ],
+      "contacts": [
+        {
+          "purpose": "푸드뱅크·마켓 이용 문의",
+          "phone": "02-577-5864"
+        },
+        {
+          "purpose": "그냥드림 이용 문의",
+          "phone": "02-577-5864"
+        }
+      ],
+      "programs": [
+        {
+          "programId": "foodbank-market",
+          "categories": [
+            "식품",
+            "생필품"
+          ],
+          "eligibility": [
+            "경제적으로 어려운 개인 우선 지원",
+            "긴급지원·차상위·지원 중단 등 가구별 선정 상담"
+          ],
+          "steps": [
+            "거주지 동주민센터 또는 해당 자치구 사업장에 이용 상담",
+            "동주민센터·자치구 담당자의 이용자 선정",
+            "기관 안내에 따른 신분증 준비 및 이용 등록",
+            "선정된 제공처에서 물품 선택·수령"
+          ],
+          "access": [
+            "등록·선정 후 해당 제공처 이용",
+            "방문이 어려운 경우 수령 방법을 기관에 알아보기"
+          ],
+          "hours": "월~금, 09:00 ~ 17:00",
+          "sources": [
+            {
+              "url": "https://www.s-foodbank.or.kr/board/market/marketList",
+              "title": "서울잇다푸드뱅크 기관 목록",
+              "checkedAt": "2026-09-17T18:30:37.395792+00:00"
+            },
+            {
+              "url": "https://www.s-foodbank.or.kr/intro/intro03",
+              "title": "푸드뱅크·마켓 대상 및 이용절차",
+              "checkedAt": "2026-09-17T18:30:37.395792+00:00"
+            }
+          ]
+        },
+        {
+          "programId": "just-dream",
+          "categories": [
+            "식품",
+            "생필품"
+          ],
+          "eligibility": [
+            "위기 상황 등으로 식료품 지원이 필요한 개인",
+            "주소지 관할 사업장 이용 원칙, 긴급 상황은 지역 외 우선 지원 판단"
+          ],
+          "steps": [
+            "신분증 준비 및 거주지 관할 코너 방문",
+            "자가 점검·사업 안내·지원 대상 상담",
+            "이용 신청서 작성 및 패키지 수령",
+            "재방문 시 생활 상황 상담, 필요한 경우 동주민센터 복지상담 연계"
+          ],
+          "access": [
+            "사업장 운영시간 내 방문",
+            "방문이 어려운 경우 이용 방법을 기관에 알아보기"
+          ],
+          "hours": "수, 목, 금 / 10:00~16:00",
+          "sources": [
+            {
+              "url": "https://www.s-foodbank.or.kr/board/map/mapList?page=2",
+              "title": "그냥드림 사업장 목록",
+              "checkedAt": "2026-09-17T18:30:37.395792+00:00"
+            },
+            {
+              "url": "https://s-foodbank.or.kr/justdream/guide",
+              "title": "그냥드림 이용안내",
+              "checkedAt": "2026-09-17T18:30:37.395792+00:00"
+            }
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "url": "https://www.s-foodbank.or.kr/board/market/marketList",
+          "title": "서울잇다푸드뱅크 기관 목록",
+          "checkedAt": "2026-09-17T18:30:37.395792+00:00"
+        },
+        {
+          "url": "https://www.s-foodbank.or.kr/board/map/mapList?page=2",
+          "title": "그냥드림 사업장 목록",
+          "checkedAt": "2026-09-17T18:30:37.395792+00:00"
+        }
+      ]
+    },
+    {
+      "id": "institution-5b32afb73b01",
+      "name": "성동잇다푸드뱅크센터",
+      "address": "서울 성동구 고산자로 323, 201호",
+      "district": "성동구",
+      "roles": [
+        "사업 운영·이용 문의",
+        "그냥드림 제공처"
+      ],
+      "contacts": [
+        {
+          "purpose": "푸드뱅크·마켓 이용 문의",
+          "phone": "02-425-1377"
+        },
+        {
+          "purpose": "그냥드림 이용 문의",
+          "phone": "02-425-1377"
+        }
+      ],
+      "programs": [
+        {
+          "programId": "foodbank-market",
+          "categories": [
+            "식품",
+            "생필품"
+          ],
+          "eligibility": [
+            "경제적으로 어려운 개인 우선 지원",
+            "긴급지원·차상위·지원 중단 등 가구별 선정 상담"
+          ],
+          "steps": [
+            "거주지 동주민센터 또는 해당 자치구 사업장에 이용 상담",
+            "동주민센터·자치구 담당자의 이용자 선정",
+            "기관 안내에 따른 신분증 준비 및 이용 등록",
+            "선정된 제공처에서 물품 선택·수령"
+          ],
+          "access": [
+            "등록·선정 후 해당 제공처 이용",
+            "방문이 어려운 경우 수령 방법을 기관에 알아보기"
+          ],
+          "hours": "월~금, 09:00 ~ 17:00",
+          "sources": [
+            {
+              "url": "https://www.s-foodbank.or.kr/board/market/marketList?page=4",
+              "title": "서울잇다푸드뱅크 기관 목록",
+              "checkedAt": "2026-09-17T18:30:37.395792+00:00"
+            },
+            {
+              "url": "https://www.s-foodbank.or.kr/intro/intro03",
+              "title": "푸드뱅크·마켓 대상 및 이용절차",
+              "checkedAt": "2026-09-17T18:30:37.395792+00:00"
+            }
+          ]
+        },
+        {
+          "programId": "just-dream",
+          "categories": [
+            "식품",
+            "생필품"
+          ],
+          "eligibility": [
+            "위기 상황 등으로 식료품 지원이 필요한 개인",
+            "주소지 관할 사업장 이용 원칙, 긴급 상황은 지역 외 우선 지원 판단"
+          ],
+          "steps": [
+            "신분증 준비 및 거주지 관할 코너 방문",
+            "자가 점검·사업 안내·지원 대상 상담",
+            "이용 신청서 작성 및 패키지 수령",
+            "재방문 시 생활 상황 상담, 필요한 경우 동주민센터 복지상담 연계"
+          ],
+          "access": [
+            "사업장 운영시간 내 방문",
+            "방문이 어려운 경우 이용 방법을 기관에 알아보기"
+          ],
+          "hours": "월~금 / 10:00~16:00",
+          "sources": [
+            {
+              "url": "https://www.s-foodbank.or.kr/board/map/mapList?page=2",
+              "title": "그냥드림 사업장 목록",
+              "checkedAt": "2026-09-17T18:30:37.395792+00:00"
+            },
+            {
+              "url": "https://s-foodbank.or.kr/justdream/guide",
+              "title": "그냥드림 이용안내",
+              "checkedAt": "2026-09-17T18:30:37.395792+00:00"
+            }
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "url": "https://www.s-foodbank.or.kr/board/market/marketList?page=4",
+          "title": "서울잇다푸드뱅크 기관 목록",
+          "checkedAt": "2026-09-17T18:30:37.395792+00:00"
+        },
+        {
+          "url": "https://www.s-foodbank.or.kr/board/map/mapList?page=2",
+          "title": "그냥드림 사업장 목록",
+          "checkedAt": "2026-09-17T18:30:37.395792+00:00"
+        }
+      ]
+    },
+    {
+      "id": "seongsu1ga2-community",
+      "name": "성수1가제2동주민센터",
+      "address": "서울특별시 성동구 왕십리로5길 3, 공공복합청사 2층",
+      "district": "성동구",
+      "roles": [
+        "신청·상담 창구"
+      ],
+      "contacts": [
+        {
+          "purpose": "돌봄SOS 신청·상담",
+          "phone": "02-2286-7729"
+        },
+        {
+          "purpose": "돌봄SOS 서비스 지원",
+          "phone": "02-2286-7454"
+        }
+      ],
+      "programs": [
+        {
+          "programId": "care-sos",
+          "categories": [
+            "식사배달",
+            "일시재가",
+            "단기시설",
+            "동행지원",
+            "주거편의"
+          ],
+          "eligibility": [
+            "긴급하고 일시적인 돌봄이 필요한 서울시민",
+            "소득과 공적 돌봄 이용 상황에 따른 비용 지원 상담"
+          ],
+          "steps": [
+            "주소지 관할 동주민센터에 전화 또는 방문 신청",
+            "돌봄매니저의 생활 상황·긴급도·필요 확인",
+            "돌봄계획 수립 및 협약 제공기관 의뢰",
+            "기관별 서비스 제공과 이용 결과 점검"
+          ],
+          "access": [
+            "성수1가제2동 거주지 관할 신청·상담",
+            "전화 또는 주민센터 방문 신청"
+          ],
+          "hours": "09:00~18:00",
+          "sources": [
+            {
+              "url": "https://wis.seoul.go.kr/wfs/sos/guide.do",
+              "title": "서울복지포털 돌봄SOS 사업 안내",
+              "checkedAt": "2026-09-17T18:30:37.395792+00:00"
+            },
+            {
+              "url": "https://www.sd.go.kr/seongsu1ga2/selectEmpList.do?deptCode=30300550000&key=2801",
+              "title": "성수1가제2동 직원 및 전화번호",
+              "checkedAt": "2026-09-17T18:30:37.395792+00:00"
+            },
+            {
+              "url": "https://www.sd.go.kr/seongsu1ga2/contents.do?key=2803",
+              "title": "성수1가제2동 청사안내",
+              "checkedAt": "2026-09-17T18:30:37.395792+00:00"
+            }
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "url": "https://www.sd.go.kr/seongsu1ga2/selectEmpList.do?deptCode=30300550000&key=2801",
+          "title": "성수1가제2동 직원 및 전화번호",
+          "checkedAt": "2026-09-17T18:30:37.395792+00:00"
+        },
+        {
+          "url": "https://www.sd.go.kr/seongsu1ga2/contents.do?key=2803",
+          "title": "성수1가제2동 청사안내",
+          "checkedAt": "2026-09-17T18:30:37.395792+00:00"
+        }
+      ]
+    },
+    {
+      "id": "institution-9934c3ad21c1",
+      "name": "성북잇다푸드뱅크센터 1호점",
+      "address": "서울 성북구 아리랑로4길 22, 301호",
+      "district": "성북구",
+      "roles": [
+        "사업 운영·이용 문의",
+        "그냥드림 제공처"
+      ],
+      "contacts": [
+        {
+          "purpose": "푸드뱅크·마켓 이용 문의",
+          "phone": "02-981-1377"
+        },
+        {
+          "purpose": "그냥드림 이용 문의",
+          "phone": "02-981-1377"
+        }
+      ],
+      "programs": [
+        {
+          "programId": "foodbank-market",
+          "categories": [
+            "식품",
+            "생필품"
+          ],
+          "eligibility": [
+            "경제적으로 어려운 개인 우선 지원",
+            "긴급지원·차상위·지원 중단 등 가구별 선정 상담"
+          ],
+          "steps": [
+            "거주지 동주민센터 또는 해당 자치구 사업장에 이용 상담",
+            "동주민센터·자치구 담당자의 이용자 선정",
+            "기관 안내에 따른 신분증 준비 및 이용 등록",
+            "선정된 제공처에서 물품 선택·수령"
+          ],
+          "access": [
+            "등록·선정 후 해당 제공처 이용",
+            "방문이 어려운 경우 수령 방법을 기관에 알아보기"
+          ],
+          "hours": "월~금, 09:00 ~ 17:00",
+          "sources": [
+            {
+              "url": "https://www.s-foodbank.or.kr/board/market/marketList?page=3",
+              "title": "서울잇다푸드뱅크 기관 목록",
+              "checkedAt": "2026-09-17T18:30:37.395792+00:00"
+            },
+            {
+              "url": "https://www.s-foodbank.or.kr/intro/intro03",
+              "title": "푸드뱅크·마켓 대상 및 이용절차",
+              "checkedAt": "2026-09-17T18:30:37.395792+00:00"
+            }
+          ]
+        },
+        {
+          "programId": "just-dream",
+          "categories": [
+            "식품",
+            "생필품"
+          ],
+          "eligibility": [
+            "위기 상황 등으로 식료품 지원이 필요한 개인",
+            "주소지 관할 사업장 이용 원칙, 긴급 상황은 지역 외 우선 지원 판단"
+          ],
+          "steps": [
+            "신분증 준비 및 거주지 관할 코너 방문",
+            "자가 점검·사업 안내·지원 대상 상담",
+            "이용 신청서 작성 및 패키지 수령",
+            "재방문 시 생활 상황 상담, 필요한 경우 동주민센터 복지상담 연계"
+          ],
+          "access": [
+            "사업장 운영시간 내 방문",
+            "방문이 어려운 경우 이용 방법을 기관에 알아보기"
+          ],
+          "hours": "월, 수, 금 / 14:00~17:00",
+          "sources": [
+            {
+              "url": "https://www.s-foodbank.or.kr/board/map/mapList?page=2",
+              "title": "그냥드림 사업장 목록",
+              "checkedAt": "2026-09-17T18:30:37.395792+00:00"
+            },
+            {
+              "url": "https://s-foodbank.or.kr/justdream/guide",
+              "title": "그냥드림 이용안내",
+              "checkedAt": "2026-09-17T18:30:37.395792+00:00"
+            }
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "url": "https://www.s-foodbank.or.kr/board/market/marketList?page=3",
+          "title": "서울잇다푸드뱅크 기관 목록",
+          "checkedAt": "2026-09-17T18:30:37.395792+00:00"
+        },
+        {
+          "url": "https://www.s-foodbank.or.kr/board/map/mapList?page=2",
+          "title": "그냥드림 사업장 목록",
+          "checkedAt": "2026-09-17T18:30:37.395792+00:00"
+        }
+      ]
+    },
+    {
+      "id": "institution-e7f22160e3ba",
+      "name": "성북잇다푸드뱅크센터 2호점",
+      "address": "서울 성북구 오패산로4번지, 1층",
+      "district": "성북구",
+      "roles": [
+        "사업 운영·이용 문의"
+      ],
+      "contacts": [
+        {
+          "purpose": "푸드뱅크·마켓 이용 문의",
+          "phone": "02-909-1377"
+        }
+      ],
+      "programs": [
+        {
+          "programId": "foodbank-market",
+          "categories": [
+            "식품",
+            "생필품"
+          ],
+          "eligibility": [
+            "경제적으로 어려운 개인 우선 지원",
+            "긴급지원·차상위·지원 중단 등 가구별 선정 상담"
+          ],
+          "steps": [
+            "거주지 동주민센터 또는 해당 자치구 사업장에 이용 상담",
+            "동주민센터·자치구 담당자의 이용자 선정",
+            "기관 안내에 따른 신분증 준비 및 이용 등록",
+            "선정된 제공처에서 물품 선택·수령"
+          ],
+          "access": [
+            "등록·선정 후 해당 제공처 이용",
+            "방문이 어려운 경우 수령 방법을 기관에 알아보기"
+          ],
+          "hours": "월~금, 09:00 ~ 17:00",
+          "sources": [
+            {
+              "url": "https://www.s-foodbank.or.kr/board/market/marketList?page=3",
+              "title": "서울잇다푸드뱅크 기관 목록",
+              "checkedAt": "2026-09-17T18:30:37.395792+00:00"
+            },
+            {
+              "url": "https://www.s-foodbank.or.kr/intro/intro03",
+              "title": "푸드뱅크·마켓 대상 및 이용절차",
+              "checkedAt": "2026-09-17T18:30:37.395792+00:00"
+            }
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "url": "https://www.s-foodbank.or.kr/board/market/marketList?page=3",
+          "title": "서울잇다푸드뱅크 기관 목록",
+          "checkedAt": "2026-09-17T18:30:37.395792+00:00"
+        }
+      ]
+    },
+    {
+      "id": "institution-2b738ffd089c",
+      "name": "송파잇다푸드뱅크센터",
+      "address": "서울 송파구 마천로 51길 2",
+      "district": "송파구",
+      "roles": [
+        "사업 운영·이용 문의",
+        "그냥드림 제공처"
+      ],
+      "contacts": [
+        {
+          "purpose": "푸드뱅크·마켓 이용 문의",
+          "phone": "02-2043-1377"
+        },
+        {
+          "purpose": "그냥드림 이용 문의",
+          "phone": "02-2043-1377"
+        }
+      ],
+      "programs": [
+        {
+          "programId": "foodbank-market",
+          "categories": [
+            "식품",
+            "생필품"
+          ],
+          "eligibility": [
+            "경제적으로 어려운 개인 우선 지원",
+            "긴급지원·차상위·지원 중단 등 가구별 선정 상담"
+          ],
+          "steps": [
+            "거주지 동주민센터 또는 해당 자치구 사업장에 이용 상담",
+            "동주민센터·자치구 담당자의 이용자 선정",
+            "기관 안내에 따른 신분증 준비 및 이용 등록",
+            "선정된 제공처에서 물품 선택·수령"
+          ],
+          "access": [
+            "등록·선정 후 해당 제공처 이용",
+            "방문이 어려운 경우 수령 방법을 기관에 알아보기"
+          ],
+          "hours": "월~금, 09:00 ~ 17:00",
+          "sources": [
+            {
+              "url": "https://www.s-foodbank.or.kr/board/market/marketList",
+              "title": "서울잇다푸드뱅크 기관 목록",
+              "checkedAt": "2026-09-17T18:30:37.395792+00:00"
+            },
+            {
+              "url": "https://www.s-foodbank.or.kr/intro/intro03",
+              "title": "푸드뱅크·마켓 대상 및 이용절차",
+              "checkedAt": "2026-09-17T18:30:37.395792+00:00"
+            }
+          ]
+        },
+        {
+          "programId": "just-dream",
+          "categories": [
+            "식품",
+            "생필품"
+          ],
+          "eligibility": [
+            "위기 상황 등으로 식료품 지원이 필요한 개인",
+            "주소지 관할 사업장 이용 원칙, 긴급 상황은 지역 외 우선 지원 판단"
+          ],
+          "steps": [
+            "신분증 준비 및 거주지 관할 코너 방문",
+            "자가 점검·사업 안내·지원 대상 상담",
+            "이용 신청서 작성 및 패키지 수령",
+            "재방문 시 생활 상황 상담, 필요한 경우 동주민센터 복지상담 연계"
+          ],
+          "access": [
+            "사업장 운영시간 내 방문",
+            "방문이 어려운 경우 이용 방법을 기관에 알아보기"
+          ],
+          "hours": "월, 화, 수 / 13:00~16:00",
+          "sources": [
+            {
+              "url": "https://www.s-foodbank.or.kr/board/map/mapList?page=2",
+              "title": "그냥드림 사업장 목록",
+              "checkedAt": "2026-09-17T18:30:37.395792+00:00"
+            },
+            {
+              "url": "https://s-foodbank.or.kr/justdream/guide",
+              "title": "그냥드림 이용안내",
+              "checkedAt": "2026-09-17T18:30:37.395792+00:00"
+            }
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "url": "https://www.s-foodbank.or.kr/board/market/marketList",
+          "title": "서울잇다푸드뱅크 기관 목록",
+          "checkedAt": "2026-09-17T18:30:37.395792+00:00"
+        },
+        {
+          "url": "https://www.s-foodbank.or.kr/board/map/mapList?page=2",
+          "title": "그냥드림 사업장 목록",
+          "checkedAt": "2026-09-17T18:30:37.395792+00:00"
+        }
+      ]
+    },
+    {
+      "id": "institution-65fda8e9aeb6",
+      "name": "양천잇다푸드뱅크센터 1호점",
+      "address": "서울 양천구 중앙로 250, 양천나눔누리센터 1층",
+      "district": "양천구",
+      "roles": [
+        "사업 운영·이용 문의",
+        "그냥드림 제공처"
+      ],
+      "contacts": [
+        {
+          "purpose": "푸드뱅크·마켓 이용 문의",
+          "phone": "02-2062-1377"
+        },
+        {
+          "purpose": "그냥드림 이용 문의",
+          "phone": "02-2062-1377"
+        }
+      ],
+      "programs": [
+        {
+          "programId": "foodbank-market",
+          "categories": [
+            "식품",
+            "생필품"
+          ],
+          "eligibility": [
+            "경제적으로 어려운 개인 우선 지원",
+            "긴급지원·차상위·지원 중단 등 가구별 선정 상담"
+          ],
+          "steps": [
+            "거주지 동주민센터 또는 해당 자치구 사업장에 이용 상담",
+            "동주민센터·자치구 담당자의 이용자 선정",
+            "기관 안내에 따른 신분증 준비 및 이용 등록",
+            "선정된 제공처에서 물품 선택·수령"
+          ],
+          "access": [
+            "등록·선정 후 해당 제공처 이용",
+            "방문이 어려운 경우 수령 방법을 기관에 알아보기"
+          ],
+          "hours": "월~금, 09:00 ~ 17:00",
+          "sources": [
+            {
+              "url": "https://www.s-foodbank.or.kr/board/market/marketList?page=2",
+              "title": "서울잇다푸드뱅크 기관 목록",
+              "checkedAt": "2026-09-17T18:30:37.395792+00:00"
+            },
+            {
+              "url": "https://www.s-foodbank.or.kr/intro/intro03",
+              "title": "푸드뱅크·마켓 대상 및 이용절차",
+              "checkedAt": "2026-09-17T18:30:37.395792+00:00"
+            }
+          ]
+        },
+        {
+          "programId": "just-dream",
+          "categories": [
+            "식품",
+            "생필품"
+          ],
+          "eligibility": [
+            "위기 상황 등으로 식료품 지원이 필요한 개인",
+            "주소지 관할 사업장 이용 원칙, 긴급 상황은 지역 외 우선 지원 판단"
+          ],
+          "steps": [
+            "신분증 준비 및 거주지 관할 코너 방문",
+            "자가 점검·사업 안내·지원 대상 상담",
+            "이용 신청서 작성 및 패키지 수령",
+            "재방문 시 생활 상황 상담, 필요한 경우 동주민센터 복지상담 연계"
+          ],
+          "access": [
+            "사업장 운영시간 내 방문",
+            "방문이 어려운 경우 이용 방법을 기관에 알아보기"
+          ],
+          "hours": "월~수 / 9:00~17:00",
+          "sources": [
+            {
+              "url": "https://www.s-foodbank.or.kr/board/map/mapList?page=2",
+              "title": "그냥드림 사업장 목록",
+              "checkedAt": "2026-09-17T18:30:37.395792+00:00"
+            },
+            {
+              "url": "https://s-foodbank.or.kr/justdream/guide",
+              "title": "그냥드림 이용안내",
+              "checkedAt": "2026-09-17T18:30:37.395792+00:00"
+            }
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "url": "https://www.s-foodbank.or.kr/board/market/marketList?page=2",
+          "title": "서울잇다푸드뱅크 기관 목록",
+          "checkedAt": "2026-09-17T18:30:37.395792+00:00"
+        },
+        {
+          "url": "https://www.s-foodbank.or.kr/board/map/mapList?page=2",
+          "title": "그냥드림 사업장 목록",
+          "checkedAt": "2026-09-17T18:30:37.395792+00:00"
+        }
+      ]
+    },
+    {
+      "id": "institution-aeda21b89beb",
+      "name": "양천잇다푸드뱅크센터 2호점",
+      "address": "서울 양천구 곰달래로13길 73",
+      "district": "양천구",
+      "roles": [
+        "사업 운영·이용 문의"
+      ],
+      "contacts": [
+        {
+          "purpose": "푸드뱅크·마켓 이용 문의",
+          "phone": "02-2644-1377"
+        }
+      ],
+      "programs": [
+        {
+          "programId": "foodbank-market",
+          "categories": [
+            "식품",
+            "생필품"
+          ],
+          "eligibility": [
+            "경제적으로 어려운 개인 우선 지원",
+            "긴급지원·차상위·지원 중단 등 가구별 선정 상담"
+          ],
+          "steps": [
+            "거주지 동주민센터 또는 해당 자치구 사업장에 이용 상담",
+            "동주민센터·자치구 담당자의 이용자 선정",
+            "기관 안내에 따른 신분증 준비 및 이용 등록",
+            "선정된 제공처에서 물품 선택·수령"
+          ],
+          "access": [
+            "등록·선정 후 해당 제공처 이용",
+            "방문이 어려운 경우 수령 방법을 기관에 알아보기"
+          ],
+          "hours": "월~금, 09:00 ~ 17:00",
+          "sources": [
+            {
+              "url": "https://www.s-foodbank.or.kr/board/market/marketList?page=2",
+              "title": "서울잇다푸드뱅크 기관 목록",
+              "checkedAt": "2026-09-17T18:30:37.395792+00:00"
+            },
+            {
+              "url": "https://www.s-foodbank.or.kr/intro/intro03",
+              "title": "푸드뱅크·마켓 대상 및 이용절차",
+              "checkedAt": "2026-09-17T18:30:37.395792+00:00"
+            }
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "url": "https://www.s-foodbank.or.kr/board/market/marketList?page=2",
+          "title": "서울잇다푸드뱅크 기관 목록",
+          "checkedAt": "2026-09-17T18:30:37.395792+00:00"
+        }
+      ]
+    },
+    {
+      "id": "institution-777401aaed8c",
+      "name": "영등포구잇다푸드뱅크센터 1호점",
+      "address": "서울 영등포구 선유동1로 80, 영등포구청 별관",
+      "district": "영등포구",
+      "roles": [
+        "사업 운영·이용 문의",
+        "그냥드림 제공처"
+      ],
+      "contacts": [
+        {
+          "purpose": "푸드뱅크·마켓 이용 문의",
+          "phone": "02-2632-1377"
+        },
+        {
+          "purpose": "그냥드림 이용 문의",
+          "phone": "02-2632-1377"
+        }
+      ],
+      "programs": [
+        {
+          "programId": "foodbank-market",
+          "categories": [
+            "식품",
+            "생필품"
+          ],
+          "eligibility": [
+            "경제적으로 어려운 개인 우선 지원",
+            "긴급지원·차상위·지원 중단 등 가구별 선정 상담"
+          ],
+          "steps": [
+            "거주지 동주민센터 또는 해당 자치구 사업장에 이용 상담",
+            "동주민센터·자치구 담당자의 이용자 선정",
+            "기관 안내에 따른 신분증 준비 및 이용 등록",
+            "선정된 제공처에서 물품 선택·수령"
+          ],
+          "access": [
+            "등록·선정 후 해당 제공처 이용",
+            "방문이 어려운 경우 수령 방법을 기관에 알아보기"
+          ],
+          "hours": "월~금, 09:00 ~ 17:00",
+          "sources": [
+            {
+              "url": "https://www.s-foodbank.or.kr/board/market/marketList?page=2",
+              "title": "서울잇다푸드뱅크 기관 목록",
+              "checkedAt": "2026-09-17T18:30:37.395792+00:00"
+            },
+            {
+              "url": "https://www.s-foodbank.or.kr/intro/intro03",
+              "title": "푸드뱅크·마켓 대상 및 이용절차",
+              "checkedAt": "2026-09-17T18:30:37.395792+00:00"
+            }
+          ]
+        },
+        {
+          "programId": "just-dream",
+          "categories": [
+            "식품",
+            "생필품"
+          ],
+          "eligibility": [
+            "위기 상황 등으로 식료품 지원이 필요한 개인",
+            "주소지 관할 사업장 이용 원칙, 긴급 상황은 지역 외 우선 지원 판단"
+          ],
+          "steps": [
+            "신분증 준비 및 거주지 관할 코너 방문",
+            "자가 점검·사업 안내·지원 대상 상담",
+            "이용 신청서 작성 및 패키지 수령",
+            "재방문 시 생활 상황 상담, 필요한 경우 동주민센터 복지상담 연계"
+          ],
+          "access": [
+            "사업장 운영시간 내 방문",
+            "방문이 어려운 경우 이용 방법을 기관에 알아보기"
+          ],
+          "hours": "월~금 / 9:00~18:00",
+          "sources": [
+            {
+              "url": "https://www.s-foodbank.or.kr/board/map/mapList?page=3",
+              "title": "그냥드림 사업장 목록",
+              "checkedAt": "2026-09-17T18:30:37.395792+00:00"
+            },
+            {
+              "url": "https://s-foodbank.or.kr/justdream/guide",
+              "title": "그냥드림 이용안내",
+              "checkedAt": "2026-09-17T18:30:37.395792+00:00"
+            }
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "url": "https://www.s-foodbank.or.kr/board/market/marketList?page=2",
+          "title": "서울잇다푸드뱅크 기관 목록",
+          "checkedAt": "2026-09-17T18:30:37.395792+00:00"
+        },
+        {
+          "url": "https://www.s-foodbank.or.kr/board/map/mapList?page=3",
+          "title": "그냥드림 사업장 목록",
+          "checkedAt": "2026-09-17T18:30:37.395792+00:00"
+        }
+      ]
+    },
+    {
+      "id": "institution-1731199bcd72",
+      "name": "영등포구잇다푸드뱅크센터 2호점",
+      "address": "서울 영등포구 도신로54길 9-17",
+      "district": "영등포구",
+      "roles": [
+        "사업 운영·이용 문의",
+        "그냥드림 제공처"
+      ],
+      "contacts": [
+        {
+          "purpose": "푸드뱅크·마켓 이용 문의",
+          "phone": "02-843-1377"
+        },
+        {
+          "purpose": "그냥드림 이용 문의",
+          "phone": "02-843-1377"
+        }
+      ],
+      "programs": [
+        {
+          "programId": "foodbank-market",
+          "categories": [
+            "식품",
+            "생필품"
+          ],
+          "eligibility": [
+            "경제적으로 어려운 개인 우선 지원",
+            "긴급지원·차상위·지원 중단 등 가구별 선정 상담"
+          ],
+          "steps": [
+            "거주지 동주민센터 또는 해당 자치구 사업장에 이용 상담",
+            "동주민센터·자치구 담당자의 이용자 선정",
+            "기관 안내에 따른 신분증 준비 및 이용 등록",
+            "선정된 제공처에서 물품 선택·수령"
+          ],
+          "access": [
+            "등록·선정 후 해당 제공처 이용",
+            "방문이 어려운 경우 수령 방법을 기관에 알아보기"
+          ],
+          "hours": "월~금, 09:00 ~ 17:00",
+          "sources": [
+            {
+              "url": "https://www.s-foodbank.or.kr/board/market/marketList",
+              "title": "서울잇다푸드뱅크 기관 목록",
+              "checkedAt": "2026-09-17T18:30:37.395792+00:00"
+            },
+            {
+              "url": "https://www.s-foodbank.or.kr/intro/intro03",
+              "title": "푸드뱅크·마켓 대상 및 이용절차",
+              "checkedAt": "2026-09-17T18:30:37.395792+00:00"
+            }
+          ]
+        },
+        {
+          "programId": "just-dream",
+          "categories": [
+            "식품",
+            "생필품"
+          ],
+          "eligibility": [
+            "위기 상황 등으로 식료품 지원이 필요한 개인",
+            "주소지 관할 사업장 이용 원칙, 긴급 상황은 지역 외 우선 지원 판단"
+          ],
+          "steps": [
+            "신분증 준비 및 거주지 관할 코너 방문",
+            "자가 점검·사업 안내·지원 대상 상담",
+            "이용 신청서 작성 및 패키지 수령",
+            "재방문 시 생활 상황 상담, 필요한 경우 동주민센터 복지상담 연계"
+          ],
+          "access": [
+            "사업장 운영시간 내 방문",
+            "방문이 어려운 경우 이용 방법을 기관에 알아보기"
+          ],
+          "hours": "월~금 / 9:00~18:00",
+          "sources": [
+            {
+              "url": "https://www.s-foodbank.or.kr/board/map/mapList?page=3",
+              "title": "그냥드림 사업장 목록",
+              "checkedAt": "2026-09-17T18:30:37.395792+00:00"
+            },
+            {
+              "url": "https://s-foodbank.or.kr/justdream/guide",
+              "title": "그냥드림 이용안내",
+              "checkedAt": "2026-09-17T18:30:37.395792+00:00"
+            }
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "url": "https://www.s-foodbank.or.kr/board/market/marketList",
+          "title": "서울잇다푸드뱅크 기관 목록",
+          "checkedAt": "2026-09-17T18:30:37.395792+00:00"
+        },
+        {
+          "url": "https://www.s-foodbank.or.kr/board/map/mapList?page=3",
+          "title": "그냥드림 사업장 목록",
+          "checkedAt": "2026-09-17T18:30:37.395792+00:00"
+        }
+      ]
+    },
+    {
+      "id": "institution-78254dc0c18b",
+      "name": "영등포구잇다푸드뱅크센터 3호점",
+      "address": "서울 영등포구 신길로8길 7",
+      "district": "영등포구",
+      "roles": [
+        "사업 운영·이용 문의",
+        "그냥드림 제공처"
+      ],
+      "contacts": [
+        {
+          "purpose": "푸드뱅크·마켓 이용 문의",
+          "phone": "02-846-1377"
+        },
+        {
+          "purpose": "그냥드림 이용 문의",
+          "phone": "02-846-1377"
+        }
+      ],
+      "programs": [
+        {
+          "programId": "foodbank-market",
+          "categories": [
+            "식품",
+            "생필품"
+          ],
+          "eligibility": [
+            "경제적으로 어려운 개인 우선 지원",
+            "긴급지원·차상위·지원 중단 등 가구별 선정 상담"
+          ],
+          "steps": [
+            "거주지 동주민센터 또는 해당 자치구 사업장에 이용 상담",
+            "동주민센터·자치구 담당자의 이용자 선정",
+            "기관 안내에 따른 신분증 준비 및 이용 등록",
+            "선정된 제공처에서 물품 선택·수령"
+          ],
+          "access": [
+            "등록·선정 후 해당 제공처 이용",
+            "방문이 어려운 경우 수령 방법을 기관에 알아보기"
+          ],
+          "hours": "월~금, 09:00 ~ 17:00",
+          "sources": [
+            {
+              "url": "https://www.s-foodbank.or.kr/board/market/marketList",
+              "title": "서울잇다푸드뱅크 기관 목록",
+              "checkedAt": "2026-09-17T18:30:37.395792+00:00"
+            },
+            {
+              "url": "https://www.s-foodbank.or.kr/intro/intro03",
+              "title": "푸드뱅크·마켓 대상 및 이용절차",
+              "checkedAt": "2026-09-17T18:30:37.395792+00:00"
+            }
+          ]
+        },
+        {
+          "programId": "just-dream",
+          "categories": [
+            "식품",
+            "생필품"
+          ],
+          "eligibility": [
+            "위기 상황 등으로 식료품 지원이 필요한 개인",
+            "주소지 관할 사업장 이용 원칙, 긴급 상황은 지역 외 우선 지원 판단"
+          ],
+          "steps": [
+            "신분증 준비 및 거주지 관할 코너 방문",
+            "자가 점검·사업 안내·지원 대상 상담",
+            "이용 신청서 작성 및 패키지 수령",
+            "재방문 시 생활 상황 상담, 필요한 경우 동주민센터 복지상담 연계"
+          ],
+          "access": [
+            "사업장 운영시간 내 방문",
+            "방문이 어려운 경우 이용 방법을 기관에 알아보기"
+          ],
+          "hours": "월~금 / 9:00~18:00",
+          "sources": [
+            {
+              "url": "https://www.s-foodbank.or.kr/board/map/mapList?page=3",
+              "title": "그냥드림 사업장 목록",
+              "checkedAt": "2026-09-17T18:30:37.395792+00:00"
+            },
+            {
+              "url": "https://s-foodbank.or.kr/justdream/guide",
+              "title": "그냥드림 이용안내",
+              "checkedAt": "2026-09-17T18:30:37.395792+00:00"
+            }
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "url": "https://www.s-foodbank.or.kr/board/market/marketList",
+          "title": "서울잇다푸드뱅크 기관 목록",
+          "checkedAt": "2026-09-17T18:30:37.395792+00:00"
+        },
+        {
+          "url": "https://www.s-foodbank.or.kr/board/map/mapList?page=3",
+          "title": "그냥드림 사업장 목록",
+          "checkedAt": "2026-09-17T18:30:37.395792+00:00"
+        }
+      ]
+    },
+    {
+      "id": "institution-a0a5cc3eab3f",
+      "name": "용산잇다푸드뱅크센터",
+      "address": "서울 용산구 한강대로 345",
+      "district": "용산구",
+      "roles": [
+        "사업 운영·이용 문의",
+        "그냥드림 제공처"
+      ],
+      "contacts": [
+        {
+          "purpose": "푸드뱅크·마켓 이용 문의",
+          "phone": "02-703-0129"
+        },
+        {
+          "purpose": "그냥드림 이용 문의",
+          "phone": "02-703-0129"
+        }
+      ],
+      "programs": [
+        {
+          "programId": "foodbank-market",
+          "categories": [
+            "식품",
+            "생필품"
+          ],
+          "eligibility": [
+            "경제적으로 어려운 개인 우선 지원",
+            "긴급지원·차상위·지원 중단 등 가구별 선정 상담"
+          ],
+          "steps": [
+            "거주지 동주민센터 또는 해당 자치구 사업장에 이용 상담",
+            "동주민센터·자치구 담당자의 이용자 선정",
+            "기관 안내에 따른 신분증 준비 및 이용 등록",
+            "선정된 제공처에서 물품 선택·수령"
+          ],
+          "access": [
+            "등록·선정 후 해당 제공처 이용",
+            "방문이 어려운 경우 수령 방법을 기관에 알아보기"
+          ],
+          "hours": "월~금, 09:00 ~ 17:00",
+          "sources": [
+            {
+              "url": "https://www.s-foodbank.or.kr/board/market/marketList?page=4",
+              "title": "서울잇다푸드뱅크 기관 목록",
+              "checkedAt": "2026-09-17T18:30:37.395792+00:00"
+            },
+            {
+              "url": "https://www.s-foodbank.or.kr/intro/intro03",
+              "title": "푸드뱅크·마켓 대상 및 이용절차",
+              "checkedAt": "2026-09-17T18:30:37.395792+00:00"
+            }
+          ]
+        },
+        {
+          "programId": "just-dream",
+          "categories": [
+            "식품",
+            "생필품"
+          ],
+          "eligibility": [
+            "위기 상황 등으로 식료품 지원이 필요한 개인",
+            "주소지 관할 사업장 이용 원칙, 긴급 상황은 지역 외 우선 지원 판단"
+          ],
+          "steps": [
+            "신분증 준비 및 거주지 관할 코너 방문",
+            "자가 점검·사업 안내·지원 대상 상담",
+            "이용 신청서 작성 및 패키지 수령",
+            "재방문 시 생활 상황 상담, 필요한 경우 동주민센터 복지상담 연계"
+          ],
+          "access": [
+            "사업장 운영시간 내 방문",
+            "방문이 어려운 경우 이용 방법을 기관에 알아보기"
+          ],
+          "hours": "월, 화, 목 / 14:00~17:00",
+          "sources": [
+            {
+              "url": "https://www.s-foodbank.or.kr/board/map/mapList?page=3",
+              "title": "그냥드림 사업장 목록",
+              "checkedAt": "2026-09-17T18:30:37.395792+00:00"
+            },
+            {
+              "url": "https://s-foodbank.or.kr/justdream/guide",
+              "title": "그냥드림 이용안내",
+              "checkedAt": "2026-09-17T18:30:37.395792+00:00"
+            }
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "url": "https://www.s-foodbank.or.kr/board/market/marketList?page=4",
+          "title": "서울잇다푸드뱅크 기관 목록",
+          "checkedAt": "2026-09-17T18:30:37.395792+00:00"
+        },
+        {
+          "url": "https://www.s-foodbank.or.kr/board/map/mapList?page=3",
+          "title": "그냥드림 사업장 목록",
+          "checkedAt": "2026-09-17T18:30:37.395792+00:00"
+        }
+      ]
+    },
+    {
+      "id": "institution-106e9d7fb264",
+      "name": "은평잇다푸드뱅크센터",
+      "address": "서울 은평구 서오릉로 134-5",
+      "district": "은평구",
+      "roles": [
+        "사업 운영·이용 문의",
+        "그냥드림 제공처"
+      ],
+      "contacts": [
+        {
+          "purpose": "푸드뱅크·마켓 이용 문의",
+          "phone": "02-354-1377"
+        },
+        {
+          "purpose": "그냥드림 이용 문의",
+          "phone": "02-354-1377"
+        }
+      ],
+      "programs": [
+        {
+          "programId": "foodbank-market",
+          "categories": [
+            "식품",
+            "생필품"
+          ],
+          "eligibility": [
+            "경제적으로 어려운 개인 우선 지원",
+            "긴급지원·차상위·지원 중단 등 가구별 선정 상담"
+          ],
+          "steps": [
+            "거주지 동주민센터 또는 해당 자치구 사업장에 이용 상담",
+            "동주민센터·자치구 담당자의 이용자 선정",
+            "기관 안내에 따른 신분증 준비 및 이용 등록",
+            "선정된 제공처에서 물품 선택·수령"
+          ],
+          "access": [
+            "등록·선정 후 해당 제공처 이용",
+            "방문이 어려운 경우 수령 방법을 기관에 알아보기"
+          ],
+          "hours": "월~금, 09:00 ~ 17:00",
+          "sources": [
+            {
+              "url": "https://www.s-foodbank.or.kr/board/market/marketList?page=3",
+              "title": "서울잇다푸드뱅크 기관 목록",
+              "checkedAt": "2026-09-17T18:30:37.395792+00:00"
+            },
+            {
+              "url": "https://www.s-foodbank.or.kr/intro/intro03",
+              "title": "푸드뱅크·마켓 대상 및 이용절차",
+              "checkedAt": "2026-09-17T18:30:37.395792+00:00"
+            }
+          ]
+        },
+        {
+          "programId": "just-dream",
+          "categories": [
+            "식품",
+            "생필품"
+          ],
+          "eligibility": [
+            "위기 상황 등으로 식료품 지원이 필요한 개인",
+            "주소지 관할 사업장 이용 원칙, 긴급 상황은 지역 외 우선 지원 판단"
+          ],
+          "steps": [
+            "신분증 준비 및 거주지 관할 코너 방문",
+            "자가 점검·사업 안내·지원 대상 상담",
+            "이용 신청서 작성 및 패키지 수령",
+            "재방문 시 생활 상황 상담, 필요한 경우 동주민센터 복지상담 연계"
+          ],
+          "access": [
+            "사업장 운영시간 내 방문",
+            "방문이 어려운 경우 이용 방법을 기관에 알아보기"
+          ],
+          "hours": "월~금 / 14:00~17:00",
+          "sources": [
+            {
+              "url": "https://www.s-foodbank.or.kr/board/map/mapList?page=3",
+              "title": "그냥드림 사업장 목록",
+              "checkedAt": "2026-09-17T18:30:37.395792+00:00"
+            },
+            {
+              "url": "https://s-foodbank.or.kr/justdream/guide",
+              "title": "그냥드림 이용안내",
+              "checkedAt": "2026-09-17T18:30:37.395792+00:00"
+            }
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "url": "https://www.s-foodbank.or.kr/board/market/marketList?page=3",
+          "title": "서울잇다푸드뱅크 기관 목록",
+          "checkedAt": "2026-09-17T18:30:37.395792+00:00"
+        },
+        {
+          "url": "https://www.s-foodbank.or.kr/board/map/mapList?page=3",
+          "title": "그냥드림 사업장 목록",
+          "checkedAt": "2026-09-17T18:30:37.395792+00:00"
+        }
+      ]
+    },
+    {
+      "id": "institution-79e5eee2091d",
+      "name": "종로잇다푸드뱅크센터 1호점",
+      "address": "서울 종로구 지봉로 86, 숭인1동주민센터 4층",
+      "district": "종로구",
+      "roles": [
+        "사업 운영·이용 문의",
+        "그냥드림 제공처"
+      ],
+      "contacts": [
+        {
+          "purpose": "푸드뱅크·마켓 이용 문의",
+          "phone": "02-762-1377"
+        },
+        {
+          "purpose": "그냥드림 이용 문의",
+          "phone": "02-2148-4102"
+        }
+      ],
+      "programs": [
+        {
+          "programId": "foodbank-market",
+          "categories": [
+            "식품",
+            "생필품"
+          ],
+          "eligibility": [
+            "경제적으로 어려운 개인 우선 지원",
+            "긴급지원·차상위·지원 중단 등 가구별 선정 상담"
+          ],
+          "steps": [
+            "거주지 동주민센터 또는 해당 자치구 사업장에 이용 상담",
+            "동주민센터·자치구 담당자의 이용자 선정",
+            "기관 안내에 따른 신분증 준비 및 이용 등록",
+            "선정된 제공처에서 물품 선택·수령"
+          ],
+          "access": [
+            "등록·선정 후 해당 제공처 이용",
+            "방문이 어려운 경우 수령 방법을 기관에 알아보기"
+          ],
+          "hours": "월~금, 09:00 ~ 17:00",
+          "sources": [
+            {
+              "url": "https://www.s-foodbank.or.kr/board/market/marketList?page=4",
+              "title": "서울잇다푸드뱅크 기관 목록",
+              "checkedAt": "2026-09-17T18:30:37.395792+00:00"
+            },
+            {
+              "url": "https://www.s-foodbank.or.kr/intro/intro03",
+              "title": "푸드뱅크·마켓 대상 및 이용절차",
+              "checkedAt": "2026-09-17T18:30:37.395792+00:00"
+            }
+          ]
+        },
+        {
+          "programId": "just-dream",
+          "categories": [
+            "식품",
+            "생필품"
+          ],
+          "eligibility": [
+            "위기 상황 등으로 식료품 지원이 필요한 개인",
+            "주소지 관할 사업장 이용 원칙, 긴급 상황은 지역 외 우선 지원 판단"
+          ],
+          "steps": [
+            "신분증 준비 및 거주지 관할 코너 방문",
+            "자가 점검·사업 안내·지원 대상 상담",
+            "이용 신청서 작성 및 패키지 수령",
+            "재방문 시 생활 상황 상담, 필요한 경우 동주민센터 복지상담 연계"
+          ],
+          "access": [
+            "사업장 운영시간 내 방문",
+            "방문이 어려운 경우 이용 방법을 기관에 알아보기"
+          ],
+          "hours": "월, 수, 금 / 13:00~17:00",
+          "sources": [
+            {
+              "url": "https://www.s-foodbank.or.kr/board/map/mapList?page=3",
+              "title": "그냥드림 사업장 목록",
+              "checkedAt": "2026-09-17T18:30:37.395792+00:00"
+            },
+            {
+              "url": "https://s-foodbank.or.kr/justdream/guide",
+              "title": "그냥드림 이용안내",
+              "checkedAt": "2026-09-17T18:30:37.395792+00:00"
+            }
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "url": "https://www.s-foodbank.or.kr/board/market/marketList?page=4",
+          "title": "서울잇다푸드뱅크 기관 목록",
+          "checkedAt": "2026-09-17T18:30:37.395792+00:00"
+        },
+        {
+          "url": "https://www.s-foodbank.or.kr/board/map/mapList?page=3",
+          "title": "그냥드림 사업장 목록",
+          "checkedAt": "2026-09-17T18:30:37.395792+00:00"
+        }
+      ]
+    },
+    {
+      "id": "institution-0f053366fb74",
+      "name": "종로잇다푸드뱅크센터 2호점",
+      "address": "서울 종로구 율곡로 89, 웰니스센터 B110호",
+      "district": "종로구",
+      "roles": [
+        "사업 운영·이용 문의",
+        "그냥드림 제공처"
+      ],
+      "contacts": [
+        {
+          "purpose": "푸드뱅크·마켓 이용 문의",
+          "phone": "02-2148-4101"
+        },
+        {
+          "purpose": "그냥드림 이용 문의",
+          "phone": "02-2148-4101"
+        }
+      ],
+      "programs": [
+        {
+          "programId": "foodbank-market",
+          "categories": [
+            "식품",
+            "생필품"
+          ],
+          "eligibility": [
+            "경제적으로 어려운 개인 우선 지원",
+            "긴급지원·차상위·지원 중단 등 가구별 선정 상담"
+          ],
+          "steps": [
+            "거주지 동주민센터 또는 해당 자치구 사업장에 이용 상담",
+            "동주민센터·자치구 담당자의 이용자 선정",
+            "기관 안내에 따른 신분증 준비 및 이용 등록",
+            "선정된 제공처에서 물품 선택·수령"
+          ],
+          "access": [
+            "등록·선정 후 해당 제공처 이용",
+            "방문이 어려운 경우 수령 방법을 기관에 알아보기"
+          ],
+          "hours": "월~금, 09:00 ~ 17:00",
+          "sources": [
+            {
+              "url": "https://www.s-foodbank.or.kr/board/market/marketList?page=4",
+              "title": "서울잇다푸드뱅크 기관 목록",
+              "checkedAt": "2026-09-17T18:30:37.395792+00:00"
+            },
+            {
+              "url": "https://www.s-foodbank.or.kr/intro/intro03",
+              "title": "푸드뱅크·마켓 대상 및 이용절차",
+              "checkedAt": "2026-09-17T18:30:37.395792+00:00"
+            }
+          ]
+        },
+        {
+          "programId": "just-dream",
+          "categories": [
+            "식품",
+            "생필품"
+          ],
+          "eligibility": [
+            "위기 상황 등으로 식료품 지원이 필요한 개인",
+            "주소지 관할 사업장 이용 원칙, 긴급 상황은 지역 외 우선 지원 판단"
+          ],
+          "steps": [
+            "신분증 준비 및 거주지 관할 코너 방문",
+            "자가 점검·사업 안내·지원 대상 상담",
+            "이용 신청서 작성 및 패키지 수령",
+            "재방문 시 생활 상황 상담, 필요한 경우 동주민센터 복지상담 연계"
+          ],
+          "access": [
+            "사업장 운영시간 내 방문",
+            "방문이 어려운 경우 이용 방법을 기관에 알아보기"
+          ],
+          "hours": "월, 수, 금 / 13:00~17:00",
+          "sources": [
+            {
+              "url": "https://www.s-foodbank.or.kr/board/map/mapList?page=3",
+              "title": "그냥드림 사업장 목록",
+              "checkedAt": "2026-09-17T18:30:37.395792+00:00"
+            },
+            {
+              "url": "https://s-foodbank.or.kr/justdream/guide",
+              "title": "그냥드림 이용안내",
+              "checkedAt": "2026-09-17T18:30:37.395792+00:00"
+            }
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "url": "https://www.s-foodbank.or.kr/board/market/marketList?page=4",
+          "title": "서울잇다푸드뱅크 기관 목록",
+          "checkedAt": "2026-09-17T18:30:37.395792+00:00"
+        },
+        {
+          "url": "https://www.s-foodbank.or.kr/board/map/mapList?page=3",
+          "title": "그냥드림 사업장 목록",
+          "checkedAt": "2026-09-17T18:30:37.395792+00:00"
+        }
+      ]
+    },
+    {
+      "id": "institution-49c10abd036b",
+      "name": "중구잇다푸드뱅크센터",
+      "address": "서울 중구 퇴계로 460, 1층",
+      "district": "중구",
+      "roles": [
+        "사업 운영·이용 문의",
+        "그냥드림 제공처"
+      ],
+      "contacts": [
+        {
+          "purpose": "푸드뱅크·마켓 이용 문의",
+          "phone": "02-2297-1377"
+        },
+        {
+          "purpose": "그냥드림 이용 문의",
+          "phone": "02-2297-1377"
+        }
+      ],
+      "programs": [
+        {
+          "programId": "foodbank-market",
+          "categories": [
+            "식품",
+            "생필품"
+          ],
+          "eligibility": [
+            "경제적으로 어려운 개인 우선 지원",
+            "긴급지원·차상위·지원 중단 등 가구별 선정 상담"
+          ],
+          "steps": [
+            "거주지 동주민센터 또는 해당 자치구 사업장에 이용 상담",
+            "동주민센터·자치구 담당자의 이용자 선정",
+            "기관 안내에 따른 신분증 준비 및 이용 등록",
+            "선정된 제공처에서 물품 선택·수령"
+          ],
+          "access": [
+            "등록·선정 후 해당 제공처 이용",
+            "방문이 어려운 경우 수령 방법을 기관에 알아보기"
+          ],
+          "hours": "월~금, 09:00 ~ 17:00",
+          "sources": [
+            {
+              "url": "https://www.s-foodbank.or.kr/board/market/marketList?page=4",
+              "title": "서울잇다푸드뱅크 기관 목록",
+              "checkedAt": "2026-09-17T18:30:37.395792+00:00"
+            },
+            {
+              "url": "https://www.s-foodbank.or.kr/intro/intro03",
+              "title": "푸드뱅크·마켓 대상 및 이용절차",
+              "checkedAt": "2026-09-17T18:30:37.395792+00:00"
+            }
+          ]
+        },
+        {
+          "programId": "just-dream",
+          "categories": [
+            "식품",
+            "생필품"
+          ],
+          "eligibility": [
+            "위기 상황 등으로 식료품 지원이 필요한 개인",
+            "주소지 관할 사업장 이용 원칙, 긴급 상황은 지역 외 우선 지원 판단"
+          ],
+          "steps": [
+            "신분증 준비 및 거주지 관할 코너 방문",
+            "자가 점검·사업 안내·지원 대상 상담",
+            "이용 신청서 작성 및 패키지 수령",
+            "재방문 시 생활 상황 상담, 필요한 경우 동주민센터 복지상담 연계"
+          ],
+          "access": [
+            "사업장 운영시간 내 방문",
+            "방문이 어려운 경우 이용 방법을 기관에 알아보기"
+          ],
+          "hours": "월, 수, 금 / 14:00~17:00",
+          "sources": [
+            {
+              "url": "https://www.s-foodbank.or.kr/board/map/mapList?page=3",
+              "title": "그냥드림 사업장 목록",
+              "checkedAt": "2026-09-17T18:30:37.395792+00:00"
+            },
+            {
+              "url": "https://s-foodbank.or.kr/justdream/guide",
+              "title": "그냥드림 이용안내",
+              "checkedAt": "2026-09-17T18:30:37.395792+00:00"
+            }
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "url": "https://www.s-foodbank.or.kr/board/market/marketList?page=4",
+          "title": "서울잇다푸드뱅크 기관 목록",
+          "checkedAt": "2026-09-17T18:30:37.395792+00:00"
+        },
+        {
+          "url": "https://www.s-foodbank.or.kr/board/map/mapList?page=3",
+          "title": "그냥드림 사업장 목록",
+          "checkedAt": "2026-09-17T18:30:37.395792+00:00"
+        }
+      ]
+    },
+    {
+      "id": "institution-faefad98dbe4",
+      "name": "중랑잇다푸드뱅크센터 면목점",
+      "address": "서울 중랑구 면목로 242",
+      "district": "중랑구",
+      "roles": [
+        "사업 운영·이용 문의"
+      ],
+      "contacts": [
+        {
+          "purpose": "푸드뱅크·마켓 이용 문의",
+          "phone": "02-6952-1376"
+        }
+      ],
+      "programs": [
+        {
+          "programId": "foodbank-market",
+          "categories": [
+            "식품",
+            "생필품"
+          ],
+          "eligibility": [
+            "경제적으로 어려운 개인 우선 지원",
+            "긴급지원·차상위·지원 중단 등 가구별 선정 상담"
+          ],
+          "steps": [
+            "거주지 동주민센터 또는 해당 자치구 사업장에 이용 상담",
+            "동주민센터·자치구 담당자의 이용자 선정",
+            "기관 안내에 따른 신분증 준비 및 이용 등록",
+            "선정된 제공처에서 물품 선택·수령"
+          ],
+          "access": [
+            "등록·선정 후 해당 제공처 이용",
+            "방문이 어려운 경우 수령 방법을 기관에 알아보기"
+          ],
+          "hours": "월~금, 09:00 ~ 17:00",
+          "sources": [
+            {
+              "url": "https://www.s-foodbank.or.kr/board/market/marketList?page=3",
+              "title": "서울잇다푸드뱅크 기관 목록",
+              "checkedAt": "2026-09-17T18:30:37.395792+00:00"
+            },
+            {
+              "url": "https://www.s-foodbank.or.kr/intro/intro03",
+              "title": "푸드뱅크·마켓 대상 및 이용절차",
+              "checkedAt": "2026-09-17T18:30:37.395792+00:00"
+            }
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "url": "https://www.s-foodbank.or.kr/board/market/marketList?page=3",
+          "title": "서울잇다푸드뱅크 기관 목록",
+          "checkedAt": "2026-09-17T18:30:37.395792+00:00"
+        }
+      ]
+    },
+    {
+      "id": "institution-578cba7006cf",
+      "name": "중랑잇다푸드뱅크센터 신내점",
+      "address": "서울 중랑구 봉화산로56길 22",
+      "district": "중랑구",
+      "roles": [
+        "사업 운영·이용 문의",
+        "그냥드림 제공처"
+      ],
+      "contacts": [
+        {
+          "purpose": "푸드뱅크·마켓 이용 문의",
+          "phone": "02-493-1582"
+        },
+        {
+          "purpose": "그냥드림 이용 문의",
+          "phone": "02-493-1582"
+        }
+      ],
+      "programs": [
+        {
+          "programId": "foodbank-market",
+          "categories": [
+            "식품",
+            "생필품"
+          ],
+          "eligibility": [
+            "경제적으로 어려운 개인 우선 지원",
+            "긴급지원·차상위·지원 중단 등 가구별 선정 상담"
+          ],
+          "steps": [
+            "거주지 동주민센터 또는 해당 자치구 사업장에 이용 상담",
+            "동주민센터·자치구 담당자의 이용자 선정",
+            "기관 안내에 따른 신분증 준비 및 이용 등록",
+            "선정된 제공처에서 물품 선택·수령"
+          ],
+          "access": [
+            "등록·선정 후 해당 제공처 이용",
+            "방문이 어려운 경우 수령 방법을 기관에 알아보기"
+          ],
+          "hours": "월~금, 09:00 ~ 17:00",
+          "sources": [
+            {
+              "url": "https://www.s-foodbank.or.kr/board/market/marketList?page=3",
+              "title": "서울잇다푸드뱅크 기관 목록",
+              "checkedAt": "2026-09-17T18:30:37.395792+00:00"
+            },
+            {
+              "url": "https://www.s-foodbank.or.kr/intro/intro03",
+              "title": "푸드뱅크·마켓 대상 및 이용절차",
+              "checkedAt": "2026-09-17T18:30:37.395792+00:00"
+            }
+          ]
+        },
+        {
+          "programId": "just-dream",
+          "categories": [
+            "식품",
+            "생필품"
+          ],
+          "eligibility": [
+            "위기 상황 등으로 식료품 지원이 필요한 개인",
+            "주소지 관할 사업장 이용 원칙, 긴급 상황은 지역 외 우선 지원 판단"
+          ],
+          "steps": [
+            "신분증 준비 및 거주지 관할 코너 방문",
+            "자가 점검·사업 안내·지원 대상 상담",
+            "이용 신청서 작성 및 패키지 수령",
+            "재방문 시 생활 상황 상담, 필요한 경우 동주민센터 복지상담 연계"
+          ],
+          "access": [
+            "사업장 운영시간 내 방문",
+            "방문이 어려운 경우 이용 방법을 기관에 알아보기"
+          ],
+          "hours": "월, 수, 금 / 13:00~16:00",
+          "sources": [
+            {
+              "url": "https://www.s-foodbank.or.kr/board/map/mapList?page=3",
+              "title": "그냥드림 사업장 목록",
+              "checkedAt": "2026-09-17T18:30:37.395792+00:00"
+            },
+            {
+              "url": "https://s-foodbank.or.kr/justdream/guide",
+              "title": "그냥드림 이용안내",
+              "checkedAt": "2026-09-17T18:30:37.395792+00:00"
+            }
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "url": "https://www.s-foodbank.or.kr/board/market/marketList?page=3",
+          "title": "서울잇다푸드뱅크 기관 목록",
+          "checkedAt": "2026-09-17T18:30:37.395792+00:00"
+        },
+        {
+          "url": "https://www.s-foodbank.or.kr/board/map/mapList?page=3",
+          "title": "그냥드림 사업장 목록",
+          "checkedAt": "2026-09-17T18:30:37.395792+00:00"
+        }
+      ]
+    }
+  ],
+  "coverage": {
+    "foodbankMarketSourceRows": 36,
+    "justDreamSourceRows": 29,
+    "foodbankDistricts": 25,
+    "mobileMarket": "서울 광역 운영기관과 사업별 이용 방식; 지역별 개별 행사 일정 별도 문의",
+    "careSos": "서울 전체 관할 안내 및 성수1가제2동 상세 접수창구; 전체 동 연락망은 추가 수집 대상",
+    "addressNote": "주소 공란은 방문 장소가 없는 전화 안내창구",
+    "collectionMethod": "공식 페이지 7개 전체를 웹 조회 도구로 수집 후 정규화; 직접 HTTP 403 응답으로 브라우저 텍스트 이용",
+    "currentAvailability": "기관 목록·일반 절차와 개별 요청의 현재 제공 조건은 별도 관리"
+  }
+}

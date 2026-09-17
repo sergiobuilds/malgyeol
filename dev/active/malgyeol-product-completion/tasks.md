@@ -6,11 +6,11 @@
   - [x] 지정 PDF·SDK·KRDS·Manyfast 실측
   - [x] 공통 인터페이스와 파일 소유권 확정
   - [x] executor 검증·self-check·CHRONICLE 확인
-- [ ] 섹션 2: 데이터·요청 처리
-  - [ ] 서울 네 사업 공개 자료·관할·이용 경로
-  - [ ] 복수 필요·동의·수정·중단·영속성 TDD
-  - [ ] 공통 조회/처리 API 및 실제 HTTP 검증
-  - [ ] executor 검증·self-check·CHRONICLE 확인
+- [x] 섹션 2: 데이터·요청 처리
+  - [x] 서울 네 사업 공개 자료·관할·이용 경로
+  - [x] 복수 필요·동의·수정·중단·영속성 TDD
+  - [x] 공통 조회/처리 API 및 실제 HTTP 검증
+  - [x] executor 검증·self-check·CHRONICLE 확인
 - [ ] 섹션 3: 전화·회신
   - [ ] 시민 접수·기관 발신·시민 회신 역할
   - [ ] 조건 조율·부분 해결·재선택·재연락

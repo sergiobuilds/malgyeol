@@ -36,3 +36,22 @@ contracts.md와 src/coordination/types.ts에 데이터/도메인/API/소유권 �
 EXECUTOR 섹션 1 PASS: 3종 실파일·타입 계약·SDK 설치·원본 PDF 확보·도구 연결 상태 직접 확인.
 섹션 1 셀프체크 완료: 외부 인증과 실제 전화 검증은 미완료로 유지.
 섹션 1 CHRONICLE 확인 완료: 최신 실행 계약 변경 기록 추가 예정.
+
+## 섹션 2 TDD 중간 근거
+
+기존 npm run verify: typecheck·171 tests·dependency audit 통과. 새 routes HTTP 테스트는 /api/support/programs 404 != 200으로 RED 확인. domain 엔진 9개 동작 통과 후 summary-only가 연결을 초기화하는 추가2개 테스트 RED→11/11 GREEN.
+
+## 전화 외부 자원 실측
+
+공식 계정 DID1개·SIP endpoint0·credential0. 기존 runtime 번호는 등록 DID와 일치, secret 원본은 과거 번호. 최근10건 inbound/completed, 발신 성공 근거 아님. A/B 허용번호 설정 없음. 임의 번호 발급·외부발신 없이 구현과 독립 검증을 계속함.
+
+## 섹션 2 완료 근거
+
+공식7페이지65원천행(푸드뱅크36/그냥드림29), 동일시설 사업별 분리 유지; 총40기관. 이동운영1·SOS안내/실제동접수2. 전체25구 기본목록. SOS 전체동 상세는 확보한 것처럼 표시하지 않음. 재현 수집기·원천행/해시 보존.
+새 HTTP/도메인/카탈로그18검사 통과. 실제 HTTP서버 재시작 복원 RED404→GREEN200. 환경계약 누락1건 수정 후 전체189/189·typecheck·audit 통과.
+POLICY_BASIS 공식 법령·서울시 원문 대조/최신 경계 교정 완료.
+섹션 2 codex 리뷰: 사용자 총1회 지시로 섹션5에 통합, 아직 수행 아님.
+EXECUTOR 섹션 2 PASS: 실제 HTTP 및 SQLite 재시작·필터·권한·동의·부분해결 검사.
+섹션 2 셀프체크 완료: 실제 전화/UI 별도 미완료.
+섹션 2 CHRONICLE 확인 완료: 실행 방침 추가 변경 없음.
+Supervisor 섹션2→3 승인. 기존 OS guard에 현재 task selector와 plain3종 filename resolver만 결박하여 직접 실행(session61755); 다른 과거 state를 선택하지 않도록 함.

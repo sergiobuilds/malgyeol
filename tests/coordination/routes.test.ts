@@ -1,0 +1,67 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import { once } from 'node:events';
+import { mkdtempSync, rmSync } from 'node:fs';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
+import { createCareApp } from '../../src/careApp.ts';
+
+test('support network and protected multi-need requests share real HTTP storage', async t => {
+  const token = 'coordination-test-operator-token-000000000000';
+  const prior = process.env.CARE_OPERATOR_TOKEN;
+  process.env.CARE_OPERATOR_TOKEN = token;
+  const server = createCareApp();
+  if (prior === undefined) delete process.env.CARE_OPERATOR_TOKEN; else process.env.CARE_OPERATOR_TOKEN = prior;
+  server.listen(0, '127.0.0.1');
+  await once(server, 'listening');
+  t.after(() => server.close());
+  const address = server.address(); assert.ok(address && typeof address !== 'string');
+  const base = `http://127.0.0.1:${address.port}`;
+  const headers = {authorization: `Bearer ${token}`, 'content-type':'application/json'};
+  const programs = await fetch(base+'/api/support/programs');
+  assert.equal(programs.status, 200);
+  assert.equal((await programs.json()).programs.length, 4);
+  assert.equal((await fetch(base+'/api/coordination/requests')).status,403);
+  const created = await fetch(base+'/api/coordination/requests',{method:'POST',headers,body:JSON.stringify({
+    citizenRef:'citizen-a', summary:'쌀은 있지만 조리가 어렵고 비누가 필요합니다',district:'마포구',
+    constraints:['직접 방문 어려움'], needs:[{description:'조리된 식사',category:'식사'},{description:'비누',category:'생필품'}]
+  })});
+  assert.equal(created.status,201);
+  const {request}=await created.json();
+  assert.equal(request.needs.length,2);
+  assert.equal(request.needs[0].description,'조리된 식사');
+  const result=await fetch(base+`/api/coordination/requests/${request.id}`,{headers});
+  assert.equal((await result.json()).request.id,request.id);
+  const stopped=await fetch(base+`/api/coordination/requests/${request.id}/needs/${request.needs[1].id}/stop`,{method:'POST',headers,body:'{}'});
+  assert.equal(stopped.status,200);
+  const stopBody=await stopped.json();
+  assert.equal(stopBody.request.needs[1].status,'stopped');
+  assert.equal(stopBody.request.needs[0].status,'open');
+  const invalid=await fetch(base+'/api/coordination/requests',{method:'POST',headers,body:JSON.stringify({needs:'bad'})});
+  assert.equal(invalid.status,400);
+  const invalidConsent=await fetch(base+`/api/coordination/requests/${request.id}/consent`,{method:'POST',headers,body:JSON.stringify({purpose:'문의',institutionIds:[],sharedFields:[],allowCoordination:'true'})});
+  assert.equal(invalidConsent.status,400);
+});
+
+test('coordination reuses configured care ledger and survives HTTP server restart',async t=>{
+  const directory=mkdtempSync(join(tmpdir(),'coordination-http-'));
+  t.after(()=>rmSync(directory,{recursive:true,force:true}));
+  const previousPath=process.env.CARE_LEDGER_PATH, previousToken=process.env.CARE_OPERATOR_TOKEN;
+  const token='http-persistence-operator-00000000000000';
+  process.env.CARE_LEDGER_PATH=join(directory,'ledger.sqlite');
+  process.env.CARE_OPERATOR_TOKEN=token;
+  const first=createCareApp();
+  first.listen(0,'127.0.0.1');await once(first,'listening');
+  const address=first.address();assert.ok(address&&typeof address!=='string');
+  const response=await fetch(`http://127.0.0.1:${address.port}/api/coordination/requests`,{method:'POST',headers:{authorization:`Bearer ${token}`,'content-type':'application/json'},body:JSON.stringify({citizenRef:'citizen-r',summary:'식사 지원',district:'마포구',constraints:[],needs:[{description:'식사',category:'식사'}]})});
+  assert.equal(response.status,201);const saved=await response.json();
+  await new Promise<void>(resolve=>first.close(()=>resolve()));
+  const second=createCareApp();
+  if(previousPath===undefined) delete process.env.CARE_LEDGER_PATH;else process.env.CARE_LEDGER_PATH=previousPath;
+  if(previousToken===undefined) delete process.env.CARE_OPERATOR_TOKEN;else process.env.CARE_OPERATOR_TOKEN=previousToken;
+  second.listen(0,'127.0.0.1');await once(second,'listening');t.after(()=>second.close());
+  const secondAddress=second.address();assert.ok(secondAddress&&typeof secondAddress!=='string');
+  const restored=await fetch(`http://127.0.0.1:${secondAddress.port}/api/coordination/requests/${saved.request.id}`,{headers:{authorization:`Bearer ${token}`}});
+  assert.equal(restored.status,200);
+  assert.equal((await restored.json()).request.summary,'식사 지원');
+});

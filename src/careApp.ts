@@ -9,6 +9,9 @@ import { CarePhoneCoordinator } from './care-support/phone.ts';
 import { timingSafeEqual } from 'node:crypto';
 import { SqliteCareRequestRepository } from './care-support/sqliteRepository.ts';
 import { CareProviderDispatcher, SandboxCareProvider } from './care-support/provider.ts';
+import { CoordinationStore } from './coordination/store.ts';
+import { CoordinationEngine } from './coordination/engine.ts';
+import { createCoordinationRoutes } from './coordination/routes.ts';
 
 export function createCareApp() {
   const operationalEnabled = process.env.NODE_ENV !== 'production' || Boolean(process.env.CARE_LEDGER_PATH);
@@ -24,6 +27,12 @@ export function createCareApp() {
   const dispatcher = automaticDispatchers.get(providerName) ?? new CareProviderDispatcher(repository, new SandboxCareProvider(providerName));
   const phone = new CarePhoneCoordinator(service);
   const agentSecret = process.env.AGENT_TOOL_SECRET;
+  const coordinationPath = process.env.COORDINATION_LEDGER_PATH ?? process.env.CARE_LEDGER_PATH;
+  const coordinationEnabled = process.env.NODE_ENV !== 'production' || Boolean(coordinationPath);
+  const coordinationStore = new CoordinationStore(coordinationPath ?? ':memory:');
+  const coordination = createCoordinationRoutes(new CoordinationEngine(coordinationStore), {
+    ...(roleTokens.OPERATOR ? {operator:roleTokens.OPERATOR}:{}), ...(agentSecret?{agent:agentSecret}:{})
+  });
   const publicBaseUrl = process.env.PUBLIC_BASE_URL;
   const twilioAuthToken = process.env.TWILIO_AUTH_TOKEN;
   const dispatchConfirmed = async (caseId: string) => {
@@ -38,6 +47,14 @@ export function createCareApp() {
   const server = createServer(async (request, response) => {
     try {
       const url = new URL(request.url ?? '/', `http://${request.headers.host ?? 'localhost'}`);
+      if (url.pathname.startsWith('/api/support/') || url.pathname.startsWith('/api/coordination/')) {
+        if (url.pathname.startsWith('/api/coordination/') && !coordinationEnabled) {
+          return sendJson(response, 503, {error:{code:'DURABLE_LEDGER_REQUIRED',message:'요청 저장 연결을 준비하고 있습니다.'}});
+        }
+        const result = coordination(request.method ?? 'GET',url,String(request.headers.authorization ?? ''),
+          ['POST','PATCH'].includes(request.method ?? '') ? await readJson(request) : {});
+        if(result) return sendJson(response,result.status,result.body);
+      }
       if (request.method === 'GET' && ['/health', '/healthz', '/api/health'].includes(url.pathname)) {
         return sendJson(response, 200, {
           ok: true,
@@ -128,7 +145,7 @@ export function createCareApp() {
       return sendJson(response, 500, { error: 'INTERNAL_SERVER_ERROR' });
     }
   });
-  server.on('close', () => { if (repository instanceof SqliteCareRequestRepository) repository.close(); });
+  server.on('close', () => { coordinationStore.close(); if (repository instanceof SqliteCareRequestRepository) repository.close(); });
   return server;
 }
 
