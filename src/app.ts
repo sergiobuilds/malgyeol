@@ -715,7 +715,7 @@ async function serveStatic(url: URL, response: ServerResponse, headOnly = false)
     ? url.searchParams.has('v') ? 'index.html' : 'landing.html'
     : appRoutes.has(pathname) ? 'index.html'
       : techRoutes.has(pathname) ? 'tech.html'
-        : pathname.slice(1);
+        : pathname === '/dashboard' ? 'dashboard.html' : pathname.slice(1);
   const deliveryAsset = /^assets\/delivery-evidence\/synthetic-(received-ok|damaged-rice|wrong-item)\.webp$/.test(file);
   const storyNames = new Set([
     'elder-voice-hero', 'elder-support-arrival', 'universal-agent-hero', 'parent-hands-full',
@@ -727,7 +727,7 @@ async function serveStatic(url: URL, response: ServerResponse, headOnly = false)
   const storyPng = file.match(/^assets\/story\/([a-z0-9-]+)\.png$/);
   const storyWebp = file.match(/^assets\/story\/([a-z0-9-]+)-(480|960|1536)\.webp$/);
   const storyAsset = Boolean((storyPng && storyNames.has(storyPng[1])) || (storyWebp && storyNames.has(storyWebp[1])));
-  if (!deliveryAsset && !storyAsset && !['index.html', 'landing.html', 'tech.html', 'landing.js', 'tech.js', 'app.js', 'icons.js', 'styles.css', 'tokens.css'].includes(file)) return sendJson(response, 404, { error: 'Not found' });
+  if (!deliveryAsset && !storyAsset && !['index.html', 'landing.html', 'tech.html', 'landing.js', 'tech.js', 'app.js', 'icons.js', 'styles.css', 'tokens.css', 'dashboard.html', 'dashboard.js', 'dashboard.css'].includes(file)) return sendJson(response, 404, { error: 'Not found' });
   const bytes = await readFile(join(process.cwd(), 'public', file));
   const contentType = extname(file) === '.css' ? 'text/css; charset=utf-8'
     : extname(file) === '.js' ? 'text/javascript; charset=utf-8'
