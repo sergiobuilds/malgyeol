@@ -103,6 +103,10 @@ html[data-contrast="high"] {
   --semantic-accent-fg-blue: #0047B3;
 }
 
+html:not([data-contrast="high"]) .app[data-surface="ben"] {
+  --semantic-label-alternative: rgba(55, 56, 60, 0.74);
+}
+
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
     animation-duration: 0.001ms !important; animation-iteration-count: 1 !important;
@@ -219,7 +223,7 @@ html[data-motion="reduced"] *, html[data-motion="reduced"] *::before, html[data-
   flex: 1; min-width: 0; border: none; outline: none; background: transparent; padding: 0;
   font-size: 1rem; line-height: 1.5rem; color: var(--semantic-label-normal);
 }
-.tf input::placeholder { color: var(--semantic-label-assistive); }
+.tf input::placeholder { color: var(--semantic-label-alternative); }
 .tf--lg { padding: 12px 12px 12px 16px; border-radius: var(--radius-16); min-height: 64px; }
 .tf--lg input { font-size: 1.125rem; line-height: 1.625rem; }
 .tf > .ico { color: var(--semantic-label-assistive); }
@@ -531,7 +535,7 @@ html[data-motion="reduced"] *, html[data-motion="reduced"] *::before, html[data-
 }
 .bnav__item {
   display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px;
-  min-height: 60px; padding: 8px 2px; color: var(--semantic-interaction-inactive);
+  min-height: 60px; padding: 8px 2px; color: var(--semantic-label-alternative);
   font-size: 0.6875rem; letter-spacing: 0.02em; font-weight: 500;
   transition: color var(--dur) var(--ease);
 }

@@ -1,7 +1,7 @@
 steps:
   - name: node:22-bookworm
     entrypoint: bash
-    args: ['-ceu', 'npm ci && npm run typecheck && npm test']
+    args: ['-ceu', 'npm ci && npm run typecheck && npm test && npm run audit:dependencies']
   - name: gcr.io/cloud-builders/docker
     args: ['build', '-t', '${_REGION}-docker.pkg.dev/$PROJECT_ID/${_REPOSITORY}/malgyeol:$COMMIT_SHA', '.']
   - name: gcr.io/cloud-builders/docker
