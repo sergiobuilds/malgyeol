@@ -31,5 +31,5 @@
   - [x] Codex 외부 리뷰 총 1회 실행
   - [ ] 외부 코드 검토 완료: bwrap 환경 오류로 코드 열람 전 종료, 추가 호출 없음
   - [x] npm run verify·산출물 검수·secret 검사
-  - [ ] commit/push·검증 커밋·GitHub 상세 링크
+  - [x] 구현·산출물 commit/push 및 원격 SHA 대조 (`244274a`)
   - [ ] executor 검증·self-check·CHRONICLE 확인
