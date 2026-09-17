@@ -40,6 +40,35 @@ class VoiceTests(unittest.IsolatedAsyncioTestCase):
             await rt.finalize(ctx,'no-answer');self.assertEqual(len(calls),1)
             journal.close()
 
+
+    async def test_missing_route_preserves_partial_result_and_sends_one_callback(self):
+        from unittest.mock import AsyncMock
+        request={'id':'r','citizenRef':'citizen','revision':1,'consent':{'institutionIds':['unmapped']},
+                 'inquiries':[{'id':'done','status':'answered','answer':{'summary':'식사 연결'}},
+                              {'id':'pending','status':'prepared','revision':1,'institutionId':'unmapped'}],
+                 'attempts':[]}
+        calls=[]
+        class API:
+            async def send(self,method,path,body=None):
+                calls.append((method,path,body))
+                return {'request':request}
+        with tempfile.TemporaryDirectory() as d:
+            journal=Journal(Path(d)/'s.sqlite')
+            routing=Routing({'allowedNumbers':['+820000000001'],'citizenNumbers':{'citizen':'+820000000001'},'institutionNumbers':{}})
+            runtime=VoiceRuntime(API(),journal,routing)
+            runtime.dial=AsyncMock()
+            try:
+                await runtime.dispatch_request(request)
+                await runtime.dispatch_request(request)
+                self.assertEqual(runtime.dial.await_count,1)
+                context=runtime.dial.await_args.args[0]
+                self.assertEqual(context['role'],'callback')
+                self.assertEqual(context['request']['inquiries'][0]['status'],'answered')
+                self.assertEqual(context['request']['inquiries'][1]['status'],'prepared')
+                self.assertTrue(all(method=='GET' for method,_,_ in calls))
+                self.assertIsNone(journal.get('dispatch:pending:0'))
+            finally:journal.close()
+
 class AdapterTests(unittest.IsolatedAsyncioTestCase):
     async def test_role_and_tools_bound_before_prewarm_in_real_sdk(self):
         try:

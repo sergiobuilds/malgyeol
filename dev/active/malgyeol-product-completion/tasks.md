@@ -16,13 +16,13 @@
   - [x] 조건 조율·부분 해결·재선택·재연락
   - [x] 허용 번호·한 통화·중복·결과 불명·수동 재시도
   - [x] executor 검증·self-check·CHRONICLE 확인
-- [ ] 섹션 4: KRDS 프론트·제출물
-  - [ ] Manyfast PRD 저장·재조회
-  - [ ] Claude design-forge/KRDS MCP·화면/실제 API
-  - [ ] POLICY_BASIS 기반 정책 원문·TeX·DOCX·PDF
-  - [ ] 참조 PDF 반영 3분 덱·TeX·편집 PPTX·PDF
-  - [ ] 명사형·보수적 문체·대본 제외·전체 렌더
-  - [ ] executor 검증·self-check·CHRONICLE 확인
+- [x] 섹션 4: KRDS 프론트·제출물
+  - [x] Manyfast PRD 저장·재조회
+  - [x] Claude design-forge/KRDS MCP·화면/실제 API
+  - [x] POLICY_BASIS 기반 정책 원문·TeX·DOCX·PDF
+  - [x] 참조 PDF 반영 3분 덱·TeX·편집 PPTX·PDF
+  - [x] 명사형·보수적 문체·대본 제외·전체 렌더
+  - [x] executor 검증·self-check·CHRONICLE 확인
 - [ ] 섹션 5: 통합·Future·최종 검증
   - [ ] 정상 왕복·부분 해결·변경·부재 실통화
   - [ ] 화면/전화/저장 일치·재시작·격리

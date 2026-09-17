@@ -1,21 +1,33 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { readFile } from 'node:fs/promises';
+import { once } from 'node:events';
+import { createCareApp } from '../../src/careApp.ts';
 
-test('public workflow exposes recipient, provider and exception-only operator handoffs', async () => {
-  const source = await readFile(new URL('../../public/app.js', import.meta.url), 'utf8');
-  assert.match(source, /수행기관에 요청하기/);
-  assert.match(source, /PROVIDER_ACCEPT/);
-  assert.match(source, /MARK_PROVIDED/);
-  assert.match(source, /CONFIRM_RECEIPT/);
-  assert.match(source, /RAISE_EXCEPTION/);
-  assert.match(source, /정상 건은 줄이고/);
+test('public entrypoints serve their actual local styles and scripts', async t => {
+  const server=createCareApp();server.listen(0,'127.0.0.1');await once(server,'listening');t.after(()=>server.close());
+  const address=server.address();assert.ok(address&&typeof address!=='string');
+  const base=`http://127.0.0.1:${address.port}`;
+  for(const route of ['/','/app','/ops','/tech']) {
+    const response=await fetch(base+route);assert.equal(response.status,200);
+    assert.match(response.headers.get('content-security-policy') ?? '',/script-src 'self'/);
+    const html=await response.text();
+    const assets=[...html.matchAll(/<(?:script|link)\b[^>]*(?:src|href)=["']([^"']+)["'][^>]*>/g)]
+      .map(m=>m[1]!).filter(path=>/\.(?:js|css)(?:\?|$)/.test(path));
+    assert.ok(assets.length>0,route);
+    for(const path of assets) {
+      const url=new URL(path,base+route);assert.equal(url.origin,base,'product assets must be self-hosted');
+      const asset=await fetch(url);assert.equal(asset.status,200,`${route}: ${path}`);
+      assert.ok((await asset.text()).length>0);
+    }
+  }
 });
 
-test('public product removes payment and direct commerce language', async () => {
-  const source = await readFile(new URL('../../public/app.js', import.meta.url), 'utf8');
-  assert.match(source, /개인별지원계획/);
-  assert.match(source, /수행기관/);
-  assert.match(source, /수령 확인/);
-  assert.doesNotMatch(source, /결제|잔액 차감|농식품바우처|판매처.*주문/);
+test('public entrypoints cannot expose private runtime files or request records', async t=>{
+  const server=createCareApp();server.listen(0,'127.0.0.1');await once(server,'listening');t.after(()=>server.close());
+  const address=server.address();assert.ok(address&&typeof address!=='string');
+  const base=`http://127.0.0.1:${address.port}`;
+  for(const path of ['/.env','/.private/care-ledger.sqlite','/.private/coordination-routing.json','/src/careApp.ts','/assets/../../.secrets/care.env']) {
+    assert.equal((await fetch(base+path)).status,404,path);
+  }
+  assert.equal((await fetch(base+'/api/coordination/requests')).status,403);
 });

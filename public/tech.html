@@ -1,7 +1,116 @@
-<!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="말결의 공급자 중립 아키텍처, 정책 경계, 감사 가능한 사건 원장."><title>말결 · 작동 원리</title><style>
-:root{--ink:#17201d;--muted:#5d6964;--paper:#f8f5ed;--card:#fffdf7;--line:#dcd8cd;--blue:#1858c8}*{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink);font-family:system-ui,-apple-system,"Noto Sans KR",sans-serif;line-height:1.65}.wrap{width:min(1040px,calc(100% - 40px));margin:auto}header{display:flex;justify-content:space-between;align-items:center;padding:22px 0;border-bottom:1px solid var(--line)}a{color:inherit}.brand{font-size:21px;font-weight:850;text-decoration:none}.back{font-size:14px}.hero,section{padding:clamp(58px,8vw,100px) 0;border-bottom:1px solid var(--line)}.eyebrow{font-size:13px;font-weight:800;letter-spacing:.12em;color:var(--blue)}h1{max-width:850px;margin:16px 0 22px;font-size:clamp(40px,6vw,70px);line-height:1.08;letter-spacing:-.05em}h2{margin:0 0 18px;font-size:clamp(28px,4vw,44px);line-height:1.2}.lead{max-width:760px;font-size:20px;color:var(--muted)}.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin-top:34px}.card{padding:25px;border:1px solid var(--line);border-radius:17px;background:var(--card)}.card h3{margin:0 0 8px;font-size:19px}.card p{margin:0;color:var(--muted)}.flow{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-top:34px}.node{padding:18px 14px;border-radius:14px;background:var(--card);border:1px solid var(--line);font-size:14px}.node b{display:block;color:var(--blue);margin-bottom:7px}.boundary{padding:28px;border-radius:18px;background:#17201d;color:white}.boundary p{color:#cbd3cf}.fact{width:100%;border-collapse:collapse;margin-top:26px}.fact th,.fact td{text-align:left;padding:15px;border-bottom:1px solid var(--line);vertical-align:top}.fact th{width:32%;font-size:14px}.fact td{color:var(--muted)}footer{padding:32px 0;color:var(--muted);font-size:13px}@media(max-width:760px){.grid,.flow{grid-template-columns:1fr}.fact th,.fact td{display:block;width:auto}.fact th{padding-bottom:3px}.fact td{padding-top:0}}
-</style></head><body><div class="wrap"><header><a class="brand" href="/">말결</a><a class="back" href="/?v=home">제품 체험 →</a></header><main><div class="hero"><p class="eyebrow">PRODUCT ARCHITECTURE</p><h1>AI는 말을 정리하고,<br>공공의 계획이 결정합니다.</h1><p class="lead">말결의 핵심은 모델이 아니라 통제 가능한 서비스 이행 흐름입니다. 개인별지원계획, 수행기관, 전화·AI 제공자는 제한된 인터페이스 뒤에서 분리됩니다.</p></div>
-<section><p class="eyebrow">ONE CASE, ONE TRACE</p><h2>요청부터 수령까지 하나의 사건으로</h2><div class="flow"><div class="node"><b>01 접수</b>전화 요청</div><div class="node"><b>02 해석</b>필요 서비스 구조화</div><div class="node"><b>03 계획</b>허용 서비스·횟수 확인</div><div class="node"><b>04 제공</b>수행기관 수락·이행</div><div class="node"><b>05 결과</b>수령·예외·감사 기록</div></div></section>
-<section><p class="eyebrow">SEPARATION OF AUTHORITY</p><h2>각 구성요소가 할 수 있는 일을 제한합니다.</h2><div class="grid"><article class="card"><h3>AI 해석기</h3><p>자연어를 구조화하고 되묻기 후보를 만듭니다. 신규 자격·급여·계획은 결정하지 않습니다.</p></article><article class="card"><h3>계획 규칙 엔진</h3><p>버전이 고정된 규칙으로 허용 서비스·횟수·수행기관을 확인하고 같은 입력에는 같은 결과를 냅니다.</p></article><article class="card"><h3>좁은 실행 권한</h3><p>승인된 이용자, 서비스, 수량, 수행기관, 유효기간 안에서만 요청을 한 번 전달합니다.</p></article><article class="card"><h3>추가만 가능한 사건 원장</h3><p>상태를 덮어쓰지 않고 요청·제공·수령 사건을 이어 붙여 감사와 사람의 인계를 가능하게 합니다.</p></article></div></section>
-<section><div class="boundary"><p class="eyebrow" style="color:#9dc2ff">SAFETY BOUNDARY</p><h2>위험 신호와 계획 밖 요청은 사람에게 갑니다.</h2><p>개인 식별정보, 자격 변경, 승인 범위 초과와 건강·학대 위험 신호는 자동 처리하지 않습니다. 해석 서비스가 응답하지 않아도 수행기관과 담당자 인계 경로는 유지됩니다.</p></div></section>
-<section><p class="eyebrow">CURRENT EVIDENCE</p><h2>확인된 것과 아직 주장하지 않는 것</h2><table class="fact"><tbody><tr><th>현재 확인 가능</th><td>합성 개인별지원계획, 서비스 범위 확인, 요청 생성, 수행기관 수락, 제공·수령·예외 이력</td></tr><tr><th>과거 기술 증거</th><td>국내 전화 입력 경로와 공급자 주문 연동. 현행 공공 실증에서는 결제 경로를 사용하지 않음</td></tr><tr><th>아직 연결하지 않음</th><td>서울시·자치구 시스템, 실제 개인별지원계획, 푸드마켓 재고, 실제 수혜자 개인정보</td></tr><tr><th>파일럿 검증 항목</th><td>공무원 처리시간, 수행기관 수락 시간, 무개입 종결률, 실제 수령률, 기록 일치율</td></tr></tbody></table></section></main><footer>말결 기술 개요 · 시연 환경의 경계를 사실대로 표시합니다.</footer></div></body></html>
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="말결이 시민의 요청을 어떻게 나누고, 어떤 창구에 무엇을 물으며, 답변을 어떻게 이어가는지 정리한 문서입니다.">
+<title>작동 방식 — 말결</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2064%2064%22%3E%3Crect%20width%3D%2264%22%20height%3D%2264%22%20rx%3D%2214%22%20fill%3D%22%2303163a%22%2F%3E%3Ctext%20x%3D%2232%22%20y%3D%2244%22%20text-anchor%3D%22middle%22%20font-family%3D%22sans-serif%22%20font-size%3D%2234%22%20font-weight%3D%22700%22%20fill%3D%22%23ffffff%22%3E%EB%A7%90%3C%2Ftext%3E%3C%2Fsvg%3E">
+<link rel="stylesheet" href="/tokens.css">
+<link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+<a class="mg-skip" href="#main">본문 바로가기</a>
+
+<div class="mg-masthead">
+  <div class="mg-masthead__in">
+    <p><strong>말결</strong> 생활 지원 연결 서비스</p>
+    <p>작동 방식과 처리 범위</p>
+  </div>
+</div>
+
+<header class="mg-header">
+  <div class="mg-header__in">
+    <a class="mg-brand" href="/">
+      <span class="mg-brand__mark" aria-hidden="true">말</span>
+      <span>
+        <span class="mg-brand__name">말결</span>
+        <span class="mg-brand__role">생활 지원 연결 서비스</span>
+      </span>
+    </a>
+    <nav class="mg-tabline" aria-label="주요 화면">
+      <a href="/tech" aria-current="page">작동 방식</a>
+      <a href="/app">지원망</a>
+      <a href="/ops">요청 진행</a>
+    </nav>
+  </div>
+</header>
+
+<main class="mg-main" id="main" tabindex="-1">
+  <div class="mg-doc">
+    <div class="mg-pagehead">
+      <div>
+        <p class="mg-eyebrow">작동 방식</p>
+        <h1>요청 분해와 문의 진행 순서</h1>
+        <p>한 번의 전화가 하나의 요청이 되고, 요청 안의 필요가 각각 따로 진행됩니다. 아래는 그 처리 순서와 각 단계에서 무엇을 기록하는지 정리한 내용입니다.</p>
+      </div>
+    </div>
+
+    <h2>요청의 구성</h2>
+    <p>시민 한 사람의 전화는 하나의 요청이 되고, 그 안에서 서로 다른 생활 필요가 개별 항목으로 나뉩니다. 필요마다 상태가 따로 움직이므로, 식사는 연결되고 생필품은 다른 경로를 찾는 상황이 그대로 표시됩니다.</p>
+    <div class="krds-table-wrap">
+      <table class="tbl col data">
+        <caption>요청을 구성하는 항목과 각 항목이 담는 내용</caption>
+        <colgroup><col style="width:22%"><col></colgroup>
+        <thead><tr><th scope="col">구성</th><th scope="col">담는 내용</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">요청</th><td>시민이 말한 전체 사정의 요약, 거주 자치구, 공통 제약, 접수 경로</td></tr>
+          <tr><th scope="row">필요</th><td>식사·생필품·돌봄처럼 따로 해결해야 하는 항목과 그 항목만의 조건</td></tr>
+          <tr><th scope="row">문의</th><td>어떤 기관의 어떤 사업 창구에 무엇을 물을지 정리한 질문 묶음</td></tr>
+          <tr><th scope="row">답변</th><td>기관이 알려 준 이용 가능 여부, 조건, 다음에 할 일</td></tr>
+          <tr><th scope="row">회신</th><td>시민에게 전화로 전달한 결과와 그 시각</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h2>필요의 상태</h2>
+    <p>상태는 지금 무슨 일이 일어나고 있고 다음에 무엇을 하는지를 나타냅니다. 상태는 색만으로 구분하지 않고 항상 이름과 설명을 함께 표시합니다.</p>
+    <div class="krds-table-wrap">
+      <table class="tbl col data">
+        <caption>필요의 상태와 각 상태의 의미</caption>
+        <colgroup><col style="width:26%"><col></colgroup>
+        <thead><tr><th scope="col">상태</th><th scope="col">의미</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">연락 준비</th><td>물어볼 창구와 질문을 정리하고 있습니다.</td></tr>
+          <tr><th scope="row">기관 연락 중</th><td>등록된 목적별 창구로 연락해 조건을 알아보고 있습니다.</td></tr>
+          <tr><th scope="row">시민 선택 대기</th><td>조건이 달라져 어떤 방법으로 진행할지 시민이 정해야 합니다.</td></tr>
+          <tr><th scope="row">이용 경로 연결</th><td>이용 방법과 조건까지 확인했습니다. 실제 지원 제공은 기관 절차에 따릅니다.</td></tr>
+          <tr><th scope="row">담당자 확인 필요</th><td>연락이 닿지 않았거나 기관이 이용이 어렵다고 답했습니다.</td></tr>
+          <tr><th scope="row">진행 중단</th><td>이 필요는 더 진행하지 않습니다. 같은 요청의 다른 필요는 계속됩니다.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h2>담당자가 할 수 있는 일</h2>
+    <p>담당자 화면은 진행 상황을 보고, 잘못 들어간 내용을 고치고, 더 진행하지 않을 일을 멈추고, 닿지 않은 창구에 다시 연락할 준비를 하는 데 쓰입니다.</p>
+    <div class="krds-table-wrap">
+      <table class="tbl col data">
+        <caption>담당자 동작과 그 동작이 바꾸는 상태</caption>
+        <colgroup><col style="width:26%"><col></colgroup>
+        <thead><tr><th scope="col">동작</th><th scope="col">바뀌는 것</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">요청 내용 정정</th><td>요약만 고치면 진행 상태는 유지됩니다. 지역이나 제약을 바꾸면 진행 중인 필요가 모두 다시 연락 준비 상태로 돌아갑니다.</td></tr>
+          <tr><th scope="row">필요 진행 중단</th><td>해당 필요의 준비·진행 중 문의가 취소됩니다. 다른 필요는 그대로 이어집니다.</td></tr>
+          <tr><th scope="row">다시 연락 준비</th><td>부재중이거나 연결에 실패한 문의만 해당합니다. 결과가 확인되지 않은 통화에는 사용할 수 없습니다.</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>통화를 완료했다고 대신 표시하거나, 시민의 선택을 대신 입력하는 동작은 담당자 화면에 두지 않습니다.</p>
+
+    <h2>지원망 자료</h2>
+    <p>기관 목록과 이용 절차는 네 개 사업의 공개 자료를 근거로 정리했고, 기관마다 확인한 출처를 함께 보관합니다. 같은 시설이 여러 사업을 운영하면 절차와 운영시간을 사업별로 나누어 표시합니다. 자료에 없는 지도 좌표나 실시간 재고는 만들지 않습니다.</p>
+    <div class="btn-wrap mg-doc__act">
+      <a class="krds-btn large primary" href="/app">지원망 화면으로</a>
+    </div>
+  </div>
+</main>
+
+<footer class="mg-foot">
+  <div class="mg-foot__in">
+    <p><strong>말결</strong> · 자격과 제공 여부의 판단은 각 기관에 있으며, 말결은 시민을 대신해 조건을 알아보고 결과를 회신합니다.</p>
+    <p>지원망 · 요청 진행</p>
+  </div>
+</footer>
+<script src="/tech.js" defer></script>
+</body>
+</html>

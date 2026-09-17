@@ -78,3 +78,27 @@ test('coordination reuses configured care ledger and survives HTTP server restar
   assert.equal(restored.status,200);
   assert.equal((await restored.json()).request.summary,'식사 지원');
 });
+
+test('operator browser session protects mutations and never returns the access code', async t=>{
+  const savedToken=process.env.CARE_OPERATOR_TOKEN, savedBase=process.env.PUBLIC_BASE_URL;
+  const token='browser-session-access-code-0000000000000';
+  process.env.CARE_OPERATOR_TOKEN=token;delete process.env.PUBLIC_BASE_URL;
+  const server=createCareApp();
+  if(savedToken===undefined)delete process.env.CARE_OPERATOR_TOKEN;else process.env.CARE_OPERATOR_TOKEN=savedToken;
+  if(savedBase===undefined)delete process.env.PUBLIC_BASE_URL;else process.env.PUBLIC_BASE_URL=savedBase;
+  server.listen(0,'127.0.0.1');await once(server,'listening');t.after(()=>server.close());
+  const address=server.address();assert.ok(address&&typeof address!=='string');
+  const base=`http://127.0.0.1:${address.port}`;
+  const login=await fetch(base+'/api/coordination/session',{method:'POST',headers:{'content-type':'application/json',origin:base},body:JSON.stringify({accessCode:token})});
+  assert.equal(login.status,200);
+  assert.deepEqual(await login.json(),{authenticated:true});
+  const setCookie=login.headers.get('set-cookie')!;assert.match(setCookie,/HttpOnly/);assert.ok(!setCookie.includes(token));
+  const cookie=setCookie.split(';')[0]!;
+  assert.equal((await fetch(base+'/api/coordination/requests',{headers:{cookie}})).status,200);
+  const body=JSON.stringify({citizenRef:'browser-request',summary:'식사',district:'성동구',constraints:[],needs:[{description:'식사',category:'식사'}]});
+  const post=(origin:string)=>fetch(base+'/api/coordination/requests',{method:'POST',headers:{cookie,origin,'content-type':'application/json'},body});
+  assert.equal((await post('https://unrelated.example')).status,403);
+  assert.equal((await post(base)).status,201);
+  assert.equal((await fetch(base+'/api/coordination/session',{method:'DELETE',headers:{cookie,origin:base}})).status,200);
+  assert.equal((await fetch(base+'/api/coordination/requests',{headers:{cookie}})).status,403);
+});

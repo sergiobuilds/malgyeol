@@ -1,0 +1,446 @@
+%% 자동 생성. 편집하지 말 것. 생성기: build.py
+\documentclass[10pt,a4paper]{article}
+\usepackage{kotex}
+\usepackage{fontspec}
+\usepackage[a4paper,left=19mm,right=19mm,top=20mm,bottom=20mm,headsep=6mm,footskip=10mm]{geometry}
+\usepackage{xcolor}
+\usepackage{fancyhdr}
+\setlength{\headheight}{16pt}
+\usepackage{lastpage}
+\usepackage{titlesec}
+\usepackage{enumitem}
+\usepackage{array}
+\usepackage{multirow}
+\usepackage{booktabs}
+\usepackage{colortbl}
+\usepackage{xltabular}
+\usepackage{needspace}
+\usepackage{ragged2e}
+\usepackage[unicode,hidelinks,pdfusetitle]{hyperref}
+\usepackage{xurl}
+\definecolor{krdsprimary5}{HTML}{ECF2FE}
+\definecolor{krdsprimary10}{HTML}{D8E5FD}
+\definecolor{krdsprimary20}{HTML}{B1CEFB}
+\definecolor{krdsprimary30}{HTML}{86AFF9}
+\definecolor{krdsprimary40}{HTML}{4C87F6}
+\definecolor{krdsprimary50}{HTML}{256EF4}
+\definecolor{krdsprimary60}{HTML}{0B50D0}
+\definecolor{krdsprimary70}{HTML}{083891}
+\definecolor{krdsprimary80}{HTML}{052561}
+\definecolor{krdssecondary5}{HTML}{EEF2F7}
+\definecolor{krdssecondary10}{HTML}{D6E0EB}
+\definecolor{krdssecondary70}{HTML}{063A74}
+\definecolor{krdsgray0}{HTML}{FFFFFF}
+\definecolor{krdsgray5}{HTML}{F4F5F6}
+\definecolor{krdsgray10}{HTML}{E6E8EA}
+\definecolor{krdsgray20}{HTML}{CDD1D5}
+\definecolor{krdsgray30}{HTML}{B1B8BE}
+\definecolor{krdsgray40}{HTML}{8A949E}
+\definecolor{krdsgray50}{HTML}{6D7882}
+\definecolor{krdsgray60}{HTML}{58616A}
+\definecolor{krdsgray70}{HTML}{464C53}
+\definecolor{krdsgray80}{HTML}{33363D}
+\definecolor{krdsgray90}{HTML}{1E2124}
+\definecolor{krdsgray95}{HTML}{131416}
+\definecolor{krdsgraphic10}{HTML}{E5ECF9}
+\definecolor{krdsgraphic70}{HTML}{39506C}
+\definecolor{krdssuccess60}{HTML}{267337}
+\definecolor{krdswarning60}{HTML}{8A5C00}
+\definecolor{krdsdanger60}{HTML}{BD2C0F}
+
+\setmainfont{PretendardGOV-}[
+  Path=/home/campbell/projects/personal/products/malgyeol/artifacts/hackathon/fonts/, Extension=.ttf,
+  UprightFont=*Regular, BoldFont=*Bold, ItalicFont=*Regular, BoldItalicFont=*Bold]
+\setmainhangulfont{PretendardGOV-}[
+  Path=/home/campbell/projects/personal/products/malgyeol/artifacts/hackathon/fonts/, Extension=.ttf,
+  UprightFont=*Regular, BoldFont=*Bold, ItalicFont=*Regular, BoldItalicFont=*Bold]
+\setsansfont{PretendardGOV-}[
+  Path=/home/campbell/projects/personal/products/malgyeol/artifacts/hackathon/fonts/, Extension=.ttf, UprightFont=*Regular, BoldFont=*Bold]
+\setsanshangulfont{PretendardGOV-}[
+  Path=/home/campbell/projects/personal/products/malgyeol/artifacts/hackathon/fonts/, Extension=.ttf, UprightFont=*Regular, BoldFont=*Bold]
+\newhangulfontfamily\krdsfallback{Noto Sans CJK KR}
+
+%% KRDS PC 토큰(px)을 인쇄 pt로 환산: 1px = 0.75pt
+\newcommand{\krdsbody}{\fontsize{11.25pt}{18pt}\selectfont}      %% body-small 1.5rem, 행간 1.6
+\newcommand{\krdssmall}{\fontsize{9.75pt}{15.6pt}\selectfont}    %% body-xsmall 1.3rem
+\newcommand{\krdslead}{\fontsize{12.75pt}{20.4pt}\selectfont}    %% body-medium 1.7rem
+\newcommand{\krdshone}{\fontsize{24pt}{28.8pt}\selectfont}         %% heading-large 3.2rem
+\newcommand{\krdshtwo}{\fontsize{14.25pt}{19.95pt}\selectfont}     %% heading-small 1.9rem
+\newcommand{\krdshthree}{\fontsize{12.75pt}{17.85pt}\selectfont}     %% heading-xsmall 1.7rem
+\krdsbody
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{6pt}                                        %% krds-number-4 0.6rem
+\linespread{1.0}
+\color{krdsgray90}
+\hypersetup{colorlinks=true, linkcolor=krdsprimary60, urlcolor=krdsprimary60,
+  citecolor=krdsprimary60, pdfborder={0 0 0}}
+\pagestyle{fancy}
+\fancyhf{}
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\footrulewidth}{0pt}
+\renewcommand{\headrule}{\color{krdsgray20}\hrule height 0.4pt}
+\fancyhead[L]{\krdssmall\color{krdsgray60}말결 전화 기반 생활지원 연계체계}
+\fancyhead[R]{\krdssmall\color{krdsgray60}서울시 정책 협력 및 현장 실증 제안}
+\fancyfoot[C]{\krdssmall\color{krdsgray50}\thepage\ /\ \pageref{LastPage}}
+\titleformat{\section}{\krdshtwo\bfseries\color{krdsgray90}}{}{0pt}{}
+\titlespacing*{\section}{0pt}{24pt}{6pt}
+\titleformat{\subsection}{\krdshthree\bfseries\color{krdssecondary70}}{}{0pt}{}
+\titlespacing*{\subsection}{0pt}{16pt}{4pt}
+\setlist[itemize]{leftmargin=12pt,itemsep=3pt,topsep=3pt,parsep=0pt,label=\textcolor{krdsprimary50}{\textbf{-}}}
+\newcommand{\refmark}[1]{\,\raisebox{0.45ex}{\fontsize{7pt}{7pt}\selectfont #1}}
+\newcommand{\sourceline}[1]{\par\vspace{2pt}{\krdssmall\textcolor{krdsgray60}{#1}}\par}
+%% 셀 앞머리의 \color 는 수직 목록에 whatsit 을 넣어 첫 줄 기준선을 한 줄 밀어낸다.
+%% \leavevmode 로 수평 모드를 먼저 열어 모든 셀의 첫 줄을 맞춘다.
+\newcommand{\cell}[1]{\krdssmall\leavevmode #1}
+\newcommand{\tblcap}[1]{\par\vspace{10pt}{\krdssmall\bfseries\textcolor{krdsgray70}{#1}}\par\vspace{3pt}}
+\newcolumntype{H}{>{\krdssmall\bfseries\color{krdsgray0}\raggedright\arraybackslash}}
+\newcolumntype{L}[1]{>{\krdssmall\raggedright\arraybackslash}p{#1}}
+\newcolumntype{Y}{>{\krdssmall\RaggedRight\arraybackslash}X}
+\newcommand{\thead}[1]{\cellcolor{krdssecondary70}\textcolor{krdsgray0}{\krdssmall\bfseries #1}}
+\renewcommand{\arraystretch}{1.22}
+\setlength{\tabcolsep}{5pt}
+\arrayrulecolor{krdsgray20}
+\begin{document}
+
+\thispagestyle{fancy}
+{\krdssmall\bfseries\textcolor{krdsprimary60}{정책 제안서}}\par\vspace{4pt}
+{\krdshone\bfseries\color{krdsgray90} 말결 전화 기반 생활지원 연계체계}\par\vspace{6pt}
+{\krdslead\textcolor{krdsgray70}{서울시 정책 협력 및 현장 실증 제안}}\par\vspace{4pt}
+{\krdssmall\textcolor{krdsgray50}{작성일 2026-09-18 · 근거 확인일 2026-09-18}}\par\vspace{2pt}
+\vspace{4pt}{\color{krdsprimary50}\hrule height 2pt}\vspace{10pt}
+\section*{1. 제안 개요}
+\phantomsection\addcontentsline{toc}{section}{1. 제안 개요}
+제안명: 말결 — 전화 기반 생활지원 연계체계.\par
+제안 목적: 시민의 반복 설명·기관 문의·조건 조율·결과 회신 부담 경감. 공개된 지원사업·기관·이용방법 데이터망과 담당자 대시보드 구축, AI 기관 확인전화의 결합.\par
+핵심 업무: 시민 요청 접수 → 사업별 이용 경로 조회 → 업무 단위 동의 → 기관 문의·조건 조율·신청 의사 전달 → 시민 회신·재선택 → 후속 처리.\par
+적용 범위: 서울의 푸드뱅크·푸드마켓, 찾아가는 푸드마켓, 그냥드림, 돌봄SOS. 특정 연령·장애 유형에 제품 전체를 고정하지 않고 사업별 기준 적용.\par
+협력 요청: 정책 지침, 사업·운영 데이터, 제한된 현장 실증, 담당자 인계·성과 측정 지원. 기관의 자격·급여·행정판단 권한 유지.\par
+\sourceline{근거: \href{https://github.com/sergiobuilds/malgyeol/blob/feat/ai-for-good-product/POLICY\_BASIS.md}{P0} · \href{https://github.com/sergiobuilds/malgyeol/blob/feat/ai-for-good-product/dev/active/care-coordination/planning-handoff.md}{E2}}
+\section*{2. 추진 배경}
+\phantomsection\addcontentsline{toc}{section}{2. 추진 배경}
+기존 전달체계: 서울시 통합돌봄 상담창구, 자치구와 동주민센터의 접수·조사·연계·모니터링. 새로운 상담창구의 추가보다 상담 이후의 실행 부담에 중점. \refmark{\href{https://www.seoul.go.kr/news/news\_report.do?nttNo=454831\&srchCtgry=475}{[S1]}}\par
+시민의 이용 제약: 사업별 관할·대상·서류·이용시간의 차이, 직접 방문의 어려움, 여러 기관에 같은 사정을 반복 설명하는 부담.\par
+담당자의 조정 업무: 생활 필요의 정리, 접수·제공 창구 확인, 기관 연락, 이용 조건 조율, 시민 재연락과 이력 정리.\par
+검증 가설: 공통 데이터와 AI 확인전화의 결합을 통한 반복 연락 감소와 지원 연결시간 단축. 효과 수치는 사전 확정 없이 현장 기준선과 비교.\par
+\tblcap{표 1. 추진 배경}
+\begin{xltabular}{\textwidth}{L{34mm}YY}
+\hline
+\thead{현장 과제} & \thead{대응 기능} & \thead{확인 항목} \\
+\hline
+\endfirsthead
+\hline
+\thead{현장 과제} & \thead{대응 기능} & \thead{확인 항목} \\
+\hline
+\endhead
+\hline
+\endfoot
+\hline
+\endlastfoot
+\cell{\textcolor{krdssecondary70}{\bfseries 분산된 이용 정보}} & \cell{사업·기관·이용절차 연결} & \cell{관할·접수처·준비물} \\
+\rowcolor{krdsgray5}
+\cell{\textcolor{krdssecondary70}{\bfseries 현재 조건의 추가 문의}} & \cell{AI 기관 전화} & \cell{일정·품목·접근 방법} \\
+\cell{\textcolor{krdssecondary70}{\bfseries 복수 필요와 일부 거절}} & \cell{필요별 진행 관리} & \cell{해결 유지·대안·인계} \\
+\rowcolor{krdsgray5}
+\cell{\textcolor{krdssecondary70}{\bfseries 반복 설명과 재연락}} & \cell{공통 요청 이력·시민 회신} & \cell{답변·선택·다음 행동} \\
+\end{xltabular}
+\sourceline{근거: \href{https://www.seoul.go.kr/news/news\_report.do?nttNo=454831\&srchCtgry=475}{S1} · \href{https://github.com/sergiobuilds/malgyeol/blob/feat/ai-for-good-product/POLICY\_BASIS.md}{P0}}
+\section*{3. 제도 및 정책 기반}
+\phantomsection\addcontentsline{toc}{section}{3. 제도 및 정책 기반}
+국가 제도: 「의료{\krdsfallback ㆍ}요양 등 지역 돌봄의 통합지원에 관한 법률」. 최초 시행 2026년 3월 27일, 확인 기준 현행 법률 제21777호의 시행일 2026년 9월 10일. 통합 제공·선택권, 지역계획, 신청·판정·개인별지원계획·연계·점검의 제도 기반. \refmark{\href{https://www.law.go.kr/LSW/LsiJoLinkP.do?docType=JO\&joNo=001200000\&languageType=KO\&lsNm=\%EC\%9D\%98\%EB\%A3\%8C\%E3\%86\%8D\%EC\%9A\%94\%EC\%96\%91\%20\%EB\%93\%B1\%20\%EC\%A7\%80\%EC\%97\%AD\%20\%EB\%8F\%8C\%EB\%B4\%84\%EC\%9D\%98\%20\%ED\%86\%B5\%ED\%95\%A9\%EC\%A7\%80\%EC\%9B\%90\%EC\%97\%90\%20\%EA\%B4\%80\%ED\%95\%9C\%20\%EB\%B2\%95\%EB\%A5\%A0\&paras=1}{[L1]}}\par
+서울시 제도: 「서울특별시 지역사회 돌봄 통합지원에 관한 조례」, 2026년 1월 5일 시행. 서울시 발표상 보건의료·건강·장기요양·일상돌봄·주거 5개 분야의 연계체계. 기본계획(2026\textasciitilde{}2030)과 돌봄자원 DB는 2026년 3월 발표문의 추진계획으로 인용. \refmark{\href{https://www.law.go.kr/LSW/ordinInfoP.do?ordinSeq=2100075}{[L2]}}\refmark{\href{https://www.seoul.go.kr/news/news\_report.do?nttNo=454831\&srchCtgry=475}{[S1]}}\par
+적용 원칙: 개인별지원계획은 해당 통합돌봄 대상자의 후속 연계 근거. 푸드뱅크·그냥드림을 포함한 네 사업의 보편적 사전 이용조건으로 강제하지 않음.\par
+권한 경계: AI의 포괄적 대리권·개인정보 접근권·수급 결정권으로 확대 해석 금지. 기관 문의에 관한 음성 동의와 개별 사업의 신청·정보 처리 요건 구별.\par
+\tblcap{표 2. 제도 및 정책 기반}
+\begin{xltabular}{\textwidth}{L{20mm}YY}
+\hline
+\thead{제도 항목} & \thead{공공기관 역할} & \thead{말결 적용} \\
+\hline
+\endfirsthead
+\hline
+\thead{제도 항목} & \thead{공공기관 역할} & \thead{말결 적용} \\
+\hline
+\endhead
+\hline
+\endfoot
+\hline
+\endlastfoot
+\cell{\textcolor{krdssecondary70}{\bfseries 제4·6조}} & \cell{통합 제공·선택권·지역계획} & \cell{전화 접근·자치구 실증} \\
+\rowcolor{krdsgray5}
+\cell{\textcolor{krdssecondary70}{\bfseries 제10·12조}} & \cell{신청·발굴·종합판정} & \cell{신청 보조·기관 판단 유지} \\
+\cell{\textcolor{krdssecondary70}{\bfseries 제13·14조}} & \cell{개인별지원계획·제공·점검} & \cell{해당 대상자의 후속 기록 연계} \\
+\rowcolor{krdsgray5}
+\cell{\textcolor{krdssecondary70}{\bfseries 제22조}} & \cell{통합지원정보시스템} & \cell{권한 협의에 따른 최소 데이터 연계} \\
+\end{xltabular}
+\sourceline{근거: \href{https://www.law.go.kr/LSW/LsiJoLinkP.do?docType=JO\&joNo=001200000\&languageType=KO\&lsNm=\%EC\%9D\%98\%EB\%A3\%8C\%E3\%86\%8D\%EC\%9A\%94\%EC\%96\%91\%20\%EB\%93\%B1\%20\%EC\%A7\%80\%EC\%97\%AD\%20\%EB\%8F\%8C\%EB\%B4\%84\%EC\%9D\%98\%20\%ED\%86\%B5\%ED\%95\%A9\%EC\%A7\%80\%EC\%9B\%90\%EC\%97\%90\%20\%EA\%B4\%80\%ED\%95\%9C\%20\%EB\%B2\%95\%EB\%A5\%A0\&paras=1}{L1} · \href{https://www.law.go.kr/LSW/ordinInfoP.do?ordinSeq=2100075}{L2} · \href{https://www.law.go.kr/LSW/lsInfoP.do?lsiSeq=284999}{L3} · \href{https://www.seoul.go.kr/news/news\_report.do?nttNo=454831\&srchCtgry=475}{S1} · \href{https://github.com/sergiobuilds/malgyeol/blob/feat/ai-for-good-product/POLICY\_BASIS.md}{P0}}
+\section*{4. 사업 연계체계}
+\phantomsection\addcontentsline{toc}{section}{4. 사업 연계체계}
+공통 데이터: 사업·기관·장소·관할·목적별 문의처·이용절차·운영조건·출처·확인일. 동일 시설의 복수 사업 분리, 접수처·제공처·물류시설 구별.\par
+정보 연결 순서: 공식 목록·이용절차 → 기관 제공 운영정보 → 필요한 현재 조건의 확인전화. 실시간 재고 API 확보를 착수 조건으로 설정하지 않음.\par
+사업별 적용: 아래 이용경로와 기관별 안내의 결합. 모든 푸드뱅크의 현장 수령, 찾아가는 푸드마켓의 보편적 가정 배송, 돌봄SOS의 무조건 무료 제공으로 일반화하지 않음.\par
+\tblcap{표 3. 사업 연계체계}
+\begin{xltabular}{\textwidth}{L{26mm}YYY}
+\hline
+\thead{사업} & \thead{이용경로} & \thead{기관 문의} & \thead{기관별 안내 유의사항} \\
+\hline
+\endfirsthead
+\hline
+\thead{사업} & \thead{이용경로} & \thead{기관 문의} & \thead{기관별 안내 유의사항} \\
+\hline
+\endhead
+\hline
+\endfoot
+\hline
+\endlastfoot
+\cell{\textcolor{krdssecondary70}{\bfseries 푸드뱅크·푸드마켓}} & \cell{동·구 문의 → 선정 → 사업장 이용 \refmark{\href{https://www.s-foodbank.or.kr/intro/intro03}{[F1]}}} & \cell{등록·서류·품목·수령} & \cell{이용시간·품목 수량이 기관마다 다름. 접수창구·제공장소·물류시설·기부 문의를 구분} \\
+\rowcolor{krdsgray5}
+\cell{\textcolor{krdssecondary70}{\bfseries 찾아가는 푸드마켓}} & \cell{지역 운영기관 → 이동·미니마켓·배달활동 \refmark{\href{https://news.seoul.go.kr/welfare/archives/1355?listPage=2}{[F3]}}} & \cell{관할·일정·참여·접근 방법} & \cell{세 운영형태는 같은 사업의 운영정보. 배달활동을 모든 시민의 개별 가정 배송으로 확대하지 않음} \\
+\cell{\textcolor{krdssecondary70}{\bfseries 그냥드림}} & \cell{관할 사업장 → 신청·상담 → 패키지 수령 \refmark{\href{https://www.s-foodbank.or.kr/justdream/guide}{[F4]}}} & \cell{신분증·방문차수·상담 절차} & \cell{재방문은 이용이력 확인·기본 상담, 후속 방문은 행정복지센터 상담기록서와 사업장 연결} \\
+\rowcolor{krdsgray5}
+\cell{\textcolor{krdssecondary70}{\bfseries 돌봄SOS}} & \cell{거주지 동·구 → 돌봄 판단 → 서비스 의뢰 \refmark{\href{https://wis.seoul.go.kr/wfs/sos/service.do}{[S2]}}\refmark{\href{https://wis.seoul.go.kr/was/sos/sosInfo.do}{[S3]}}} & \cell{돌봄 필요·비용·일정·제공기관} & \cell{기준 중위소득 100\% 이하 비용 지원 안내. 선정·무료 제공 확정은 기관의 공식 판단} \\
+\end{xltabular}
+\sourceline{근거: \href{https://www.s-foodbank.or.kr/intro/intro03}{F1} · \href{https://www.s-foodbank.or.kr/board/market/marketList}{F2} · \href{https://news.seoul.go.kr/welfare/archives/1355?listPage=2}{F3} · \href{https://www.s-foodbank.or.kr/justdream/guide}{F4} · \href{https://www.s-foodbank.or.kr/board/map/mapList}{F5} · \href{https://wis.seoul.go.kr/wfs/sos/service.do}{S2} · \href{https://wis.seoul.go.kr/was/sos/sosInfo.do}{S3} · \href{https://github.com/sergiobuilds/malgyeol/blob/feat/ai-for-good-product/POLICY\_BASIS.md}{P0}}
+\section*{5. 서비스 운영모형}
+\phantomsection\addcontentsline{toc}{section}{5. 서비스 운영모형}
+요청 접수: 시민의 생활 언어에서 필요한 도움과 조리·방문·연락 제약 파악. 공개 정보로 답할 수 있는 내용은 현재 통화에서 안내.\par
+업무 동의: 문의 목적·연락할 기관 범위·전달 정보·결과 회신 방식을 설명하고 음성 동의 확보. 기관마다 같은 동의를 반복하지 않고 범위 변경 시 재확인.\par
+기관 처리: 목적에 맞는 창구에 연락, 이용 조건과 가능한 방법 확인, 허용 범위의 일정 조율·신청 의사 전달. 불명확한 답변은 같은 통화에서 추가 질문.\par
+시민 회신: 기관 결과·가능한 선택·준비할 사항·후속 처리를 전달. 비용·일정·수령 방법의 중요 변경은 시민 선택 후 기관에 재연락.\par
+부분 해결: 식사 연결 이후 생필품 경로가 거절된 경우 식사 결과 유지, 생필품만 대안 탐색. 재문의·취소도 해당 필요 단위로 처리.\par
+담당자 개입: 요청·통화 결과·남은 행동 확인, 정보 정정, 자동 연락 중단, 수동 재시도. 이용자는 화면 없이 전화로 이용, 기관은 기존 전화로 응대.\par
+\tblcap{표 4. 서비스 운영모형}
+\begin{xltabular}{\textwidth}{L{32mm}YY}
+\hline
+\thead{상황} & \thead{후속 처리} & \thead{권한 기준} \\
+\hline
+\endfirsthead
+\hline
+\thead{상황} & \thead{후속 처리} & \thead{권한 기준} \\
+\hline
+\endhead
+\hline
+\endfoot
+\hline
+\endlastfoot
+\cell{\textcolor{krdssecondary70}{\bfseries 기관의 조건부 답변}} & \cell{추가 질문·시민 선택} & \cell{새 비용·일정의 임의 수락 금지} \\
+\rowcolor{krdsgray5}
+\cell{\textcolor{krdssecondary70}{\bfseries 기관 부재·거절}} & \cell{기록·대체 경로·담당자 인계} & \cell{중복 전달 방지} \\
+\cell{\textcolor{krdssecondary70}{\bfseries 신청 의사 전달}} & \cell{기관 접수 여부 별도 기록} & \cell{행정 접수·승인과 구별} \\
+\rowcolor{krdsgray5}
+\cell{\textcolor{krdssecondary70}{\bfseries 이용자 취소·변경}} & \cell{관련 필요·일정만 갱신} & \cell{이미 전달한 업무의 후속 확인} \\
+\end{xltabular}
+\sourceline{근거: \href{https://github.com/sergiobuilds/malgyeol/blob/feat/ai-for-good-product/dev/active/care-coordination/planning-handoff.md}{E2} · \href{https://github.com/sergiobuilds/malgyeol/blob/feat/ai-for-good-product/dev/active/care-coordination/phone-goal-prompt.md}{E3} · \href{https://github.com/sergiobuilds/malgyeol/blob/feat/ai-for-good-product/POLICY\_BASIS.md}{P0}}
+\section*{6. 구현 및 검증 결과}
+\phantomsection\addcontentsline{toc}{section}{6. 구현 및 검증 결과}
+데이터 구축: 공식 7개 페이지의 65개 목록 원천행을 출처와 함께 수집. 목록의 중복 정리 및 운영·접수창구 보완을 통해 40개 기관·창구 연결. 서울 25개 구 기본목록과 네 사업 조회 구조 구성. 전체 동 단위의 상세 구축 완료를 뜻하지 않음. \refmark{\href{https://github.com/sergiobuilds/malgyeol/blob/feat/ai-for-good-product/dev/active/malgyeol-product-completion/context.md}{[E1]}}\par
+업무 처리 검증: 실제 HTTP 서비스와 SQLite 저장을 연결한 재시작 복원, 권한·동의, 부분 해결, 시민 재선택, 회신 기록 확인. 기관 답변에 따른 식사 연결 유지와 생필품 후속 처리 검사. \refmark{\href{https://github.com/sergiobuilds/malgyeol/blob/feat/ai-for-good-product/dev/active/malgyeol-product-completion/context.md}{[E1]}}\par
+음성 연결 검증: 설치 SDK의 세션 준비 이전 역할·전용도구 결박, 전사와 동의의 연결, 허용 번호 밖 발신 및 자기 발신 차단 검사. Node 198건·Python 23건 자동 검사 통과 기록. \refmark{\href{https://github.com/sergiobuilds/malgyeol/blob/feat/ai-for-good-product/dev/active/malgyeol-product-completion/context.md}{[E1]}}\par
+운영 전 수용검사 계획: 팀 보유 번호의 시민·기관 역할을 통한 실제 수신 → 기관 발신·양방향 응답 → 시민 회신 → 조건 변경 후 재연락을 검증 대상으로 지정. 전화망 왕복 증거 확보 후 검사 결과 반영.\par
+성과 표기: 기관 문의·신청 의사 전달·접수·일정 확정·실제 제공을 별도 구분. 현재 근거에 없는 공공기관 참여·실물 제공·절감률의 실적 기재 제외.\par
+\tblcap{표 5. 구현 및 검증 결과}
+\begin{xltabular}{\textwidth}{L{28mm}YY}
+\hline
+\thead{검증 범위} & \thead{확인 결과} & \thead{증거 범위} \\
+\hline
+\endfirsthead
+\hline
+\thead{검증 범위} & \thead{확인 결과} & \thead{증거 범위} \\
+\hline
+\endhead
+\hline
+\endfoot
+\hline
+\endlastfoot
+\cell{\textcolor{krdssecondary70}{\bfseries 공개 기관 데이터}} & \cell{65개 목록 원천행·40개 기관·창구} & \cell{공식 목록 수집·중복 정리·창구 보완} \\
+\rowcolor{krdsgray5}
+\cell{\textcolor{krdssecondary70}{\bfseries 업무·저장·권한}} & \cell{Node 198건 검사} & \cell{서버·도메인·영속성} \\
+\cell{\textcolor{krdssecondary70}{\bfseries 음성 역할·도구}} & \cell{Python 23건 검사} & \cell{설치 SDK·HTTP 결합} \\
+\rowcolor{krdsgray5}
+\cell{\textcolor{krdssecondary70}{\bfseries 실제 전화 왕복}} & \cell{운영 전 수용검사 항목} & \cell{시민·기관 양방향 음성·회신} \\
+\end{xltabular}
+\sourceline{근거: \href{https://github.com/sergiobuilds/malgyeol/blob/feat/ai-for-good-product/dev/active/malgyeol-product-completion/context.md}{E1} · \href{https://github.com/sergiobuilds/malgyeol/blob/feat/ai-for-good-product/dev/active/care-coordination/phone-goal-prompt.md}{E3}}
+\section*{7. 정책 협력사항}
+\phantomsection\addcontentsline{toc}{section}{7. 정책 협력사항}
+정책: 필요성—문의·신청 보조·조율의 업무 경계 명확화. 주체—서울시 통합돌봄 담당과 자치구·법률·개인정보 담당. 협력—음성 동의·대리 전달·정보 제공의 허용 범위 및 처리 지침. 제품 반영—업무별 실행 권한과 시민 재선택. 측정—범위 밖 실행·재동의·담당자 이관.\par
+데이터: 필요성—분산된 창구와 운영조건의 최신성 확보. 주체—서울시 사업 담당·자치구·사업 운영기관. 협력—네 사업의 관할·접수처·절차·일정·제공 가능 정보·갱신 체계. 제품 반영—공통 조회와 목적별 기관 문의. 측정—잘못된 경로·재문의·정보 정정.\par
+실증환경: 필요성—시민 요청과 기관 응답에 따른 후속 처리의 현장 평가. 주체—참여 자치구·네 사업의 접수·제공기관. 협력—참여자·문의 창구·대상 업무·시험 일정. 제품 반영—실제 기관 전화·조건 조율·시민 회신. 측정—필요별 연결 결과·응답시간·회신 도달.\par
+지원: 필요성—해결 곤란 요청의 인계와 성과 평가. 주체—서울시 총괄·자치구 전담조직·기관 담당자. 협력—인계 책임·개인정보 검토·업무시간 측정 자료. 제품 반영—담당자 업무함과 이력·중단·정정. 측정—개입 횟수·처리시간·오류 대응.\par
+협의 창구: 현행 조례·서울복지포털의 통합돌봄과, 찾아가는 푸드마켓 안내의 복지정책과, 자치구별 담당조직. 과거 발표 당시 부서명과 현재 안내명 구별. \refmark{\href{https://www.law.go.kr/LSW/ordinInfoP.do?ordinSeq=2100075}{[L2]}}\refmark{\href{https://news.seoul.go.kr/welfare/archives/1355?listPage=2}{[F3]}}\refmark{\href{https://wis.seoul.go.kr/sec/ctg/categoryDetail.do?id=88}{[S4]}}\par
+\tblcap{표 6. 정책 협력 요청별 세부 항목}
+\begin{xltabular}{\textwidth}{L{22mm}L{20mm}Y}
+\hline
+\thead{협력 요청} & \thead{항목} & \thead{내용} \\
+\hline
+\endfirsthead
+\hline
+\thead{협력 요청} & \thead{항목} & \thead{내용} \\
+\hline
+\endhead
+\hline
+\endfoot
+\hline
+\endlastfoot
+\cell{} & \cell{{\bfseries 필요성}} & \cell{문의·신청 보조·조율의 업무 경계 명확화} \\
+\cell{} & \cell{{\bfseries 주체}} & \cell{서울시 통합돌봄 담당과 자치구·법률·개인정보 담당} \\
+\cell{} & \cell{{\bfseries 협력}} & \cell{음성 동의·대리 전달·정보 제공의 허용 범위 및 처리 지침} \\
+\cell{} & \cell{{\bfseries 제품 반영}} & \cell{업무별 실행 권한과 시민 재선택} \\
+\cell{\multirow{-5}{=}{\krdssmall\bfseries\textcolor{krdssecondary70}{정책}}} & \cell{{\bfseries 측정}} & \cell{범위 밖 실행·재동의·담당자 이관} \\
+\hline
+\rowcolor{krdsgray5}
+\cell{} & \cell{{\bfseries 필요성}} & \cell{분산된 창구와 운영조건의 최신성 확보} \\
+\rowcolor{krdsgray5}
+\cell{} & \cell{{\bfseries 주체}} & \cell{서울시 사업 담당·자치구·사업 운영기관} \\
+\rowcolor{krdsgray5}
+\cell{} & \cell{{\bfseries 협력}} & \cell{네 사업의 관할·접수처·절차·일정·제공 가능 정보·갱신 체계} \\
+\rowcolor{krdsgray5}
+\cell{} & \cell{{\bfseries 제품 반영}} & \cell{공통 조회와 목적별 기관 문의} \\
+\rowcolor{krdsgray5}
+\cell{\multirow{-5}{=}{\krdssmall\bfseries\textcolor{krdssecondary70}{데이터}}} & \cell{{\bfseries 측정}} & \cell{잘못된 경로·재문의·정보 정정} \\
+\hline
+\cell{} & \cell{{\bfseries 필요성}} & \cell{시민 요청과 기관 응답에 따른 후속 처리의 현장 평가} \\
+\cell{} & \cell{{\bfseries 주체}} & \cell{참여 자치구·네 사업의 접수·제공기관} \\
+\cell{} & \cell{{\bfseries 협력}} & \cell{참여자·문의 창구·대상 업무·시험 일정} \\
+\cell{} & \cell{{\bfseries 제품 반영}} & \cell{실제 기관 전화·조건 조율·시민 회신} \\
+\cell{\multirow{-5}{=}{\krdssmall\bfseries\textcolor{krdssecondary70}{실증환경}}} & \cell{{\bfseries 측정}} & \cell{필요별 연결 결과·응답시간·회신 도달} \\
+\hline
+\rowcolor{krdsgray5}
+\cell{} & \cell{{\bfseries 필요성}} & \cell{해결 곤란 요청의 인계와 성과 평가} \\
+\rowcolor{krdsgray5}
+\cell{} & \cell{{\bfseries 주체}} & \cell{서울시 총괄·자치구 전담조직·기관 담당자} \\
+\rowcolor{krdsgray5}
+\cell{} & \cell{{\bfseries 협력}} & \cell{인계 책임·개인정보 검토·업무시간 측정 자료} \\
+\rowcolor{krdsgray5}
+\cell{} & \cell{{\bfseries 제품 반영}} & \cell{담당자 업무함과 이력·중단·정정} \\
+\rowcolor{krdsgray5}
+\cell{\multirow{-5}{=}{\krdssmall\bfseries\textcolor{krdssecondary70}{지원}}} & \cell{{\bfseries 측정}} & \cell{개입 횟수·처리시간·오류 대응} \\
+\end{xltabular}
+\sourceline{근거: \href{https://github.com/sergiobuilds/malgyeol/blob/feat/ai-for-good-product/POLICY\_BASIS.md}{P0} · \href{https://www.law.go.kr/LSW/ordinInfoP.do?ordinSeq=2100075}{L2} · \href{https://news.seoul.go.kr/welfare/archives/1355?listPage=2}{F3} · \href{https://wis.seoul.go.kr/sec/ctg/categoryDetail.do?id=88}{S4}}
+\section*{8. 실증 추진계획}
+\phantomsection\addcontentsline{toc}{section}{8. 실증 추진계획}
+규모 제안: 자치구 1곳, 시민 20\textasciitilde{}30명, 준비 2주·운영 4\textasciitilde{}8주·평가 1\textasciitilde{}2주. 협의용 제안값이며 참여 확정·법정 요건과 구별.\par
+참여 구성: 통합돌봄 전담조직, 푸드뱅크·마켓 담당, 찾아가는 푸드마켓 운영기관, 그냥드림 사업장, 돌봄SOS 접수·제공기관. 동일 시설의 복수 사업 참여 가능.\par
+참여자 구성: 전화로 지원 연결이 필요한 시민. 기존 이용자 중심 초기 운영 가능. 신규 문의자의 신청 경로 연결과 특정 연령 외 이용을 제품에서 배제하지 않음.\par
+개인정보 처리: 업무에 필요한 최소 정보·접근권한·보존기간 협의. 문의 목적을 넘는 정보 전달 전 시민 확인. 기관 포털 가입과 전 기관 실시간 API를 참여 전제조건으로 설정하지 않음.\par
+\tblcap{표 7. 실증 추진계획}
+\begin{xltabular}{\textwidth}{L{22mm}YY}
+\hline
+\thead{단계} & \thead{추진 내용} & \thead{단계별 산출물} \\
+\hline
+\endfirsthead
+\hline
+\thead{단계} & \thead{추진 내용} & \thead{단계별 산출물} \\
+\hline
+\endhead
+\hline
+\endfoot
+\hline
+\endlastfoot
+\cell{\textcolor{krdssecondary70}{\bfseries 준비·2주}} & \cell{기관 역할·업무 권한·기준선·연락 창구 협의} & \cell{운영 범위·자료 갱신·인계 기준} \\
+\rowcolor{krdsgray5}
+\cell{\textcolor{krdssecondary70}{\bfseries 운영·4\textasciitilde{}8주}} & \cell{접수·기관 문의·조율·회신·인계} & \cell{필요별 처리 이력·오류 기록} \\
+\cell{\textcolor{krdssecondary70}{\bfseries 평가·1\textasciitilde{}2주}} & \cell{기준선 비교·시민/담당자 결과 검토} & \cell{성과 보고·보완사항·확대 판단} \\
+\end{xltabular}
+\sourceline{근거: \href{https://github.com/sergiobuilds/malgyeol/blob/feat/ai-for-good-product/POLICY\_BASIS.md}{P0} · \href{https://github.com/sergiobuilds/malgyeol/blob/feat/ai-for-good-product/dev/active/care-coordination/planning-handoff.md}{E2}}
+\section*{9. 성과관리 체계}
+\phantomsection\addcontentsline{toc}{section}{9. 성과관리 체계}
+측정 원칙: 동일 업무·기간 기준의 도입 전후 비교. 평균과 중앙값, 응답 실패·인계 건을 함께 집계. 중복 요청·취소·미수신의 분모 처리 기준 사전 고정.\par
+결과 분류: 이용 경로 안내, 신청 의사 전달, 기관 접수, 일정 확정, 실제 제공의 단계별 집계. 부분 해결을 전체 해결로 확대하지 않음.\par
+운영 전환 기준: 개인정보 오발송, 시민 허용 범위 밖 실행, 중복 신청 전달 발생 시 해당 자동 처리 중단과 담당자 확인. 원인·영향·수정·재개 근거 보존.\par
+효과 산정: 담당자 시간·연락 횟수·시민 회신·필요별 연결 결과의 실제 측정. 예상 절감률·지원 성공률·경제성의 선확정 제외.\par
+\tblcap{표 8. 성과관리 체계}
+\begin{xltabular}{\textwidth}{L{36mm}YY}
+\hline
+\thead{지표} & \thead{산정 기준} & \thead{측정 목적} \\
+\hline
+\endfirsthead
+\hline
+\thead{지표} & \thead{산정 기준} & \thead{측정 목적} \\
+\hline
+\endhead
+\hline
+\endfoot
+\hline
+\endlastfoot
+\cell{\textcolor{krdssecondary70}{\bfseries 요청당 통화 횟수}} & \cell{시민·담당자·기관의 연락 시도 수} & \cell{반복 연락 부담} \\
+\rowcolor{krdsgray5}
+\cell{\textcolor{krdssecondary70}{\bfseries 담당자 개입·처리시간}} & \cell{요청별 개입 횟수·실작업 시간} & \cell{행정 부담} \\
+\cell{\textcolor{krdssecondary70}{\bfseries 기관 응답 소요시간}} & \cell{문의 시작부터 유효 답변까지} & \cell{조건 확인 속도} \\
+\rowcolor{krdsgray5}
+\cell{\textcolor{krdssecondary70}{\bfseries 필요별 연결 결과}} & \cell{식사·생필품 등 필요 단위 단계} & \cell{부분 해결·대안·인계} \\
+\cell{\textcolor{krdssecondary70}{\bfseries 시민 회신 도달률}} & \cell{전달 완료 수 / 회신 대상 수} & \cell{결과 전달·재선택} \\
+\rowcolor{krdsgray5}
+\cell{\textcolor{krdssecondary70}{\bfseries 오류·범위 초과}} & \cell{중복·오발송·권한 초과 건수} & \cell{실행 통제} \\
+\cell{\textcolor{krdssecondary70}{\bfseries 제공·수령·청구 일치}} & \cell{후속 행정 연계 단계의 기록 대조} & \cell{서비스 이행·정산} \\
+\end{xltabular}
+\sourceline{근거: \href{https://github.com/sergiobuilds/malgyeol/blob/feat/ai-for-good-product/POLICY\_BASIS.md}{P0}}
+\section*{10. 단계별 확장계획}
+\phantomsection\addcontentsline{toc}{section}{10. 단계별 확장계획}
+1단계·공개 데이터 기반: 네 사업 데이터·대시보드·시민 접수·기관 전화·조건 조율·시민 회신. 실제 통화와 업무 흐름의 일치 확인.\par
+2단계·제한 실증: 참여기관 운영정보의 갱신, 담당자 인계, 부재·취소·조건 변경의 운영기준 적용. 현장 성과와 오류 원인 평가.\par
+3단계·공공 연계: 권한 협의 이후 해당 대상자의 개인별지원계획·허용 한도·기관 범위 연계. 제공·수령 기록과 행정시스템의 최소 데이터 교환.\par
+후속 기능: 본인 확인·보호자 대리권, 자동 재연락, 담당자 배정·부분 인수, 보존·삭제, 접근성·다국어·문자·3자 통화, 동시 요청과 복구.\par
+후속 검토: 서비스 제공·수령·청구 근거의 연결, 운영비와 경제성. 결제·배송 운영·정산 자동화를 현 MVP의 착수조건으로 확대하지 않음.\par
+\sourceline{근거: \href{https://github.com/sergiobuilds/malgyeol/blob/feat/ai-for-good-product/POLICY\_BASIS.md}{P0} · \href{https://github.com/sergiobuilds/malgyeol/blob/feat/ai-for-good-product/dev/active/care-coordination/implementation-plan.md}{E4}}
+\section*{11. 참고자료}
+\phantomsection\addcontentsline{toc}{section}{11. 참고자료}
+근거 확인일: 2026년 9월 18일. 공식 법령·서울시 발표·운영기관 안내와 저장소 실행 기록의 구분.\par
+법령·조례: 국가법령정보센터의 시행일·법령번호 기준. 동적 사업 안내는 운영조건 갱신 시 재대조.\par
+정책 논리: POLICY\_BASIS.md의 제안 개요·현장 과제·제도 기반·네 사업·협력·실증·성과관리 각 절과 대응. 세부 대응표는 본 문서의 정책 근거 대응 참조.\par
+\par\needspace{\baselineskip}
+\tblcap{표 9. 정책 근거 대응}
+\begin{tabularx}{\textwidth}{L{32mm}L{32mm}Y L{12mm}}
+\hline
+\thead{정책 근거 절} & \thead{본 제안서 절} & \thead{적용 내용} & \thead{출처} \\
+\hline
+\cell{1. 제안 개요} & \cell{1. 제안 개요} & \cell{제품 목적·네 사업·대상 범위} & \cell{{\krdssmall \href{https://github.com/sergiobuilds/malgyeol/blob/feat/ai-for-good-product/POLICY\_BASIS.md}{P0}}} \\
+\rowcolor{krdsgray5}
+\cell{2. 현장 과제 및 처리구조} & \cell{2. 추진 배경} & \cell{기존 상담체계와 반복 조정 업무} & \cell{{\krdssmall \href{https://github.com/sergiobuilds/malgyeol/blob/feat/ai-for-good-product/POLICY\_BASIS.md}{P0}}} \\
+\cell{3. 법령 및 제도 기반} & \cell{3. 제도 및 정책 기반} & \cell{법률·조례·서울시 전달체계} & \cell{{\krdssmall \href{https://github.com/sergiobuilds/malgyeol/blob/feat/ai-for-good-product/POLICY\_BASIS.md}{P0}}} \\
+\rowcolor{krdsgray5}
+\cell{4. 사업별 공급망 및 이용경로} & \cell{4. 사업 연계체계} & \cell{사업별 절차와 기관 역할} & \cell{{\krdssmall \href{https://github.com/sergiobuilds/malgyeol/blob/feat/ai-for-good-product/POLICY\_BASIS.md}{P0}}} \\
+\cell{5. 정책 연계구조} & \cell{5. 서비스 운영모형} & \cell{동의·기관 조율·회신·담당자 개입} & \cell{{\krdssmall \href{https://github.com/sergiobuilds/malgyeol/blob/feat/ai-for-good-product/POLICY\_BASIS.md}{P0}}} \\
+\rowcolor{krdsgray5}
+\cell{9. 대외 표현 및 근거 관리} & \cell{6. 구현 및 검증 결과} & \cell{실행 증거 범위·현재와 후속 구분} & \cell{{\krdssmall \href{https://github.com/sergiobuilds/malgyeol/blob/feat/ai-for-good-product/POLICY\_BASIS.md}{P0}}} \\
+\cell{6. 정책 협력사항} & \cell{7. 정책 협력사항} & \cell{정책·데이터·실증환경·지원의 네 요청} & \cell{{\krdssmall \href{https://github.com/sergiobuilds/malgyeol/blob/feat/ai-for-good-product/POLICY\_BASIS.md}{P0}}} \\
+\rowcolor{krdsgray5}
+\cell{7. 현장 실증 제안} & \cell{8. 실증 추진계획} & \cell{협의용 규모·기간·참여 역할} & \cell{{\krdssmall \href{https://github.com/sergiobuilds/malgyeol/blob/feat/ai-for-good-product/POLICY\_BASIS.md}{P0}}} \\
+\cell{8. 성과관리 및 후속 통제} & \cell{9. 성과관리 체계} & \cell{실측 지표·오류 대응·후속 통제} & \cell{{\krdssmall \href{https://github.com/sergiobuilds/malgyeol/blob/feat/ai-for-good-product/POLICY\_BASIS.md}{P0}}} \\
+\rowcolor{krdsgray5}
+\cell{5·7·8절} & \cell{10. 단계별 확장계획} & \cell{개인별지원계획·행정시스템·운영 확장} & \cell{{\krdssmall \href{https://github.com/sergiobuilds/malgyeol/blob/feat/ai-for-good-product/POLICY\_BASIS.md}{P0}}} \\
+\cell{각 절의 공식 원문} & \cell{11. 참고자료} & \cell{출처·확인일·관련 주장} & \cell{{\krdssmall \href{https://github.com/sergiobuilds/malgyeol/blob/feat/ai-for-good-product/POLICY\_BASIS.md}{P0}}} \\
+\hline
+\end{tabularx}
+\par\needspace{\baselineskip}
+\tblcap{표 10. 참고자료 목록}
+\begin{tabularx}{\textwidth}{L{10mm}Y L{40mm}}
+\hline
+\thead{번호} & \thead{자료명 (누르면 원문으로 연결)} & \thead{제공처} \\
+\hline
+\cell{\textcolor{krdssecondary70}{\bfseries P0}} & \cell{\href{https://github.com/sergiobuilds/malgyeol/blob/feat/ai-for-good-product/POLICY\_BASIS.md}{말결 정책·실증 근거}} & \cell{{\krdssmall\textcolor{krdsgray50}{github.com}}} \\
+\rowcolor{krdsgray5}
+\cell{\textcolor{krdssecondary70}{\bfseries L1}} & \cell{\href{https://www.law.go.kr/LSW/LsiJoLinkP.do?docType=JO\&joNo=001200000\&languageType=KO\&lsNm=\%EC\%9D\%98\%EB\%A3\%8C\%E3\%86\%8D\%EC\%9A\%94\%EC\%96\%91\%20\%EB\%93\%B1\%20\%EC\%A7\%80\%EC\%97\%AD\%20\%EB\%8F\%8C\%EB\%B4\%84\%EC\%9D\%98\%20\%ED\%86\%B5\%ED\%95\%A9\%EC\%A7\%80\%EC\%9B\%90\%EC\%97\%90\%20\%EA\%B4\%80\%ED\%95\%9C\%20\%EB\%B2\%95\%EB\%A5\%A0\&paras=1}{국가법령정보센터·돌봄통합지원법·2026.9.10. 시행}} & \cell{{\krdssmall\textcolor{krdsgray50}{law.go.kr}}} \\
+\cell{\textcolor{krdssecondary70}{\bfseries L2}} & \cell{\href{https://www.law.go.kr/LSW/ordinInfoP.do?ordinSeq=2100075}{국가법령정보센터·서울특별시 지역사회 돌봄 통합지원 조례·2026.1.5. 시행}} & \cell{{\krdssmall\textcolor{krdsgray50}{law.go.kr}}} \\
+\rowcolor{krdsgray5}
+\cell{\textcolor{krdssecondary70}{\bfseries L3}} & \cell{\href{https://www.law.go.kr/LSW/lsInfoP.do?lsiSeq=284999}{국가법령정보센터·돌봄통합지원법 시행규칙·2026.3.27. 시행}} & \cell{{\krdssmall\textcolor{krdsgray50}{law.go.kr}}} \\
+\cell{\textcolor{krdssecondary70}{\bfseries S1}} & \cell{\href{https://www.seoul.go.kr/news/news\_report.do?nttNo=454831\&srchCtgry=475}{서울특별시·서울형 통합돌봄 시행 발표·2026.3.24.}} & \cell{{\krdssmall\textcolor{krdsgray50}{seoul.go.kr}}} \\
+\rowcolor{krdsgray5}
+\cell{\textcolor{krdssecondary70}{\bfseries F1}} & \cell{\href{https://www.s-foodbank.or.kr/intro/intro03}{서울잇다푸드뱅크·사업 및 이용절차}} & \cell{{\krdssmall\textcolor{krdsgray50}{s-foodbank.or.kr}}} \\
+\cell{\textcolor{krdssecondary70}{\bfseries F2}} & \cell{\href{https://www.s-foodbank.or.kr/board/market/marketList}{서울잇다푸드뱅크·기관 목록}} & \cell{{\krdssmall\textcolor{krdsgray50}{s-foodbank.or.kr}}} \\
+\rowcolor{krdsgray5}
+\cell{\textcolor{krdssecondary70}{\bfseries F3}} & \cell{\href{https://news.seoul.go.kr/welfare/archives/1355?listPage=2}{서울특별시·찾아가는 푸드마켓 운영·2026.3.20. 수정}} & \cell{{\krdssmall\textcolor{krdsgray50}{news.seoul.go.kr}}} \\
+\cell{\textcolor{krdssecondary70}{\bfseries F4}} & \cell{\href{https://www.s-foodbank.or.kr/justdream/guide}{서울잇다푸드뱅크·그냥드림 이용안내}} & \cell{{\krdssmall\textcolor{krdsgray50}{s-foodbank.or.kr}}} \\
+\rowcolor{krdsgray5}
+\cell{\textcolor{krdssecondary70}{\bfseries F5}} & \cell{\href{https://www.s-foodbank.or.kr/board/map/mapList}{서울잇다푸드뱅크·그냥드림 사업장 목록}} & \cell{{\krdssmall\textcolor{krdsgray50}{s-foodbank.or.kr}}} \\
+\cell{\textcolor{krdssecondary70}{\bfseries S2}} & \cell{\href{https://wis.seoul.go.kr/wfs/sos/service.do}{서울복지포털·돌봄SOS 제공 대상기준}} & \cell{{\krdssmall\textcolor{krdsgray50}{wis.seoul.go.kr}}} \\
+\rowcolor{krdsgray5}
+\cell{\textcolor{krdssecondary70}{\bfseries S3}} & \cell{\href{https://wis.seoul.go.kr/was/sos/sosInfo.do}{서울복지포털·돌봄SOS 서비스 구성 및 상담신청}} & \cell{{\krdssmall\textcolor{krdsgray50}{wis.seoul.go.kr}}} \\
+\cell{\textcolor{krdssecondary70}{\bfseries S4}} & \cell{\href{https://wis.seoul.go.kr/sec/ctg/categoryDetail.do?id=88}{서울복지포털·돌봄SOS 소관부서 및 신청 안내}} & \cell{{\krdssmall\textcolor{krdsgray50}{wis.seoul.go.kr}}} \\
+\rowcolor{krdsgray5}
+\cell{\textcolor{krdssecondary70}{\bfseries E1}} & \cell{\href{https://github.com/sergiobuilds/malgyeol/blob/feat/ai-for-good-product/dev/active/malgyeol-product-completion/context.md}{말결 구현·실행 검증 기록}} & \cell{{\krdssmall\textcolor{krdsgray50}{github.com}}} \\
+\cell{\textcolor{krdssecondary70}{\bfseries E2}} & \cell{\href{https://github.com/sergiobuilds/malgyeol/blob/feat/ai-for-good-product/dev/active/care-coordination/planning-handoff.md}{말결 사용자 합의 및 범위}} & \cell{{\krdssmall\textcolor{krdsgray50}{github.com}}} \\
+\rowcolor{krdsgray5}
+\cell{\textcolor{krdssecondary70}{\bfseries E3}} & \cell{\href{https://github.com/sergiobuilds/malgyeol/blob/feat/ai-for-good-product/dev/active/care-coordination/phone-goal-prompt.md}{말결 전화 처리 계약}} & \cell{{\krdssmall\textcolor{krdsgray50}{github.com}}} \\
+\cell{\textcolor{krdssecondary70}{\bfseries E4}} & \cell{\href{https://github.com/sergiobuilds/malgyeol/blob/feat/ai-for-good-product/dev/active/care-coordination/implementation-plan.md}{말결 후속 개발계획}} & \cell{{\krdssmall\textcolor{krdsgray50}{github.com}}} \\
+\hline
+\end{tabularx}
+\sourceline{근거: \href{https://github.com/sergiobuilds/malgyeol/blob/feat/ai-for-good-product/POLICY\_BASIS.md}{P0} · \href{https://www.law.go.kr/LSW/LsiJoLinkP.do?docType=JO\&joNo=001200000\&languageType=KO\&lsNm=\%EC\%9D\%98\%EB\%A3\%8C\%E3\%86\%8D\%EC\%9A\%94\%EC\%96\%91\%20\%EB\%93\%B1\%20\%EC\%A7\%80\%EC\%97\%AD\%20\%EB\%8F\%8C\%EB\%B4\%84\%EC\%9D\%98\%20\%ED\%86\%B5\%ED\%95\%A9\%EC\%A7\%80\%EC\%9B\%90\%EC\%97\%90\%20\%EA\%B4\%80\%ED\%95\%9C\%20\%EB\%B2\%95\%EB\%A5\%A0\&paras=1}{L1} · \href{https://www.law.go.kr/LSW/ordinInfoP.do?ordinSeq=2100075}{L2} · \href{https://www.law.go.kr/LSW/lsInfoP.do?lsiSeq=284999}{L3} · \href{https://www.seoul.go.kr/news/news\_report.do?nttNo=454831\&srchCtgry=475}{S1} · \href{https://www.s-foodbank.or.kr/intro/intro03}{F1} · \href{https://www.s-foodbank.or.kr/board/market/marketList}{F2} · \href{https://news.seoul.go.kr/welfare/archives/1355?listPage=2}{F3} · \href{https://www.s-foodbank.or.kr/justdream/guide}{F4} · \href{https://www.s-foodbank.or.kr/board/map/mapList}{F5} · \href{https://wis.seoul.go.kr/wfs/sos/service.do}{S2} · \href{https://wis.seoul.go.kr/was/sos/sosInfo.do}{S3} · \href{https://wis.seoul.go.kr/sec/ctg/categoryDetail.do?id=88}{S4} · \href{https://github.com/sergiobuilds/malgyeol/blob/feat/ai-for-good-product/dev/active/malgyeol-product-completion/context.md}{E1} · \href{https://github.com/sergiobuilds/malgyeol/blob/feat/ai-for-good-product/dev/active/care-coordination/planning-handoff.md}{E2} · \href{https://github.com/sergiobuilds/malgyeol/blob/feat/ai-for-good-product/dev/active/care-coordination/phone-goal-prompt.md}{E3} · \href{https://github.com/sergiobuilds/malgyeol/blob/feat/ai-for-good-product/dev/active/care-coordination/implementation-plan.md}{E4}}
+\end{document}

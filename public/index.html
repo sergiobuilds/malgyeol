@@ -1,38 +1,72 @@
 <!doctype html>
 <html lang="ko">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <meta name="description" content="전화 한 통으로 승인된 돌봄서비스를 요청하고 실제 수령까지 확인하는 말결 시연">
-  <title>말결 · 전화로 이어지는 통합돌봄</title>
-  <link rel="stylesheet" href="/styles.css">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="말결 담당자 화면. 네 개 지원사업의 기관·이용 절차를 조회하고, 시민 요청의 기관 문의와 답변 처리 상황을 확인합니다.">
+<meta name="robots" content="noindex">
+<title>말결 담당자 화면</title>
+<link rel="preload" as="font" type="font/woff2" href="/assets/fonts/PretendardGOV-Regular.subset.woff2" crossorigin>
+<link rel="preload" as="font" type="font/woff2" href="/assets/fonts/PretendardGOV-Bold.subset.woff2" crossorigin>
+<link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2064%2064%22%3E%3Crect%20width%3D%2264%22%20height%3D%2264%22%20rx%3D%2214%22%20fill%3D%22%2303163a%22%2F%3E%3Ctext%20x%3D%2232%22%20y%3D%2244%22%20text-anchor%3D%22middle%22%20font-family%3D%22sans-serif%22%20font-size%3D%2234%22%20font-weight%3D%22700%22%20fill%3D%22%23ffffff%22%3E%EB%A7%90%3C%2Ftext%3E%3C%2Fsvg%3E">
+<link rel="stylesheet" href="/tokens.css">
+<link rel="stylesheet" href="/styles.css">
 </head>
 <body>
-  <a class="skip" href="#main">본문 바로가기</a>
-  <div class="shell">
-    <header class="topbar">
-      <a class="brand" href="/?v=home" aria-label="말결 홈">
-        <span class="brand__mark" aria-hidden="true">말</span>
-        <span><strong>말결</strong><small>전화로 이어지는 통합돌봄</small></span>
-      </a>
-      <nav class="nav" aria-label="주요 화면">
-        <a href="/?v=home" data-nav="home">어르신 화면</a>
-        <a href="/?v=provider" data-nav="provider">수행기관</a>
-        <a href="/?v=ops" data-nav="ops">담당자</a>
-        <a href="/?v=demo" data-nav="demo">발표 모드</a>
-      </nav>
-      <div class="route-state"><i aria-hidden="true"></i><span>합성 시연</span></div>
-    </header>
+<a class="mg-skip" href="#main">본문 바로가기</a>
 
-    <main id="main" tabindex="-1">
-      <div id="view" aria-live="polite"></div>
-    </main>
-
-    <footer class="footer">
-      <p><strong>말결</strong>은 신규 자격을 판정하지 않습니다. 승인된 개인별지원계획 안에서 요청과 제공 결과를 잇습니다.</p>
-      <p>현재 화면과 데이터는 합성 시연이며 실제 서울시·자치구 시스템과 연결되어 있지 않습니다.</p>
-    </footer>
+<div class="mg-masthead">
+  <div class="mg-masthead__in">
+    <p><strong>말결</strong> 지원 연결 담당자 화면</p>
+    <p>시민 요청은 전화로 접수되며, 기관 문의와 회신은 말결이 이어서 진행합니다.</p>
   </div>
-  <script src="/app.js" defer></script>
+</div>
+
+<header class="mg-header">
+  <div class="mg-header__in">
+    <a class="mg-brand" href="/app">
+      <span class="mg-brand__mark" aria-hidden="true">말</span>
+      <span>
+        <span class="mg-brand__name">말결</span>
+        <span class="mg-brand__role">지원 연결 담당자 화면</span>
+      </span>
+    </a>
+    <nav class="mg-tabline" aria-label="담당자 화면 이동">
+      <a href="/app" data-route="/app">지원망</a>
+      <a href="/ops" data-route="/ops">요청 진행</a>
+    </nav>
+    <div id="session-slot"></div>
+  </div>
+</header>
+
+<main class="mg-main" id="main" tabindex="-1">
+  <div id="view"></div>
+</main>
+
+<p class="mg-only-reader" id="live-region" role="status" aria-live="polite"></p>
+
+<footer class="mg-foot">
+  <div class="mg-foot__in">
+    <p><strong>말결</strong>은 네 개 지원사업의 기관 정보와 공개된 이용 절차를 그대로 사용합니다. 자격과 제공 여부의 판단은 각 기관에 있으며, 말결은 시민을 대신해 조건을 알아보고 결과를 회신합니다.</p>
+    <p>푸드뱅크·푸드마켓 · 찾아가는 푸드마켓 · 그냥드림 · 돌봄SOS</p>
+  </div>
+</footer>
+
+<div class="mg-dialog" id="dialog" role="dialog" aria-modal="true" aria-labelledby="dialog-title" data-open="false">
+  <div class="mg-dialog__back" data-close-dialog></div>
+  <div class="mg-dialog__panel">
+    <div class="mg-dialog__head">
+      <h2 id="dialog-title"></h2>
+      <button type="button" class="krds-btn medium icon" data-close-dialog>
+        <span class="sr-only">대화 상자 닫기</span>
+        <i class="svg-icon ico-popup-close" aria-hidden="true"></i>
+      </button>
+    </div>
+    <div class="mg-dialog__body" id="dialog-body"></div>
+    <div class="mg-dialog__foot" id="dialog-foot"></div>
+  </div>
+</div>
+
+<script src="/app.js" defer></script>
 </body>
 </html>

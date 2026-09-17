@@ -66,3 +66,34 @@ EXECUTOR 섹션 3 PASS: 위 SDK/HTTP/영속성 통합 및 전체 검사.
 섹션 3 셀프체크 완료: 실전화 미완료, 다음4 Claude UI/API 연결·정책·덱 제작.
 섹션 3 CHRONICLE 확인 완료: 검증 순서 재배치 아래 기록.
 Supervisor 섹션3 구현 게이트 승인. 실전화 게이트는 섹션5에서 증거로 별도 판정.
+
+## 섹션 4 진행
+
+Supervisor 섹션4 승인. UI와 제출물 내용/시각 제작 독립 파일 병렬. 담당자 HttpOnly session 구현 RED403→GREEN200, cookie 원토큰 비노출·Origin 경계·로그아웃8검사 통과. PUBLIC_BASE_URL이 있는 서비스는 해당 origin으로 cookie접속 제한.
+정책 원문/구조화내용11장과6장180초덱 내용 작성. Claude Opus가 공식 KRDS팩·MCP·지정18쪽PDF 기반 LaTeX/PPTX/DOCX 제작 시작. public/는 별도Claude 소유.
+
+### Manyfast 저장 및 오류 기록
+
+정상 DCR/PKCE 재인증으로 OAuth 복구. 하위작업자가 search_projects의 무필터 전체 반환을 신뢰해 다른 프로젝트(말결 외 프로젝트)의 PRD 5개 섹션을 write_prd create로 교체하는 오류 발생. 기존 pending 제안·기능명세·flow·wireframe 보존. supervisor가 추가 변경 중지, 저장버전/정상웹/기존cache 복구 조사 지시. 직전원문 확보 실패; 최신 저장버전13 이후 변경이 존재하며 전체restore는 다른자료 손상 위험 때문에 미실행. 원본 복구 미완료 사실을 사용자에게 보고. 원문을 추정하여 대체하지 않음. 관련 비공개 복구 증거는 저장소 외 보호 보존. 이 사고를 정상 완료로 간주하지 않음.
+
+Supervisor가 별도 생성한 `말결 해커톤 MVP`의 exact id/title·빈본문·activeUsers[]를 검증한 후 저장. ID `c5d1f6a7-896d-4524-96bd-f070fbe4a095`. 추가 사용자필드는 서비스가 저장하지 않아 기존 정규 goal/solution/scenario/risk 필드에 전체 내용을 편입 후 문자열마다 exact readback PASS. PRD data 5327자, 정렬 JSON SHA256 `25b1b47a2f5a25bbb1eb5fb708f1d6be30c38ba2e94c5bbba64702181068b029`. 원래 다른 프로젝트 변경의 복구와 말결 PRD 완료는 분리 관리.
+
+섹션4 중간 통합검증: typecheck+Node198+dependency audit PASS, 설치SDK Python23 PASS. 누락된 기관수신경로가 다른 필요의 결과회신을 막던 문제를 회귀TDD로 수정(누락문의prepared유지, 미발신, 이미확보결과callback1회). 이전고정카탈로그/기관포털을강제하던소스문자열검사3건은 최신승인제품과충돌하여 실제진입점자산서빙·비공개파일/요청접근 차단검사로교체. legacyAPI/영속성/권한기능검사는유지.
+Supervisor 별도HTTP서버(임시SQLite)에서 agent-browser 실제조작: 공식기관검색/상세, HttpOnly접속, 요청정정 DB반영, 부재후수동재시도prepared, 독립필요유지,390/1440가로넘침0,JSerror0. 이UI시나리오는격리된시험요청이며 실통화로집계하지않음.
+
+Manyfast 말결 실제웹 재조회 완료: https://manyfast.io/editor/c5d1f6a7-896d-4524-96bd-f070fbe4a095 . 임시OAuth비밀삭제, 정상Claude credential유지. 다른프로젝트복구증거는 Linux private state0700/0600으로보호이동, Git반입없음.
+
+### 프론트 작업자의 기존 API 종료 및 복구
+
+Claude 프론트 작업자가 임시 서버 정리 중 광범위한 pkill -f 명령으로 기존18081 API까지 종료. 기존서비스종료금지계약위반이며 사용자에게즉시보고. supervisor가포트공백·기존PID종료·서비스unit부재를실측한뒤 README의동일launcher와unit설정으로malgyeol-care-api를복구. voice서비스변경없음. health200·보호요청403·API/voice active확인. 임시서버정리는기록한개별PID만허용하도록재지시. 이사고와Manyfast원문복구미완료를구분하며API복구를전체작업완료로취급하지않음.
+
+섹션4 supervisor 추가검수: 제안서원문과출력표셀194건누락발견→Claude생성기수정후PDF/DOCX누락0. 데이터산정계보37목록기관+3보완창구=40으로교정, 실제전화검증완료로오독될문장을수용검사계획으로교정. 최신UI 내부citizenRef표시제거·명사구제목확인, 실제브라우저 End키로돌봄SOS선택및tabindex0단일성확인. npm run verify 재실행198/198·typecheck·audit PASS. 복구API SQLite integrity_check=ok.
+
+Claude UI 보완종료: 감독지적4건수정, 추가23개브라우저검사+기존24개회귀통과, 1440/768/390 overflow=false, 결과불명문의에통화기록대조/담당자검토다음행동제공. 실제KRDSMCP 호출기록5회차보존. root는최종화면/키보드/부분해결실제API기록재조회확인. /mnt/data/work/malgyeol-reference/root-render/final-partial-request.png 는격리된QA기관응답자료이며실전화증거아님.
+
+제출물두번째Claude수정검수: 제안서6쪽·표10개·본문/표대조225건PDF/DOCX일치·원문셀누락0, 본문색상누출및참고표고립행수정. 6장덱공통말결표기·응답별분기구조·어절줄바꿈·실제화면발췌구성. 폰트/페이지밖텍스트0·PPTX편집텍스트·노트0검사통과. 최신화면캡처및repo내재생성자산보존최종수정진행, 프론트소스수정없음.
+
+## 섹션 4 완료 근거
+
+Claude최종캡처자산repo보존및상대경로수정완료. 복사본에서생성물/crop삭제후재생성확인. root최종PDF/PPTX/DOCX기계검사PASS: 정책6쪽·덱6장·표셀누락0·페이지밖텍스트0·PPTX편집가능·노트0, 180초. root최종3·4슬라이드실열람. 최종프론트동작23+24검사·root실제HTTP/브라우저확인. Node198/Python23 및전체typecheck/auditPASS.
+외부Codex리뷰는총1회지시에따라섹션5에서실시하며현재미실시. EXECUTOR 섹션4 PASS, 셀프체크완료, CHRONICLE 확인완료. Manyfast다른프로젝트원문복구미완료는사고후속항목으로남김; 기존API종료사고는동일launcher복구·health/auth/SQLite정상확인. Supervisor 섹션4→5 승인. 실전화왕복수용조건은삭제하지않고5에유지.

@@ -54,3 +54,9 @@ GET `/:id/events`. 성공 응답 `{request}` / `{requests}` / `{inquiry}` / `{at
 ## 명시 재시도
 
 POST `/:id/inquiries/:inquiryId/retry`는 확정 부재/실패만 prepared로 되돌림. worker는 prepared만 실행하며 failed/no-answer 자동재발신 금지. 결과불명/중단/오래된 revision은 재시도 금지. engine.retryInquiry(requestId,inquiryId):SupportRequest.
+
+## 담당자 브라우저 접속
+
+GET `/api/coordination/session` → `{authenticated:boolean}`.
+POST 동일경로 `{accessCode}` + same-origin Origin → HttpOnly/SameSite=Strict/8시간 cookie, `{authenticated:true}`. 원본 토큰 클라이언트 영속저장 금지.
+DELETE 동일경로 + same-origin Origin → 세션해제. API는 기존 agent/operator Bearer도 계속 지원. cookie변경요청의 외부 Origin 거절. PUBLIC_BASE_URL 설정 시 해당 origin에 한정; 별도접속 도메인 검증시 이를 정확히 설정. 런타임 재시작 시 담당자 재접속.

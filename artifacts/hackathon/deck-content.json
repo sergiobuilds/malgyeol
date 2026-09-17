@@ -1,0 +1,175 @@
+{
+  "title": "말결 | 전화 기반 생활지원 연계",
+  "slides": [
+    {
+      "title": "추진 배경 및 현장 과제",
+      "seconds": 25,
+      "headline": "상담 이후 반복 업무의 경감",
+      "bullets": [
+        "생활 필요·이용 조건의 반복 설명",
+        "기관별 신청 절차·제공 조건의 분산",
+        "기관 문의·조건 조율·결과 회신의 연속 처리"
+      ],
+      "sources": [
+        "https://github.com/sergiobuilds/malgyeol/blob/feat/ai-for-good-product/POLICY_BASIS.md#2-현장-과제-및-처리구조",
+        "https://www.seoul.go.kr/news/news_report.do?nttNo=454831&srchCtgry=475"
+      ]
+    },
+    {
+      "title": "지원사업 연계체계",
+      "seconds": 25,
+      "headline": "네 사업의 기관·관할·이용절차 통합",
+      "bullets": [
+        "푸드뱅크·푸드마켓: 등록·선정·수령 경로",
+        "찾아가는 푸드마켓: 지역·일정·이용 방식",
+        "그냥드림: 사업장·준비물·방문 절차",
+        "돌봄SOS: 거주지 접수·돌봄계획·기관 의뢰"
+      ],
+      "sources": [
+        "https://github.com/sergiobuilds/malgyeol/blob/feat/ai-for-good-product/POLICY_BASIS.md",
+        "https://www.s-foodbank.or.kr/intro/intro03",
+        "https://news.seoul.go.kr/welfare/archives/1355",
+        "https://www.s-foodbank.or.kr/justdream/guide",
+        "https://wis.seoul.go.kr/wfs/sos/guide.do"
+      ]
+    },
+    {
+      "title": "전화 기반 지원 처리",
+      "seconds": 45,
+      "headline": "AI 기관 통화와 시민 회신의 연결",
+      "bullets": [
+        "업무 단위 동의와 전달 정보의 제한",
+        "기관 문의·수령 방법 조율·신청 의사 전달",
+        "기관 답변에 따른 시민 회신·후속 연락"
+      ],
+      "steps": [
+        "시민 요청·제약 파악",
+        "문의 범위 동의",
+        "기관 발신·조건 조율",
+        "답변·후속 행동 기록",
+        "시민 회신·선택",
+        "필요시 기관 재연락"
+      ],
+      "sources": [
+        "https://github.com/sergiobuilds/malgyeol/blob/feat/ai-for-good-product/POLICY_BASIS.md#5-정책-연계구조",
+        "https://github.com/sergiobuilds/malgyeol/blob/feat/ai-for-good-product/dev/active/care-coordination/phone-goal-prompt.md",
+        "https://github.com/sergiobuilds/malgyeol/blob/feat/ai-for-good-product/dev/active/care-coordination/planning-handoff.md#4-승인된-13개-설계"
+      ],
+      "screenshotHint": "실제 요청 상세 화면의 생활 필요·동의 범위·기관 문의 항목. 화면 확보 시 해당 상태의 실제 캡처만 사용. 전화망 왕복 성공의 증거로 해석 금지."
+    },
+    {
+      "title": "기관 응답별 후속 처리",
+      "seconds": 35,
+      "headline": "필요별 진행과 중요 조건의 시민 선택",
+      "bullets": [
+        "사례: 조리 곤란·생필품 필요·방문 제약",
+        "식사 경로 유지·생필품 대안 탐색",
+        "비용·일정·수령 방법 변경 시 시민 재선택",
+        "연락 이력·남은 업무의 담당자 인계"
+      ],
+      "sources": [
+        "https://github.com/sergiobuilds/malgyeol/blob/feat/ai-for-good-product/POLICY_BASIS.md#72-권한-및-담당자-처리",
+        "https://github.com/sergiobuilds/malgyeol/blob/feat/ai-for-good-product/dev/active/care-coordination/planning-handoff.md#4-승인된-13개-설계",
+        "https://github.com/sergiobuilds/malgyeol/blob/feat/ai-for-good-product/dev/active/care-coordination/phone-goal-prompt.md"
+      ],
+      "screenshotHint": "실제 복수 필요 요청의 식사 연결·생필품 선택 대기와 기관 답변 이력. 실제 화면의 상태와 출처를 유지하며 실기관 제공 실적을 암시하는 배지·수치 추가 금지."
+    },
+    {
+      "title": "정책 협력 및 실증 계획",
+      "seconds": 30,
+      "headline": "서울시·자치구 협력 실증 제안",
+      "bullets": [
+        "정책: 음성 동의·문의·신청 보조 범위 정립",
+        "데이터: 네 사업의 창구·절차·운영정보 갱신",
+        "실증환경: 참여 자치구·기관·문의 창구 구성",
+        "지원: 담당자 인계·개인정보 검토·측정자료 협력"
+      ],
+      "sources": [
+        "https://github.com/sergiobuilds/malgyeol/blob/feat/ai-for-good-product/POLICY_BASIS.md#6-정책-협력사항",
+        "https://github.com/sergiobuilds/malgyeol/blob/feat/ai-for-good-product/POLICY_BASIS.md#7-현장-실증-제안",
+        "https://www.law.go.kr/LSW/ordinInfoP.do?ordinSeq=2100075",
+        "https://www.seoul.go.kr/news/news_report.do?nttNo=454831&srchCtgry=475"
+      ]
+    },
+    {
+      "title": "성과관리 및 추진 방향",
+      "seconds": 20,
+      "headline": "업무부담·연결 결과 중심의 실증 평가",
+      "bullets": [
+        "부담 지표: 요청당 통화 횟수·담당자 처리시간",
+        "연결 지표: 기관 응답시간·필요별 결과·회신 도달률",
+        "통제 지표: 중복·취소·권한 범위 밖 실행",
+        "추진 과제: 기준선 측정·협력 실증·단계적 확대"
+      ],
+      "sources": [
+        "https://github.com/sergiobuilds/malgyeol/blob/feat/ai-for-good-product/POLICY_BASIS.md#8-성과관리-및-후속-통제"
+      ]
+    }
+  ],
+  "references": [
+    {
+      "title": "말결 정책·실증 근거",
+      "url": "https://github.com/sergiobuilds/malgyeol/blob/feat/ai-for-good-product/POLICY_BASIS.md",
+      "sections": "제1·2·4·5·6·7·8·9절",
+      "role": "전체 논지·사업 구조·정책 요청·성과관리의 주요 근거"
+    },
+    {
+      "title": "말결 계획 인계문",
+      "url": "https://github.com/sergiobuilds/malgyeol/blob/feat/ai-for-good-product/dev/active/care-coordination/planning-handoff.md",
+      "sections": "제3·4·5·6·8·9절",
+      "role": "승인된 업무 동작·대표 사례·제품 범위·대외 표현의 경계"
+    },
+    {
+      "title": "말결 전화 구현 계약",
+      "url": "https://github.com/sergiobuilds/malgyeol/blob/feat/ai-for-good-product/dev/active/care-coordination/phone-goal-prompt.md",
+      "role": "기관 발신·조율·시민 회신·재선택·재연락의 구현 계약"
+    },
+    {
+      "title": "서울형 통합돌봄 시행 발표",
+      "url": "https://www.seoul.go.kr/news/news_report.do?nttNo=454831&srchCtgry=475",
+      "role": "기존 공공 상담·접수·서비스 연계체계의 정책 배경"
+    },
+    {
+      "title": "서울특별시 지역사회 돌봄 통합지원에 관한 조례",
+      "url": "https://www.law.go.kr/LSW/ordinInfoP.do?ordinSeq=2100075",
+      "role": "지방자치단체 통합지원의 제도 기반"
+    },
+    {
+      "title": "푸드뱅크·마켓 이용안내",
+      "url": "https://www.s-foodbank.or.kr/intro/intro03",
+      "role": "대상·선정·수령 절차"
+    },
+    {
+      "title": "서울시 찾아가는 푸드마켓 운영",
+      "url": "https://news.seoul.go.kr/welfare/archives/1355",
+      "role": "이동·꾸러미·동 단위 운영형태"
+    },
+    {
+      "title": "그냥드림 이용안내",
+      "url": "https://www.s-foodbank.or.kr/justdream/guide",
+      "role": "관할·신분증·방문 차수별 절차"
+    },
+    {
+      "title": "서울복지포털 돌봄SOS 안내",
+      "url": "https://wis.seoul.go.kr/wfs/sos/guide.do",
+      "role": "거주지 접수·돌봄계획·제공기관 연계"
+    }
+  ],
+  "verification": {
+    "renderOnSlides": false,
+    "source": "https://github.com/sergiobuilds/malgyeol/blob/feat/ai-for-good-product/dev/active/malgyeol-product-completion/context.md",
+    "checkpoint": "섹션 4 중간 통합검증",
+    "observed": [
+      "Node 198개 검사·타입 검사·의존성 검사 통과 기록",
+      "설치 SDK 기반 Python 23개 검사 통과 기록",
+      "실제 Node HTTP·SQLite와 Python 음성도구의 결합 검증 기록",
+      "식사 경로 유지·생필품 재선택·시민 회신 기록의 로컬 통합 확인"
+    ],
+    "pending": [
+      "A/B 전화 자원 연결 및 실제 전화망 왕복",
+      "실제 양방향 오디오·사람 청취 검증",
+      "발표 화면 캡처의 최종 상태 대조"
+    ],
+    "claimBoundary": "슬라이드 3·4는 제품 처리구조와 사례 설명. 실제 공공기관 참여·지원 승인·물품 제공·실전화 왕복 성공의 성과 주장 제외. 역할극 결과와 공공기관 실적의 구분."
+  }
+}

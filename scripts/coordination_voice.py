@@ -146,7 +146,14 @@ class VoiceRuntime:
             if q['status']!='prepared' or q['revision']!=r['revision']: continue
             if q['institutionId'] not in r['consent']['institutionIds']:continue
             # Resolve approved routing before creating a started attempt.
-            number=self.routing.destination('institution',q['institutionId'])
+            try:
+                number=self.routing.destination('institution',q['institutionId'])
+            except ToolError:
+                # Routing absence is not a call attempt or a no-answer. Keep
+                # this inquiry prepared while delivering other useful results.
+                self.journal.put('routing:'+q['id'],{'state':'route-required'})
+                continue
+            self.journal.put('routing:'+q['id'],{'state':'ready'})
             previous=sum(a['inquiryId']==q['id'] for a in r.get('attempts',[]))
             job='dispatch:'+q['id']+':'+str(previous)
             if not self.journal.claim(job,{'state':'dispatching'}):continue
