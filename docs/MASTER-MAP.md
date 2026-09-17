@@ -1,7 +1,7 @@
 ---
 doc_kind: project-map
 status: working
-version: 2026-09-18_v3
+version: 2026-09-18_v4
 ---
 
 # 말결 — 지도 (MASTER-MAP)
@@ -22,6 +22,8 @@ version: 2026-09-18_v3
 - 비목표: 이번에 수요·구매의사·기관 협조 조사, 경제성·상용 운영, 실시간 재고 API 확보를 선행조건으로 요구하지 않는다. 결제·정산·배송 운영·새 공급자를 임의 추가하지 않는다.
 
 ## 2 Current Map
+
+다음 계획자의 첫 입력은 [계획 작성용 세션 인계](../dev/active/care-coordination/planning-handoff.md)다. 사용자가 재인터뷰 반복을 거절했으므로 승인·정정을 인계받아 writing-plans로 계획을 구체화한다.
 
 | 축 | 상태 | 작업 기준 |
 |---|---|---|
@@ -78,7 +80,8 @@ version: 2026-09-18_v3
 |---|---|---|
 | `docs/MASTER-MAP.md` | project-map | 최신 합의 작업 지도 |
 | `docs/CHRONICLE.md` | project-decision | append-only 결정 기록 |
-| `dev/active/care-coordination/implementation-plan.md` | 작업 | 전체 Future Plan |
+| `dev/active/care-coordination/implementation-plan.md` | 작업 | 참고 보존 자료, 사용자 합의의 근거는 세션 인계가 우선 |
+| `dev/active/care-coordination/planning-handoff.md` | 기록 | 사용자 승인·정정·권고 구분, 다음 계획 작성의 입력 |
 | 해커톤 MVP 계획 | 작업 | 사용자 지시로 삭제, 새 문서 없음 |
 | `POLICY_BASIS.md` | project-material | 후속 정책 작성 시 공식 근거 재확인 |
 | `docs/AI_FOR_GOOD_SUBMISSION.md` | project-material | 이전 방향의 파생 자료; MVP 7절에 따라 재작성 대상 |
@@ -91,6 +94,8 @@ version: 2026-09-18_v3
 - 다음은 사용자 의도를 기준으로 새 계획 수립이다. 거절된 계획으로 구현하지 않는다. 범위 확정 없이 코드 작성·운영 서비스 변경·발신으로 넘어가지 않는다.
 
 ## 8 이력
+
+- 2026-09-18 v4 — 사용자 지시로 세션 합의와 정정을 단일 인계문에 정리. 반복 인터뷰 금지, 삭제된 계획과 에이전트 해석의 재사용 금지 명시.
 
 - 2026-09-18 v3 — 사용자가 안내 서비스로 축소된 MVP 계획을 거절해 삭제. 실행 기준에서 철회하고 Superpowers 설치·재계획으로 전환.
 
