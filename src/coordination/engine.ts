@@ -10,6 +10,8 @@ import type {
   AttemptResult,
   AnswerInput,
   Need,
+  CitizenProfile,
+  RequestDetails,
 } from "./types.ts";
 export class CoordinationError extends Error {
   constructor(
@@ -29,6 +31,54 @@ const strings = (v: unknown): v is string[] =>
   Array.isArray(v) && v.length <= 100 && v.every(text);
 const programs = ["foodbank-market", "mobile-market", "just-dream", "care-sos"];
 const now = () => new Date().toISOString();
+const boundedText = (value: unknown, maximum: number): value is string =>
+  text(value) && value.length <= maximum;
+function object(value: unknown): value is Record<string, unknown> {
+  return value !== null && typeof value === "object" && !Array.isArray(value);
+}
+export function validateCitizenProfile(value: unknown): CitizenProfile {
+  if (
+    !object(value) ||
+    Object.keys(value).some(
+      (key) =>
+        ![
+          "name",
+          "address",
+          "age",
+          "household",
+          "mobility",
+          "contactPreference",
+        ].includes(key),
+    ) ||
+    !boundedText(value.name, 100) ||
+    !boundedText(value.address, 500) ||
+    (value.age !== undefined &&
+      (typeof value.age !== "number" ||
+        !Number.isInteger(value.age) ||
+        value.age < 0 ||
+        value.age > 130)) ||
+    ["household", "mobility", "contactPreference"].some(
+      (key) => value[key] !== undefined && !boundedText(value[key], 200),
+    )
+  )
+    fail("INVALID_PROFILE", 400);
+  return structuredClone(value) as unknown as CitizenProfile;
+}
+export function validateRequestDetails(value: unknown): RequestDetails {
+  if (
+    !object(value) ||
+    Object.keys(value).some(
+      (key) => !["quantity", "requestedDate", "deliveryMethod"].includes(key),
+    ) ||
+    Object.entries(value).some(
+      ([key, entry]) =>
+        !boundedText(entry, key === "requestedDate" ? 100 : 200),
+    )
+  )
+    fail("INVALID_REQUEST_DETAILS", 400);
+  return structuredClone(value) as RequestDetails;
+}
+
 function request(l: CoordinationLedger, id: string): SupportRequest {
   return l.requests[id] ?? fail("REQUEST_NOT_FOUND", 404);
 }
@@ -80,11 +130,19 @@ export class CoordinationEngine {
       )
     )
       fail("INVALID_REQUEST", 400);
+    const profile =
+      input.citizenProfile === undefined
+        ? undefined
+        : validateCitizenProfile(input.citizenProfile);
+    for (const n of input.needs)
+      if (n.requestDetails !== undefined)
+        validateRequestDetails(n.requestDetails);
     return this.store.transaction((l) => {
       const at = now();
       const r: SupportRequest = {
         id: randomUUID(),
         citizenRef: input.citizenRef,
+        ...(profile === undefined ? {} : { citizenProfile: profile }),
         summary: input.summary,
         district: input.district,
         constraints: [...input.constraints],
@@ -93,6 +151,9 @@ export class CoordinationEngine {
           description: n.description,
           category: n.category,
           constraints: [...(n.constraints ?? [])],
+          ...(n.requestDetails === undefined
+            ? {}
+            : { requestDetails: structuredClone(n.requestDetails) }),
           status: "open",
         })),
         revision: 1,
@@ -107,11 +168,13 @@ export class CoordinationEngine {
       return r;
     });
   }
-  listRequests(): SupportRequest[] {
+  listRequests(citizenRef?: string): SupportRequest[] {
+    if (citizenRef !== undefined && !boundedText(citizenRef, 160))
+      fail("INVALID_CITIZEN_REF", 400);
     return this.store.transaction((l) =>
-      Object.values(l.requests).sort((a, b) =>
-        b.createdAt.localeCompare(a.createdAt),
-      ),
+      Object.values(l.requests)
+        .filter((r) => citizenRef === undefined || r.citizenRef === citizenRef)
+        .sort((a, b) => b.createdAt.localeCompare(a.createdAt)),
     );
   }
   getRequest(id: string): SupportRequest | undefined {

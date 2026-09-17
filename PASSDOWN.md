@@ -1,12 +1,15 @@
 ---
 handoff_schema: project-handoff/v1
 project_mode: observe-only
-verified_at: 2026-09-17T20:27:37.684196+00:00
+verified_at: 2026-09-17T23:15:02.362537+00:00
 canonical_ref: refs/heads/master
-verified_commit: 965bd6b3942e6215f5014f62c639e613a129bf52
+verified_commit: fb782d467825959d4022a8040e30faaf54c77489
 ---
 
 ## Next
+
+- 최신 사용자 정정 반영: 고정 화면 문구 명사형, 모노그램·상단설명·장문바닥글 제거, 이름·주소·품목수량·일정·수령방법·동일인 이력. Claude 프론트 전담, Node202 검사.
+- [현재 웹앱](https://qualifying-grande-bags-characterized.trycloudflare.com/ops): 5명·6개 요청의 발표용 별도 SQLite. 원래 전화용 ledger와 분리. 해당 저장소를 실전화 런타임에 연결하지 않음. 사용자 브라우저 세션 연결, PUBLIC_BASE_URL 일치 설정. 외부 주소·인증·저장소 전환 상세는 README의 웹 접속 절.
 
 - [실행계획](dev/active/malgyeol-product-completion/plan.md) · [체크리스트](dev/active/malgyeol-product-completion/tasks.md) · [실행기록](dev/active/malgyeol-product-completion/context.md). looprun-auto 섹션5, supervisor 게이트 승인.
 - 섹션1~4 완료. 실제 공개65목록행·37기관 및3보완창구, 복수필요 API/SQLite, 역할별전화코드, Claude KRDS프론트, 정책제안서6쪽·3분6장덱과편집원본/LaTeX. Node198/Python32, 브라우저검사23+24 및root실제API조작.

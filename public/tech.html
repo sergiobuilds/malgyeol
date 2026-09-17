@@ -3,30 +3,18 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="description" content="말결이 시민의 요청을 어떻게 나누고, 어떤 창구에 무엇을 물으며, 답변을 어떻게 이어가는지 정리한 문서입니다.">
+<meta name="description" content="말결 · 요청 분해 · 문의 진행 · 필요 상태 · 담당자 동작">
 <title>작동 방식 — 말결</title>
-<link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2064%2064%22%3E%3Crect%20width%3D%2264%22%20height%3D%2264%22%20rx%3D%2214%22%20fill%3D%22%2303163a%22%2F%3E%3Ctext%20x%3D%2232%22%20y%3D%2244%22%20text-anchor%3D%22middle%22%20font-family%3D%22sans-serif%22%20font-size%3D%2234%22%20font-weight%3D%22700%22%20fill%3D%22%23ffffff%22%3E%EB%A7%90%3C%2Ftext%3E%3C%2Fsvg%3E">
 <link rel="stylesheet" href="/tokens.css">
 <link rel="stylesheet" href="/styles.css">
 </head>
 <body>
 <a class="mg-skip" href="#main">본문 바로가기</a>
 
-<div class="mg-masthead">
-  <div class="mg-masthead__in">
-    <p><strong>말결</strong> 생활 지원 연결 서비스</p>
-    <p>작동 방식과 처리 범위</p>
-  </div>
-</div>
-
 <header class="mg-header">
   <div class="mg-header__in">
     <a class="mg-brand" href="/">
-      <span class="mg-brand__mark" aria-hidden="true">말</span>
-      <span>
-        <span class="mg-brand__name">말결</span>
-        <span class="mg-brand__role">생활 지원 연결 서비스</span>
-      </span>
+      <span class="mg-brand__name">말결</span>
     </a>
     <nav class="mg-tabline" aria-label="주요 화면">
       <a href="/tech" aria-current="page">작동 방식</a>
@@ -40,75 +28,76 @@
   <div class="mg-doc">
     <div class="mg-pagehead">
       <div>
-        <p class="mg-eyebrow">작동 방식</p>
         <h1>요청 분해와 문의 진행 순서</h1>
-        <p>한 번의 전화가 하나의 요청이 되고, 요청 안의 필요가 각각 따로 진행됩니다. 아래는 그 처리 순서와 각 단계에서 무엇을 기록하는지 정리한 내용입니다.</p>
+        <p>전화 1건 · 요청 1건 · 필요별 개별 진행</p>
       </div>
     </div>
 
     <h2>요청의 구성</h2>
-    <p>시민 한 사람의 전화는 하나의 요청이 되고, 그 안에서 서로 다른 생활 필요가 개별 항목으로 나뉩니다. 필요마다 상태가 따로 움직이므로, 식사는 연결되고 생필품은 다른 경로를 찾는 상황이 그대로 표시됩니다.</p>
     <div class="krds-table-wrap">
       <table class="tbl col data">
-        <caption>요청을 구성하는 항목과 각 항목이 담는 내용</caption>
+        <caption>요청 구성 항목 · 항목별 기록 내용</caption>
         <colgroup><col style="width:22%"><col></colgroup>
         <thead><tr><th scope="col">구성</th><th scope="col">담는 내용</th></tr></thead>
         <tbody>
-          <tr><th scope="row">요청</th><td>시민이 말한 전체 사정의 요약, 거주 자치구, 공통 제약, 접수 경로</td></tr>
-          <tr><th scope="row">필요</th><td>식사·생필품·돌봄처럼 따로 해결해야 하는 항목과 그 항목만의 조건</td></tr>
-          <tr><th scope="row">문의</th><td>어떤 기관의 어떤 사업 창구에 무엇을 물을지 정리한 질문 묶음</td></tr>
-          <tr><th scope="row">답변</th><td>기관이 알려 준 이용 가능 여부, 조건, 다음에 할 일</td></tr>
-          <tr><th scope="row">회신</th><td>시민에게 전화로 전달한 결과와 그 시각</td></tr>
+          <tr><th scope="row">요청</th><td>시민 사정 요약 · 거주 자치구 · 공통 제약 · 접수 경로</td></tr>
+          <tr><th scope="row">필요</th><td>식사·생필품·돌봄 등 개별 해결 항목 · 항목별 조건</td></tr>
+          <tr><th scope="row">문의</th><td>대상 기관·사업 창구 · 질문 묶음</td></tr>
+          <tr><th scope="row">답변</th><td>이용 가능 여부 · 이용 조건 · 다음 행동</td></tr>
+          <tr><th scope="row">회신</th><td>시민 전화 회신 내용 · 회신 시각</td></tr>
         </tbody>
       </table>
     </div>
 
     <h2>필요의 상태</h2>
-    <p>상태는 지금 무슨 일이 일어나고 있고 다음에 무엇을 하는지를 나타냅니다. 상태는 색만으로 구분하지 않고 항상 이름과 설명을 함께 표시합니다.</p>
     <div class="krds-table-wrap">
       <table class="tbl col data">
-        <caption>필요의 상태와 각 상태의 의미</caption>
+        <caption>필요 상태 · 상태별 의미</caption>
         <colgroup><col style="width:26%"><col></colgroup>
         <thead><tr><th scope="col">상태</th><th scope="col">의미</th></tr></thead>
         <tbody>
-          <tr><th scope="row">연락 준비</th><td>물어볼 창구와 질문을 정리하고 있습니다.</td></tr>
-          <tr><th scope="row">기관 연락 중</th><td>등록된 목적별 창구로 연락해 조건을 알아보고 있습니다.</td></tr>
-          <tr><th scope="row">시민 선택 대기</th><td>조건이 달라져 어떤 방법으로 진행할지 시민이 정해야 합니다.</td></tr>
-          <tr><th scope="row">이용 경로 연결</th><td>이용 방법과 조건까지 확인했습니다. 실제 지원 제공은 기관 절차에 따릅니다.</td></tr>
-          <tr><th scope="row">담당자 확인 필요</th><td>연락이 닿지 않았거나 기관이 이용이 어렵다고 답했습니다.</td></tr>
-          <tr><th scope="row">진행 중단</th><td>이 필요는 더 진행하지 않습니다. 같은 요청의 다른 필요는 계속됩니다.</td></tr>
+          <tr><th scope="row">연락 준비</th><td>문의 창구·질문 정리 중</td></tr>
+          <tr><th scope="row">기관 연락 중</th><td>등록 목적별 창구 조건 확인 중</td></tr>
+          <tr><th scope="row">시민 선택 대기</th><td>조건 변경 · 시민 직접 선택 필요</td></tr>
+          <tr><th scope="row">이용 경로 연결</th><td>이용 방법·조건 확인 완료 · 제공 여부는 기관 절차</td></tr>
+          <tr><th scope="row">담당자 확인 필요</th><td>연락 미도달 또는 이용 어려움 회신</td></tr>
+          <tr><th scope="row">진행 중단</th><td>해당 필요 진행 중단 · 동일 요청의 다른 필요 유지</td></tr>
         </tbody>
       </table>
     </div>
 
-    <h2>담당자가 할 수 있는 일</h2>
-    <p>담당자 화면은 진행 상황을 보고, 잘못 들어간 내용을 고치고, 더 진행하지 않을 일을 멈추고, 닿지 않은 창구에 다시 연락할 준비를 하는 데 쓰입니다.</p>
+    <h2>담당자 동작</h2>
     <div class="krds-table-wrap">
       <table class="tbl col data">
-        <caption>담당자 동작과 그 동작이 바꾸는 상태</caption>
+        <caption>담당자 동작 · 동작별 상태 변화</caption>
         <colgroup><col style="width:26%"><col></colgroup>
         <thead><tr><th scope="col">동작</th><th scope="col">바뀌는 것</th></tr></thead>
         <tbody>
-          <tr><th scope="row">요청 내용 정정</th><td>요약만 고치면 진행 상태는 유지됩니다. 지역이나 제약을 바꾸면 진행 중인 필요가 모두 다시 연락 준비 상태로 돌아갑니다.</td></tr>
-          <tr><th scope="row">필요 진행 중단</th><td>해당 필요의 준비·진행 중 문의가 취소됩니다. 다른 필요는 그대로 이어집니다.</td></tr>
-          <tr><th scope="row">다시 연락 준비</th><td>부재중이거나 연결에 실패한 문의만 해당합니다. 결과가 확인되지 않은 통화에는 사용할 수 없습니다.</td></tr>
+          <tr><th scope="row">요청 내용 정정</th><td>요약 단독 수정 · 진행 상태 유지 / 지역·제약 변경 · 진행 중 필요 연락 준비 복귀</td></tr>
+          <tr><th scope="row">필요 진행 중단</th><td>해당 필요의 준비·진행 중 문의 취소 · 다른 필요 유지</td></tr>
+          <tr><th scope="row">다시 연락 준비</th><td>부재중·연결 실패 문의 한정 · 결과 미확정 통화 불가</td></tr>
+          <tr><th scope="row">대리 기록 불가 동작</th><td>통화 완료 대리 표시 · 시민 선택 대리 입력</td></tr>
         </tbody>
       </table>
     </div>
-    <p>통화를 완료했다고 대신 표시하거나, 시민의 선택을 대신 입력하는 동작은 담당자 화면에 두지 않습니다.</p>
 
     <h2>지원망 자료</h2>
-    <p>기관 목록과 이용 절차는 네 개 사업의 공개 자료를 근거로 정리했고, 기관마다 확인한 출처를 함께 보관합니다. 같은 시설이 여러 사업을 운영하면 절차와 운영시간을 사업별로 나누어 표시합니다. 자료에 없는 지도 좌표나 실시간 재고는 만들지 않습니다.</p>
+    <ul class="mg-bullets">
+      <li>기관 목록·이용 절차 근거 · 4개 사업 공개 자료</li>
+      <li>기관별 확인 출처 보관</li>
+      <li>복수 사업 운영 시설 · 사업별 절차·운영시간 분리 표시</li>
+      <li>자료 미포함 항목 · 지도 좌표·실시간 재고 생성 없음</li>
+    </ul>
     <div class="btn-wrap mg-doc__act">
-      <a class="krds-btn large primary" href="/app">지원망 화면으로</a>
+      <a class="krds-btn large primary" href="/app">지원망 조회</a>
     </div>
   </div>
 </main>
 
 <footer class="mg-foot">
   <div class="mg-foot__in">
-    <p><strong>말결</strong> · 자격과 제공 여부의 판단은 각 기관에 있으며, 말결은 시민을 대신해 조건을 알아보고 결과를 회신합니다.</p>
-    <p>지원망 · 요청 진행</p>
+    <p><strong>말결</strong> | 생활지원 연계 서비스</p>
+    <p>푸드뱅크·푸드마켓 · 찾아가는 푸드마켓 · 그냥드림 · 돌봄SOS</p>
   </div>
 </footer>
 <script src="/tech.js" defer></script>

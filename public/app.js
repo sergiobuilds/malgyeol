@@ -48,55 +48,55 @@
         ...(body === undefined ? {} : { body: JSON.stringify(body) }),
       });
     } catch {
-      throw new ApiError(0, "NETWORK", "연결이 끊겼습니다. 잠시 후 다시 시도해 주세요.");
+      throw new ApiError(0, "NETWORK", "연결 끊김 · 재시도 필요");
     }
     const payload = await response.json().catch(() => ({}));
     if (!response.ok) {
       const code = payload?.error?.code ?? "ERROR";
       throw new ApiError(response.status, code,
-        REASON[code] ?? payload?.error?.message ?? "요청을 처리하지 못했습니다.");
+        REASON[code] ?? payload?.error?.message ?? "요청 처리 실패");
     }
     return payload;
   }
 
-  /* 서버가 알려 준 사유를 담당자가 바로 이해할 수 있는 문장으로 옮깁니다. */
+  /* 서버 사유 코드를 담당자 화면 표시 문구로 옮긴다. */
   const REASON = {
-    CALL_ACTIVE: "지금 다른 기관과 통화가 진행 중입니다. 통화가 끝난 뒤 다시 시도해 주세요.",
-    RESULT_UNKNOWN: "통화 결과가 확인되지 않아 아직 다시 연락할 수 없습니다.",
-    STALE_INQUIRY: "요청 조건이 정정되어 이 문의는 더 사용하지 않습니다. 바뀐 조건으로 문의를 다시 준비합니다.",
-    RETRY_NOT_ALLOWED: "이 문의는 다시 연락할 수 있는 상태가 아닙니다.",
-    NEED_STOPPED: "이미 진행을 중단한 필요입니다.",
-    CHOICE_REQUIRED: "시민 선택을 기다리는 중이라 다음 연락을 진행할 수 없습니다.",
-    CONSENT_REQUIRED: "기관에 전달할 범위가 아직 확인되지 않았습니다.",
-    CONSENT_SCOPE: "확인한 전달 범위에 없는 기관입니다.",
-    ANSWER_FINAL: "이미 정리된 답변입니다.",
-    ATTEMPT_FINAL: "이미 마무리된 통화입니다.",
-    INVALID_INPUT: "입력 내용을 확인해 주세요.",
-    INVALID_REVISION: "정정할 내용을 확인해 주세요.",
-    REQUEST_NOT_FOUND: "요청을 찾지 못했습니다. 목록을 다시 불러와 주세요.",
-    NEED_NOT_FOUND: "해당 필요를 찾지 못했습니다. 목록을 다시 불러와 주세요.",
-    INQUIRY_NOT_FOUND: "해당 문의를 찾지 못했습니다. 목록을 다시 불러와 주세요.",
-    DURABLE_LEDGER_REQUIRED: "요청 저장 연결을 준비하고 있습니다. 잠시 후 다시 확인해 주세요.",
+    CALL_ACTIVE: "통화 진행 중 · 종료 후 재시도",
+    RESULT_UNKNOWN: "통화 결과 미확정 · 재연락 불가",
+    STALE_INQUIRY: "요청 조건 정정 · 문의 재준비 필요",
+    RETRY_NOT_ALLOWED: "재연락 불가 상태",
+    NEED_STOPPED: "진행 중단된 필요",
+    CHOICE_REQUIRED: "시민 선택 대기 · 다음 연락 불가",
+    CONSENT_REQUIRED: "전달 범위 미확인",
+    CONSENT_SCOPE: "전달 범위 외 기관",
+    ANSWER_FINAL: "정리 완료된 답변",
+    ATTEMPT_FINAL: "종료된 통화",
+    INVALID_INPUT: "입력값 오류 · 확인 필요",
+    INVALID_REVISION: "정정 내용 오류 · 확인 필요",
+    REQUEST_NOT_FOUND: "요청 없음 · 목록 재조회 필요",
+    NEED_NOT_FOUND: "필요 없음 · 목록 재조회 필요",
+    INQUIRY_NOT_FOUND: "문의 없음 · 목록 재조회 필요",
+    DURABLE_LEDGER_REQUIRED: "요청 저장 연결 준비 중 · 재확인 필요",
   };
 
   /* ── 표시 문구 ─────────────────────────────── */
   const PROGRAM_NAMES = new Map();
 
   const NEED_STATE = {
-    open: { label: "연락 준비", badge: "bg-light-primary", note: "다음 기관 문의를 준비하고 있습니다." },
-    contacting: { label: "기관 연락 중", badge: "bg-light-information", note: "등록된 창구로 연락해 조건을 알아보고 있습니다." },
-    "awaiting-choice": { label: "시민 선택 대기", badge: "bg-light-warning", note: "조건이 달라져 어떤 방법으로 진행할지 시민이 선택해야 합니다." },
-    connected: { label: "이용 경로 연결", badge: "bg-light-success", note: "이용 방법과 조건까지 확인했습니다. 실제 지원 제공은 기관 절차에 따릅니다." },
-    "needs-attention": { label: "담당자 확인 필요", badge: "bg-light-danger", note: "연락이 닿지 않았거나 기관이 이용이 어렵다고 답했습니다." },
-    stopped: { label: "진행 중단", badge: "bg-light-gray", note: "이 필요는 더 진행하지 않습니다." },
+    open: { label: "연락 준비", badge: "bg-light-primary", note: "기관 문의 준비 중" },
+    contacting: { label: "기관 연락 중", badge: "bg-light-information", note: "등록 창구 조건 확인 중" },
+    "awaiting-choice": { label: "시민 선택 대기", badge: "bg-light-warning", note: "조건 변경 · 시민 선택 필요" },
+    connected: { label: "이용 경로 연결", badge: "bg-light-success", note: "이용 방법·조건 확인 완료 · 제공 여부는 기관 절차" },
+    "needs-attention": { label: "담당자 확인 필요", badge: "bg-light-danger", note: "연락 미도달 또는 이용 어려움 회신" },
+    stopped: { label: "진행 중단", badge: "bg-light-gray", note: "진행 중단" },
   };
   const INQUIRY_STATE = {
     prepared: { label: "문의 준비", badge: "bg-light-gray" },
     calling: { label: "통화 중", badge: "bg-light-information" },
     answered: { label: "답변 도착", badge: "bg-light-success" },
     "no-answer": { label: "부재중", badge: "bg-light-warning" },
-    failed: { label: "연결 실패", badge: "bg-light-danger" },
-    unknown: { label: "결과 확인 중", badge: "bg-light-warning" },
+    failed: { label: "재연락 필요", badge: "bg-light-danger" },
+    unknown: { label: "담당자 확인 필요", badge: "bg-light-warning" },
     cancelled: { label: "문의 취소", badge: "bg-light-gray" },
   };
   const OUTCOME = {
@@ -107,12 +107,24 @@
   const CALLBACK_STATE = {
     completed: { label: "회신 완료", badge: "bg-light-success" },
     "no-answer": { label: "시민 부재중", badge: "bg-light-warning" },
-    failed: { label: "회신 실패", badge: "bg-light-danger" },
+    failed: { label: "회신 재시도 필요", badge: "bg-light-danger" },
   };
   const ATTEMPT_RESULT = {
     started: "통화 연결 중", completed: "통화 완료",
-    "no-answer": "부재중", failed: "연결 실패", unknown: "결과 확인 중",
+    "no-answer": "부재중", failed: "재연락 필요", unknown: "담당자 확인 필요",
   };
+
+  /* 시민 성명. 없으면 '신규 요청'이며 자치구를 사람 이름 자리에 쓰지 않는다. */
+  const rawName = (request) => {
+    const name = request?.citizenProfile?.name;
+    return typeof name === "string" && name.trim() ? name.trim() : "";
+  };
+  const personName = (request) => rawName(request) || "신규 요청";
+
+  /* 값이 있는 항목만 dt·dd로 만든다. */
+  const defRows = (rows) => rows
+    .filter(([, value]) => value !== undefined && value !== null && String(value).trim() !== "")
+    .map(([key, value]) => `<div><dt>${esc(key)}</dt><dd>${esc(value)}</dd></div>`).join("");
 
   const badge = (state, fallback) => {
     const found = state ?? fallback;
@@ -200,7 +212,7 @@
     async loadDistricts() {
       const { institutions } = await api("GET", "/api/support/institutions");
       const total = document.getElementById("network-total");
-      if (total) total.textContent = `${institutions.length}곳`;
+      if (total) total.textContent = `${institutions.length}개소`;
       this.districts = [...new Set(institutions.map((item) => item.district))]
         .sort((a, b) => a.localeCompare(b, "ko-KR"));
       document.getElementById("district").innerHTML =
@@ -213,11 +225,11 @@
       <div class="mg-pagehead">
         <div>
           <p class="mg-eyebrow">지원망</p>
-          <h1>지원사업 기관과 이용 절차</h1>
-          <p>네 개 지원사업의 실제 기관, 관할, 이용 절차와 목적별 문의 창구를 확인합니다. 말결이 시민을 대신해 문의할 때도 같은 자료를 사용합니다.</p>
+          <h1>지원사업별 기관·이용절차</h1>
+          <p>관할 지역 · 신청 절차 · 문의 창구</p>
         </div>
         <div class="mg-pagehead__aside">
-          <p class="mg-inst__meta">정리한 기관</p>
+          <p class="mg-inst__meta">등록 기관</p>
           <p class="mg-reqbtn__dist" id="network-total">조회 중</p>
         </div>
       </div>
@@ -316,7 +328,7 @@
       const results = document.getElementById("results");
       const counter = document.getElementById("result-count");
       results.innerHTML = `<div class="mg-skeleton" aria-hidden="true"><span></span><span></span><span></span></div>`;
-      counter.textContent = "조회하고 있습니다.";
+      counter.textContent = "조회 중";
       const params = new URLSearchParams({ programId: this.filters.programId });
       if (this.filters.district) params.set("district", this.filters.district);
       if (this.filters.query) params.set("query", this.filters.query);
@@ -324,15 +336,13 @@
         const { institutions } = await api("GET", `/api/support/institutions?${params}`);
         this.institutions = institutions;
         const name = PROGRAM_NAMES.get(this.filters.programId) ?? "";
-        counter.innerHTML = institutions.length
-          ? `${esc(name)} <strong>${institutions.length}개 기관</strong>을 조회했습니다.`
-          : `${esc(name)} <strong>0개 기관</strong>이 조회되었습니다.`;
+        counter.innerHTML = `${esc(name)} · 조회 결과 <strong>${institutions.length}개소</strong>`;
         results.innerHTML = institutions.length ? this.cards(institutions) : this.empty();
       } catch (error) {
         counter.textContent = "";
         results.innerHTML = `<div class="mg-empty">
           <h3>지원망 조회 실패</h3>
-          <p>${esc(error.message)} 잠시 후 조회를 다시 눌러 주세요.</p></div>`;
+          <p>${esc(error.message)} · 재조회 필요</p></div>`;
       }
     },
 
@@ -342,7 +352,7 @@
       if (this.filters.query) conditions.push(`검색어 ‘${this.filters.query}’`);
       return `<div class="mg-empty">
         <h3>조회 결과 없음</h3>
-        <p>${conditions.length ? `${esc(conditions.join(", "))} 조건에서는 이 사업을 운영하는 기관이 조회되지 않았습니다. ` : ""}사업 탭을 바꾸거나 조건을 해제하고 다시 조회해 주세요.</p></div>`;
+        <p>${conditions.length ? `${esc(conditions.join(", "))} · 해당 조건 운영 기관 없음 · ` : ""}사업 탭 변경 또는 조건 해제 후 재조회</p></div>`;
     },
 
     cards(institutions) {
@@ -371,7 +381,7 @@
     },
 
     async openDetail(id) {
-      dialog.open({ title: "기관 상세", body: `<p class="mg-inst__meta">기관 정보를 불러오고 있습니다.</p>` });
+      dialog.open({ title: "기관 상세", body: `<p class="mg-inst__meta">기관 정보 조회 중</p>` });
       try {
         const { institution } = await api("GET", `/api/support/institutions/${encodeURIComponent(id)}`);
         dialog.open({
@@ -391,7 +401,7 @@
     detail(institution) {
       const rows = [];
       if (institution.address) rows.push(["방문 주소", esc(institution.address)]);
-      else rows.push(["이용 방법", "방문처가 아닌 안내 창구입니다. 아래 연락처로 관할 창구를 안내받습니다."]);
+      else rows.push(["이용 방법", "안내 창구 · 방문처 아님 · 아래 연락처로 관할 창구 안내"]);
       rows.push(["관할", esc(institution.district)]);
       rows.push(["기관 역할", listOf(institution.roles)]);
       rows.push(["목적별 연락처", `<ul class="mg-bullets">${institution.contacts.map((c) =>
@@ -421,11 +431,7 @@
           </div>
         </section>`).join("");
 
-      const lead = institution.programs.length > 1
-        ? "이 시설은 여러 사업을 운영합니다. 절차와 운영시간을 사업별로 나누어 표시합니다."
-        : "이 기관이 운영하는 사업의 이용 절차와 문의 창구입니다.";
       return `
-        <p class="mg-detail__lead">${esc(lead)}</p>
         <dl class="mg-defs">${rows.map(([key, value]) =>
           `<dt>${esc(key)}</dt><dd>${value}</dd>`).join("")}</dl>
         ${programs}
@@ -441,6 +447,7 @@
   const work = {
     authenticated: false,
     requests: [], events: [], eventsLoading: false, queued: false, institutions: new Map(),
+    history: [], historyLoading: false,
     selectedId: null, timer: null, busy: false, lastLoadedAt: null,
 
     async start() {
@@ -464,13 +471,12 @@
       view.innerHTML = `
         <div class="mg-gate">
           <div class="mg-gate__card">
-            <h1>담당자 접속</h1>
-            <p>시민의 개인 요청은 접속한 담당자에게만 표시됩니다. 지원망 조회는 접속 없이 이용할 수 있습니다.</p>
+            <h1>담당자 인증</h1>
             <form id="gate-form" novalidate>
               <div class="form-group">
                 <div class="form-tit">
-                  <label for="access-code">접속 코드</label>
-                  <span class="mg-required">필수 입력</span>
+                  <label for="access-code">인증 코드</label>
+                  <span class="mg-required">필수</span>
                 </div>
                 <div class="form-conts">
                   <input type="password" id="access-code" class="krds-input${message ? " is-error" : ""}"
@@ -478,10 +484,10 @@
                          aria-describedby="gate-hint"${message ? ' aria-invalid="true"' : ""}>
                 </div>
                 <p class="${message ? "form-hint-invalid" : "form-hint"}" id="gate-hint" role="status" aria-live="polite">${
-                  esc(message ?? "담당자에게 전달된 접속 코드를 입력해 주세요.")}</p>
+                  esc(message ?? "인증 코드 입력")}</p>
               </div>
               <div class="btn-wrap">
-                <button type="submit" class="krds-btn large primary" id="gate-submit">접속</button>
+                <button type="submit" class="krds-btn large primary" id="gate-submit">인증</button>
               </div>
             </form>
           </div>
@@ -491,16 +497,16 @@
         event.preventDefault();
         const field = document.getElementById("access-code");
         const submit = document.getElementById("gate-submit");
-        submit.disabled = true; submit.textContent = "접속 확인 중";
+        submit.disabled = true; submit.textContent = "인증 확인 중";
         try {
           await api("POST", "/api/coordination/session", { accessCode: field.value });
           field.value = "";
-          announce("담당자 접속이 확인되었습니다.");
+          announce("담당자 인증 완료");
           this.authenticated = true;
           await this.start();
         } catch (error) {
           this.renderGate(error.status === 403
-            ? "접속 코드가 확인되지 않았습니다. 다시 입력해 주세요."
+            ? "인증 코드 불일치 · 재입력 필요"
             : error.message);
           document.getElementById("access-code")?.focus();
         }
@@ -509,13 +515,14 @@
     },
 
     renderSession() {
-      sessionSlot.innerHTML = `<button type="button" class="krds-btn small tertiary" id="logout">접속 해제</button>`;
+      sessionSlot.innerHTML = `<button type="button" class="krds-btn small tertiary" id="logout">인증 해제</button>`;
       document.getElementById("logout").addEventListener("click", async () => {
         this.stopPolling();
         try { await api("DELETE", "/api/coordination/session"); } catch { /* 이미 해제된 상태 */ }
         this.authenticated = false;
         this.requests = []; this.selectedId = null;
-        announce("접속을 해제했습니다.");
+        this.events = []; this.history = [];
+        announce("인증 해제");
         this.renderGate();
       });
     },
@@ -536,8 +543,8 @@
         <div class="mg-pagehead">
           <div>
             <p class="mg-eyebrow">요청 진행</p>
-            <h1>시민 요청과 기관 문의 현황</h1>
-            <p>전화로 접수한 요청마다 어떤 필요가 어디까지 진행되었는지, 기관이 무엇이라고 답했는지, 다음에 할 일이 무엇인지 확인합니다.</p>
+            <h1>시민 요청·기관 문의 현황</h1>
+            <p>필요별 진행 상태 · 기관 답변 · 후속 조치</p>
           </div>
           <div class="mg-pagehead__aside">
             <p class="mg-inst__meta">자동 갱신</p>
@@ -565,9 +572,11 @@
         if (!chosen) return;
         if (chosen.id === this.selectedId) return;
         this.selectedId = chosen.id;
-        // 이력은 요청마다 따로 조회한다. 이전 요청의 이력을 잠시라도 보여주지 않는다.
+        // 이력은 요청마다 따로 조회한다. 이전 요청·다른 시민의 이력을 잠시라도 보여주지 않는다.
         this.events = [];
         this.eventsLoading = true;
+        this.history = [];
+        this.historyLoading = true;
         this.renderList(); this.renderDetail();
         document.getElementById("request-detail")?.scrollIntoView({ block: "start", behavior: "smooth" });
         this.refresh(false);
@@ -621,13 +630,16 @@
         return;
       }
       this.busy = true;
-      const slow = window.setTimeout(() => this.status("응답이 늦어지고 있습니다. 계속 기다리는 중입니다."), 1200);
-      const slower = window.setTimeout(() => this.status("서버 응답을 5초 넘게 기다리고 있습니다. 연결 상태를 확인해 주세요.", "error"), 5000);
+      const slow = window.setTimeout(() => this.status("응답 지연 · 대기 중"), 1200);
+      const slower = window.setTimeout(() => this.status("서버 응답 5초 초과 · 연결 상태 확인 필요", "error"), 5000);
       try {
         const { requests } = await api("GET", "/api/coordination/requests");
         this.requests = requests;
         if (!this.requests.some((r) => r.id === this.selectedId)) {
+          // 선택이 서버 상태에 따라 바뀌면 이전 시민의 이력을 남기지 않는다.
           this.selectedId = this.requests[0]?.id ?? null;
+          this.events = []; this.eventsLoading = Boolean(this.selectedId);
+          this.history = []; this.historyLoading = Boolean(this.selectedId);
         }
         if (this.selectedId) {
           const requestedId = this.selectedId;
@@ -635,26 +647,50 @@
           // 조회 중에 담당자가 다른 요청을 골랐다면 늦게 도착한 이력을 버린다.
           if (requestedId !== this.selectedId) { this.refresh(false); return; }
           this.events = events;
+          this.eventsLoading = false;
+          await this.loadHistory(requestedId);
+          if (requestedId !== this.selectedId) { this.refresh(false); return; }
         } else {
           this.events = [];
+          this.eventsLoading = false;
+          this.history = [];
+          this.historyLoading = false;
         }
-        this.eventsLoading = false;
         this.lastLoadedAt = new Date().toISOString();
         this.status(requests.length
-          ? `${requests.length}건의 요청을 ${timeText(this.lastLoadedAt)} 기준으로 표시합니다.`
+          ? `요청 ${requests.length}건 · ${timeText(this.lastLoadedAt)} 기준`
           : "");
         this.renderList(); this.renderDetail();
         if (first) announce(requests.length
-          ? `요청 ${requests.length}건을 불러왔습니다.`
-          : "접수된 요청이 없습니다.");
+          ? `요청 ${requests.length}건 조회 완료`
+          : "접수 요청 없음");
       } catch (error) {
-        if (error.status === 403) { this.stopPolling(); this.authenticated = false; return this.renderGate("접속이 해제되었습니다. 접속 코드를 다시 입력해 주세요."); }
-        this.status(`${error.message} 자동 갱신은 계속됩니다.`, "error");
+        if (error.status === 403) { this.stopPolling(); this.authenticated = false; return this.renderGate("인증 해제됨 · 인증 코드 재입력 필요"); }
+        this.status(`${error.message} · 자동 갱신 유지`, "error");
       } finally {
         window.clearTimeout(slow); window.clearTimeout(slower);
         this.busy = false;
         this.updatePollState();
       }
+    },
+
+    /* 같은 시민의 다른 요청. 서버 필터를 신뢰하지 않고 citizenRef 일치 건만 남긴다. */
+    async loadHistory(requestedId) {
+      const request = this.requests.find((item) => item.id === requestedId);
+      const ref = request?.citizenRef;
+      if (!ref) { this.history = []; this.historyLoading = false; return; }
+      try {
+        const { requests } = await api(
+          "GET", `/api/coordination/requests?citizenRef=${encodeURIComponent(ref)}`);
+        // 조회 중에 선택이 바뀌면 늦게 도착한 다른 시민의 이력을 버린다.
+        if (requestedId !== this.selectedId) return;
+        this.history = (Array.isArray(requests) ? requests : [])
+          .filter((item) => item.citizenRef === ref && item.id !== requestedId);
+      } catch {
+        // 이력 조회 실패는 본 화면 갱신을 막지 않는다.
+        if (requestedId === this.selectedId) this.history = [];
+      }
+      if (requestedId === this.selectedId) this.historyLoading = false;
     },
 
     renderList() {
@@ -671,7 +707,7 @@
         for (const need of request.needs) counts.set(need.status, (counts.get(need.status) ?? 0) + 1);
         return `<button type="button" class="mg-reqbtn" aria-current="${active}" data-request-index="${index}">
           <span class="mg-reqbtn__top">
-            <span class="mg-reqbtn__dist">${esc(request.district)}</span>
+            <span class="mg-reqbtn__dist">${esc(personName(request))}</span>
             <span class="mg-reqbtn__time">${esc(sinceText(request.updatedAt))}</span>
           </span>
           <span class="mg-reqbtn__sum">${esc(request.summary)}</span>
@@ -689,22 +725,22 @@
       const request = this.requests.find((item) => item.id === this.selectedId);
       if (!request) {
         canvas.innerHTML = this.requests.length
-          ? `<div class="mg-empty"><h3>요청 선택 안내</h3><p>왼쪽 목록에서 요청을 고르면 필요별 진행 상황이 표시됩니다.</p></div>`
-          : `<div class="mg-empty"><h3>접수된 요청 없음</h3>
-             <p>전화로 접수한 요청이 생기면 이 자리에 표시됩니다. 지원망 화면에서는 기관과 이용 절차를 계속 조회할 수 있습니다.</p></div>`;
+          ? `<div class="mg-empty"><h3>요청 미선택</h3><p>왼쪽 목록에서 요청 선택</p></div>`
+          : `<div class="mg-empty"><h3>접수 요청 없음</h3></div>`;
         return;
       }
+      const profile = request.citizenProfile ?? {};
       const revised = request.revision > 1
-        ? `<p class="mg-inst__meta">요청 조건이 ${request.revision - 1}회 정정되어 진행 중인 필요는 다시 연락 준비 상태로 돌아갔습니다.</p>` : "";
+        ? `<p class="mg-inst__meta">요청 조건 정정 ${request.revision - 1}회 · 진행 중 필요 연락 준비 상태 복귀</p>` : "";
       canvas.innerHTML = `
         <section class="mg-overview">
           <div class="mg-overview__top">
             <div>
               <p class="mg-eyebrow">요청 개요</p>
-              <h2>${esc(request.district)} 접수 요청</h2>
+              <h2>${rawName(request) ? `${esc(rawName(request))} 지원 요청` : "신규 요청"}</h2>
               <blockquote class="mg-quote">
                 <p>${esc(request.summary)}</p>
-                <cite>시민이 전화로 말한 내용</cite>
+                <cite>시민 전화 접수 내용</cite>
               </blockquote>
               ${revised}
             </div>
@@ -713,18 +749,25 @@
             </div>
           </div>
           <dl class="mg-facts">
-            <div><dt>거주 자치구</dt><dd>${esc(request.district)}</dd></div>
-            <div><dt>접수</dt><dd>${esc(timeText(request.createdAt))}</dd></div>
-            <div><dt>최근 진행</dt><dd>${esc(timeText(request.updatedAt))}</dd></div>
-            <div><dt>접수 방법</dt><dd>전화 접수</dd></div>
+            ${defRows([
+              ["성명", rawName(request)],
+              ["연령", profile.age],
+              ["주소", profile.address],
+              ["가구 구성", profile.household],
+              ["이동 여건", profile.mobility],
+              ["연락 시간", profile.contactPreference],
+              ["거주 자치구", request.district],
+              ["접수", timeText(request.createdAt)],
+              ["최근 진행", timeText(request.updatedAt)],
+              ["접수 방법", "전화 접수"],
+            ])}
           </dl>
-          ${request.constraints.length ? `<div class="mg-note mg-note--quiet"><strong>시민이 알려 준 제약</strong>${
+          ${request.constraints.length ? `<div class="mg-note mg-note--quiet"><strong>시민 제약 사항</strong>${
             esc(request.constraints.join(" · "))}</div>` : ""}
         </section>
 
         <section class="mg-section mg-section--tight">
-          <div class="mg-section__head"><h3>필요별 진행</h3>
-            <span class="mg-inst__meta">이용 경로 연결은 이용 방법과 조건을 확인했다는 뜻이며, 실제 지원 제공과는 구분합니다.</span></div>
+          <div class="mg-section__head"><h3>필요별 진행</h3></div>
           <div class="mg-list">${request.needs.map((need, index) => this.needCard(request, need, index)).join("")}</div>
         </section>
 
@@ -740,6 +783,11 @@
         </section>` : ""}
 
         <section class="mg-section mg-section--tight">
+          <div class="mg-section__head"><h3>동일 시민 요청 이력</h3></div>
+          <div class="mg-card"><ul class="mg-trail">${this.personHistory(request)}</ul></div>
+        </section>
+
+        <section class="mg-section mg-section--tight">
           <div class="mg-section__head"><h3>진행 이력</h3></div>
           <div class="mg-card"><ul class="mg-trail">${this.trail(request)}</ul></div>
         </section>`;
@@ -747,15 +795,16 @@
 
     needCard(request, need, needIndex) {
       const state = NEED_STATE[need.status] ?? { label: need.status, badge: "bg-light-gray", note: "" };
+      const details = need.requestDetails ?? {};
       const inquiries = request.inquiries.filter((item) => item.needId === need.id);
       const canStop = need.status !== "stopped";
       const result = need.result
         ? `<div class="mg-note ${need.status === "connected" ? "mg-note--result" : need.status === "needs-attention" ? "mg-note--attention" : ""}">
              <strong>확인한 내용과 다음 행동</strong>${esc(need.result)}</div>` : "";
       const choice = need.status === "awaiting-choice"
-        ? `<div class="mg-note"><strong>시민 선택 대기</strong>어떤 방법으로 진행할지는 시민이 통화로 결정합니다. 담당자가 대신 선택할 수 없습니다.</div>`
+        ? `<div class="mg-note"><strong>시민 선택 대기</strong>통화를 통한 시민 직접 선택 · 담당자 대리 선택 불가</div>`
         : need.choice
-          ? `<div class="mg-note mg-note--quiet"><strong>시민이 고른 방법</strong>${esc(need.choice)}</div>` : "";
+          ? `<div class="mg-note mg-note--quiet"><strong>시민 선택 방법</strong>${esc(need.choice)}</div>` : "";
       return `
         <section class="mg-need">
           <div class="mg-need__head">
@@ -767,11 +816,19 @@
             <div class="mg-badges">${badge(state)}</div>
           </div>
           <div class="mg-need__body">
-            ${need.constraints.length ? `<p class="mg-inst__meta mg-need__cond">이 필요의 조건 · ${esc(need.constraints.join(" · "))}</p>` : ""}
+            <dl class="mg-facts">
+              ${defRows([
+                ["지원 내용", need.description],
+                ["수량", details.quantity],
+                ["희망 일정", details.requestedDate],
+                ["수령 방법", details.deliveryMethod],
+              ])}
+            </dl>
+            ${need.constraints.length ? `<p class="mg-inst__meta mg-need__cond">필요 조건 · ${esc(need.constraints.join(" · "))}</p>` : ""}
             ${choice}${result}
             ${inquiries.length
               ? `<ul class="mg-inq">${inquiries.map((inquiry) => this.inquiryCard(request, need, inquiry)).join("")}</ul>`
-              : `<p class="mg-inst__meta">아직 기관에 문의하지 않았습니다.</p>`}
+              : `<p class="mg-inst__meta">기관 문의 없음</p>`}
           </div>
           ${canStop ? `<div class="mg-need__actions">
             <button type="button" class="krds-btn small tertiary" data-action="stop" data-need="${needIndex}">
@@ -792,7 +849,7 @@
       return `<li>
         <div class="mg-inq__head">
           <div>
-            <p class="mg-inq__inst">${esc(institution?.name ?? "등록된 문의 창구")}</p>
+            <p class="mg-inq__inst">${esc(institution?.name ?? "등록 문의 창구")}</p>
             <p class="mg-inq__prog">${esc(PROGRAM_NAMES.get(inquiry.programId) ?? inquiry.programId)} · ${esc(inquiry.contactPurpose)}</p>
           </div>
           <div class="mg-badges">${badge(state)}${outcome ? badge(outcome) : ""}</div>
@@ -812,22 +869,40 @@
           ${inquiry.status === "unknown" ? `
             <div class="mg-note mg-note--quiet mg-inq__aside">
               <strong>다음 행동</strong>
-              통화 기록과 대조해 이 연락이 실제로 닿았는지 확인하고, 그 결과를 통화 결과로 확정합니다.
-              확정 전까지는 같은 창구에 다시 연락하지 않습니다. 중복 연락을 막기 위한 조치입니다.
               <ul class="mg-bullets">
-                <li>담당자: 통화 기록에서 이 창구로 건 연락의 응답 여부를 대조</li>
-                <li>응답이 없었다면 부재중으로 확정한 뒤 다시 연락 준비</li>
-                <li>응답이 있었다면 기관 답변을 정리해 필요 상태를 이어서 진행</li>
+                <li>통화 기록 대조 · 해당 창구 응답 여부 확인</li>
+                <li>응답 없음 · 부재중 확정 후 재연락 준비</li>
+                <li>응답 있음 · 기관 답변 정리 후 필요 상태 진행</li>
               </ul>
             </div>` : ""}
           ${stale && ["no-answer", "failed"].includes(inquiry.status)
-            ? `<p class="mg-inst__meta mg-inq__aside">요청 조건이 정정되어 이 문의는 더 사용하지 않습니다. 바뀐 조건으로 문의를 다시 준비합니다.</p>` : ""}
+            ? `<p class="mg-inst__meta mg-inq__aside">요청 조건 정정 · 문의 사용 중지 · 변경 조건 재준비</p>` : ""}
           ${canRetry ? `<div class="btn-wrap mg-inq__act">
             <button type="button" class="krds-btn small secondary" data-action="retry" data-inquiry="${request.inquiries.indexOf(inquiry)}">
               이 창구에 다시 연락 준비<span class="sr-only"> · ${esc(institution?.name ?? "")}</span></button>
           </div>` : ""}
         </div>
       </li>`;
+    },
+
+    /* 선택한 시민의 다른 요청만 표시한다. */
+    personHistory(request) {
+      if (this.historyLoading) return `<li>요청 이력 조회 중</li>`;
+      const ref = request.citizenRef;
+      const rows = this.history.filter((item) => ref && item.citizenRef === ref && item.id !== request.id);
+      if (!rows.length) return `<li>동일 시민 다른 요청 없음</li>`;
+      return rows.map((item) => {
+        const counts = new Map();
+        for (const need of item.needs ?? []) counts.set(need.status, (counts.get(need.status) ?? 0) + 1);
+        const tags = [...counts].map(([state, count]) => {
+          const shown = NEED_STATE[state];
+          return shown ? `<span class="krds-badge ${shown.badge}">${esc(shown.label)} ${count}</span>` : "";
+        }).join("");
+        return `<li>
+          <time datetime="${esc(item.createdAt)}">${esc(timeText(item.createdAt))}</time>
+          <strong>${esc(item.summary)}</strong>
+          <span class="mg-badges">${tags}</span></li>`;
+      }).join("");
     },
 
     trail(request) {
@@ -841,25 +916,25 @@
       const line = (event) => {
         const [head, tail] = String(event.detail ?? "").split(":");
         switch (event.type) {
-          case "request-created": return ["요청 접수", "전화로 필요를 확인해 요청을 만들었습니다."];
-          case "consent-recorded": return ["전달 범위 확인", `기관에 전달할 범위를 확인했습니다. 목적 · ${event.detail}`];
-          case "inquiry-prepared": return ["문의 준비", `${inquiryName(head) ?? "등록된 창구"}에 물어볼 내용을 정리했습니다.`];
-          case "call-started": return ["기관 연락 시작", `${attemptName(head) ?? "등록된 창구"}로 연락했습니다.`];
-          case "call-finished": return ["기관 연락 종료", `${attemptName(head) ?? "등록된 창구"} · ${ATTEMPT_RESULT[tail] ?? tail}`];
+          case "request-created": return ["요청 접수", "전화 접수 · 필요 확인"];
+          case "consent-recorded": return ["전달 범위 확인", `전달 범위 확인 · 목적 · ${event.detail}`];
+          case "inquiry-prepared": return ["문의 준비", `${inquiryName(head) ?? "등록 창구"} · 질문 정리 완료`];
+          case "call-started": return ["기관 연락 시작", `${attemptName(head) ?? "등록 창구"} · 연락 시작`];
+          case "call-finished": return ["기관 연락 종료", `${attemptName(head) ?? "등록 창구"} · ${ATTEMPT_RESULT[tail] ?? tail}`];
           case "answer-recorded": return ["답변 정리", `${inquiryName(head) ?? "기관"} · ${OUTCOME[tail]?.label ?? tail}`];
-          case "retry-ready": return ["다시 연락 준비", `${inquiryName(head) ?? "등록된 창구"}에 다시 연락할 준비를 마쳤습니다.`];
-          case "need-stopped": return ["진행 중단", `${needName(head) ?? "선택한 필요"}의 진행을 중단했습니다.`];
+          case "retry-ready": return ["다시 연락 준비", `${inquiryName(head) ?? "등록 창구"} · 재연락 준비 완료`];
+          case "need-stopped": return ["진행 중단", `${needName(head) ?? "선택 필요"} · 진행 중단`];
           case "choice-recorded": return ["시민 선택 반영", `${needName(head) ?? "필요"} · ${tail ?? ""}`];
-          case "request-revised": return ["요청 조건 정정", "지역이나 제약이 바뀌어 진행 중인 필요를 다시 준비합니다."];
-          case "summary-corrected": return ["요청 요약 정정", "요청 내용을 다시 정리했습니다."];
+          case "request-revised": return ["요청 조건 정정", "지역·제약 변경 · 진행 중 필요 재준비"];
+          case "summary-corrected": return ["요청 요약 정정", "요청 내용 재정리"];
           case "callback-recorded": return ["시민 회신", event.detail];
           default: return null;
         }
       };
       const rows = this.events.map(line).map((row, index) =>
         row ? { row, at: this.events[index].at } : null).filter(Boolean).reverse();
-      if (this.eventsLoading) return `<li>진행 이력을 불러오고 있습니다.</li>`;
-      if (!rows.length) return `<li>진행 이력이 아직 없습니다.</li>`;
+      if (this.eventsLoading) return `<li>진행 이력 조회 중</li>`;
+      if (!rows.length) return `<li>진행 이력 없음</li>`;
       return rows.map(({ row: [title, detail], at }) => `<li>
         <time datetime="${esc(at)}">${esc(timeText(at))}</time>
         <strong>${esc(title)}</strong> · ${esc(detail)}</li>`).join("");
@@ -872,20 +947,20 @@
       dialog.open({
         title: "요청 내용 정정",
         body: `
-          <p class="mg-detail__lead">시민이 말한 내용과 다른 부분을 고칩니다. 지역이나 제약을 바꾸면 진행 중인 필요가 모두 다시 연락 준비 상태로 돌아가고, 지금까지 받은 답변은 새 조건으로 다시 확인해야 합니다.</p>
+          <p class="mg-detail__lead">지역·제약 변경 시 진행 중 필요 전체 연락 준비 상태 복귀 · 기존 답변 재확인 필요</p>
           <div class="form-group">
-            <div class="form-tit"><label for="revise-summary">요청 요약</label><span class="mg-required">필수 입력</span></div>
+            <div class="form-tit"><label for="revise-summary">요청 요약</label><span class="mg-required">필수</span></div>
             <div class="form-conts"><div class="textarea-wrap"><textarea id="revise-summary" class="krds-input" rows="3" required aria-required="true">${esc(request.summary)}</textarea></div></div>
-            <p class="form-hint">요약만 고치면 진행 상태는 그대로 유지됩니다.</p>
+            <p class="form-hint">요약 단독 수정 시 진행 상태 유지</p>
           </div>
           <div class="form-group">
-            <div class="form-tit"><label for="revise-district">거주 자치구</label><span class="mg-required">필수 입력</span></div>
+            <div class="form-tit"><label for="revise-district">거주 자치구</label><span class="mg-required">필수</span></div>
             <div class="form-conts"><input type="text" id="revise-district" class="krds-input" required aria-required="true" value="${esc(request.district)}"></div>
           </div>
           <div class="form-group">
             <div class="form-tit"><label for="revise-constraints">시민이 알려 준 제약</label></div>
             <div class="form-conts"><div class="textarea-wrap"><textarea id="revise-constraints" class="krds-input" rows="3">${esc(request.constraints.join("\n"))}</textarea></div></div>
-            <p class="form-hint">한 줄에 하나씩 적습니다.</p>
+            <p class="form-hint">한 줄에 하나</p>
           </div>
           <p class="form-hint-invalid" id="revise-error" role="status" aria-live="polite"></p>`,
         actions: [
@@ -896,11 +971,11 @@
             const constraints = document.getElementById("revise-constraints").value
               .split("\n").map((line) => line.trim()).filter(Boolean);
             const error = document.getElementById("revise-error");
-            if (!summary || !district) { error.textContent = "요약과 자치구는 비워 둘 수 없습니다."; return; }
+            if (!summary || !district) { error.textContent = "요약·자치구 필수 입력"; return; }
             try {
               await api("PATCH", `/api/coordination/requests/${request.id}`, { summary, district, constraints });
               d.close();
-              announce("요청 내용을 정정했습니다.");
+              announce("요청 내용 정정 완료");
               await this.refresh(false);
             } catch (failure) { error.textContent = failure.message; }
           } },
@@ -914,7 +989,7 @@
       if (!need) return;
       dialog.open({
         title: "필요 진행 중단",
-        body: `<p class="mg-detail__lead">‘${esc(need.description)}’에 대한 기관 문의를 더 진행하지 않습니다. 준비했거나 진행 중인 문의는 취소되고, 같은 요청의 다른 필요는 그대로 이어집니다.</p>
+        body: `<p class="mg-detail__lead">대상 · ‘${esc(need.description)}’ · 준비·진행 중 문의 취소 · 동일 요청의 다른 필요 유지</p>
                <p class="form-hint-invalid" id="stop-error" role="status" aria-live="polite"></p>`,
         actions: [
           { label: "취소", kind: "tertiary", onClick: (d) => d.close() },
@@ -922,7 +997,7 @@
             try {
               await api("POST", `/api/coordination/requests/${request.id}/needs/${need.id}/stop`);
               d.close();
-              announce("해당 필요의 진행을 중단했습니다.");
+              announce("필요 진행 중단 완료");
               await this.refresh(false);
             } catch (failure) { document.getElementById("stop-error").textContent = failure.message; }
           } },
@@ -937,7 +1012,7 @@
       const institution = this.institutions.get(inquiry.institutionId);
       dialog.open({
         title: "다시 연락 준비",
-        body: `<p class="mg-detail__lead">${esc(institution?.name ?? "등록된 문의 창구")}의 ‘${esc(inquiry.contactPurpose)}’ 창구에 같은 내용을 다시 물어볼 수 있도록 준비합니다. 이 버튼은 연락을 바로 걸지 않으며, 통화 결과를 대신 기록하지도 않습니다.</p>
+        body: `<p class="mg-detail__lead">대상 · ${esc(institution?.name ?? "등록 문의 창구")} ‘${esc(inquiry.contactPurpose)}’ 창구 · 동일 내용 재문의 준비 · 즉시 발신 없음 · 통화 결과 대리 기록 없음</p>
                <p class="form-hint-invalid" id="retry-error" role="status" aria-live="polite"></p>`,
         actions: [
           { label: "취소", kind: "tertiary", onClick: (d) => d.close() },
@@ -945,7 +1020,7 @@
             try {
               await api("POST", `/api/coordination/requests/${request.id}/inquiries/${inquiry.id}/retry`);
               d.close();
-              announce("다시 연락할 준비를 마쳤습니다.");
+              announce("재연락 준비 완료");
               await this.refresh(false);
             } catch (failure) { document.getElementById("retry-error").textContent = failure.message; }
           } },

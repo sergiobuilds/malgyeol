@@ -8,6 +8,16 @@
 
 한 요청의 식사·생필품 등 필요를 별도로 관리합니다. 식사 경로를 유지하면서 생필품만 다른 기관에 문의할 수 있으며, 중요 조건 변경은 시민 선택을 거칩니다. 결과 불명 통화는 자동 반복하지 않고 담당자 검토 대상으로 유지합니다.
 
+## 웹 접속
+
+현재 검토 주소: [말결 웹앱](https://qualifying-grande-bags-characterized.trycloudflare.com) · [지원망](https://qualifying-grande-bags-characterized.trycloudflare.com/app) · [담당자 업무](https://qualifying-grande-bags-characterized.trycloudflare.com/ops).
+
+Campbell의 `malgyeol-web-preview`가 기존 API에 연결하는 임시 HTTPS 주소입니다. 터널을 다시 만들면 주소가 바뀔 수 있습니다. 실제 사용 주소와 API의 `PUBLIC_BASE_URL`을 동일하게 설정해야 담당자 인증과 변경 요청의 Origin 검사가 통과합니다. 현재 설정은 API user unit의 `preview-origin.conf`에 보존합니다. 전화 런타임과 별도입니다.
+
+현재 웹 요청 화면에는 사용자 요청에 따른 발표용 5명·6개 요청 사례를 연결합니다. `presentation-ledger.conf`의 `COORDINATION_LEDGER_PATH`가 `.private/coordination-presentation.sqlite`를 가리키며 기존 전화용 저장소와 분리합니다. 원본 생성 근거는 비공개 `presentation-provenance.json`에 보존합니다. 이 사례의 문의·답변은 실제 발신 실적으로 집계하지 않습니다. 실전화 검증 전에는 원래 coordination 저장소로 전환해야 합니다.
+
+담당자 인증은 `CARE_OPERATOR_TOKEN`과 서버 발급 HttpOnly 세션을 사용합니다. 인증값을 URL·채팅·공개 문서에 넣지 않습니다. 브라우저 세션은 8시간이며 API 재시작 시 다시 인증해야 합니다. 접속 코드의 별도 배포 기능은 아직 없습니다.
+
 ## 문서 및 산출물
 
 현재 브랜치는 `observe-only`입니다. 아래 지도는 실행 관찰과 작업 연결 문서이며 canonical master의 방향 권위나 전체 완료를 주장하지 않습니다. 권위 판정은 프로젝트 라우터 결과를 따릅니다.

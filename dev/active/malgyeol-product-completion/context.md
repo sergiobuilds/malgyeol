@@ -110,3 +110,14 @@ Future A01~A13/O01~O12/I01~I24 총49항목 보존, 현행 문서 정합성 반�
 ### 재개 시 실행계약 점검
 
 Campbell·브랜치965bd6b·observe-only 재확인. 첨부 전체 실행계약 및 정본 looprun, executing-plans, verification-before-completion 재열람. EXECUTOR: coordination-check 재실행은 ROUTING_FILE_REQUIRED로 종료. 셀프체크: 실제 통화 증거와 허용 A/B 매핑 없음, 성공 판정 불가. CHRONICLE 확인: D-20260918-08~10 실행범위 유지. 이전 턴은 코드·문서·원격 저장이 진행된 progress로 분류. 본 재개에서는 누락된 통화 횟수·시간·중단 기준을 verification.md 6.1에 추가. 운용정책을 새로 확정한 것이 아니라 기존 전화계약 제10절의 시험 한도 명시. 섹션5 전체 PASS 또는 section_done 전이는 하지 않음.
+
+### 사용자 접속 및 KRDS 재점검
+
+사용자가 실제 웹앱 열람과 담당자 코드 입력 문제를 지적. 내부18081만 실행하고 외부 접속을 제공하지 않았던 누락을 수정하여 별도 malgyeol-web-preview 터널 생성. HTTPS 주소에 맞춰 API user unit의 PUBLIC_BASE_URL 설정 후 API 재시작, 음성서비스 변경없음. 기존 사용자의 말결 탭에서 비공개 인증을 수행하고 Secure·HttpOnly 세션 전달: authenticated=true, 요청조회200, 입력창 제거 확인. 인증값은 채팅·파일·로그 출력없음. 인증/HTTP 검사8건 PASS.
+
+KRDS 공식 tokens.css와현재public/tokens.css byte-identical, WDS package의존성없음 확인. 그러나 자체추가그라데이션·격자·홍보형위계와허위코드전달안내는사용자의보수적표현요구미충족. Claude에public전용수정과실제KRDSMCP대조·화면검증위임. MCP호출사실을최종품질보증으로확대하지않음.
+
+사용자 추가 정정: 모든 고정 UI 표현을 명사형으로 제한하며 상단 중복안내·페이지설명·장문바닥글 삭제. 형식적인 존댓말 교체로 대체 금지. Claude수정범위를 이 기준으로 갱신. 별도presentation SQLite에 사용자 승인 사례5건(접수/연락중/부분연결/선택대기/조건변경/부재) 생성, API가해당저장소만참조하도록 user unit override적용. 전화서비스·원래ledger불변, 실제발신0. 사용자탭재인증후현재API에연결. 표면의개발배지는추가하지않으며생성근거는비공개기록보존.
+
+사용자개인별사례요구추가: 선택한시민의이름·상세주소·연령·가구·이동·연락정보와필요별수량·일정·수령방법을서버저장으로연결. citizenProfile/requestDetails optional schema, exact citizenRef query필터추가. 신규4검사RED→GREEN, 전체Node202/typecheck/audit PASS. 시연인물5명·요청6건, 동일시민이전철회사례포함. 신원·주거주소는구성자료이며실제인물연계주장없음. 원래운영ledger불변. 기관음성disclosure whitelist에새프로필이자동포함되지않음 확인.
+Claude가public전담으로모든고정서술문을명사형축약·삭제, 말모노그램/부제/상단설명/장문footer제거. 사람별목록·profile·need details·이력구현. 선택변경시이력초기화및늦은응답폐기로다른사람정보혼합차단. 실제사용자9445말결탭에서김정희profile/간편식5식/일정/대리수령및동일인과거요청확인, 타인profile0·가로넘침0. 실패형표현은내부enum을유지하고다음행동중심으로후속교정.
