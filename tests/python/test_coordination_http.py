@@ -58,6 +58,8 @@ class RealHttpVoiceTests(unittest.IsolatedAsyncioTestCase):
                     state=(await api.send('GET',prefix))['request']
                     self.assertEqual([n['status'] for n in state['needs']],['connected','awaiting-choice'])
                     callback=VoiceTools(api,journal,{'role':'callback','requestId':request_id,'citizenRef':'citizen-fixture','callId':'callback-fixture'})
+                    callback.context['_heard']='네 제가 요청한 본인입니다'
+                    await callback.confirm_recipient('self',callback.context['_heard'])
                     await callback.record_choice(1,'금요일 방문은 어렵고 대리수령을 원합니다')
                     await callback.finish_conversation('식사는 연결, 생필품은 대리수령 가능 여부 추가 문의')
                     await runtime.finalize(callback.context,'completed')

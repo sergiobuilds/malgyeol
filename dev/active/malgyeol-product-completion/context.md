@@ -97,3 +97,12 @@ Claude UI 보완종료: 감독지적4건수정, 추가23개브라우저검사+�
 
 Claude최종캡처자산repo보존및상대경로수정완료. 복사본에서생성물/crop삭제후재생성확인. root최종PDF/PPTX/DOCX기계검사PASS: 정책6쪽·덱6장·표셀누락0·페이지밖텍스트0·PPTX편집가능·노트0, 180초. root최종3·4슬라이드실열람. 최종프론트동작23+24검사·root실제HTTP/브라우저확인. Node198/Python23 및전체typecheck/auditPASS.
 외부Codex리뷰는총1회지시에따라섹션5에서실시하며현재미실시. EXECUTOR 섹션4 PASS, 셀프체크완료, CHRONICLE 확인완료. Manyfast다른프로젝트원문복구미완료는사고후속항목으로남김; 기존API종료사고는동일launcher복구·health/auth/SQLite정상확인. Supervisor 섹션4→5 승인. 실전화왕복수용조건은삭제하지않고5에유지.
+
+## 섹션 5 진행
+
+Future 추적 과정에서 callback 초기 요청 본문 공개 위험 발견. phone_audit가 실제 전사에 결박된 confirm_recipient 및 확인 이전 도구 차단을 RED7→GREEN30으로 구현. root가 부정 발화의 긍정 substring 오인 2건을 추가 발견, 전체 긍정 패턴으로 수정해 RED2→GREEN32. root 설치SDK Python32 전체 재실행 PASS. 정식 OTP/대리권 확인은 Future 유지. 코드와 정책 원문/JSON의 검증 근거도 함께 갱신.
+
+
+### 최종 자체 검증 및 게이트 판정
+
+Future A01~A13/O01~O12/I01~I24 총49항목 보존, 현행 문서 정합성 반영. 최종 npm run verify Node198·typecheck·audit PASS, 설치SDK Python32 PASS. 정책6쪽·덱6장·편집원본·표셀누락0·페이지밖텍스트0 재검사 PASS. 외부Codex 리뷰는 승인된1회 실행했으나 bwrap loopback 권한 오류로 코드 미열람 종료. 리뷰 통과로 취급하지 않으며 추가 호출 없음. Supervisor는 자체검사 완료를 기록하되 실제 전화 수용조건 미충족으로 섹션5 최종완료 게이트를 통과시키지 않음. 필요한 A/B 비공개 라우팅 파일 및 기존 음성 런타임 전환 조건은 유지.

@@ -63,11 +63,31 @@ class VoiceTests(unittest.IsolatedAsyncioTestCase):
                 self.assertEqual(runtime.dial.await_count,1)
                 context=runtime.dial.await_args.args[0]
                 self.assertEqual(context['role'],'callback')
-                self.assertEqual(context['request']['inquiries'][0]['status'],'answered')
-                self.assertEqual(context['request']['inquiries'][1]['status'],'prepared')
+                self.assertNotIn('request',context)
+                self.assertEqual(request['inquiries'][0]['status'],'answered')
+                self.assertEqual(request['inquiries'][1]['status'],'prepared')
                 self.assertTrue(all(method=='GET' for method,_,_ in calls))
                 self.assertIsNone(journal.get('dispatch:pending:0'))
             finally:journal.close()
+
+
+    def test_callback_prompt_excludes_individual_request_before_confirmation(self):
+        prompt=build_prompt({'role':'callback','request':{'summary':'특정시민비공개지원내용','needs':[{'description':'개인병력비공개'}]}})
+        self.assertNotIn('특정시민비공개지원내용',prompt)
+        self.assertNotIn('개인병력비공개',prompt)
+        self.assertIn('confirm_recipient',prompt)
+
+    async def test_callback_transport_completion_without_role_confirmation_is_not_delivery(self):
+        with tempfile.TemporaryDirectory() as d:
+            journal=Journal(Path(d)/'s.sqlite');calls=[]
+            class API:
+                async def send(self,method,path,body=None):calls.append(body);return {'request':{}}
+            rt=VoiceRuntime(API(),journal,Routing({'allowedNumbers':[],'citizenNumbers':{},'institutionNumbers':{}}))
+            journal.put('finish:cb',{'summary':'모델이 주장한 안내 완료'})
+            await rt.finalize({'role':'callback','requestId':'r','callId':'cb'},'completed')
+            self.assertEqual(calls[0]['status'],'failed')
+            self.assertNotIn('모델이 주장한',calls[0]['summary'])
+            journal.close()
 
 class AdapterTests(unittest.IsolatedAsyncioTestCase):
     async def test_role_and_tools_bound_before_prewarm_in_real_sdk(self):

@@ -1,101 +1,73 @@
 ---
 doc_kind: project-map
 status: working
-version: 2026-09-18_v5
+version: 2026-09-18_v6
 ---
 
-# 말결 — 지도 (MASTER-MAP)
+# 말결 작업 지도
 
-> 최신 결정 D-20260918-05: 사용자가 MVP 계획의 제품 정의·범위 해석을 거절하고 삭제를 지시했다. 해당 계획은 삭제했으며 아래의 MVP 상세·완료 기준·착수 순서는 승인된 실행 계약으로 사용하지 않는다. 사용자 대화 합의는 보존하고 Superpowers로 다시 계획한다.
+## 권위 및 실행 기준
 
-현재 대화에서 승인된 전체 제품 방향과 해커톤 MVP의 작업 지도. observe-only이며 canonical master의 방향 권한을 주장하지 않는다.
+현재 브랜치는 `observe-only`입니다. 이 지도는 사용자 지시와 현재 실행의 작업 연결·관찰 상태를 기록하며 canonical master의 방향 권한이나 managed 완료를 주장하지 않습니다. 권위 판정은 프로젝트 라우터 결과를 따릅니다.
 
-## 1 Project Charter
+이전 MVP 계획의 삭제·거절은 이력으로 보존합니다. 현재 실행은 최신 사용자의 looprun-auto·supervisor 게이트 승인·활성 섹션 내 병렬 TDD·최종 Codex 리뷰 총1회 계약을 따릅니다. 구현 전 상태로 되돌아가거나 완료된 인터뷰를 반복하지 않습니다.
 
-- 목표: 직접 기관을 찾아 문의하기 어려운 시민이 생활상의 필요를 전화로 말하면 네 사업의 경로를 찾고 AI가 기관에 확인·조율한 뒤 구체적인 다음 행동을 회신한다. 특정 연령·장애 유형으로 대상을 제한하지 않는다. [D-20260918-02]
-- 핵심: 실제 지원사업·기관·이용절차 데이터망, 사람과 AI가 같은 정보를 읽는 대시보드, AI 확인전화와 시민 회신. 대표 시연을 식사·비누로 하더라도 제품 범위를 그 품목에 고정하지 않는다.
-- 고정 사업: 푸드뱅크·푸드마켓, 찾아가는 푸드마켓, 그냥드림, 돌봄SOS. 네 사업을 모두 연결하고 다섯 번째 사업을 임의 추가하지 않는다.
-- 해커톤 최우선 산출물: 발표 덱·정책 제안서. 핵심 증거는 확실히 반복 작동하는 전화와 실제 데이터/행동이 연결된 매우 아름다운 프론트다. 빈틈·슬롭·작동하지 않는 장식을 허용하지 않는다. [D-20260918-03]
-- 시연: 번호 A는 시민 역할로 전화하고 회신을 받으며 번호 B는 기관 역할로 AI의 전화를 받는다. Sergio/팀원의 두 번호 역할극을 허용한다. 실제 공공기관의 응답·협조를 착수 조건으로 두지 않는다. [D-20260918-04]
-- 프론트: Claude 전담. KRDS https://github.com/KRDS-uiux/krds-uiux 필수. Codex는 와이어프레임·화면 설계·디자인·UI 구현을 하지 않고 백엔드·데이터·전화 및 연결 계약을 맡는다. [D-20260918-04]
-- 전면 문구: 미확인·미검증·목업·시연용·연습용 등의 개발 표현/배지를 제거하고 다음 행동을 보여준다. 내부 근거와 사건은 관리하며 실제로 하지 않은 행동을 완료로 표시하지 않는다.
-- 비목표: 이번에 수요·구매의사·기관 협조 조사, 경제성·상용 운영, 실시간 재고 API 확보를 선행조건으로 요구하지 않는다. 결제·정산·배송 운영·새 공급자를 임의 추가하지 않는다.
+## 제품 범위
 
-## 2 Current Map
+- 네 사업: 푸드뱅크·푸드마켓, 찾아가는 푸드마켓, 그냥드림, 돌봄SOS.
+- 공통 데이터: 기관·역할·관할·이용절차·문의 창구·출처. 화면과 AI의 동일 API 사용.
+- 전화 업무: 생활 필요·제약·동의 → 기관 문의·조건 조율·허용된 신청 의사 전달 → 기관 답변 → 시민 회신·중요 조건 재선택·후속 연락.
+- 복수 필요: 일부 경로 연결 유지와 남은 필요의 대안 처리. 대표 사례로 품목·지역·대상을 제한하지 않음.
+- 담당자: 진행 조회·정정·중단·수동 재시도. 시민 앱·기관 포털 가입을 필수화하지 않음.
+- 판단 경계: 자격·선정·행정 승인은 기관 권한. 경로 연결과 실제 제공 완료 구별.
+- 최우선 산출물: 정책 근거 기반 제안서, 대본 없는3분 KRDS 덱, 확실한 실제 전화, 아름다운 실제 업무 화면.
+- 디자인: Claude 전담 프론트, design-forge·KRDS MCP·공식 KRDS 토큰. Codex 프론트 대체 금지.
+- 표현: 내부 개발 배지를 전면에 노출하지 않되 실제 하지 않은 연락·접수·제공을 완료로 표시하지 않음.
 
-최신 후속 세션 입력은 [전체 goal 프롬프트](../dev/active/care-coordination/full-product-goal-prompt.md)다. 전화 1~7번 합의, Manyfast PRD, 실제 KRDS MCP 기반 Claude 프론트, looprun --auto 직렬 실행, 취침 중 정상 인증 복구·실제 전화망 자동 역할극을 명시했다. [전화 전용 원문](../dev/active/care-coordination/phone-goal-prompt.md)은 별도 보존한다. 두 문서 작성만 완료했으며 제품 구현 완료 상태는 바꾸지 않는다. [D-20260918-07]
+## 구현 및 검증 현황
 
-다음 계획자의 첫 입력은 [계획 작성용 세션 인계](../dev/active/care-coordination/planning-handoff.md)다. 사용자가 재인터뷰 반복을 거절했으므로 승인·정정을 인계받아 writing-plans로 계획을 구체화한다.
-
-| 축 | 상태 | 작업 기준 |
+| 영역 | 현재 관찰 | 남은 수용조건 |
 |---|---|---|
-| 전체 설계 | 계획 문서 작성, 운영 파라미터 결정 조건 보존 | [Future Plan](../dev/active/care-coordination/implementation-plan.md) |
-| 해커톤 | 계획 거절·삭제, 재계획 필요 | 사용자 거절로 삭제, 재계획 필요 |
-| 기존 코드 | 수신 브리지·SQLite·단일 품목/고정 시민 구조를 읽기 확인 | MVP 4절; 발신/회신 성공은 이번 작업에서 시험하지 않음 |
-| 프론트 | Claude 소유, KRDS 필수 | MVP 6절의 API/이벤트 인계 계약 |
-| 발표·정책 | 최우선, 기존 제출 자료는 이전 방향이므로 재작성 대상 | MVP 7절 |
-| 후속 운영 | Future에 보존, 해커톤 선행조건 아님 | Future 9~11절 |
+| 데이터·도메인 | 공식65목록행→37기관·보완3창구=40, 네 사업/API/복수 필요/동의/SQLite 구현 | 수집 범위 밖 상세 경로는 향후 보강 |
+| 전화 구현 | 역할별 브리지·조건 조율·선택·회신·허용 라우팅·수동 재시도 구현, SDK/HTTP 결합 검사 | A/B 라우팅, 새 브리지 전환, 실제 전화망 왕복·오디오 |
+| 프론트 | Claude KRDS 화면·HttpOnly 접속·업무 API·부분 해결·키보드/반응형 검사 | 최종 코드와 수용 증거 대조 |
+| 정책 제안서 | 정책 원문·LaTeX·6쪽 PDF·편집 DOCX, 출처·표 검수 | 제출 전 현행 근거와 최종 검증 결과 확인 |
+| 발표 덱 | 6장180초·LaTeX·PDF·편집 PPTX·실제 화면·노트 없음 | 실제 발표 환경 리허설 |
+| PRD | 말결 프로젝트 저장·웹 재조회 | 타 프로젝트 오수정 원문 복구는 별도 사고 후속 |
+| 운영 서비스 | 기존 API18081 복구·기존 음성18082 유지 | 기존 음성은 새 coordination 브리지가 아님 |
+| 전체 완료 | 섹션1~4 완료, 섹션5 실행 중 | 실제 전화 대기·외부1회 리뷰 환경 차단·자체 통합 검사 통과 |
 
-## 3 Confirmed Scope
+검사 건수는 섹션4 시점 Node198·Python23·브라우저23+24입니다. 후속 코드 검사와 실전화 수용 여부는 [실행 기록](https://github.com/sergiobuilds/malgyeol/blob/feat/ai-for-good-product/dev/active/malgyeol-product-completion/context.md)을 따릅니다. 대역·로컬 검사를 전화망 성공이나 공공기관 실적으로 계산하지 않습니다.
 
-### 3.1 전체 제품
+## 실행 문서
 
-승인한 13개 설계·표현/축소/추가 금지·운영 권고 12개·암묵지 24개를 Future Plan에 매핑했다. 사업·기관·관할·접수/제공/물류 역할을 구분하고 서울 전체 공개 목록과 상세 경로 구축 범위를 나눠 관리한다. 필요별 진행, 기관 거절 후 부분 재협의, 시민 선택과 회신을 유지한다.
+| 문서 | 역할 |
+|---|---|
+| [실행계획](https://github.com/sergiobuilds/malgyeol/blob/feat/ai-for-good-product/dev/active/malgyeol-product-completion/plan.md) | 다섯 실행 섹션·소유권·수용조건 |
+| [작업 체크](https://github.com/sergiobuilds/malgyeol/blob/feat/ai-for-good-product/dev/active/malgyeol-product-completion/tasks.md) | 섹션별 진행·미완료 |
+| [실행 근거](https://github.com/sergiobuilds/malgyeol/blob/feat/ai-for-good-product/dev/active/malgyeol-product-completion/context.md) | 게이트·실측·사고·복구·검사 |
+| [공통 계약](https://github.com/sergiobuilds/malgyeol/blob/feat/ai-for-good-product/dev/active/malgyeol-product-completion/contracts.md) | 데이터·엔진·API·파일 책임 |
+| [사용자 합의 인계](https://github.com/sergiobuilds/malgyeol/blob/feat/ai-for-good-product/dev/active/care-coordination/planning-handoff.md) | 승인13·운영권고12·암묵지24·정정 |
+| [전화 상세](https://github.com/sergiobuilds/malgyeol/blob/feat/ai-for-good-product/dev/active/care-coordination/phone-goal-prompt.md) | 전화 업무 동작 및 완료 경계 |
+| [통합 계약 원문](https://github.com/sergiobuilds/malgyeol/blob/feat/ai-for-good-product/dev/active/care-coordination/full-product-goal-prompt.md) | 기존 합의와 최신 지시의 비교 입력 |
+| [정책 근거](https://github.com/sergiobuilds/malgyeol/blob/feat/ai-for-good-product/POLICY_BASIS.md) | 법·서울시 계획·사업·실증 요청 |
+| [정책 제안서](https://github.com/sergiobuilds/malgyeol/blob/feat/ai-for-good-product/docs/AI_FOR_GOOD_SUBMISSION.md) | 현행 정책 제안 원문 |
+| [제출물 상세](https://github.com/sergiobuilds/malgyeol/blob/feat/ai-for-good-product/artifacts/hackathon/README.md) | LaTeX·PDF·편집본·재생성·KRDS 근거 |
+| [아키텍처](https://github.com/sergiobuilds/malgyeol/blob/feat/ai-for-good-product/docs/ARCHITECTURE.md) | 현행 coordination과 과거 care 경계 |
+| [Future Plan](https://github.com/sergiobuilds/malgyeol/blob/feat/ai-for-good-product/dev/active/care-coordination/implementation-plan.md) | 후속 기능·미결정 운영값 보존 |
+| [결정 이력](https://github.com/sergiobuilds/malgyeol/blob/feat/ai-for-good-product/docs/CHRONICLE.md) | 과거 거절과 변경 근거 |
+| [인계](https://github.com/sergiobuilds/malgyeol/blob/feat/ai-for-good-product/PASSDOWN.md) | 다음 실행 진입점 |
 
-전체 설계를 운영 제품으로 완성하는 데 필요한 본인 확인·대리권·장기 기억·자동 재연락·담당자 인수·신청/예약/취소·정보 갱신·경제성은 Future다. 재시도 2회 등의 권고값을 확정 운영 정책으로 승격하지 않는다.
+## 외부 조건 및 후속 범위
 
-### 3.2 해커톤 MVP
+번호 A/B의 사용자·팀원 역할극은 승인된 방식입니다. 실제 비공개 번호 설정·서비스 번호 관계·발신 경로·시험을 아직 완료한 것으로 쓰지 않습니다. 임의 공공기관 연락·추가 번호 구매·다른 서비스 종료는 실행 범위가 아닙니다.
 
-데이터·조회 API, 생활 필요 파악, 문의 동의, 실제 기관 역할 통화, 답변 반영, 시민 회신, 부분 해결과 대안, 기본 저장·중복 방지, 담당자 확인/정정/중단/재시도를 구현한다. 자동 운영 대신 수동 재시도를 사용하고 기관 행정 시스템의 신청·예약·취소 실행은 제외한다.
+본인 확인·보호자 대리권·장기 기억·자동 재연락·담당자 인수·다기관 병렬·행정시스템 연계·개인정보 보존삭제·운영 경제성은 Future에 보존합니다. 수요·구매의사·기관 협조 조사와 전 기관 재고 API를 해커톤의 선행조건으로 두지 않습니다.
 
-발표는 짧게 보여주되 네 사업 범위는 유지한다. 전화는 번호 A/B 역할극으로 실제 양방향 대화와 회신을 반복 검증한다. 프론트는 Claude가 KRDS로 별도 설계/구현한다. 덱·제안서 논지를 초반에 정하고 실제 작동 증거를 넣어 완성한다.
+## 변경 이력
 
-### 3.3 적용 순서와 승인
-
-이번 작업은 Future/MVP 계획 문서 저장이다. 구현·서비스 변경·발신·배포는 실행하지 않았다. 구현 착수는 다음 실행 요청으로 한다. 역할극 방식은 승인됐지만 실제 번호/역할과 말결 서비스 번호 관계는 실행 전 등록해야 한다. 공공기관 직접 발신은 이 시연 승인에 포함되지 않는다.
-
-2026-09-18 이전의 어르신 전용·프록시 비핵심·화면의 미확인 배지·1장 제안서/3분 발표 고정·A~G 전체 운영 구현 우선 지시는 최신 합의로 대체한다. 근거와 과거 결정은 CHRONICLE/Git 이력에 보존하고 현행 실행 기준으로 사용하지 않는다.
-
-## 4 Work Tree
-
-| 번호 | leaf ID | 상태 | 항목 | 완료 증거 · 전이 조건 |
-|---|---|---|---|---|
-| 1 | L1 | active | Future/MVP 계획과 합의 추적 | 두 계획·CHRONICLE·PASSDOWN; managed 전환은 별도 과제 · decision:D-20260918-02 |
-| 2 | L2 | planned | 네 사업 데이터·요청·문의·회신 도메인 | 공통 API·부분 해결·저장·격리·중복 방지 시험 · decision:D-20260918-03 |
-| 3 | L3 | planned | 실제 전화 역할극 전체 경로 | 번호 A 수신→B 발신/답변→A 회신 반복 게이트 · decision:D-20260918-04 |
-| 4 | L4 | planned | Claude의 KRDS 프론트와 실제 통합 | Claude 시각 QA·기능 연결·Sergio 확인; Codex UI 수정 제외 · decision:D-20260918-04 |
-| 5 | L5 | planned | 발표 덱·정책 제안서·대본·영상 | 실제 증거·공식 제출 형식·PDF 렌더·리허설 · decision:D-20260918-03 |
-| 6 | L6 | planned | Future 운영·실증·경제성 | 후속 결정 대장과 별도 실행 계약, 해커톤 선행조건 아님 · decision:D-20260918-03 |
-
-## 5 Open / Unconfirmed
-
-- 구현 시작 시 확보: 실제 전화번호 A/B와 연결 유형, 기존 서비스 번호·발신 기능 계약, 시험 일정.
-- 제출물 분량 확정 전 확보: 해커톤 공식 공고·시간·마감·제출 형식. 이전 문서의 수치를 행사 규정으로 간주하지 않는다.
-- Claude에게 전달: KRDS 필수, 세밀한 와이어프레임/화면 설계 소유권, 공통 데이터/API/이벤트 계약. 자동 메시지 전송은 하지 않았다.
-- 인증·대리권·자동 재시도 수치·긴급 인계·보존기간·운영 SLA는 Future의 단계별 결정 대장으로 관리하며 MVP를 막지 않는다.
-
-## 6 Canonical Documents
-
-이 목록은 현재 브랜치의 작업 문서 명단이며 observe-only 권위 경계를 유지한다.
-
-| 문서 | 역할 | 상태 |
-|---|---|---|
-| `docs/MASTER-MAP.md` | project-map | 최신 합의 작업 지도 |
-| `docs/CHRONICLE.md` | project-decision | append-only 결정 기록 |
-| `dev/active/care-coordination/implementation-plan.md` | 작업 | 참고 보존 자료, 사용자 합의의 근거는 세션 인계가 우선 |
-| `dev/active/care-coordination/planning-handoff.md` | 기록 | 사용자 승인·정정·권고 구분, 다음 계획 작성의 입력 |
-| 해커톤 MVP 계획 | 작업 | 사용자 지시로 삭제, 새 문서 없음 |
-| `POLICY_BASIS.md` | project-material | 후속 정책 작성 시 공식 근거 재확인 |
-| `docs/AI_FOR_GOOD_SUBMISSION.md` | project-material | 이전 방향의 파생 자료; MVP 7절에 따라 재작성 대상 |
-| `docs/ARCHITECTURE.md` | project-material | 기존 구현 참고, 새 기능 완료 근거 아님 |
-
-## 7 Status
-
-- 로컬 기준 커밋 45337d8에서 출발해 문서만 변경했다. 기존 수신/SQLite 코드를 읽었고 새 기능·통화·UI·공공기관 협조를 완료했다고 주장하지 않는다.
-- 전체 제품 설계와 해커톤 MVP 계획을 분리했다. 전화·덱·정책 제안서·KRDS/Claude 프론트·번호 A/B 역할극을 최신 기준으로 반영했다.
-- 다음은 사용자 의도를 기준으로 새 계획 수립이다. 거절된 계획으로 구현하지 않는다. 범위 확정 없이 코드 작성·운영 서비스 변경·발신으로 넘어가지 않는다.
-
-## 8 이력
+- 2026-09-18 v6 — 실제 구현 및 섹션4 산출물 반영. 오래된 계획 전용 상태·고정 품목 정의·대본 요구 제거. 섹션5의 실전화·최종 검증 미완료 유지. 권위 observe-only 유지.
+### 과거 변경
 
 - 2026-09-18 v5 — 전화 확정과 전체 직렬 실행 goal 프롬프트 등록. 실제 KRDS MCP·Manyfast PRD·취침 중 무인 검증 계약 반영. 구현 시작 없음.
 

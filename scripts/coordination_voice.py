@@ -58,13 +58,18 @@ allowCoordination=true이면 시민이 허용한 조건 안에서 신청 의사 
 새로운 비용·일정·방문 방식이 시민 선택을 필요로 하면 임의 수락하지 않고 requiresChoice=true로 기록합니다.
 애매한 답변은 되묻고 record_answer로 답변·조건·다음 행동을 기록합니다.
 전달 허용 자료: '''+encode(context.get('disclosure',{}))
-    return common+'''첫 인사는 '말결입니다. 맡겨주신 지원 문의 결과를 안내드리려고 전화드렸습니다.'입니다.
-아래 요청의 결과와 계속 진행 중인 도움을 구분해 안내합니다. 시민에게 처음부터 설명하라고 하지 않습니다.
+    return common+'''첫 인사는 '말결입니다. 앞서 말결에 전화로 요청하신 본인이신가요?'입니다.
+본인 확인 전에는 지원 요청 내용·기관·지역·조건을 설명하지 않습니다.
+실제 최근 답변 전체를 confirm_recipient의 utterance에 넣고 본인은 recipient_role='self'로 확인합니다.
+다른 사람·가족·자동응답기이거나 불명확하면 상세를 남기지 않고 end_without_disclosure로 종료합니다.
+confirm_recipient가 반환한 요청만 사용합니다. 도구가 거절하면 진행하지 않습니다.
+확인 후 결과와 계속 진행 중인 도움을 구분해 안내합니다. 시민에게 처음부터 설명하라고 하지 않습니다.
 기관이 제시한 중요 조건은 시민에게 선택받은 뒤 record_choice로 기록합니다.
 거절된 도움이나 선택 후 필요한 후속 문의는 기관 조회와 prepare_inquiry로 준비합니다.
 새 기관 또는 추가 전달 정보가 필요하면 기존 동의를 임의 확장하지 말고 새 동의를 얻습니다.
 이미 연결된 도움은 유지합니다. 변경·취소는 해당 도구로 반영합니다.
-현재 요청: '''+encode(context.get('request',{}))
+'''
+
 
 class HttpAPI:
     def __init__(self,client,base): self.client=client;self.base=base.rstrip('/')
@@ -105,7 +110,9 @@ class VoiceRuntime:
                 if status=='completed' and draft:
                     await self.api.send('POST',prefix+'/inquiries/'+ctx['inquiryId']+'/answer',draft)
             elif ctx['role']=='callback':
-                finished=self.journal.get('finish:'+ctx['callId'])
+                recipient=self.journal.get('recipient:'+ctx['callId']) or {}
+                confirmed=recipient.get('status')=='confirmed' and recipient.get('requestId')==ctx.get('requestId')
+                finished=self.journal.get('finish:'+ctx['callId']) if confirmed else None
                 summary=(finished or {}).get('summary','안내 전달 상태 확인 필요')
                 callback_status=status if status in {'completed','no-answer'} else 'failed'
                 if status=='completed' and not finished: callback_status='failed'
@@ -169,7 +176,7 @@ class VoiceRuntime:
         key='callback:'+r['id']+':'+fingerprint
         number=self.routing.destination('callback',r['citizenRef'])
         if not self.journal.claim(key,{'state':'dispatching'}):return
-        await self.dial({'role':'callback','requestId':r['id'],'citizenRef':r['citizenRef'],'request':current},number)
+        await self.dial({'role':'callback','requestId':r['id'],'citizenRef':r['citizenRef']},number)
         self.journal.put(key,{'state':'finished'})
     async def recover(self):
         for _,ctx in self.journal.entries('call:'):
@@ -216,7 +223,7 @@ def make_agent_class(base,gemini,registry_type):
             await super()._handle_response(response)
             if content and getattr(content,'turn_complete',False) and self._call:
                 self.context['_heard_complete']=True
-                finish=self.runtime.journal.get('finish:'+self.context['callId'])
+                finish=self.runtime.journal.get('finish:'+self.context['callId']) or self.runtime.journal.get('end:'+self.context['callId'])
                 if finish and not getattr(self,'_ending',False):
                     self._ending=True
                     async def close_after_audio():

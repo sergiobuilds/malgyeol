@@ -233,7 +233,7 @@
 \phantomsection\addcontentsline{toc}{section}{6. 구현 및 검증 결과}
 데이터 구축: 공식 7개 페이지의 65개 목록 원천행을 출처와 함께 수집. 목록의 중복 정리 및 운영·접수창구 보완을 통해 40개 기관·창구 연결. 서울 25개 구 기본목록과 네 사업 조회 구조 구성. 전체 동 단위의 상세 구축 완료를 뜻하지 않음. \refmark{\href{https://github.com/sergiobuilds/malgyeol/blob/feat/ai-for-good-product/dev/active/malgyeol-product-completion/context.md}{[E1]}}\par
 업무 처리 검증: 실제 HTTP 서비스와 SQLite 저장을 연결한 재시작 복원, 권한·동의, 부분 해결, 시민 재선택, 회신 기록 확인. 기관 답변에 따른 식사 연결 유지와 생필품 후속 처리 검사. \refmark{\href{https://github.com/sergiobuilds/malgyeol/blob/feat/ai-for-good-product/dev/active/malgyeol-product-completion/context.md}{[E1]}}\par
-음성 연결 검증: 설치 SDK의 세션 준비 이전 역할·전용도구 결박, 전사와 동의의 연결, 허용 번호 밖 발신 및 자기 발신 차단 검사. Node 198건·Python 23건 자동 검사 통과 기록. \refmark{\href{https://github.com/sergiobuilds/malgyeol/blob/feat/ai-for-good-product/dev/active/malgyeol-product-completion/context.md}{[E1]}}\par
+음성 연결 검증: 설치 SDK의 세션 준비 이전 역할·전용도구 결박, 전사와 동의의 연결, 회신 수신자 확인 전 정보 공개 차단, 허용 번호 밖 발신 및 자기 발신 차단 검사. Node 198건·Python 32건 자동 검사 통과 기록. \refmark{\href{https://github.com/sergiobuilds/malgyeol/blob/feat/ai-for-good-product/dev/active/malgyeol-product-completion/context.md}{[E1]}}\par
 운영 전 수용검사 계획: 팀 보유 번호의 시민·기관 역할을 통한 실제 수신 → 기관 발신·양방향 응답 → 시민 회신 → 조건 변경 후 재연락을 검증 대상으로 지정. 전화망 왕복 증거 확보 후 검사 결과 반영.\par
 성과 표기: 기관 문의·신청 의사 전달·접수·일정 확정·실제 제공을 별도 구분. 현재 근거에 없는 공공기관 참여·실물 제공·절감률의 실적 기재 제외.\par
 \tblcap{표 5. 구현 및 검증 결과}
@@ -253,7 +253,7 @@
 \cell{\textcolor{krdssecondary70}{\bfseries 공개 기관 데이터}} & \cell{65개 목록 원천행·40개 기관·창구} & \cell{공식 목록 수집·중복 정리·창구 보완} \\
 \rowcolor{krdsgray5}
 \cell{\textcolor{krdssecondary70}{\bfseries 업무·저장·권한}} & \cell{Node 198건 검사} & \cell{서버·도메인·영속성} \\
-\cell{\textcolor{krdssecondary70}{\bfseries 음성 역할·도구}} & \cell{Python 23건 검사} & \cell{설치 SDK·HTTP 결합} \\
+\cell{\textcolor{krdssecondary70}{\bfseries 음성 역할·도구}} & \cell{Python 32건 검사} & \cell{설치 SDK·HTTP 결합} \\
 \rowcolor{krdsgray5}
 \cell{\textcolor{krdssecondary70}{\bfseries 실제 전화 왕복}} & \cell{운영 전 수용검사 항목} & \cell{시민·기관 양방향 음성·회신} \\
 \end{xltabular}

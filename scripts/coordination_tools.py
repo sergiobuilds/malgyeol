@@ -1,5 +1,6 @@
 """Role-bound voice tools; phone destinations never enter model-visible data."""
 import json
+import re
 import os
 import sqlite3
 from pathlib import Path
@@ -81,17 +82,54 @@ class Journal:
 class VoiceTools:
     def __init__(self,api,journal,context):
         self.api=api;self.journal=journal;self.context=context;self.catalog={}
+    def require_recipient(self):
+        if self.context['role']!='callback': return
+        confirmation=self.journal.get('recipient:'+self.context['callId']) or {}
+        if confirmation.get('status')!='confirmed' or confirmation.get('requestId')!=self.context.get('requestId'):
+            raise ToolError('먼저 요청하신 본인인지 확인해 주세요.')
     def role(self,*allowed):
         if self.context['role'] not in allowed: raise ToolError('이 통화에서 처리할 수 없는 요청입니다.')
+        self.require_recipient()
     def path(self,suffix=''):
         request_id=self.context.get('requestId')
         if not request_id: raise ToolError('먼저 필요한 도움을 정리해 주세요.')
         return '/api/coordination/requests/'+request_id+suffix
     async def current(self):
+        self.require_recipient()
         r=(await self.api.send('GET',self.path()))['request']
         if self.context.get('citizenRef') and r['citizenRef']!=self.context['citizenRef']:
             raise ToolError('요청 연결을 확인해 주세요.')
         return r
+    async def confirm_recipient(self,recipient_role:str,utterance:str):
+        """요청한 본인 여부 질문 후 실제 최근 답변 전체를 기록. 확인 후에만 요청 내용을 반환."""
+        if self.context['role']!='callback': raise ToolError('회신 통화에서만 수신자를 확인합니다.')
+        quote=text(utterance)
+        normalize=lambda v:re.sub(r'[\s.,!?。]', '',v)
+        heard=normalize(self.context.get('_heard',''))
+        actual=normalize(quote)
+        negative=['아니','본인아','다른사람','가족','대신','자동응답','음성사서함','소리샘','메시지','남겨','모르','잘못','지금없','부재','안했','않았','적없','한적없','기억없']
+        accepted_roles={'self'}|set(self.context.get('authorizedRecipientRoles',[]))
+        # Match the complete affirmative response, not a fragment that also
+        # appears in denials such as '제가 전화 안 했는데요'.
+        affirmative=(r'(?:네|예)?(?:네|예|맞아요|맞습니다|접니다|저예요|본인입니다|'
+                     r'(?:제가|저는)?(?:아까|앞서|방금)?(?:요청|전화)(?:한|했던)(?:본인|사람)(?:입니다|이에요|맞아요|맞습니다)|'
+                     r'(?:제가|저는)?본인(?:이)?(?:맞아요|맞습니다|입니다)|'
+                     r'제가(?:요청|전화)(?:했습니다|했어요)|제가맞(?:아요|습니다))')
+        positive=re.fullmatch(affirmative,actual) is not None
+        if not actual or actual!=heard or recipient_role not in accepted_roles or not positive or any(v in actual for v in negative):
+            self.journal.put('recipient:'+self.context['callId'],{'status':'not-confirmed','requestId':self.context.get('requestId')})
+            raise ToolError('상세 안내를 진행하지 않습니다. 요청하신 분께 다시 연결하겠습니다.')
+        # Do not release data merely because the destination number matched.
+        r=(await self.api.send('GET',self.path()))['request']
+        if not self.context.get('citizenRef') or r['citizenRef']!=self.context['citizenRef']:
+            raise ToolError('요청 연결을 확인해 주세요.')
+        self.journal.put('recipient:'+self.context['callId'],{'status':'confirmed','requestId':r['id'],'role':recipient_role,'utterance':quote[:160]})
+        return encode({'request':r,'message':'수신자 역할 확인 후 결과 안내를 진행합니다.'})
+    async def end_without_disclosure(self):
+        """다른 수신자·자동응답기·역할확인 불가 시 개별 내용 없이 통화 종료. 전달 완료 아님."""
+        if self.context['role']!='callback': raise ToolError('회신 통화 종료 도구입니다.')
+        self.journal.put('end:'+self.context['callId'],{'reason':'recipient-not-confirmed'})
+        return encode({'message':'개별 내용을 안내하지 않고 짧게 인사 후 통화를 마쳐 주세요.','ending':True})
     async def create_request(self,input_json:str):
         """시민이 말한 지역·여러 필요·제약을 JSON으로 저장. 임의로 필요를 추정하지 않음."""
         self.role('citizen')
@@ -168,6 +206,7 @@ class VoiceTools:
         return encode(await self.api.send('POST',self.path('/needs/'+r['needs'][need_index]['id']+'/stop'),{}))
     async def finish_conversation(self,summary:str):
         """대화 결과를 정리. 인사를 마친 뒤 통화를 종료할 준비 표시."""
+        self.require_recipient()
         self.journal.put('finish:'+self.context['callId'],{'summary':text(summary)})
         return encode({'message':'마지막 안내와 인사를 마쳐 주세요.','ending':True})
     def handlers(self):
@@ -176,4 +215,5 @@ class VoiceTools:
         else:
             names+=['search_institutions','prepare_inquiry','record_consent','record_choice','revise_request','stop_need']
             if self.context['role']=='citizen': names+=['create_request']
+            if self.context['role']=='callback': names+=['confirm_recipient','end_without_disclosure']
         return [getattr(self,n) for n in names]

@@ -26,9 +26,10 @@
 - [ ] 섹션 5: 통합·Future·최종 검증
   - [ ] 정상 왕복·부분 해결·변경·부재 실통화
   - [ ] 화면/전화/저장 일치·재시작·격리
-  - [ ] 13개 승인·12개 운영·24개 암묵지 추적
-  - [ ] Future·README·아키텍처·TODO·지도·인계
-  - [ ] Codex 외부 리뷰 총 1회 및 결함 수정
-  - [ ] npm run verify·산출물 검수·secret 검사
+  - [x] 13개 승인·12개 운영·24개 암묵지 추적
+  - [x] Future·README·아키텍처·TODO·지도·인계
+  - [x] Codex 외부 리뷰 총 1회 실행
+  - [ ] 외부 코드 검토 완료: bwrap 환경 오류로 코드 열람 전 종료, 추가 호출 없음
+  - [x] npm run verify·산출물 검수·secret 검사
   - [ ] commit/push·검증 커밋·GitHub 상세 링크
   - [ ] executor 검증·self-check·CHRONICLE 확인

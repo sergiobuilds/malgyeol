@@ -158,10 +158,10 @@
   "verification": {
     "renderOnSlides": false,
     "source": "https://github.com/sergiobuilds/malgyeol/blob/feat/ai-for-good-product/dev/active/malgyeol-product-completion/context.md",
-    "checkpoint": "섹션 4 중간 통합검증",
+    "checkpoint": "섹션 5 수신자 보호 보완검증",
     "observed": [
       "Node 198개 검사·타입 검사·의존성 검사 통과 기록",
-      "설치 SDK 기반 Python 23개 검사 통과 기록",
+      "설치 SDK 기반 Python 32개 검사 통과 기록",
       "실제 Node HTTP·SQLite와 Python 음성도구의 결합 검증 기록",
       "식사 경로 유지·생필품 재선택·시민 회신 기록의 로컬 통합 확인"
     ],

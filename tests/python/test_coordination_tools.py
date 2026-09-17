@@ -57,3 +57,47 @@ class ToolsTests(unittest.IsolatedAsyncioTestCase):
         self.tools.catalog['i']={}
         await self.tools.record_consent('{"purpose":"문의","institutionIds":["i"],"sharedFields":["needs"],"allowCoordination":true,"utterance":"네 동의합니다"}')
         self.assertEqual(self.j.get('consent:call')['utterance'],'네 동의합니다')
+
+    async def test_callback_cannot_read_choose_or_finish_before_recipient_confirmation(self):
+        tools=VoiceTools(self.api,self.j,{'role':'callback','requestId':'r','citizenRef':'c','callId':'cb'})
+        for action in [lambda:tools.current(),lambda:tools.record_choice(0,'금요일'),lambda:tools.finish_conversation('안내 완료'),lambda:tools.revise_request('{"summary":"변경"}')]:
+            with self.assertRaises(ToolError):await action()
+        self.assertEqual(self.api.calls,[])
+        self.assertIsNone(self.j.get('finish:cb'))
+    async def test_callback_confirmation_requires_real_whole_utterance(self):
+        ctx={'role':'callback','requestId':'r','citizenRef':'c','callId':'cb','_heard':'아니요 저는 다른 사람입니다'}
+        tools=VoiceTools(self.api,self.j,ctx)
+        with self.assertRaises(ToolError):await tools.confirm_recipient('self','제가 요청한 본인입니다')
+        with self.assertRaises(ToolError):await tools.confirm_recipient('self',ctx['_heard'])
+        self.assertEqual(self.api.calls,[])
+    async def test_callback_verified_self_can_receive_request(self):
+        ctx={'role':'callback','requestId':'r','citizenRef':'c','callId':'cb','_heard':'네 제가 요청한 본인입니다'}
+        tools=VoiceTools(self.api,self.j,ctx)
+        result=await tools.confirm_recipient('self',ctx['_heard'])
+        self.assertIn('식사',result)
+        await tools.finish_conversation('결과 안내')
+        self.assertEqual(self.j.get('recipient:cb')['status'],'confirmed')
+        self.assertIsNone(self.j.get('recipient:different-call'))
+    async def test_machine_or_unapproved_delegate_never_receives_request(self):
+        for role,heard in [('machine','소리샘입니다 음성을 남겨 주세요'),('delegate','제가 가족입니다 대신 받을게요')]:
+            ctx={'role':'callback','requestId':'r','citizenRef':'c','callId':'cb','_heard':heard}
+            tools=VoiceTools(self.api,self.j,ctx)
+            with self.assertRaises(ToolError):await tools.confirm_recipient(role,heard)
+        self.assertEqual(self.api.calls,[])
+    async def test_unverified_recipient_can_end_without_success_summary(self):
+        tools=VoiceTools(self.api,self.j,{'role':'callback','requestId':'r','citizenRef':'c','callId':'cb'})
+        await tools.end_without_disclosure()
+        self.assertIsNone(self.j.get('finish:cb'))
+        self.assertTrue(self.j.get('end:cb'))
+
+    async def test_callback_rejects_denial_of_previous_call(self):
+        ctx={'role':'callback','requestId':'r','citizenRef':'c','callId':'cb','_heard':'제가 전화 안 했는데요'}
+        tools=VoiceTools(self.api,self.j,ctx)
+        with self.assertRaises(ToolError):await tools.confirm_recipient('self',ctx['_heard'])
+        self.assertEqual(self.api.calls,[])
+
+    async def test_callback_rejects_denial_of_previous_request(self):
+        ctx={'role':'callback','requestId':'r','citizenRef':'c','callId':'cb','_heard':'제가 요청한 적 없어요'}
+        tools=VoiceTools(self.api,self.j,ctx)
+        with self.assertRaises(ToolError):await tools.confirm_recipient('self',ctx['_heard'])
+        self.assertEqual(self.api.calls,[])

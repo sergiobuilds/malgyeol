@@ -60,3 +60,7 @@ POST `/:id/inquiries/:inquiryId/retry`는 확정 부재/실패만 prepared로 �
 GET `/api/coordination/session` → `{authenticated:boolean}`.
 POST 동일경로 `{accessCode}` + same-origin Origin → HttpOnly/SameSite=Strict/8시간 cookie, `{authenticated:true}`. 원본 토큰 클라이언트 영속저장 금지.
 DELETE 동일경로 + same-origin Origin → 세션해제. API는 기존 agent/operator Bearer도 계속 지원. cookie변경요청의 외부 Origin 거절. PUBLIC_BASE_URL 설정 시 해당 origin에 한정; 별도접속 도메인 검증시 이를 정확히 설정. 런타임 재시작 시 담당자 재접속.
+
+## 회신 수신자 확인
+
+callback 초기 prompt/context에는 개별 요청을 포함하지 않음. `confirm_recipient`가 최근 실제 발화 전체와 본인 확인의 긍정 응답을 대조하고, 요청의 citizenRef와 해당 통화의 결박을 확인한 뒤 현재 요청 반환. 다른 사람·가족·자동응답기·부정 응답은 요청 조회 이전 차단. 수신자 확인 이전에 callback의 검색·동의·선택·정정·중단·전달 완료 도구 실행 불가. `end_without_disclosure`는 내용 공개 없이 통화 종료하되 전달 완료로 기록하지 않음. 이 경계는 정식 신원인증·OTP·대리권 확인의 대체가 아님.

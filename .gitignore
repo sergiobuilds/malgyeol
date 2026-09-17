@@ -18,3 +18,5 @@ dev/**/.looprun-permissions.json
 *.log
 .gstack/
 audits/blind-league-*/
+
+artifacts/hackathon/.build/

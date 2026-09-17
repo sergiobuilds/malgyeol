@@ -109,7 +109,7 @@ canonical_path: /home/campbell/projects/personal/products/malgyeol/docs/AI_FOR_G
 
 업무 처리 검증: 실제 HTTP 서비스와 SQLite 저장을 연결한 재시작 복원, 권한·동의, 부분 해결, 시민 재선택, 회신 기록 확인. 기관 답변에 따른 식사 연결 유지와 생필품 후속 처리 검사. [E1]
 
-음성 연결 검증: 설치 SDK의 세션 준비 이전 역할·전용도구 결박, 전사와 동의의 연결, 허용 번호 밖 발신 및 자기 발신 차단 검사. Node 198건·Python 23건 자동 검사 통과 기록. [E1]
+음성 연결 검증: 설치 SDK의 세션 준비 이전 역할·전용도구 결박, 전사와 동의의 연결, 회신 수신자 확인 전 정보 공개 차단, 허용 번호 밖 발신 및 자기 발신 차단 검사. Node 198건·Python 32건 자동 검사 통과 기록. [E1]
 
 운영 전 수용검사 계획: 팀 보유 번호의 시민·기관 역할을 통한 실제 수신 → 기관 발신·양방향 응답 → 시민 회신 → 조건 변경 후 재연락을 검증 대상으로 지정. 전화망 왕복 증거 확보 후 검사 결과 반영.
 
@@ -119,7 +119,7 @@ canonical_path: /home/campbell/projects/personal/products/malgyeol/docs/AI_FOR_G
 | --- | --- | --- |
 | 공개 기관 데이터 | 65개 목록 원천행·40개 기관·창구 | 공식 목록 수집·중복 정리·창구 보완 |
 | 업무·저장·권한 | Node 198건 검사 | 서버·도메인·영속성 |
-| 음성 역할·도구 | Python 23건 검사 | 설치 SDK·HTTP 결합 |
+| 음성 역할·도구 | Python 32건 검사 | 설치 SDK·HTTP 결합 |
 | 실제 전화 왕복 | 운영 전 수용검사 항목 | 시민·기관 양방향 음성·회신 |
 
 근거: [E1 · 말결 구현·실행 검증 기록](https://github.com/sergiobuilds/malgyeol/blob/feat/ai-for-good-product/dev/active/malgyeol-product-completion/context.md), [E3 · 말결 전화 처리 계약](https://github.com/sergiobuilds/malgyeol/blob/feat/ai-for-good-product/dev/active/care-coordination/phone-goal-prompt.md)

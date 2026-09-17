@@ -1,56 +1,69 @@
-# 말결 구현 TODO
+# 말결 구현 체크리스트
 
-2026-09-17 실행 계약 기준입니다. 현재 브랜치는 observe-only이며 managed 완료로 판정하지 않습니다. 실제 수신·기관 제공 증거와 합성 검증은 별개입니다. 섹션별 Codex 리뷰와 self-check는 [실행 기록](dev/active/care-phone-recovery/care-phone-recovery-context.md)에 있습니다.
+2026-09-18 섹션5 실행 중 기준입니다. 현재 브랜치는 observe-only이며 아래 체크는 구현·검사 범위를 구분합니다. 전체 완료나 canonical master 상태를 대신하지 않습니다.
 
-## P0. 전화 대화 복구
+## 실행 근거
 
-- [x] 기본 런타임은 `src/server.ts` → `careApp.ts`. ClawOps SDK → 인증된 care-agent API → 통화 coordinator에 연결. 레거시 구매 경로 제외.
-- [x] 시나리오는 연습용 쌀 4kg 1포·선택 시 고정한 제공일·숫자키 1 확인. 위험·주소·계획 밖 요청은 자동 접수 차단. `tests/voice/carePhone.test.ts`.
-- [x] 공식 번호 GET 빈 목록 → POST 201 → GET 1개 확인. 번호 07052767277. SDK 제어 연결과 health 준비 상태 확인. [운영 절차](README.md#전화-운영과-복구).
-- [x] 통화별 토큰·명시 승인 전 0건·replay 1건·취소·만료·위험 혼합 발화 검증. `tests/voice/carePhone.test.ts`, `tests/http/careApp.test.ts`.
-- [ ] 실제 수신 통화 1회, Call ID·비식별 대화·발화·승인·caseId 증거. 외부 전화 사건 미확보. 제어 연결 ready는 실제 통화 성공이 아님.
-- [ ] 실제 등록 이용자의 계획 연결. 현재 모든 전화는 합성 계획이며 첫 안내에서 연습용임을 고지.
+- [현행 실행계획](https://github.com/sergiobuilds/malgyeol/blob/feat/ai-for-good-product/dev/active/malgyeol-product-completion/plan.md)
+- [실행 체크리스트](https://github.com/sergiobuilds/malgyeol/blob/feat/ai-for-good-product/dev/active/malgyeol-product-completion/tasks.md)
+- [검사·사고·복구 기록](https://github.com/sergiobuilds/malgyeol/blob/feat/ai-for-good-product/dev/active/malgyeol-product-completion/context.md)
+- [전화 계약](https://github.com/sergiobuilds/malgyeol/blob/feat/ai-for-good-product/dev/active/care-coordination/phone-goal-prompt.md)
 
-## P1. 정책 기반 수행기관 전달
+## 데이터 및 업무
 
-기존 민간 로컬업체 구매 항목은 사용자 계약에 따라 승인 수행기관 요청·응답·readback으로 이행합니다. 공공 공급 불가와 자치구 승인 없는 민간 구매는 실행하지 않습니다.
+- [x] 네 사업·공식65목록행·37기관 정규화·보완3창구·총40기관.
+- [x] 기관 역할·사업별 이용절차·출처·관할·문의 창구 분리.
+- [x] 공통 지원망 조회 및 인증된 요청 API.
+- [x] 복수 필요·동의·부분 해결·중요 조건 선택·기관 후속 처리.
+- [x] 요약 정정의 연결 결과 보존·실질 조건 변경의 경로 재검토.
+- [x] 필요 중단·수동 재시도·결과 불명 차단·멱등성·요청 격리.
+- [x] SQLite 영속성·두 연결 동시성·재시작 복원.
 
-- [x] 확인된 같은 caseId를 수행기관 어댑터에 전달. `src/care-support/provider.ts`, `careApp.ts`.
-- [x] 합성 품목·수량·기관 범위 확인. `service.ts`의 명시적 SYNTHETIC 카탈로그.
-- [x] 전달 예약 후 1회 submit, 응답 식별자·품목·수량·readback 기록. `tests/http/careProvider.test.ts`.
-- [x] 동시 전달·실제 deadline·응답 소실 후 재전송 0·늦은 응답의 담당자 예외 보존 검증.
-- [ ] 실제 협약기관 카탈로그·전달·수락·제공. 계약 기관 연결이 없어서 어댑터는 SANDBOX만 지원.
-- [ ] 사용자 확인 납작보리쌀 실제 주문 원본. 기존 배포 readback은 모듬잡곡 700g 1개, SPECIAL_OFFER_LIVE, 준비 중, 송장 없음으로 품목이 다름. [비식별 기술 증거](dev/active/care-phone-recovery/evidence.json)에 별도 보존.
+## 전화 구현 및 실제 수용검사
 
-## P2. 하나의 사건 기록과 예외 이관
+- [x] 시민 접수·기관 발신·시민 회신의 역할과 도구 분리.
+- [x] prewarm 이전 맥락 결박·전사 기반 동의·허용 전달 정보 통제.
+- [x] 허용 번호·서비스 자기발신 차단·통화 작업 기록.
+- [x] 기관 답변 반영·시민 재선택·일부 결과 선회신의 로컬 통합.
+- [x] `coordination-check`·`coordination` 신규 실행 경로.
+- [ ] 승인된 A/B 비공개 라우팅 구성 및 기존 음성 서비스의 명시적 전환.
+- [ ] 실제 A 접수→B 문의·양방향 응답→A 회신.
+- [ ] 실제 전화망의 정상·부분 해결·조건 변경·부재 시나리오.
+- [ ] 양방향 청취·첫 인사·말 끊기·침묵·종료·맥락 격리 검사.
+- [x] 회신 상세의 초기 prompt 제외·실제 음성 수신자 확인 게이트 구현.
+- [x] 수신자 확인 보완을 포함한 Python32 검사 최종 재확인. OTP·정식 신원인증과 구별.
 
-- [x] 같은 caseId로 REQUESTED → CONFIRMED → PROVIDER_SUBMITTED → PROVIDER_ACCEPTED → PROVIDED → RECIPIENT_CONFIRMED. 예외는 EXCEPTION. `tests/http/careAuthorization.test.ts`.
-- [x] 요청 전 통화 예외와 요청 후 기관 timeout·안전 보류를 담당자 업무함 API로 조회. `/api/care/inbox`.
-- [x] 정상 연습용 요청은 확인 후 샌드박스에 자동 전달. 제공·수령은 각 역할이 명시 기록하며 실제 결과를 생성하지 않음.
-- [x] SQLite 원장·누적 수량 한도·멱등키·동시 연결·재시작·역할별 접근 검증. `tests/http/carePersistence.test.ts`.
-- [x] 공개 데모 데이터와 전화 사건 분리. 인증 없는 요청·역할 오용 차단. `tests/http/careAuthorization.test.ts`.
-- [ ] 실제 기관 사용자 인증·수혜자별 계획·수량/횟수/기간 복합 한도 연결, 개인정보 분리 암호화·보존 정책. 현재 합성 이용자 1명 범위.
-- [ ] 실제 담당자 연락처·통화 전환. 현재 업무함 기록만 가능하며 자동 연락 완료로 안내하지 않음.
+현재 18082는 이전 `clawops-care-agent.py`입니다. API/음성 서비스 실행과 health 응답을 새 브리지의 실제 왕복 증거로 사용하지 않습니다. 공식기관 협약·응답 확보는 팀원 A/B 역할극의 선행조건이 아닙니다.
 
-## P3. 운영·증거 패키지
+## 프론트 및 제출물
 
-- [x] 환경변수·비밀 경로·번호·시작·health·로그·재시작·수동 전환을 README와 `.env.example`에 기록. 비밀값 제외.
-- [x] Campbell API/음성 user transient service 실행. 기존 18080 컨테이너 보존.
-- [x] 실제 발급/제어 연결과 로컬 합성 검증을 증거 패키지에서 분리.
-- [ ] 실제 전화·기관 제공·수령 증거를 패키지에 추가. 외부 사건 미확보.
-- [ ] 자동 백업·재부팅 자동 시작·공유 영속 저장소 운영. 현재 Campbell SQLite이며 transient service는 재부팅 후 다시 시작 필요.
-- [ ] P0~P3 실제 증거 후 방향 정본의 완료 상태 반영. 지금은 외부 blocked이고 observe-only라 완료 전이하지 않음.
+- [x] Claude의 design-forge·실제 KRDS MCP 기반 지원망·요청 진행 화면.
+- [x] 담당자 HttpOnly 접속·정정·중단·수동 재시도와 실제 API 연결.
+- [x] 부분 해결·결과 불명·로딩·부재 상태와 다음 행동 표시.
+- [x] 1440·768·390 너비, 키보드 사업 선택, 가로 넘침 검사.
+- [x] Manyfast 말결 PRD 저장·웹 재조회. 다른 프로젝트의 복구 미완료 사고와 별도 관리.
+- [x] POLICY_BASIS 중심 정책 원문·LaTeX·6쪽 PDF·편집 DOCX.
+- [x] 6장·180초 KRDS 덱·LaTeX·PDF·편집 PPTX. 대본·노트 제외.
+- [x] 제목·소제목의 명사형, 보수적 표현, 실제 화면 발췌.
+- [x] 표 원문·글꼴·색·링크·페이지 범위·편집성·복사본 재생성 검사.
 
-## 후순위
+[제출물 상세 및 재생성 절차](https://github.com/sergiobuilds/malgyeol/blob/feat/ai-for-good-product/artifacts/hackathon/README.md)를 참조합니다.
 
-- [ ] 이용자·수행기관·담당자 화면의 최종 design-forge 전환. 기존 dirty 화면은 보존·QA하며 새 화면 구현은 전화·기관 실증 선행조건이 남아 후순위.
-- [ ] 3분 데모·발표 화면·접근성 최종 보정. 현재 화면은 합성 데모, 실제 현장 성과로 발표하지 않음.
-- [x] 서울시 정책·데이터·실증환경·지원 제안은 `POLICY_BASIS.md`와 `docs/AI_FOR_GOOD_SUBMISSION.md`에 반영되어 있음.
-- [ ] 실증 제안서·발표의 최종 리허설과 현장 승인. 자치구·협약기관 미확정.
+## 최종 통합
 
-## 최종 검증
+- [x] 섹션4 시점 Node198·Python23·브라우저23+24·타입·의존성 검사.
+- [x] 실제 HTTP·SQLite·브라우저 결합 검사. 실전화 증거와 구분.
+- [x] 최종 변경 반영 전체 자체 검사 및 외부 Codex 리뷰 총1회 호출.
+- [ ] 외부 코드 검토 완료: bwrap 환경 오류로 미열람 종료. 추가 호출 없음.
+- [ ] 13개 승인 설계·12개 운영 권고·24개 암묵지 추적의 최종 대조.
+- [ ] Future·실행 인계·완료 증거·문서 링크의 최종 대조.
+- [ ] 비밀·개인정보·출처 검사, commit·push 및 원격 확인.
+- [ ] 모든 필수 수용조건 충족 이후 전체 완료 판정.
 
-- [x] `npm run verify`: 171 tests PASS, dependency audit 취약점 0. 인사·응답은 대화를 유지하지만 숫자키 승인 전 접수하지 않는 회귀 포함.
-- [x] `project-doctor`: observe-only PASS, dirty 경고는 저장 전 상태.
-- [ ] 실제 전화·제공·수령 1회 완료. 합성 테스트로 대체하지 않음.
-- [x] 최종 독립 리뷰·비밀/PII 검사·commit 직후 push. 소스 d994650, Cloud Run 00063-x6z. 최종 기록은 실행 기록 참조.
+## 후속 운영
+
+본인 확인·대리권·장기 기억·자동 재연락·다기관 병렬 통화·담당자 자동 배정·보존삭제·재해복구·행정시스템 연계·실증·경제성은 [Future Plan](https://github.com/sergiobuilds/malgyeol/blob/feat/ai-for-good-product/dev/active/care-coordination/implementation-plan.md)에 보존합니다. 이 항목을 이번 MVP 착수 조건으로 되돌리지 않습니다.
+
+## 과거 검증
+
+2026-09-17의 171개 검사·고정 쌀4kg·고정 시민·기관 샌드박스·과거 배포 기록은 [전화 복구 기록](https://github.com/sergiobuilds/malgyeol/blob/feat/ai-for-good-product/dev/active/care-phone-recovery/care-phone-recovery-context.md)에 보존합니다. 최신 네 사업·기관 조율·회신 완료의 근거로 재사용하지 않습니다.
