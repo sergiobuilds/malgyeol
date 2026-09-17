@@ -1,0 +1,34 @@
+# 말결 실행 체크리스트
+
+- [x] 섹션 1: 근거·도구·공통 계약
+  - [x] 최신 사용자 지시 및 looprun 정의 확인
+  - [x] supervisor GATE_0 승인 및 3종 문서 생성
+  - [x] 지정 PDF·SDK·KRDS·Manyfast 실측
+  - [x] 공통 인터페이스와 파일 소유권 확정
+  - [x] executor 검증·self-check·CHRONICLE 확인
+- [ ] 섹션 2: 데이터·요청 처리
+  - [ ] 서울 네 사업 공개 자료·관할·이용 경로
+  - [ ] 복수 필요·동의·수정·중단·영속성 TDD
+  - [ ] 공통 조회/처리 API 및 실제 HTTP 검증
+  - [ ] executor 검증·self-check·CHRONICLE 확인
+- [ ] 섹션 3: 전화·회신
+  - [ ] 시민 접수·기관 발신·시민 회신 역할
+  - [ ] 조건 조율·부분 해결·재선택·재연락
+  - [ ] 허용 번호·한 통화·중복·결과 불명·수동 재시도
+  - [ ] executor 검증·self-check·CHRONICLE 확인
+- [ ] 섹션 4: KRDS 프론트·제출물
+  - [ ] Manyfast PRD 저장·재조회
+  - [ ] Claude design-forge/KRDS MCP·화면/실제 API
+  - [ ] POLICY_BASIS 기반 정책 원문·TeX·DOCX·PDF
+  - [ ] 참조 PDF 반영 3분 덱·TeX·편집 PPTX·PDF
+  - [ ] 명사형·보수적 문체·대본 제외·전체 렌더
+  - [ ] executor 검증·self-check·CHRONICLE 확인
+- [ ] 섹션 5: 통합·Future·최종 검증
+  - [ ] 정상 왕복·부분 해결·변경·부재 실통화
+  - [ ] 화면/전화/저장 일치·재시작·격리
+  - [ ] 13개 승인·12개 운영·24개 암묵지 추적
+  - [ ] Future·README·아키텍처·TODO·지도·인계
+  - [ ] Codex 외부 리뷰 총 1회 및 결함 수정
+  - [ ] npm run verify·산출물 검수·secret 검사
+  - [ ] commit/push·검증 커밋·GitHub 상세 링크
+  - [ ] executor 검증·self-check·CHRONICLE 확인

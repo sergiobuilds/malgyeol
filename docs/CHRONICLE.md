@@ -19,3 +19,5 @@
 - 2026-09-18T02:17:29.077052+09:00 | [direction] | D-20260918-06 | affects: leaf:L1 | Sergio가 이미 합의한 인터뷰를 반복하지 말고 이 세션 내용을 .md로 정리하라고 지시. planning-handoff.md에 승인·정정·권고·Future를 구분해 다음 writing-plans 입력으로 저장. 새 제품 정의나 구현 승인은 만들지 않는다.
 
 - 2026-09-18 | [direction] | D-20260918-07 | affects: leaf:L1,leaf:L2,leaf:L3,leaf:L4,leaf:L5 | Sergio가 전화 1~7번 동작을 확정하고 전화 원문 별도 저장 및 전체 상세 goal 프롬프트 작성을 지시. 후속 구현은 looprun --auto 직렬, Manyfast PRD·실제 KRDS MCP 기반 Claude 프론트 포함. 취침 중 인증·수신자 부재를 기본 보류 사유로 삼지 말고 의도에 따라 완수하도록 정정. 전체 프롬프트는 정상 OAuth 복구와 기존 승인 자원 안의 실제 전화망 자동 역할극을 실행 선택으로 명시하며 사람 검증과 구별한다. 이번 세션은 프롬프트 저장이며 실제 제품 구현·발신·배포는 수행하지 않음.
+
+- 2026-09-18 | [execution] | D-20260918-08 | Sergio 최신 실행 지시: executing-plan v2는 looprun-auto 의미. supervisor가 gate 승인. 활성 섹션 내 독립 TDD 병렬 작업, 외부 Codex 리뷰 총1회. LaTeX 기반 정책·3분 KRDS 덱, 간결한 명사형·보수적 표현. 지정 모두의창업 발표 PDF는 구성 참고, 디자인은 design-forge+KRDS MCP. 실제 구현·실통화 완료는 증거별 판정.
