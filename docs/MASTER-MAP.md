@@ -1,10 +1,12 @@
 ---
 doc_kind: project-map
 status: working
-version: 2026-09-18_v2
+version: 2026-09-18_v3
 ---
 
 # 말결 — 지도 (MASTER-MAP)
+
+> 최신 결정 D-20260918-05: 사용자가 MVP 계획의 제품 정의·범위 해석을 거절하고 삭제를 지시했다. 해당 계획은 삭제했으며 아래의 MVP 상세·완료 기준·착수 순서는 승인된 실행 계약으로 사용하지 않는다. 사용자 대화 합의는 보존하고 Superpowers로 다시 계획한다.
 
 현재 대화에서 승인된 전체 제품 방향과 해커톤 MVP의 작업 지도. observe-only이며 canonical master의 방향 권한을 주장하지 않는다.
 
@@ -24,7 +26,7 @@ version: 2026-09-18_v2
 | 축 | 상태 | 작업 기준 |
 |---|---|---|
 | 전체 설계 | 계획 문서 작성, 운영 파라미터 결정 조건 보존 | [Future Plan](../dev/active/care-coordination/implementation-plan.md) |
-| 해커톤 | 구현 계획 작성, 코드 구현 시작 전 | [MVP 계획](../dev/active/care-coordination/hackathon-mvp-plan.md) |
+| 해커톤 | 계획 거절·삭제, 재계획 필요 | 사용자 거절로 삭제, 재계획 필요 |
 | 기존 코드 | 수신 브리지·SQLite·단일 품목/고정 시민 구조를 읽기 확인 | MVP 4절; 발신/회신 성공은 이번 작업에서 시험하지 않음 |
 | 프론트 | Claude 소유, KRDS 필수 | MVP 6절의 API/이벤트 인계 계약 |
 | 발표·정책 | 최우선, 기존 제출 자료는 이전 방향이므로 재작성 대상 | MVP 7절 |
@@ -77,7 +79,7 @@ version: 2026-09-18_v2
 | `docs/MASTER-MAP.md` | project-map | 최신 합의 작업 지도 |
 | `docs/CHRONICLE.md` | project-decision | append-only 결정 기록 |
 | `dev/active/care-coordination/implementation-plan.md` | 작업 | 전체 Future Plan |
-| `dev/active/care-coordination/hackathon-mvp-plan.md` | 작업 | 이번 해커톤 MVP 계획 |
+| 해커톤 MVP 계획 | 작업 | 사용자 지시로 삭제, 새 문서 없음 |
 | `POLICY_BASIS.md` | project-material | 후속 정책 작성 시 공식 근거 재확인 |
 | `docs/AI_FOR_GOOD_SUBMISSION.md` | project-material | 이전 방향의 파생 자료; MVP 7절에 따라 재작성 대상 |
 | `docs/ARCHITECTURE.md` | project-material | 기존 구현 참고, 새 기능 완료 근거 아님 |
@@ -86,9 +88,11 @@ version: 2026-09-18_v2
 
 - 로컬 기준 커밋 45337d8에서 출발해 문서만 변경했다. 기존 수신/SQLite 코드를 읽었고 새 기능·통화·UI·공공기관 협조를 완료했다고 주장하지 않는다.
 - 전체 제품 설계와 해커톤 MVP 계획을 분리했다. 전화·덱·정책 제안서·KRDS/Claude 프론트·번호 A/B 역할극을 최신 기준으로 반영했다.
-- 다음은 계획 검토 후 구현 실행 요청이다. 범위 확정 없이 코드 작성·운영 서비스 변경·발신으로 넘어가지 않는다.
+- 다음은 사용자 의도를 기준으로 새 계획 수립이다. 거절된 계획으로 구현하지 않는다. 범위 확정 없이 코드 작성·운영 서비스 변경·발신으로 넘어가지 않는다.
 
 ## 8 이력
+
+- 2026-09-18 v3 — 사용자가 안내 서비스로 축소된 MVP 계획을 거절해 삭제. 실행 기준에서 철회하고 Superpowers 설치·재계획으로 전환.
 
 - 2026-09-18 v2 — 13개 설계·경계·운영 권고·암묵지를 Future로 보존. 해커톤은 발표 덱/정책 제안서·확실한 전화·아름다운 프론트 중심으로 분리. 두 번호 역할극 승인, KRDS 필수와 Claude 프론트 전담 반영.
 - 2026-09-18 v1 — 실제 사업·기관 데이터망 우선순위 저장.

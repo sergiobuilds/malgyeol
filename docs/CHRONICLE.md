@@ -13,3 +13,5 @@
 - 2026-09-18T02:00:08.785719+09:00 | [direction] | D-20260918-03 | affects: charter,leaf:L2,leaf:L3,leaf:L4,leaf:L5,leaf:L6 | Sergio가 해커톤 MVP로 경량화하고 전체 설계는 Future Plan으로 먼저 마무리하도록 지시. 발표 덱·정책 제안서가 최우선, 실제 반복 전화·기능 연결·아름답고 슬롭 없는 프론트 강조. 운영 자동화·기관 행정 실행은 후속. 이번 실행 범위는 계획 문서 작성이다.
 
 - 2026-09-18T02:00:08.785719+09:00 | [direction] | D-20260918-04 | affects: charter,leaf:L3,leaf:L4 | Sergio/팀원의 두 전화번호를 시민과 기관 역할로 쓰는 실제 통화 시연 허용; 공공기관 왕복 확인을 선행조건으로 요구하지 않음. KRDS-uiux/krds-uiux 필수. 최신 지시로 프론트·와이어프레임·디자인·구현은 Claude 전담, Codex는 다른 영역과 API/이벤트 계약만 담당.
+
+- 2026-09-18T02:06:20.458540+09:00 | [direction] | D-20260918-05 | affects: charter,leaf:L1,leaf:L2,leaf:L3,leaf:L5 | Sergio가 작성된 MVP 계획의 제품 정의·범위 해석을 거절하고 즉시 삭제 및 obra/superpowers 설치를 지시. 해당 계획은 실행 기준에서 철회. Future는 보존 자료이며 기존 MVP 축소 해석을 승인 근거로 사용하지 않는다. 새 구현은 시작하지 않는다.
