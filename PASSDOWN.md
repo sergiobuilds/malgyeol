@@ -1,22 +1,20 @@
 ---
 handoff_schema: project-handoff/v1
 project_mode: observe-only
-verified_at: 2026-09-17T17:43:01.661435+00:00
+verified_at: 2026-09-17T18:30:12.073078+00:00
 canonical_ref: refs/heads/master
-verified_commit: 8d402eb13016103c517d06c875e1561a64f056fb
+verified_commit: 60bcc4263eab8ebcd7907fb268a6abaadceeba22
 ---
 
 ## Next
 
-- 최신 실행 입력은 [전체 goal 프롬프트](dev/active/care-coordination/full-product-goal-prompt.md)다. 사용자가 새 세션에 실행 지시로 전달하면 looprun --auto로 직렬 실행한다. 전화 원문은 [전화 goal 프롬프트](dev/active/care-coordination/phone-goal-prompt.md)에 보존했다. 이 세션은 프롬프트 작성만 완료했으며 실제 구현·Manyfast 복구·KRDS MCP 프론트·실통화는 실행하지 않았다.
-- 사용자 최신 합의: 전화 1~7번 확정, Manyfast PRD와 실제 KRDS MCP 기반 Claude 프론트 포함 전체 수행. 취침 중에는 정상 인증 복구와 통제된 실제 전화망 자동 역할극까지 수행하며, 실제 사람 검증과 구별한다. 전체 프롬프트가 아래 종전 인계의 계획 전용 범위와 전화 원문보다 최신 실행 계약이다.
-
-- Sergio가 MVP 계획을 거절해 삭제했다. 지원 경로/다음 행동 안내로 말결을 축소한 해석을 다시 사용하지 않는다.
-- 다음 작업자는 [계획 작성용 세션 인계](dev/active/care-coordination/planning-handoff.md)를 먼저 전체 읽는다. 사용자 인터뷰는 끝났다. Superpowers writing-plans로 기존 합의를 구체적인 계획에 옮기고 재인터뷰하지 않는다. 거절된 계획으로 구현하지 않는다.
-- Future Plan은 보존 자료이며 이번 MVP 범위의 승인 근거가 아니다. 대화의 합의와 최신 정정을 우선한다.
-- 유지할 사용자 직접 지시: 덱·정책 제안서 최우선, 확실한 실제 전화, 두 번호 시민/기관 역할극 허용, KRDS 필수, 프론트는 Claude 전담. Codex는 프론트 설계/와이어프레임/구현을 하지 않는다.
+- 현재 실행: [plan](dev/active/malgyeol-product-completion/plan.md), [tasks](dev/active/malgyeol-product-completion/tasks.md), [context](dev/active/malgyeol-product-completion/context.md). 매 세션 looprun 정의와 3종 문서 재확인. supervisor가 gate 승인.
+- executing-plan v2는 looprun-auto 의미라는 사용자 정정 적용. 활성 섹션2에서 데이터·도메인 TDD 병렬 구현 중. 외부 Codex 리뷰는 전체1회.
+- 실제 기관 역할 발신·시민 회신·Claude KRDS 프론트·LaTeX 정책/3분 덱은 아직 완료하지 않음. 검증 없이 완료 표기 금지.
+- 지정 모두의창업 PDF 확보 및18쪽 열람; KRDS MCP 실제 조회 성공; Manyfast token_expired·KRDS pack 미설치 복구 필요.
+- 기존 수신 서비스는 다른 세션이 실행한 프로세스로 유지. A/B 시험번호 현재 설정에 없음. 실제 발신 증거 아직 없음.
 
 ## Do Not Touch
 
-- 코드·운영·번호·비밀값·다른 세션·프론트. 이번 변경은 세션 인계 문서 작성이다.
-- 새 제품 정의나 MVP 축소를 임의 확정하지 않는다. 기존 계획의 테스트/완료 기준을 승인된 실행 계약으로 되살리지 않는다.
+- 타 세션 프로세스·서비스 종료, 비밀값·개인번호 출력, 실제 공공기관 시험발신.
+- 프론트·와이어프레임·UI는 Claude 전담. 공개 기관 전화번호를 시험번호로 덮어쓰지 않음.
