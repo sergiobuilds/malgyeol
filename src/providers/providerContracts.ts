@@ -2,12 +2,10 @@ import { createHash } from 'node:crypto';
 import { spawn } from 'node:child_process';
 
 export const PROVIDERS = [
-  'twilio',
-  'vertex',
-  'x402',
-  'solana-devnet',
-  'merchant',
-  'cloud-run'
+  'voice',
+  'ai-interpreter',
+  'supplier',
+  'hosting'
 ] as const;
 
 export type ProviderName = typeof PROVIDERS[number];
@@ -71,28 +69,20 @@ class LiveOrBlockerProviderAdapter implements ProviderAdapter {
   }
 }
 
-export function createTwilioProviderAdapter(liveEnabled: boolean): ProviderAdapter {
-  return new LiveOrBlockerProviderAdapter('twilio', liveEnabled);
+export function createVoiceProviderAdapter(liveEnabled: boolean): ProviderAdapter {
+  return new LiveOrBlockerProviderAdapter('voice', liveEnabled);
 }
 
-export function createVertexProviderAdapter(liveEnabled: boolean): ProviderAdapter {
-  return new LiveOrBlockerProviderAdapter('vertex', liveEnabled);
+export function createAiProviderAdapter(liveEnabled: boolean): ProviderAdapter {
+  return new LiveOrBlockerProviderAdapter('ai-interpreter', liveEnabled);
 }
 
-export function createX402ProviderAdapter(liveEnabled: boolean): ProviderAdapter {
-  return new LiveOrBlockerProviderAdapter('x402', liveEnabled);
+export function createSupplierProviderAdapter(liveEnabled: boolean): ProviderAdapter {
+  return new LiveOrBlockerProviderAdapter('supplier', liveEnabled);
 }
 
-export function createSolanaDevnetProviderAdapter(liveEnabled: boolean): ProviderAdapter {
-  return new LiveOrBlockerProviderAdapter('solana-devnet', liveEnabled);
-}
-
-export function createMerchantProviderAdapter(liveEnabled: boolean): ProviderAdapter {
-  return new LiveOrBlockerProviderAdapter('merchant', liveEnabled);
-}
-
-export function createCloudRunProviderAdapter(liveEnabled: boolean): ProviderAdapter {
-  return new LiveOrBlockerProviderAdapter('cloud-run', liveEnabled);
+export function createHostingProviderAdapter(liveEnabled: boolean): ProviderAdapter {
+  return new LiveOrBlockerProviderAdapter('hosting', liveEnabled);
 }
 
 export async function runProviderGate<T>(input: {

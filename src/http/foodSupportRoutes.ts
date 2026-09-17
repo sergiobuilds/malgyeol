@@ -4,7 +4,7 @@ import { evaluateFoodSupportPolicy, FOOD_VOUCHER_POLICY } from '../food-support/
 import { SpecialOfferHttpError, type SpecialOfferCatalogAdapter } from '../food-support/specialOffer.ts';
 import { InMemoryConversationRepository, type ConversationRepository } from '../food-support/conversationRepository.ts';
 import type { CartLine, FoodProduct, FoodSupportBudget } from '../food-support/types.ts';
-import type { VertexFoodTextInterpretation } from '../food-support/vertexFoodTextInterpreter.ts';
+import type { FoodTextInterpretation } from '../food-support/httpFoodTextInterpreter.ts';
 import { containsLikelyPii } from '../food-support/privacy.ts';
 
 export interface SafeJourneyEvent {
@@ -39,7 +39,7 @@ export function createFoodSupportHandlers(
   loadJourney?: (caseId: string) => Promise<SafeJourneyEvent[]>,
   issueFoodAccess?: (caseId: string, sessionId: string) => { token: string; expiresAt: number },
   validateFoodAccess?: (caseId: string, token: string | undefined) => boolean,
-  interpretFoodText?: (text: string) => Promise<VertexFoodTextInterpretation>
+  interpretFoodText?: (text: string) => Promise<FoodTextInterpretation>
 ) {
   return async (request: FoodSupportRouteRequest): Promise<FoodSupportRouteResponse> => {
     if (request.method === 'GET' && request.pathname === '/api/food-support/program') {
@@ -60,10 +60,10 @@ export function createFoodSupportHandlers(
       const deterministicBlocked = value.parsed.requestedCategories.some(category => [
         'FIREARM', 'AMMUNITION', 'ILLEGAL_DRUG', 'TOBACCO', 'ALCOHOL', 'GIFT_CARD', 'CASH_EQUIVALENT', 'HIGH_RISK_UNKNOWN'
       ].includes(category));
-      let gemini: VertexFoodTextInterpretation | undefined;
+      let interpretation: FoodTextInterpretation | undefined;
       const piiBlocked = containsLikelyPii(text);
       if (interpretFoodText && !deterministicBlocked && !piiBlocked) {
-        try { gemini = await interpretFoodText(text); } catch { gemini = undefined; }
+        try { interpretation = await interpretFoodText(text); } catch { interpretation = undefined; }
       }
       return {
         status: 200,
@@ -72,17 +72,17 @@ export function createFoodSupportHandlers(
           sessionId: value.session.sessionId,
           turnCount: value.session.turns.length,
           ...(access ? { sessionAccessToken: access.token, sessionAccessExpiresAt: access.expiresAt } : {}),
-          ...(gemini ? { gemini: {
-            ...gemini,
-            engine: 'VERTEX_GEMINI',
+          ...(interpretation ? { interpretation: {
+            ...interpretation,
+            engine: 'CONFIGURED_AI_PROVIDER',
             policyAuthority: false,
             inputHash: `sha256:${createTextHash(text)}`
-          } } : { gemini: {
+          } } : { interpretation: {
             engine: deterministicBlocked
               ? 'SKIPPED_POLICY_BOUNDARY'
               : piiBlocked
                 ? 'SKIPPED_PII_BOUNDARY'
-                : interpretFoodText ? 'VERTEX_GEMINI_UNAVAILABLE' : 'DETERMINISTIC_ONLY',
+                : interpretFoodText ? 'AI_PROVIDER_UNAVAILABLE' : 'DETERMINISTIC_ONLY',
             policyAuthority: false
           } }),
           ...value.parsed

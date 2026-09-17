@@ -60,7 +60,7 @@ const artifact = {
   schemaVersion: 'real-inbound-food-phone-demo-evidence-v1',
   capturedAt: new Date().toISOString(),
   status: 'PASS',
-  claimBoundary: 'A real Korean inbound phone call used Gemini Live and live supplier catalog readback through DTMF confirmation. The synthetic demo budget prevented payment and supplier ordering.',
+  claimBoundary: 'A real Korean inbound phone call used an external AI interpreter and live supplier catalog readback through DTMF confirmation. The synthetic demo budget prevented payment and supplier ordering.',
   caseId,
   call: {
     provider: 'ClawOps',

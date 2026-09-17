@@ -13,12 +13,9 @@
 - [ ] `npm ci`
 - [ ] `npm run typecheck`
 - [ ] `npm test`
-- [ ] `cargo fmt --all --check`
-- [ ] `cargo clippy --workspace --all-targets --locked -- -D warnings`
-- [ ] `cargo test --workspace --locked`
 - [ ] 비밀정보와 실제 개인정보가 diff에 없음
 
 ## 실행 경계
 
-- [ ] 실제 주문, 전화, Cloud Run 배포, Devnet 서명 작업을 실행하지 않음
+- [ ] 실제 주문, 전화 또는 프로덕션 배포를 실행하지 않음
 - [ ] 실행했다면 승인 근거와 검증 가능한 결과를 기재함

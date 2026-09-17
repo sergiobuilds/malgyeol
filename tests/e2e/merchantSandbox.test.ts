@@ -7,7 +7,7 @@ import { InMemoryMerchantSandboxStore } from '../../src/merchant/store.ts';
 
 const input = {
   caseId: 'case_http_001', sku: 'ASSISTIVE_STAND_AID_01', quantity: 1,
-  merchantId: 'DEMO_ACCESS_STORE', programAmountKrw: 380_000, paymentIntentId: 'pay_http_001'
+  merchantId: 'DEMO_ACCESS_STORE', programAmountKrw: 380_000, paymentAuthorizationId: 'pay_http_001'
 };
 
 async function fixture() {

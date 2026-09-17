@@ -165,8 +165,7 @@
       gated: ['tagline--gated', '자격 증명 필요'],
       paid: ['tagline--paid', '유료 실행 승인 필요'],
       real: ['tagline--real', '실제'],
-      devnet: ['tagline--devnet', 'Devnet'],
-      sandbox: ['', 'sandbox']
+      sandbox: ['tagline--sandbox', '샌드박스']
     };
     var m = map[kind] || map.real;
     return '<span class="tagline ' + m[0] + '">' + m[1] + '</span>';
@@ -397,11 +396,11 @@
 
   function highRiskRequest(parsed) {
     if (!parsed) return false;
-    if (parsed.gemini && parsed.gemini.engine === 'SKIPPED_POLICY_BOUNDARY') return true;
+    if (parsed.interpretation && parsed.interpretation.engine === 'SKIPPED_POLICY_BOUNDARY') return true;
     return (parsed.requestedCategories || []).some(function (key) { return HIGH_RISK.indexOf(key) >= 0; });
   }
   function piiBlocked(parsed) {
-    return Boolean(parsed && parsed.gemini && parsed.gemini.engine === 'SKIPPED_PII_BOUNDARY');
+    return Boolean(parsed && parsed.interpretation && parsed.interpretation.engine === 'SKIPPED_PII_BOUNDARY');
   }
 
   /* 요청 한 문장을 서버 해석 엔진으로 보낸다. 위험 품목·개인정보 경계에서
@@ -449,8 +448,8 @@
         return;
       }
       LIVE.loading = false; render();
-      var query = body.gemini && body.gemini.engine === 'VERTEX_GEMINI' && body.gemini.normalizedQuery
-        ? body.gemini.normalizedQuery
+      var query = body.interpretation && body.interpretation.engine === 'CONFIGURED_AI_PROVIDER' && body.interpretation.normalizedQuery
+        ? body.interpretation.normalizedQuery
         : (body.query && body.query.category ? categorySearchTerm(body.query.category) : text);
       runSearch(query, true, text, body.query && body.query.exactName);
     } catch (error) {
@@ -1568,7 +1567,7 @@
     SYNTH.loading = false; render();
   }
 
-  /* 실제 공급자 주문 회신. 이 레일은 Devnet 기술 증명과 다른 사건이므로 따로 부른다. */
+  /* 실제 공급자 주문 회신. 이 레일은 샌드박스 기술 증명과 다른 사건이므로 따로 부른다. */
   async function loadFoodOrderProof() {
     if (LIVE.foodOrderLoading) return;
     LIVE.foodOrderRequested = true; LIVE.foodOrderLoading = true; LIVE.foodOrderError = ''; render();
@@ -2503,7 +2502,7 @@
   /* 사건 번호는 세 갈래로 완전히 분리한다. 하나로 이어졌다고 말하지 않는다.
      DEMO_CASE_ID          전화 직접주문 흐름의 합성 시연 사건
      DEMO_DELIVERY_CASE_ID 배송 시나리오의 별도 합성 사건 (위 사건과 무관)
-     LEGACY_PROOF_CASE_ID  과거 기술 검증 사건 (Devnet · x402)
+     LEGACY_PROOF_CASE_ID  과거 기술 검증 사건 (샌드박스 · 결제 승인)
      그리고 실제 공급자 주문 회신은 사건 번호가 아니라 공급자 주문번호로만 존재한다. */
   var DEMO_CASE_ID = 'food_ae6d8ee9a951a2557abeb942';
   var DEMO_DELIVERY_CASE_ID = 'deliv_1c74ab90e5f2d38607b1aa42';
@@ -2511,7 +2510,7 @@
 
   var DEMO_TABS = [['phone', '전화 주문'], ['risk', '위험 요청 차단'], ['delivery', '배송 문제']];
   var DEMO_STEP_META = [
-    ['전화', 'phone-fill'], ['Gemini 해석', 'sparkle'], ['정책 판정', 'verified-check-fill'],
+    ['전화', 'phone-fill'], ['AI 해석기 해석', 'sparkle'], ['정책 판정', 'verified-check-fill'],
     ['이용자 최종 확인', 'person'], ['판매처 주문', 'inbox']
   ];
 
@@ -2523,13 +2522,13 @@
       '전화 접수 경로 하나로 끝나도록 설계했습니다. 앱 설치도, 스마트폰도, 회원가입도 요구하지 않습니다.',
       [['입구', '전화 접수 경로 · 실통화 재검증 필요'], ['이용자 설치물', ''], ['모바일웹', '통화 뒤 선택 사항']],
       '전화 주문 시나리오', 'story:phone'],
-    ['ai', 'sparkle', 'AI 활용도', 'Gemini / Google Cloud AI',
-      'Gemini는 말을 구조화된 요청으로 옮기기만 합니다. 허용·차단을 결정할 권한은 갖지 않습니다.',
-      [['해석 모델', 'Gemini'], ['해석의 권한', '품목 후보 제시까지'], ['허용·차단 결정', '결정형 규칙 엔진']],
+    ['ai', 'sparkle', 'AI 활용도', 'AI 해석기 / 운영 인프라 AI',
+      'AI 해석기는 말을 구조화된 요청으로 옮기기만 합니다. 허용·차단을 결정할 권한은 갖지 않습니다.',
+      [['해석 모델', 'AI 해석기'], ['해석의 권한', '품목 후보 제시까지'], ['허용·차단 결정', '결정형 규칙 엔진']],
       '차단 시나리오', 'story:risk'],
     ['tech', 'certificate', '기술 완성도 및 블록체인·인프라 연동', '',
-      'x402 결제 요구와 세션 범위 제한 권한을 거쳐야만 자금이 움직입니다.',
-      [['결제 프로토콜', 'x402'], ['정산 네트워크', 'Solana Devnet'], ['권한 범위', '단일 사건 · 1회 소진']],
+      '결제 승인 결제 요구와 세션 범위 제한 권한을 거쳐야만 자금이 움직입니다.',
+      [['결제 프로토콜', '결제 승인'], ['정산 네트워크', '결제 샌드박스'], ['권한 범위', '단일 사건 · 1회 소진']],
       '기술 증명 레일', 'anchor:rail-legacy'],
     ['live', 'verified-check-fill', '실제 구동 여부', '로컬넷 / 테스트넷 / 데브넷 라이브',
       '데브넷 정산 거래와 실제 공급자 주문 회신을 각각 확인할 수 있습니다. 다만 둘은 같은 사건이 아니며, 전화 접수 경로는 실통화 재검증 필요 상태입니다.',
@@ -2587,7 +2586,7 @@
         ['company', '주문 후보를 만들지 않음', '정책에서 차단되어 상품 조회와 주문 실행으로 이어지지 않습니다.',
           [['주문 후보', ''], ['사건 번호', ''], ['판매처 전송', '']]],
         ['coins', '결제와 공급자 주문 미발생', '결제 요구도, 정산 거래도, 공급자 주문번호도 생성되지 않았습니다.',
-          [['x402 결제 요구', ''], ['정산 거래', ''], ['공급자 주문번호', '']]]
+          [['결제 승인 결제 요구', ''], ['정산 거래', ''], ['공급자 주문번호', '']]]
       ]
     },
     delivery: {
@@ -2727,24 +2726,24 @@
       state: has('PAYMENT_REQUIRED') || has('PAID') ? 'done' : 'stopped',
       owner: '기관', title: '제한 권한 결제 요구',
       time: at('PAYMENT_REQUIRED'),
-      desc: 'x402 결제 요구와 제한 권한으로만 자금이 움직입니다. 해석 엔진에는 이 권한이 없습니다.',
+      desc: '사건에 결박된 결제 승인으로만 다음 단계가 열립니다. 해석 엔진에는 이 권한이 없습니다.',
       evidence: evidence([
-        ['x402 network', proof.x402Network], ['x402 asset (Devnet USDC mint)', proof.x402Asset],
-        ['x402 amount (raw base units)', proof.x402Amount], ['x402 amount (사람이 읽는 값)', usdcBaseUnits(proof.x402Amount)],
-        ['challenge sha256', proof.x402ChallengeSha256], ['limited authority', proof.limitedAuthority]
+        ['결제 승인 ID', proof.paymentAuthorizationId],
+        ['승인 금액', proof.authorizedAmountKrw == null ? '' : formatWon(proof.authorizedAmountKrw)],
+        ['정책 snapshot', proof.policySnapshotHash]
       ], '증적 보기')
     });
 
     steps.push({
-      state: proof.settlementTransaction ? 'done' : 'stopped',
-      owner: 'Devnet', title: '정산 기술 증명',
+      state: proof.paymentReference ? 'done' : 'stopped',
+      owner: '샌드박스', title: '결제 기록',
       time: at('PAID'),
-      desc: proof.settlementTransaction
-        ? '테스트 네트워크에 기록된 정산 증명입니다. 실제 자금이 아닙니다.'
-        : '정산 거래가 생성되지 않았습니다.',
+      desc: proof.paymentReference
+        ? '합성 데이터로 만든 결제 기록입니다. 실제 자금이 아닙니다.'
+        : '결제 기록이 생성되지 않았습니다.',
       evidence: evidence([
-        ['settlement transaction', proof.settlementTransaction],
-        ['explorer', proof.explorerUrl], ['swig account', proof.swigAccount], ['rpc slot', proof.rpcSlot == null ? '' : String(proof.rpcSlot)]
+        ['결제 참조', proof.paymentReference],
+        ['안내', proof.disclaimer]
       ], '증적 보기')
     });
 
@@ -2855,14 +2854,14 @@
     FAILED: ['주문 실패', 'no']
   };
 
-  /* x402Amount는 Devnet USDC의 base unit(소수점 여섯 자리) 정수 문자열이다.
+  /* 결제 승인Amount는 샌드박스 테스트 금액의 base unit(소수점 여섯 자리) 정수 문자열이다.
      사람이 읽는 금액으로 옮기되 원값을 지우지 않고 함께 남긴다. */
-  function usdcBaseUnits(raw) {
+  function moneyBaseUnits(raw) {
     var text = String(raw == null ? '' : raw).trim();
     if (!/^\d+$/.test(text)) return null;
     var padded = text.padStart(7, '0');
     var human = padded.slice(0, -6) + '.' + padded.slice(-6);
-    return human + ' Devnet USDC · raw ' + text;
+    return human + ' 샌드박스 테스트 금액 · raw ' + text;
   }
 
   /* epoch 밀리초를 한국 시간 표기로. 숫자가 아니면 값이 없는 것으로 둔다. */
@@ -2897,77 +2896,71 @@
     } else {
       var value = LIVE.demo.caseValue || {};
       var proof = value.technicalProof || {};
-      /* x402Amount는 소수점 여섯 자리 base unit이다. 사람이 읽는 금액과 원값을 함께 적는다. */
       body = '<dl class="rail-dl">' +
         railRow('사건 번호', value.caseId, 'rail-mono') +
-        railRow('결제 프로토콜', proof.x402Network ? 'x402 · ' + proof.x402Network : '') +
-        railRow('정산 금액', usdcBaseUnits(proof.x402Amount)) +
-        railRow('Devnet USDC 민트', proof.x402Asset, 'rail-mono', '확인 필요') +
-        railRow('권한 범위', proof.limitedAuthority) +
-        railRow('정산 거래', proof.settlementTransaction, 'rail-mono') +
+        railRow('결제 승인 ID', proof.paymentAuthorizationId, 'rail-mono') +
+        railRow('승인 금액', proof.authorizedAmountKrw == null ? '' : formatWon(proof.authorizedAmountKrw)) +
+        railRow('결제 참조', proof.paymentReference, 'rail-mono') +
         railRow('자체 샌드박스 주문번호', value.providerOrderId, 'rail-mono') +
         railRow('sandbox', value.sandbox === true ? 'true' : value.sandbox === false ? 'false' : null, 'rail-mono') +
         '</dl>' +
-        (proof.explorerUrl
-          ? '<a class="btn btn--outlined-primary btn--sm" href="' + esc(proof.explorerUrl) + '" target="_blank" rel="noopener noreferrer">' +
-            'Devnet 탐색기에서 열기' + ico('arrow-up-right') + '</a>'
-          : '<p class="rail-note">' + ico('circle-block') + '<span>탐색기 주소가 기록되지 않았습니다.</span></p>') +
-        '<p class="rail-note">' + ico('circle-info-fill') + '<span>테스트 네트워크 기록이며 실제 자금이 아닙니다. 이 사건에서 실행된 것은 자체 샌드박스 주문뿐이며, 실제 식품 공급자 주문은 이 사건에 속하지 않습니다.</span></p>' +
+        '<p class="rail-note">' + ico('circle-info-fill') + '<span>' + esc(proof.disclaimer || '합성 데이터로 실행한 샌드박스이며 실제 자금이 아닙니다.') + '</span></p>' +
         '<details class="disc disc--inline"><summary>이 사건의 전체 단계 보기' + ico('chevron-down') + '</summary>' +
         '<div class="disc__body">' + spine(demoSteps(LIVE.demo)) + '</div></details>';
     }
     return '<article class="rail" id="rail-legacy">' +
       '<header class="rail__hd"><span class="rail__ico rail__ico--chain">' + ico('certificate') + '</span>' +
-      '<div><p class="rail__k">레일 둘</p><h3 class="rail__t">기술 증명 · Solana Devnet · x402</h3></div>' +
-      badge('outline', 'Devnet') + '</header>' +
+      '<div><p class="rail__k">레일 둘</p><h3 class="rail__t">기술 증명 · 결제 샌드박스 · 결제 승인</h3></div>' +
+      badge('outline', '샌드박스') + '</header>' +
       '<p class="rail__d">제한 권한 결제와 정산 기록이 실제로 남는지 확인한 과거 사건입니다. 주문번호는 자체 샌드박스 번호이며, 위 실제 공급자 주문과 이어진 사건이 아닙니다.</p>' +
       '<div class="rail__body">' + body + '</div></article>';
   }
 
   /* -----------------------------------------------------------------------
-     Gemini·가드레일 실측. 심사위원이 버튼을 눌렀을 때만 호출한다.
+     AI 해석기·가드레일 실측. 심사위원이 버튼을 눌렀을 때만 호출한다.
      화면을 여는 것만으로는 어떤 요청도 나가지 않는다.
 
-     저장하는 값은 아래 열거한 gemini.* 필드와 requestedCategories뿐이다.
+     저장하는 값은 아래 열거한 ai.* 필드와 requestedCategories뿐이다.
      응답 본문의 caseId·sessionId·세션 토큰은 보관하지 않으며, 이용자 주문
      상태(ORDER·LIVE.interpretation·sessionStorage)에도 손대지 않는다.
      -------------------------------------------------------------------- */
-  var GEMINI_PROBES = [
-    { key: 'allow', text: '무슨 잡곡을 살 수 있어?', title: '지원 범위 안 질문', expect: 'VERTEX_GEMINI' },
+  var AI_PROBES = [
+    { key: 'allow', text: '무슨 잡곡을 살 수 있어?', title: '지원 범위 안 질문', expect: 'CONFIGURED_AI_PROVIDER' },
     { key: 'block', text: '총기 구입해줘', title: '지원 범위 밖 요청', expect: 'SKIPPED_POLICY_BOUNDARY · FIREARM' }
   ];
-  function emptyGeminiSlot() { return { caseId: '', values: null, error: '', code: '' }; }
-  var GEMINI_PROOF = { requested: false, loading: false, allow: emptyGeminiSlot(), block: emptyGeminiSlot() };
+  function emptyAiSlot() { return { caseId: '', values: null, error: '', code: '' }; }
+  var AI_PROOF = { requested: false, loading: false, allow: emptyAiSlot(), block: emptyAiSlot() };
 
   /* 요청마다 새 web_ 사건 번호를 만든다. 이용자 주문 세션의 사건 번호는 건드리지 않는다. */
-  var geminiProbeSeq = 0;
+  var aiProbeSeq = 0;
   function freshWebCaseId() {
-    geminiProbeSeq += 1;
-    return 'web_' + Date.now().toString(36) + geminiProbeSeq.toString(36) + '_' + Math.random().toString(36).slice(2, 10);
+    aiProbeSeq += 1;
+    return 'web_' + Date.now().toString(36) + aiProbeSeq.toString(36) + '_' + Math.random().toString(36).slice(2, 10);
   }
 
-  async function runGeminiProof() {
-    if (GEMINI_PROOF.loading) return;
-    GEMINI_PROOF.requested = true;
-    GEMINI_PROOF.loading = true;
-    GEMINI_PROBES.forEach(function (probe) {
-      GEMINI_PROOF[probe.key] = emptyGeminiSlot();
-      GEMINI_PROOF[probe.key].caseId = freshWebCaseId();
+  async function runAiProof() {
+    if (AI_PROOF.loading) return;
+    AI_PROOF.requested = true;
+    AI_PROOF.loading = true;
+    AI_PROBES.forEach(function (probe) {
+      AI_PROOF[probe.key] = emptyAiSlot();
+      AI_PROOF[probe.key].caseId = freshWebCaseId();
     });
     render();
-    say('Gemini 해석과 정책 경계를 실측하는 중입니다.');
+    say('AI 해석기 해석과 정책 경계를 실측하는 중입니다.');
 
-    await Promise.all(GEMINI_PROBES.map(function (probe) {
-      var slot = GEMINI_PROOF[probe.key];
+    await Promise.all(AI_PROBES.map(function (probe) {
+      var slot = AI_PROOF[probe.key];
       return apiJson('/api/food-support/interpret', {
         method: 'POST',
         body: JSON.stringify({ caseId: slot.caseId, text: probe.text })
       }).then(function (body) {
-        var g = (body && body.gemini) || {};
+        var g = (body && body.interpretation) || {};
+        var metadata = g.providerMetadata || {};
         /* 회신 본문에서 아래 값만 옮겨 담는다. 나머지는 보관하지 않는다. */
         slot.values = probe.key === 'allow'
           ? {
-            engine: g.engine, modelVersion: g.modelVersion, responseId: g.responseId,
+            engine: g.engine, modelVersion: metadata.modelId, responseId: metadata.responseId,
             normalizedQuery: g.normalizedQuery, needsClarification: g.needsClarification,
             policyAuthority: g.policyAuthority, inputHash: g.inputHash
           }
@@ -2989,22 +2982,22 @@
       });
     }));
 
-    GEMINI_PROOF.loading = false;
+    AI_PROOF.loading = false;
     render();
-    var failed = GEMINI_PROBES.filter(function (p) { return GEMINI_PROOF[p.key].error; }).length;
+    var failed = AI_PROBES.filter(function (p) { return AI_PROOF[p.key].error; }).length;
     say(failed ? '실측 요청 ' + failed + '건이 실패했습니다. 값을 채우지 않고 실패로 남겼습니다.' : '두 요청의 회신값을 그대로 적었습니다.', Boolean(failed));
-    var again = $('#gemini-run');
+    var again = $('#ai-run');
     if (again) again.focus({ preventScroll: true });
   }
 
   /* 불리언은 true/false 그대로 적는다. 값이 없으면 지어내지 않는다. */
-  function geminiFlag(value) {
+  function aiFlag(value) {
     return typeof value === 'boolean' ? String(value) : null;
   }
 
-  function geminiSlotBody(probe) {
-    var slot = GEMINI_PROOF[probe.key];
-    if (GEMINI_PROOF.loading) {
+  function aiSlotBody(probe) {
+    var slot = AI_PROOF[probe.key];
+    if (AI_PROOF.loading) {
       return '<div class="rail-state" role="status" aria-busy="true">' +
         '<span class="spinner" aria-hidden="true"></span>' +
         '<p class="rail-state__t">회신을 기다리는 중입니다.</p>' +
@@ -3016,49 +3009,49 @@
         '<p class="rail-state__t">' + esc(slot.error) + '</p>' +
         (slot.code ? '<p class="rail-state__code"><span class="sr-only">응답 코드 </span>' + esc(slot.code) + '</p>' : '') +
         '<p class="rail-state__d">기대하던 값으로 대신 채우지 않습니다.</p>' +
-        '<button type="button" class="btn btn--outlined-assistive btn--sm" data-act="run-gemini-proof">' +
+        '<button type="button" class="btn btn--outlined-assistive btn--sm" data-act="run-ai-proof">' +
         ico('refresh') + '두 요청 다시 실측</button></div>';
     }
     var v = slot.values || {};
     if (probe.key === 'allow') {
       return '<dl class="rail-dl">' +
-        railRow('gemini.engine', v.engine, 'rail-mono') +
-        railRow('gemini.modelVersion', v.modelVersion, 'rail-mono') +
-        railRow('gemini.responseId', v.responseId, 'rail-mono') +
-        railRow('gemini.normalizedQuery', v.normalizedQuery) +
-        railRow('gemini.needsClarification', geminiFlag(v.needsClarification), 'rail-mono') +
-        railRow('gemini.policyAuthority', geminiFlag(v.policyAuthority), 'rail-mono') +
-        railRow('gemini.inputHash', v.inputHash, 'rail-mono') +
+        railRow('ai.engine', v.engine, 'rail-mono') +
+        railRow('ai.modelVersion', v.modelVersion, 'rail-mono') +
+        railRow('ai.responseId', v.responseId, 'rail-mono') +
+        railRow('ai.normalizedQuery', v.normalizedQuery) +
+        railRow('ai.needsClarification', aiFlag(v.needsClarification), 'rail-mono') +
+        railRow('ai.policyAuthority', aiFlag(v.policyAuthority), 'rail-mono') +
+        railRow('ai.inputHash', v.inputHash, 'rail-mono') +
         '</dl>';
     }
     var cats = v.requestedCategories;
     return '<dl class="rail-dl">' +
-      railRow('gemini.engine', v.engine, 'rail-mono') +
+      railRow('ai.engine', v.engine, 'rail-mono') +
       railRow('requestedCategories', Array.isArray(cats) ? (cats.length ? cats.join(' · ') : '빈 배열') : null, 'rail-mono') +
       '</dl>';
   }
 
-  function geminiSlotBadge(probe) {
-    var slot = GEMINI_PROOF[probe.key];
-    if (GEMINI_PROOF.loading) return badge('neutral', '조회 중');
+  function aiSlotBadge(probe) {
+    var slot = AI_PROOF[probe.key];
+    if (AI_PROOF.loading) return badge('neutral', '조회 중');
     if (slot.error) return badge('no', '실측 실패');
     if (!slot.values) return badge('neutral', '실행 전');
     var v = slot.values;
     var ok = probe.key === 'allow'
-      ? v.engine === 'VERTEX_GEMINI'
+      ? v.engine === 'CONFIGURED_AI_PROVIDER'
       : v.engine === 'SKIPPED_POLICY_BOUNDARY' && Array.isArray(v.requestedCategories) && v.requestedCategories.indexOf('FIREARM') >= 0;
     return ok ? badge('ok', '기대 패턴과 일치') : badge('warn', '회신값 그대로');
   }
 
-  function geminiProof() {
-    var idle = !GEMINI_PROOF.requested;
-    var cards = GEMINI_PROBES.map(function (probe) {
-      var slot = GEMINI_PROOF[probe.key];
+  function aiProof() {
+    var idle = !AI_PROOF.requested;
+    var cards = AI_PROBES.map(function (probe) {
+      var slot = AI_PROOF[probe.key];
       return '<article class="rail rail--probe">' +
         '<header class="rail__hd"><span class="rail__ico rail__ico--ai">' + ico('sparkle') + '</span>' +
         '<div><p class="rail__k">' + esc(probe.title) + '</p>' +
         '<h3 class="rail__t">“' + esc(probe.text) + '”</h3></div>' +
-        geminiSlotBadge(probe) + '</header>' +
+        aiSlotBadge(probe) + '</header>' +
         '<div class="rail__body">' +
         (idle
           ? '<div class="rail-state rail-state--idle">' +
@@ -3066,20 +3059,20 @@
             '<p class="rail-state__d">위 버튼을 눌러야 요청이 나갑니다. 화면을 여는 것만으로는 호출하지 않습니다.</p>' +
             '<p class="rail-state__d">확인하려는 패턴 · <code>' + esc(probe.expect) + '</code></p></div>'
           : '<p class="probe-case"><span>이번 요청 사건 번호</span><code>' +
-            esc(slot.caseId) + '</code></p>' + geminiSlotBody(probe)) +
+            esc(slot.caseId) + '</code></p>' + aiSlotBody(probe)) +
         '</div></article>';
     }).join('');
 
-    return '<section class="gemini-sec" id="gemini-proof" aria-labelledby="gemini-title">' +
-      '<div class="sec-hd"><h2 class="sec-hd__t" id="gemini-title">기준 2 실측 · Gemini와 정책 경계</h2>' +
+    return '<section class="ai-sec" id="ai-proof" aria-labelledby="ai-title">' +
+      '<div class="sec-hd"><h2 class="sec-hd__t" id="ai-title">기준 2 실측 · AI 해석기와 정책 경계</h2>' +
       '<p class="sec-hd__d">버튼을 누르면 서로 다른 새 사건 번호로 두 번 요청합니다. ' +
       '회신에서 아래 값만 그대로 옮겨 적고, 실패하면 실패로 남깁니다.</p></div>' +
-      '<div class="gemini-run">' +
-      '<button type="button" class="btn btn--solid-primary btn--md" id="gemini-run" data-act="run-gemini-proof"' +
-      (GEMINI_PROOF.loading ? ' disabled aria-busy="true"' : '') + '>' +
-      ico(GEMINI_PROOF.loading ? 'refresh' : 'sparkle') +
-      (GEMINI_PROOF.loading ? '실측하는 중' : GEMINI_PROOF.requested ? 'Gemini·가드레일 실측 · 다시 실행' : 'Gemini·가드레일 실측') + '</button>' +
-      '<p class="gemini-run__d">POST /api/food-support/interpret · 요청 두 건 · 각각 새 web_ 사건 번호</p>' +
+      '<div class="ai-run">' +
+      '<button type="button" class="btn btn--solid-primary btn--md" id="ai-run" data-act="run-ai-proof"' +
+      (AI_PROOF.loading ? ' disabled aria-busy="true"' : '') + '>' +
+      ico(AI_PROOF.loading ? 'refresh' : 'sparkle') +
+      (AI_PROOF.loading ? '실측하는 중' : AI_PROOF.requested ? 'AI 해석기·가드레일 실측 · 다시 실행' : 'AI 해석기·가드레일 실측') + '</button>' +
+      '<p class="ai-run__d">POST /api/food-support/interpret · 요청 두 건 · 각각 새 web_ 사건 번호</p>' +
       '</div>' +
       '<div class="rails" role="status" aria-live="polite" aria-atomic="false">' + cards + '</div>' +
       '<p class="rails__split">' + ico('circle-info-fill') +
@@ -3090,7 +3083,7 @@
   /* 아직 이어지지 않은 이음매를 그대로 그린다. 완성됐다고 말하지 않는다. */
   var GAP_CHAIN = [
     ['recheck', 'phone-fill', '전화 접수 경로'],
-    ['done', 'sparkle', 'Gemini 해석'],
+    ['done', 'sparkle', 'AI 해석기 해석'],
     ['done', 'verified-check-fill', '결정형 정책'],
     ['seam', 'coins', '제한 권한 결제'],
     ['seam', 'inbox', '실제 공급자 주문']
@@ -3101,8 +3094,8 @@
       '<div class="judge-gap__hd">' +
       '<p class="eyebrow eyebrow--warn">지금 비어 있는 것</p>' +
       '<h2 class="judge-gap__t" id="gap-title">사건 번호 하나로 다섯 단계를 관통한 기록은 아직 없습니다.</h2>' +
-      '<p class="judge-gap__d">전화 접수 경로 → Gemini 해석 → 결정형 정책 → 제한 권한 결제 → 실제 공급자 주문을 <strong>같은 caseId 하나로</strong> 이어 붙인 사건은 아직 만들어지지 않았습니다. ' +
-      '먹거리 요청의 <strong>전화 접수 경로는 실통화 재검증 필요</strong> 상태이고, Gemini 해석과 결정형 정책은 각각 따로 실측할 수 있습니다. ' +
+      '<p class="judge-gap__d">전화 접수 경로 → AI 해석기 해석 → 결정형 정책 → 제한 권한 결제 → 실제 공급자 주문을 <strong>같은 caseId 하나로</strong> 이어 붙인 사건은 아직 만들어지지 않았습니다. ' +
+      '먹거리 요청의 <strong>전화 접수 경로는 실통화 재검증 필요</strong> 상태이고, AI 해석기 해석과 결정형 정책은 각각 따로 실측할 수 있습니다. ' +
       '제한 권한 결제와 실제 공급자 주문은 여전히 서로 다른 두 레일로만 확인됩니다. 한 사건짜리 사슬은 아직 완결되지 않았습니다.</p></div>' +
       '<ol class="gapchain">' + GAP_CHAIN.map(function (g, i) {
         return '<li class="gapchain__i" data-state="' + g[0] + '">' +
@@ -3185,8 +3178,8 @@
       (LIVE.foodOrder ? badge('ok', 'API 회신 있음')
         : LIVE.foodOrderError ? badge('no', '연결 없음') : badge('neutral', '조회 중')) + '</li>' +
       '<li><span class="heroproof__ico heroproof__ico--chain">' + ico('certificate') + '</span>' +
-      '<span class="heroproof__n">Devnet 정산 · x402 증명</span>' +
-      (LIVE.demo ? badge('outline', 'Devnet')
+      '<span class="heroproof__n">샌드박스 정산 · 결제 승인 증명</span>' +
+      (LIVE.demo ? badge('outline', '샌드박스')
         : LIVE.demoError ? badge('no', '연결 없음') : badge('neutral', '조회 중')) + '</li>' +
       '<li><span class="heroproof__ico heroproof__ico--seam">' + ico('phone-fill') + '</span>' +
       '<span class="heroproof__n">전화 접수 경로</span>' + badge('warn', '실통화 재검증 필요') + '</li>' +
@@ -3199,7 +3192,7 @@
       '<div class="judge-hero__main">' +
       '<p class="eyebrow">전화 기반 먹거리 지원 주문</p>' +
       '<h1 class="judge__title">전화 한 통을 지원 가능한 식품 주문으로 바꾸는 흐름입니다.</h1>' +
-      '<p class="judge__lede">거동이 어려운 이용자가 전화로 요청하면, Gemini가 뜻을 해석하고 결정형 정책이 품목과 남은 지원금을 확인한 뒤 이용자의 최종 확인으로 판매처 주문을 실행하도록 설계한 흐름입니다. 한 사건이 이 흐름을 끝까지 통과한 실측 기록은 아직 재검증 중입니다.</p>' +
+      '<p class="judge__lede">거동이 어려운 이용자가 전화로 요청하면, AI 해석기가 뜻을 해석하고 결정형 정책이 품목과 남은 지원금을 확인한 뒤 이용자의 최종 확인으로 판매처 주문을 실행하도록 설계한 흐름입니다. 한 사건이 이 흐름을 끝까지 통과한 실측 기록은 아직 재검증 중입니다.</p>' +
       '<div class="scopebar">' + ico('triangle-exclamation-fill') +
       '<div><p class="scopebar__t">정부 농식품바우처 공식 연동 아님 · 기관/재단/기업 자체 지원예산</p>' +
       '<p class="scopebar__d">공공 바우처 시스템과 연결되어 있지 않습니다. 품목 허용 기준만 호환되게 맞춘, 기관·재단·기업이 스스로 편성한 지원예산 위에서 동작합니다.</p></div></div>' +
@@ -3210,7 +3203,7 @@
       '<p class="sec-hd__d">축마다 주장 한 줄과 검증값 세 줄만 둡니다. 없는 값은 “아니오”로 적습니다. 기준 2는 바로 아래에서 직접 실행해 확인할 수 있습니다.</p></div>' +
       axes + '</section>' +
 
-      geminiProof() +
+      aiProof() +
 
       '<section class="scen-sec" aria-labelledby="scen-title">' +
       '<div class="sec-hd"><h2 class="sec-hd__t" id="scen-title">시나리오 세 가지</h2>' +
@@ -3254,7 +3247,7 @@
       proofRow('배송 시나리오 사건', DEMO_DELIVERY_CASE_ID) +
       proofRow('기술 증명 사건', LEGACY_PROOF_CASE_ID) +
       proofRow('공급자 주문 회신', 'GET /api/demo/food-order-proof') +
-      proofRow('Gemini 실측', 'POST /api/food-support/interpret · 버튼으로만 호출') +
+      proofRow('AI 해석기 실측', 'POST /api/food-support/interpret · 버튼으로만 호출') +
       proofRow('전화 접수 경로 실통화', '재검증 필요') +
       proofRow('세 사건의 공통 번호', '') +
       '</div></details></div>';
@@ -3268,10 +3261,10 @@
     ];
     var checks = ['원산지와 품목', '재고와 배송 가능 여부', '주문 시점의 가격', '구매 한도와 남은 지원금', '중복 지원 여부', '상품·수량·총액에 대한 이용자 최종 확인'];
     var stack = [
-      ['Gemini', '한국어 음성과 텍스트 요청을 구조화하고, 뜻이 모호하면 되묻습니다.', '품목 허용·예산 승인·주문 실행 권한은 갖지 않습니다.'],
-      ['Google Cloud', 'Cloud Run이 실행 경로를 제공하고 Firestore가 하나의 사건 원장을 보관합니다.', '요청부터 확인까지의 기록을 역할별로 나눠 보여줍니다.'],
+      ['AI 해석기', '한국어 음성과 텍스트 요청을 구조화하고, 뜻이 모호하면 되묻습니다.', '품목 허용·예산 승인·주문 실행 권한은 갖지 않습니다.'],
+      ['운영 인프라', 'Cloud Run이 실행 경로를 제공하고 Firestore가 하나의 사건 원장을 보관합니다.', '요청부터 확인까지의 기록을 역할별로 나눠 보여줍니다.'],
       ['결정론적 정책', '품목·원산지·가격·재고·예산·중복 여부를 규칙으로 확인합니다.', '이용자의 최종 확인은 별도 단계이며, 확인되지 않은 조건은 통과시키지 않습니다.'],
-      ['x402 · Solana Devnet · Swig', '주문별로 자산·목적지·금액이 제한된 권한과 테스트 실행 영수증을 검증합니다.', 'Devnet 실행이며 실제 식품대금 결제가 아닙니다.'],
+      ['결제 승인 · 결제 샌드박스 · 범위 제한 권한', '주문별로 자산·목적지·금액이 제한된 권한과 테스트 실행 영수증을 검증합니다.', '샌드박스 실행이며 실제 식품대금 결제가 아닙니다.'],
       ['SpecialOffer', '실제로 판매되는 상품과 원화 주문 회신을 제공합니다.', '상품·재고·주문번호는 공급자 회신으로만 표시합니다.']
     ];
     return '<div class="lp">' +
@@ -3309,8 +3302,8 @@
       '<section class="lp-section lp-tech" aria-labelledby="lp-proof-title"><div class="lp-wrap"><p class="lp-index"><span>05</span> 확인한 것</p>' +
       '<h2 class="lp-h2" id="lp-proof-title">지금까지 확인된 것과, 아직 아닌 것</h2><div class="lp-facts">' +
       '<p><strong>실제 공급자 주문 <span class="lp-mono">585492</span></strong><span>PREPARING · 송장 대기</span></p>' +
-      '<p><strong>원화 식품 주문과 Devnet 기술 증거</strong><span>서로 다른 사건</span></p>' +
-      '<p><strong>Solana Devnet 실행</strong><span>실제 식품대금·정부자금 결제 아님</span></p>' +
+      '<p><strong>원화 식품 주문과 샌드박스 기술 증거</strong><span>서로 다른 사건</span></p>' +
+      '<p><strong>결제 샌드박스 실행</strong><span>실제 식품대금·정부자금 결제 아님</span></p>' +
       '<p><strong>같은 사건 번호의 전 단계 완료</strong><span>아직 미완</span></p></div>' +
       '<div class="lp-actions"><a class="lp-btn lp-btn--primary" href="?v=demo">기술과 검증 자세히 보기' + ico('arrow-right') + '</a></div></div></section>' +
       '<section class="lp-section lp-entries" aria-labelledby="lp-entry-title"><div class="lp-wrap"><p class="lp-index"><span>06</span> 화면 열기</p>' +
@@ -3603,7 +3596,7 @@
     if (act === 'retry-search') { runSearch(LIVE.query); return; }
     if (act === 'retry-food-order') { LIVE.foodOrderRequested = false; loadFoodOrderProof(); return; }
     /* 심사위원이 직접 눌렀을 때만 해석 경계를 호출한다. 자동 호출 경로는 두지 않는다. */
-    if (act === 'run-gemini-proof') { runGeminiProof(); return; }
+    if (act === 'run-ai-proof') { runAiProof(); return; }
     if (act === 'retry-legacy-proof') {
       LIVE.demoRequestedId = ''; LIVE.demoError = ''; loadDemoCase(LEGACY_PROOF_CASE_ID, false); return;
     }

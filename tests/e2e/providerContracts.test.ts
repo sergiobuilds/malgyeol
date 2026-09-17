@@ -2,22 +2,18 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {
   PROVIDERS,
-  createCloudRunProviderAdapter,
-  createMerchantProviderAdapter,
-  createSolanaDevnetProviderAdapter,
-  createTwilioProviderAdapter,
-  createVertexProviderAdapter,
-  createX402ProviderAdapter,
+  createAiProviderAdapter,
+  createHostingProviderAdapter,
+  createSupplierProviderAdapter,
+  createVoiceProviderAdapter,
   runProviderGate
 } from '../../src/providers/providerContracts.ts';
 
 const factories = [
-  createTwilioProviderAdapter,
-  createVertexProviderAdapter,
-  createX402ProviderAdapter,
-  createSolanaDevnetProviderAdapter,
-  createMerchantProviderAdapter,
-  createCloudRunProviderAdapter
+  createVoiceProviderAdapter,
+  createAiProviderAdapter,
+  createSupplierProviderAdapter,
+  createHostingProviderAdapter
 ] as const;
 
 test('all provider blocker adapters emit the common schema from a nonzero subprocess', async () => {
@@ -48,7 +44,7 @@ test('one blocked provider prevents every live side effect before execution star
   assert.equal(result.status, 'BLOCKED_EXTERNAL_DEPENDENCY');
   assert.equal(result.sideEffectsStarted, 0);
   assert.equal(calls, 0);
-  assert.deepEqual(result.blockers.map(value => value.provider), ['x402']);
+  assert.deepEqual(result.blockers.map(value => value.provider), ['supplier']);
 });
 
 test('live adapters execute each explicitly supplied operation once after all preflights pass', async () => {

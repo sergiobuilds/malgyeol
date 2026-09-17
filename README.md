@@ -1,23 +1,14 @@
-# 말결 · Bounded Agent Payments for Everyone
+# 말결
 
-사람이 의사를 표현하면 Gemini가 실행 가능한 거래 의도로 바꾸고, 결정론적 정책과 Solana가 AI의 권한을 제한하며 구매·결제·증빙·정산까지 잇는 에이전트 결제 기반시설입니다. 디지털 약자를 첫 권리자로 삼고, 지원금은 가장 엄격한 테스트베드, 식품지원은 첫 실제 공급망 사례, 전화와 음성은 첫 인터페이스로 사용합니다.
+말결은 복잡한 디지털 절차를 이용하기 어려운 사람이 전화나 쉬운 문장으로 지원을 요청하고, 사람의 최종 확인을 거쳐 주문과 증빙까지 이어가도록 돕는 실행 서비스입니다.
 
-현재 저장소에는 2026 농식품바우처 호환 품목 정책, Vertex Gemini 음성·웹 요청 해석, SpecialOffer 실상품·주문 어댑터, Firestore 사건·역할 원장, subject-bound read/act 권한, 이용자·기관 워크플로, x402·Solana Devnet 제한권한 증명, 모바일웹·PC 업무함·심사 데모가 있습니다. 현행 소스는 Node 테스트 197개, Rust 테스트 9개와 typecheck를 통과합니다. 최신 공개 제품 프론트는 Cloud Run 리비전 `benefit-settlement-rail-00061-dtq`에 배포됐습니다. 공개 루트는 5섹션 제품 스토리, `/tech`는 상세 구현과 증거, `/?v=home`과 `/?v=demo`는 실제 제품 화면을 제공합니다.
+AI는 말과 글을 구조화할 뿐 자격, 품목, 예산, 결제 또는 주문을 결정하지 않습니다. 결정형 정책, 범위가 제한된 권한, 이용자 확인, 추가만 가능한 사건 원장이 각각의 경계를 맡습니다.
 
-**목차** — 1 실행과 검증 · 2 실측 경계 · 3 공동개발 · 4 이력
+> 현재 저장소는 합성 데이터와 샌드박스 실행을 위한 제품 후보입니다. 실제 공공 지원금, 정부 시스템, 실결제 또는 실제 수혜자 개인정보와 연결되어 있지 않습니다.
 
-- 공개 서비스: https://benefit-settlement-rail-tbauoylpra-uc.a.run.app/
-- 기술 구현: https://benefit-settlement-rail-tbauoylpra-uc.a.run.app/tech
-- 제품 화면: https://benefit-settlement-rail-tbauoylpra-uc.a.run.app/?v=home
-- 심사 데모: https://benefit-settlement-rail-tbauoylpra-uc.a.run.app/?v=demo
-- 공개 상태 확인: https://benefit-settlement-rail-tbauoylpra-uc.a.run.app/health
-- 최신 Cloud Run 리비전: `benefit-settlement-rail-00061-dtq`
-- 제출 발표자료: [말결 프로젝트 소개서 PDF](pitch/malgyeol-submission-deck.pdf)
-- 제출 영상: [말결 2분 50초 데모](https://youtu.be/yS79FHbe5To)
-- 실제 070·Devnet 기술 사건: [`proof/u9-real-phone-success.json`](proof/u9-real-phone-success.json)
-- 실제 공급망 주문은 공개 서비스의 [`/api/demo/food-order-proof`](https://benefit-settlement-rail-tbauoylpra-uc.a.run.app/api/demo/food-order-proof)에서 최신 상태를 읽습니다.
+## 실행
 
-## 1 실행과 검증
+Node.js 22와 npm 10이 필요합니다.
 
 ```bash
 npm ci
@@ -25,43 +16,30 @@ npm run check
 npm start
 ```
 
-공개 웹앱은 Vertex Gemini로 한국어 요청을 거래 의도로 구조화하고 식품지원 테스트베드의 정책 API를 읽습니다. Gemini는 정책 승인이나 결제 권한을 갖지 않습니다. 마지막 검증된 정상 탐색은 `VERTEX_GEMINI`와 `gemini-2.5-flash` provenance를 반환했고, 총기 요청은 `SKIPPED_POLICY_BOUNDARY`로 종료해 Gemini·상품 조회·결제에 도달하지 않았습니다.
+- 제품 소개: `http://localhost:8080/`
+- 이용자 흐름: `http://localhost:8080/?v=home`
+- 운영 흐름: `http://localhost:8080/?v=ops&s=demo`
+- 기술 경계: `http://localhost:8080/tech`
+- 상태 확인: `http://localhost:8080/health`
 
-화면의 공개 재생 결제는 `SIMULATED_NO_DEVNET_CREDENTIALS_*`로 표시됩니다. 인증된 전화 에이전트 브리지는 `LIVE_DEVNET_PAYMENT=1`일 때 주문별 에스크로에만 정확히 1 Circle Devnet USDC를 보낼 수 있는 Swig 제한권한 경로를 사용합니다. `GOOGLE_CLOUD_PROJECT`가 설정되면 Vertex AI Gemini 오디오 해석기를 사용하고, `CASE_REPOSITORY=firestore`이면 Firestore 사건 원장을 사용합니다. 이번 제출 경로에서 Twilio는 사용하지 않습니다.
+외부 AI 해석기는 선택 사항입니다. `AI_INTERPRETER_ENDPOINT`를 설정하지 않으면 결정형 로컬 해석으로 동작합니다.
 
-`cloudbuild.yaml`은 검증된 이미지를 빌드·푸시합니다. Cloud Run 리비전 전환은 Secret Manager 환경을 유지할 수 있는 승인된 배포 주체가 수행합니다. 전화 HMAC, 감사 열람 토큰, Devnet 서명키는 이미지와 Git에 넣지 않습니다.
+## 제품 경계
 
-## 2 실측 경계
+```text
+전화·웹 요청 → 의도 구조화 → 정책 판정 → 이용자 확인
+             → 결제 승인 → 공급자 주문 → 결과·예외 기록
+```
 
-- [`proof/u8-cloud-live-devnet-case.json`](proof/u8-cloud-live-devnet-case.json)은 인증된 합성 에이전트 입력이 동일 `caseId`로 정책·동의·x402 Devnet 결제·자체 샌드박스 주문까지 이어졌음을 증명합니다. [Devnet Explorer](https://explorer.solana.com/tx/54qCy5me9uXHRY3QobrhFUPp6EiZ37dvUYXGw11KY4pKrmQF2Nff9dvfTHPE8vrNJtbDnaKFLFL2AynSVioNfMTQ?cluster=devnet)에서 거래를 확인할 수 있습니다.
-- [`proof/u9-real-phone-success.json`](proof/u9-real-phone-success.json)은 한국 070 실전화가 동일 `caseId`로 Vertex 해석·DTMF·Devnet·자체 샌드박스 주문까지 이어진 기록입니다. [Devnet Explorer](https://explorer.solana.com/tx/52ythTGiyTLbsQVQRmHJmHtVVDzVW9UrPxvjcF1Mq3Sb9bGZD7gZyHsawr5RaY7PMfL5URdsSF2T6mBTejqUCXBX?cluster=devnet)에서 거래를 확인할 수 있습니다. 이 기록은 이전 보조기기 흐름이며 외부 식료품 공급사 주문 증거가 아닙니다.
-- 식료품 실주문 `585492`는 `web_real_food_20260801_01`에서 국내산 모듬잡곡 700g 1개, 총 12,300원으로 접수됐습니다. 외부 주문번호는 `26080121204025`, 상태는 `PREPARING`입니다. 택배사와 송장번호는 아직 없습니다.
-- 식료품 실주문과 위 Devnet 기술 사건은 서로 다른 `caseId`입니다. 전화부터 실제 식품 주문과 Devnet 거래까지 하나로 연결됐다고 주장하지 않습니다.
-- 심사 화면은 공식 네 기준, 버튼으로 실행하는 Gemini·가드레일 실측, 합성 시나리오 세 개, 실주문·Devnet 분리 레일과 남은 동일 `caseId` 이음매를 표시합니다.
-- Solana는 Devnet이며 Mainnet이나 실가치 정부자금 결제가 아닙니다.
-- 현행 Solana 실증은 자산·목적지·누적 금액 제한입니다. 사용자·목적·품목·판매자·시간·횟수는 정책·동의·범위 토큰·사건 원장이 함께 제한하며 전부 온체인이라고 주장하지 않습니다.
-- 배송 후 release/refund 모듈은 별도 기술증명이며 현재 전화 핵심 흐름의 완료 주장에 포함하지 않습니다.
+- 해석기, 공급자, 결제, 호스팅은 인터페이스 뒤에 격리합니다.
+- 민감정보와 위험 요청은 외부 AI 호출 전에 차단합니다.
+- 승인과 실행은 같은 사건 ID와 조건 해시로 결박합니다.
+- 외부 서비스가 실패해도 운영자가 사건 기록에서 이어받습니다.
 
-품목 정책은 농식품바우처 공식 플랫폼의 공개 기준을 호환 규칙으로 사용합니다. 현 집행 자금은 정부 바우처가 아니라 기관·재단·기업의 자체 식품지원 예산을 가정하며, 공식 카드 결제나 지정몰 제휴로 표시하지 않습니다.
+자세한 구조는 [아키텍처](docs/ARCHITECTURE.md), 출품·파일럿·사업화 자료는 [AI for Good 제출 자료](docs/AI_FOR_GOOD_SUBMISSION.md)를 참고합니다.
 
-## 3 공동개발
+## 권리와 기여
 
-- 구조와 현재·과거 경계: [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md)
-- 개발·검증·PR 규칙: [`CONTRIBUTING.md`](CONTRIBUTING.md)
-- 보안 제보와 비밀정보 처리: [`SECURITY.md`](SECURITY.md)
-- 사용권과 제3자 고지: [`LICENSE`](LICENSE), [`THIRD_PARTY_NOTICES`](THIRD_PARTY_NOTICES)
+이 저장소는 공개 소프트웨어 사용권을 부여하지 않습니다. 열람이나 포크 가능 여부가 복제, 배포 또는 상업 이용 권한을 뜻하지 않습니다. 모든 권리는 [LICENSE](LICENSE)에 따라 유보됩니다.
 
-저장소와 npm 패키지의 현행 이름은 `malgyeol`입니다. 배포 URL과 일부 증거의 `benefit-settlement-rail` 표기는 기존 공개 배포와 검증 해시를 가리키는 호환 식별자입니다. `G2`~`G6`, `U3`~`U9`는 개발 상태가 아니라 제출 당시 증거 단위이므로 이름을 유지합니다.
-
-## 4 이력
-
-- 2026-07-30 — 제한권한형 에이전트 결제 제품 구현을 시작했습니다.
-- 2026-07-31 — 비제휴 합성 전화 구매 E2E 데모를 추가했습니다.
-- 2026-08-01 — 농식품바우처 호환 식품지원 제품과 모바일웹으로 전환했습니다.
-- 2026-08-01 — SpecialOffer 판매회원과 실상품 API를 연결했습니다.
-- 2026-08-01 — 동일 caseId 유료행동 게이트로 실제 주문 `585492`를 접수하고 공급자 잔액과 주문 상태를 재검증했습니다.
-- 2026-08-01 — Vertex Gemini 웹 해석과 Design Forge + WDS 실상품 모바일 주문·조회 흐름을 배포하고 개인정보·위험품목의 Gemini 사전 차단 경계를 검증했습니다.
-- 2026-08-02 — Design Forge + WDS 심사 화면, Gemini·가드레일 실측, 분리된 실주문·Devnet 레일, 170개 테스트와 Cloud Run `00057-qqs`를 반영했습니다.
-- 2026-08-03 — 제품 위계를 제한권한형 에이전트 결제 기반시설로 정리하고 195개 테스트를 통과했습니다.
-- 2026-08-03 — 5섹션 메인과 별도 기술 페이지를 Cloud Run `00060-w98`에 배포하고 세 뷰포트 공개 readback을 통과했습니다.
-- 2026-08-03 — 정부보조금 전문 회계사가 현장에서 이 문제를 시작한 창업자 원점을 제출 덱 전면부에 추가했습니다.
+외부 기여는 사전 승인과 별도의 서면 기여 계약이 있어야 받습니다. 저장소 접근은 저작권, 지분, 수익분배, 고용 또는 파트너십을 만들지 않습니다. 자세한 절차는 [기여 안내](CONTRIBUTING.md)를 따릅니다.

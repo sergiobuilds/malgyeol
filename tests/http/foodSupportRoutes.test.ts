@@ -177,53 +177,54 @@ test('public food-support policy API requires a case-bound session before readin
   assert.equal(body.error, 'Invalid or expired food session access');
 });
 
-test('web interpretation exposes Gemini provenance but deterministic high-risk guard runs first', async () => {
-  let geminiCalls = 0;
+test('web interpretation exposes provider-neutral provenance but deterministic high-risk guard runs first', async () => {
+  let interpreterCalls = 0;
   const catalog = {} as SpecialOfferCatalogAdapter;
   const handler = createFoodSupportHandlers(
     catalog, undefined, undefined, undefined, undefined, undefined, undefined, undefined,
     async text => {
-      geminiCalls += 1;
+      interpreterCalls += 1;
       return {
         normalizedQuery: text, requestedCategories: ['MIXED_GRAINS'], exactProductName: '납작보리쌀',
         quantity: 1, substitutionsAllowed: false, needsClarification: false, ambiguityReasons: [],
-        safeUserSummary: '잡곡 요청', confidence: 0.95, responseId: 'r1', modelVersion: 'gemini-test'
+        safeUserSummary: '잡곡 요청', confidence: 0.95,
+        providerMetadata: { provider: 'test-provider', modelId: 'test-model', responseId: 'r1' }
       };
     }
   );
   const allowed = await handler({ method: 'POST', pathname: '/api/food-support/interpret', searchParams: new URLSearchParams(), body: {
-    caseId: 'web_gemini_food', text: '납작보리쌀 사줘'
+    caseId: 'web_ai_food', text: '납작보리쌀 사줘'
   } });
   assert.equal(allowed.status, 200);
-  const gemini = (allowed.body as { gemini: { engine: string; policyAuthority: boolean; inputHash: string } }).gemini;
-  assert.equal(gemini.engine, 'VERTEX_GEMINI');
-  assert.equal(gemini.policyAuthority, false);
-  assert.match(gemini.inputHash, /^sha256:[a-f0-9]{64}$/);
+  const interpretation = (allowed.body as { interpretation: { engine: string; policyAuthority: boolean; inputHash: string } }).interpretation;
+  assert.equal(interpretation.engine, 'CONFIGURED_AI_PROVIDER');
+  assert.equal(interpretation.policyAuthority, false);
+  assert.match(interpretation.inputHash, /^sha256:[a-f0-9]{64}$/);
 
   const blocked = await handler({ method: 'POST', pathname: '/api/food-support/interpret', searchParams: new URLSearchParams(), body: {
-    caseId: 'web_gemini_blocked', text: '총기 구입해줘'
+    caseId: 'web_ai_blocked', text: '총기 구입해줘'
   } });
   assert.equal((blocked.body as { mustNotExecutePurchase: boolean }).mustNotExecutePurchase, true);
-  assert.equal((blocked.body as { gemini: { engine: string } }).gemini.engine, 'SKIPPED_POLICY_BOUNDARY');
-  assert.equal(geminiCalls, 1);
+  assert.equal((blocked.body as { interpretation: { engine: string } }).interpretation.engine, 'SKIPPED_POLICY_BOUNDARY');
+  assert.equal(interpreterCalls, 1);
 
   const pii = await handler({ method: 'POST', pathname: '/api/food-support/interpret', searchParams: new URLSearchParams(), body: {
-    caseId: 'web_gemini_pii', text: '잡곡 보내줘 연락처는 010-1234-5678이야'
+    caseId: 'web_ai_pii', text: '잡곡 보내줘 연락처는 010-1234-5678이야'
   } });
-  assert.equal((pii.body as { gemini: { engine: string } }).gemini.engine, 'SKIPPED_PII_BOUNDARY');
-  assert.equal(geminiCalls, 1);
+  assert.equal((pii.body as { interpretation: { engine: string } }).interpretation.engine, 'SKIPPED_PII_BOUNDARY');
+  assert.equal(interpreterCalls, 1);
 
   for (const [caseId, text] of [
-    ['web_gemini_road_address', '서울시 강남구 테헤란로 1로 보내줘'],
-    ['web_gemini_street_address', '부산광역시 해운대구 센텀중앙로 97'],
-    ['web_gemini_lot_address', '서울 종로구 청운동 12-3 101호']
+    ['web_ai_road_address', '서울시 강남구 테헤란로 1로 보내줘'],
+    ['web_ai_street_address', '부산광역시 해운대구 센텀중앙로 97'],
+    ['web_ai_lot_address', '서울 종로구 청운동 12-3 101호']
   ] as const) {
     const address = await handler({ method: 'POST', pathname: '/api/food-support/interpret', searchParams: new URLSearchParams(), body: {
       caseId, text
     } });
-    assert.equal((address.body as { gemini: { engine: string } }).gemini.engine, 'SKIPPED_PII_BOUNDARY', text);
+    assert.equal((address.body as { interpretation: { engine: string } }).interpretation.engine, 'SKIPPED_PII_BOUNDARY', text);
   }
-  assert.equal(geminiCalls, 1);
+  assert.equal(interpreterCalls, 1);
 });
 
 test('catalog rejects address-shaped queries before the supplier adapter', async () => {

@@ -20,11 +20,11 @@ test('recipient, institution, supplier, judge and chain projections expose separ
   const aggregate = await ledger.getAggregate(caseId);
   assert.ok(aggregate);
   await ledger.advance({
-    caseId, type: 'INTENT_INTERPRETED', at: 2, actor: 'GEMINI', source: 'VERTEX_GEMINI',
+    caseId, type: 'INTENT_INTERPRETED', at: 2, actor: 'AI_INTERPRETER', source: 'AI_PROVIDER',
     idempotencyKey: `${caseId}:intent:v1`, expectedPreviousHash: aggregate.lastEventHash,
     data: {
-      intentHash: sha256('잡곡'), intent: 'PURCHASE', model: 'gemini-2.5-flash',
-      responseIdHash: sha256('vertex-response-id')
+      intentHash: sha256('잡곡'), intent: 'PURCHASE', model: 'model-test',
+      responseIdHash: sha256('provider-response-id')
     }
   });
   const current = await ledger.getAggregate(caseId);

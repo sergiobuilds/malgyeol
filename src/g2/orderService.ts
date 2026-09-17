@@ -1,5 +1,5 @@
 import { createHash } from 'node:crypto';
-import type { Clock, GeminiInterpreter, NonceGenerator, OrderResult } from './types.ts';
+import type { Clock, IntentInterpreter, NonceGenerator, OrderResult } from './types.ts';
 import { validateAudio, validateIntent } from './validator.ts';
 
 const CHALLENGE_TTL_MS = 60000;
@@ -13,12 +13,12 @@ interface PendingChallenge {
 
 export class OrderService {
   private pendingChallenges = new Map<string, PendingChallenge>();
-  private readonly interpreter: GeminiInterpreter;
+  private readonly interpreter: IntentInterpreter;
   private readonly clock: Clock;
   private readonly nonceGen: NonceGenerator;
 
   constructor(
-    interpreter: GeminiInterpreter,
+    interpreter: IntentInterpreter,
     clock: Clock,
     nonceGen: NonceGenerator
   ) {
@@ -37,7 +37,7 @@ export class OrderService {
     try {
       intent = await this.interpreter.analyzeAudio(audioBytes, mimeType);
     } catch {
-      return { status: 'NEEDS_CLARIFICATION', reasons: ['Gemini interpretation failed'], readbackSentence: '주문 내용을 다시 말씀해주세요.' };
+      return { status: 'NEEDS_CLARIFICATION', reasons: ['Intent interpretation failed'], readbackSentence: '주문 내용을 다시 말씀해주세요.' };
     }
     const validation = validateIntent(intent);
 

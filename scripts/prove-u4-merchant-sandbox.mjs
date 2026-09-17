@@ -5,13 +5,13 @@ import 'tsx/esm';
 const { CaseCoordinator } = await import('../src/e2e/caseCoordinator.ts');
 const { DemoMerchantAdapter } = await import('../src/e2e/demoMerchantAdapter.ts');
 const { InMemoryCaseRepository } = await import('../src/e2e/inMemoryCaseRepository.ts');
-const { createMerchantProviderAdapter } = await import('../src/providers/providerContracts.ts');
+const { createSupplierProviderAdapter } = await import('../src/providers/providerContracts.ts');
 
 const repo = new InMemoryCaseRepository();
 const sandbox = new DemoMerchantAdapter();
 const calls = { payments: 0, merchantAttempts: 0, merchantAccepted: 0 };
 const interpreter = { async analyzeAudio() { return { requestedCategory: 'ASSISTIVE_EQUIPMENT', requestedSku: 'ASSISTIVE_STAND_AID_01', quantity: 1, substitutionsAllowed: false, referencesApprovedPlan: true, confidence: 0.97, ambiguityReasons: [], safeUserSummary: '합성 요청' }; } };
-const payment = { async pay(input) { calls.payments += 1; return { paymentIntentId: `u4_${input.caseId}`, settlementTransaction: `DEVNET_PROOF_${input.caseId}`, settlementProofBaseUnits: input.settlementProofBaseUnits }; } };
+const payment = { async authorize(input) { calls.payments += 1; return { paymentAuthorizationId: `u4_${input.caseId}`, paymentReference: `SYNTHETIC_${input.caseId}`, authorizedAmountKrw: input.amountKrw }; } };
 const merchant = { async submit(input) { calls.merchantAttempts += 1; if (calls.merchantAttempts === 1) throw new Error('synthetic sandbox timeout'); calls.merchantAccepted += 1; return sandbox.submit(input); } };
 const coordinator = new CaseCoordinator(repo, interpreter, payment, merchant, () => 1_785_456_000_000);
 const captured = await coordinator.capture('CA-SYNTHETIC-U4', Buffer.from('synthetic-u4-audio'), 'audio/mpeg');
@@ -26,7 +26,7 @@ if (replay.providerOrderId !== recovered.providerOrderId) throw new Error('Recov
 if (calls.payments !== 1 || calls.merchantAccepted !== 1) throw new Error('Recovery was not exactly once across payment and accepted order');
 
 const liveEnabled = process.env.U4_MERCHANT_SANDBOX === '1' && Boolean(process.env.MERCHANT_SANDBOX_URL) && Boolean(process.env.MERCHANT_SANDBOX_TOKEN);
-const preflight = await createMerchantProviderAdapter(liveEnabled).preflight(captured.caseId, 'submit-sandbox-order');
+const preflight = await createSupplierProviderAdapter(liveEnabled).preflight(captured.caseId, 'submit-sandbox-order');
 const external = preflight.status === 'BLOCKED'
   ? { status: 'BLOCKED_EXTERNAL_DEPENDENCY', sideEffectsStarted: 0, blockers: [preflight.blocker] }
   : { status: 'LIVE_READY_NOT_EXECUTED', sideEffectsStarted: 0 };

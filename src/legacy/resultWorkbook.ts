@@ -27,9 +27,9 @@ export function buildResultWorkbook(cases: BenefitCase[]): Buffer {
     caseId: value.caseId,
     '정책 해시': value.policySnapshotHash,
     '동의 commitment': value.confirmationCommitment,
-    'Devnet 기술증명(base units)': value.settlementProofBaseUnits,
-    'Devnet 거래 서명': value.settlementTransaction,
-    '주의': '실제 정부자금 또는 원화 결제가 아닌 해커톤 기술증명'
+    '결제 승인 참조': value.paymentReference,
+    '승인 금액(원)': value.authorizedAmountKrw,
+    '주의': '합성 데이터로 실행한 샌드박스 기록이며 실제 정부자금 결제가 아님'
   }));
   const sheets: Array<[string, Record<string, unknown>[]]> = [
     ['참여자별 집행', executions],

@@ -4,8 +4,8 @@ export const CANONICAL_CASE_STATES = [
   'POLICY_EVALUATED',
   'USER_CONFIRMED',
   'INSTITUTION_APPROVED',
-  'X402_REQUIRED',
-  'DEVNET_PROOF_FINALIZED',
+  'PAYMENT_AUTHORIZED',
+  'PAYMENT_RECORDED',
   'SUPPLIER_ORDER_SUBMITTED',
   'SUPPLIER_CONFIRMED',
   'SHIPPED',
@@ -22,8 +22,8 @@ export const AUXILIARY_EVENT_TYPES = [
   'POLICY_REEVALUATED',
   'USER_RECONFIRMED',
   'INSTITUTION_REAPPROVED',
-  'X402_REBOUND',
-  'DEVNET_PROOF_REFINALIZED'
+  'PAYMENT_REAUTHORIZED',
+  'PAYMENT_RERECORDED'
 ] as const;
 
 export type AuxiliaryEventType = (typeof AUXILIARY_EVENT_TYPES)[number];
@@ -31,25 +31,25 @@ export type CanonicalEventType = CanonicalCaseState | AuxiliaryEventType;
 
 export type CanonicalActor =
   | 'PHONE_PROVIDER'
-  | 'GEMINI'
+  | 'AI_INTERPRETER'
   | 'POLICY_ENGINE'
   | 'RECIPIENT'
   | 'INSTITUTION'
-  | 'X402_FACILITATOR'
-  | 'SOLANA_RPC'
+  | 'PAYMENT_AUTHORIZER'
+  | 'PAYMENT_EXECUTOR'
   | 'SUPPLIER'
   | 'CARRIER'
   | 'SYSTEM';
 
 export type CanonicalSource =
   | 'CLAWOPS'
-  | 'VERTEX_GEMINI'
+  | 'AI_PROVIDER'
   | 'DETERMINISTIC_POLICY'
   | 'DTMF'
   | 'VOICE_CONFIRMATION'
   | 'INSTITUTION_WORKFLOW'
-  | 'X402'
-  | 'SOLANA_DEVNET'
+  | 'PAYMENT_POLICY'
+  | 'PAYMENT_PROVIDER'
   | 'SPECIAL_OFFER'
   | 'CARRIER_READBACK'
   | 'RECIPIENT_PORTAL'
@@ -75,7 +75,7 @@ export interface CanonicalCaseEvent {
   data: SafeEventData;
 }
 
-export type RevalidationStage = 'NONE' | 'INVALIDATED' | 'POLICY' | 'USER' | 'INSTITUTION' | 'X402';
+export type RevalidationStage = 'NONE' | 'INVALIDATED' | 'POLICY' | 'USER' | 'INSTITUTION' | 'PAYMENT';
 
 export interface CanonicalCaseAggregate {
   caseId: string;
@@ -92,10 +92,13 @@ export interface CanonicalCaseAggregate {
   approvalInvalidated: boolean;
   revalidationStage: RevalidationStage;
   evidenceClass: EvidenceClass;
-  x402ApprovalRevision?: number;
-  x402ConditionHash?: string;
-  devnetApprovalRevision?: number;
-  devnetConditionHash?: string;
+  paymentApprovalRevision?: number;
+  paymentConditionHash?: string;
+  paymentAuthorizationHash?: string;
+  paymentAuthorizedAmountKrw?: number;
+  paymentAuthorizationExpiresAt?: number;
+  paymentRecordApprovalRevision?: number;
+  paymentRecordConditionHash?: string;
   supplierOrderId?: string;
 }
 

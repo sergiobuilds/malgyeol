@@ -10,23 +10,11 @@
   "scripts": {
     "audit:dependencies": "node scripts/check-npm-audit.mjs",
     "check": "npm run verify",
-    "verify": "npm run typecheck && npm test && npm run audit:dependencies && cargo fmt --all --check && cargo clippy --workspace --all-targets --locked -- -D warnings && npm run test:rust",
+    "verify": "npm run typecheck && npm test && npm run audit:dependencies",
     "test": "node scripts/run-node-tests.mjs",
-    "test:rust": "cargo test --workspace --locked",
     "start": "node --import tsx src/server.ts",
     "typecheck": "tsc --noEmit",
-    "proof:g3:devnet": "node --experimental-strip-types scripts/g3-devnet-swig.ts",
-    "proof:g4:challenge": "node --experimental-strip-types scripts/g4-devnet-challenge.ts",
-    "setup:g4:swig": "node --experimental-strip-types scripts/g4-setup-usdc-swig.ts",
-    "proof:g4:devnet": "node --experimental-strip-types scripts/g4-devnet-swig.ts",
-    "proof:g6:vertex": "node --import tsx scripts/prove-g6-vertex-dual-receipt.mjs",
-    "proof:u3:x402-solana": "node --import tsx scripts/prove-u3-x402-solana.mjs",
     "proof:u4:merchant": "node --import tsx scripts/prove-u4-merchant-sandbox.mjs",
-    "proof:u5:browser": "node --import tsx scripts/prove-u5-live-stage-xlsx-browser.mjs",
-    "proof:u6:cloud-run": "node scripts/prove-u6-cloud-run.mjs",
-    "proof:e2e:phone": "node --import tsx scripts/prove-phone-e2e.mjs",
-    "proof:cloud-live-case": "node scripts/capture-cloud-live-case.mjs",
-    "proof:phone-live-case": "node scripts/capture-phone-live-case.mjs",
     "proof:food-phone-demo": "node scripts/capture-food-phone-demo.mjs"
   },
   "devDependencies": {
@@ -36,21 +24,7 @@
   "dependencies": {
     "@e965/xlsx": "^0.20.3",
     "@google-cloud/firestore": "^8.7.0",
-    "@scure/base": "1.1.9",
-    "@solana-program/compute-budget": "0.15.0",
-    "@solana-program/token-2022": "0.11.0",
-    "@solana/kit": "6.10.0",
-    "@solana/pay-kit": "0.7.0",
-    "@solana/spl-token": "0.4.15",
-    "@solana/web3.js": "1.98.4",
-    "@swig-wallet/classic": "2.1.0",
-    "@swig-wallet/coder": "2.1.0",
-    "@swig-wallet/kit": "2.1.0",
-    "@x402/core": "2.16.0",
-    "@x402/svm": "https://raw.githubusercontent.com/solana-foundation/pay-kit/2d7f605c08c1b32abad99b2e13c0960112d929b9/typescript/.x402-vendor/x402-svm-2.16.0-paykit.2.tgz",
-    "google-auth-library": "^10.9.1",
-    "tsx": "^4.20.5",
-    "ws": "^8.21.1"
+    "tsx": "^4.20.5"
   },
   "overrides": {
     "brace-expansion": "5.0.9",

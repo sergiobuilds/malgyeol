@@ -36,14 +36,11 @@ function referencedKeys(directories: string[]): Set<string> {
   return keys;
 }
 
-test('environment examples use names recognized by application or proof code', () => {
+test('environment example uses names recognized by application code', () => {
   const runtime = referencedKeys(['src']);
-  const all = referencedKeys(['src', 'scripts']);
   const runtimeExample = environmentKeys('.env.example');
-  const proofExample = environmentKeys('.env.proof.example');
 
   assert.deepEqual([...runtimeExample].filter(key => !runtime.has(key)), []);
-  assert.deepEqual([...proofExample].filter(key => !all.has(key)), []);
 });
 
 test('application runtime variables are represented in the runtime example', () => {

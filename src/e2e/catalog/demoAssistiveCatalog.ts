@@ -6,6 +6,5 @@ export const DEMO_ASSISTIVE_CATALOG: readonly CatalogItem[] = Object.freeze([Obj
   merchantId: 'DEMO_ACCESS_STORE',
   productName: '승인된 기립 보조기',
   unitPriceKrw: 380_000,
-  settlementProofBaseUnits: 1_000_000,
   deliveryAvailable: true
 })]);

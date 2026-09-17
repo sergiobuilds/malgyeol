@@ -7,7 +7,7 @@ export class FirestoreCanonicalCaseRepository implements CanonicalCaseRepository
 
   async runTransaction<T>(caseId: string, operation: (transaction: CanonicalLedgerTransaction) => Promise<T>): Promise<T> {
     validateCaseId(caseId);
-    const caseRef = this.db.collection('canonicalCases').doc(caseId);
+    const caseRef = this.db.collection('canonicalCasesV2').doc(caseId);
     return this.db.runTransaction(async firestoreTransaction => operation(
       new FirestoreLedgerTransaction(firestoreTransaction, caseRef)
     ));
@@ -15,19 +15,19 @@ export class FirestoreCanonicalCaseRepository implements CanonicalCaseRepository
 
   async getAggregate(caseId: string): Promise<CanonicalCaseAggregate | undefined> {
     validateCaseId(caseId);
-    const snapshot = await this.db.collection('canonicalCases').doc(caseId).get();
+    const snapshot = await this.db.collection('canonicalCasesV2').doc(caseId).get();
     return snapshot.exists ? snapshot.data() as CanonicalCaseAggregate : undefined;
   }
 
   async getEvent(caseId: string, eventId: string): Promise<CanonicalCaseEvent | undefined> {
     validateCaseId(caseId);
-    const snapshot = await this.db.collection('canonicalCases').doc(caseId).collection('events').doc(eventId).get();
+    const snapshot = await this.db.collection('canonicalCasesV2').doc(caseId).collection('events').doc(eventId).get();
     return snapshot.exists ? snapshot.data() as CanonicalCaseEvent : undefined;
   }
 
   async events(caseId: string): Promise<CanonicalCaseEvent[]> {
     validateCaseId(caseId);
-    const snapshot = await this.db.collection('canonicalCases').doc(caseId).collection('events').orderBy('sequence').get();
+    const snapshot = await this.db.collection('canonicalCasesV2').doc(caseId).collection('events').orderBy('sequence').get();
     return snapshot.docs.map(document => document.data() as CanonicalCaseEvent);
   }
 }

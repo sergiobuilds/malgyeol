@@ -6,20 +6,17 @@ import { CaseCoordinator, type AudioPurchaseInterpreter } from './e2e/caseCoordi
 import { InMemoryCaseRepository } from './e2e/inMemoryCaseRepository.ts';
 import { FirestoreCaseRepository } from './e2e/firestoreCaseRepository.ts';
 import { DemoMerchantAdapter } from './e2e/demoMerchantAdapter.ts';
-import { DemoProofPaymentAdapter } from './e2e/demoProofPaymentAdapter.ts';
-import { SolanaDevnetEscrowPaymentAdapter } from './e2e/solanaDevnetEscrowPaymentAdapter.ts';
+import { InMemoryPaymentExecutor } from './e2e/inMemoryPaymentExecutor.ts';
 import { projectPublicCase, projectPublicEvent } from './http/publicProjection.ts';
 import { buildResultWorkbook } from './legacy/resultWorkbook.ts';
 import type { BenefitCase, InterpretedPurchase } from './e2e/types.ts';
-import { VertexAudioInterpreter } from './voice/vertexAudioInterpreter.ts';
+import { HttpAudioInterpreter } from './voice/httpAudioInterpreter.ts';
 import { createVoiceHandlers } from './voice/twilioRoutes.ts';
 import { createClawOpsVoiceHandlers } from './voice/clawopsRoutes.ts';
 import { AgentInputError, createAgentHandlers } from './http/agentRoutes.ts';
 import { HttpMerchantSandboxAdapter } from './merchant/httpMerchantAdapter.ts';
 import { createMerchantSandboxNodeHandler, MerchantSandbox } from './merchant/sandbox.ts';
 import { FirestoreMerchantSandboxStore } from './merchant/store.ts';
-import { Keypair, PublicKey } from '@solana/web3.js';
-import { PROGRAM_ID } from './g5/escrowClient.ts';
 import {
   FileSpecialOfferCredentialProvider,
   HmacPaidActionApprovalVerifier,
@@ -39,7 +36,7 @@ import { createPublicFoodOrderProofReader } from './http/publicFoodOrderProof.ts
 import { FirestorePaidOrderExecutionStore } from './food-support/firestorePaidOrderExecutionStore.ts';
 import { FirestoreFoodBudgetLedger, InMemoryFoodBudgetLedger } from './food-support/budgetLedger.ts';
 import { rollupReconciledSpecialOfferOrder, rollupSpecialOfferOrder } from './food-support/orderRollup.ts';
-import { VertexFoodTextInterpreter } from './food-support/vertexFoodTextInterpreter.ts';
+import { HttpFoodTextInterpreter } from './food-support/httpFoodTextInterpreter.ts';
 import {
   FirestorePhoneFoodRepository,
   InMemoryPhoneFoodRepository,
@@ -95,12 +92,13 @@ export function createApp() {
     production: canonicalProduction
   });
   const publicCostLimiter = new FixedWindowRateLimiter();
-  const payment = createPaymentAdapter();
-  const interpreter = process.env.GOOGLE_CLOUD_PROJECT
-    ? new VertexAudioInterpreter({
-      project: process.env.GOOGLE_CLOUD_PROJECT,
-      location: process.env.GOOGLE_CLOUD_LOCATION ?? 'us-central1',
-      model: process.env.GEMINI_MODEL ?? 'gemini-2.5-flash'
+  const payment = new InMemoryPaymentExecutor();
+  const interpreter = process.env.AI_INTERPRETER_ENDPOINT
+    ? new HttpAudioInterpreter({
+      endpoint: process.env.AI_INTERPRETER_ENDPOINT,
+      ...(process.env.AI_INTERPRETER_BEARER_TOKEN ? { bearerToken: process.env.AI_INTERPRETER_BEARER_TOKEN } : {}),
+      ...(process.env.AI_MODEL_ID ? { modelId: process.env.AI_MODEL_ID } : {}),
+      ...(process.env.AI_PROVIDER_NAME ? { providerName: process.env.AI_PROVIDER_NAME } : {})
     })
     : new SyntheticInterpreter();
   const merchantSandbox = createMerchantSandboxNodeHandler(new MerchantSandbox(
@@ -176,11 +174,12 @@ export function createApp() {
     ? createPublicFoodOrderProofReader(specialOfferOrders)
     : undefined;
   const foodConversations = process.env.CASE_REPOSITORY === 'firestore' ? new FirestoreConversationRepository() : new InMemoryConversationRepository();
-  const foodTextInterpreter = process.env.GOOGLE_CLOUD_PROJECT
-    ? new VertexFoodTextInterpreter({
-      project: process.env.GOOGLE_CLOUD_PROJECT,
-      location: process.env.GOOGLE_CLOUD_LOCATION ?? 'us-central1',
-      model: process.env.GEMINI_MODEL ?? 'gemini-2.5-flash'
+  const foodTextInterpreter = process.env.AI_INTERPRETER_ENDPOINT
+    ? new HttpFoodTextInterpreter({
+      endpoint: process.env.AI_INTERPRETER_ENDPOINT,
+      ...(process.env.AI_INTERPRETER_BEARER_TOKEN ? { bearerToken: process.env.AI_INTERPRETER_BEARER_TOKEN } : {}),
+      ...(process.env.AI_MODEL_ID ? { modelId: process.env.AI_MODEL_ID } : {}),
+      ...(process.env.AI_PROVIDER_NAME ? { providerName: process.env.AI_PROVIDER_NAME } : {})
     })
     : undefined;
   const foodSupportHandlers = createFoodSupportHandlers(
@@ -315,9 +314,7 @@ export function createApp() {
       throw new Error('Phone direct order failed');
     } : undefined
   );
-  // Public replay buttons must never spend scarce Devnet USDC. Only the authenticated
-  // phone/agent bridge receives the live payment adapter.
-  const demoCoordinator = new CaseCoordinator(repo, new SyntheticInterpreter(), new DemoProofPaymentAdapter(), new DemoMerchantAdapter());
+  const demoCoordinator = new CaseCoordinator(repo, new SyntheticInterpreter(), new InMemoryPaymentExecutor(), new DemoMerchantAdapter());
   const agentHandlers = agentToolSecret
     ? createAgentHandlers(agentToolSecret, coordinator, caseId => repo.get(caseId), continuationTokens, roleTokens)
     : undefined;
@@ -364,7 +361,7 @@ export function createApp() {
         }
         return sendJson(response, 200, {
           ok: true,
-          mode: process.env.GOOGLE_CLOUD_PROJECT ? 'vertex-enabled' : 'synthetic-local',
+          mode: process.env.AI_INTERPRETER_ENDPOINT ? 'ai-provider-enabled' : 'deterministic-local',
           externalEvidence
         });
       }
@@ -568,32 +565,6 @@ function requireAuditReadAccess(request: IncomingMessage, secret: string | undef
   const expected = Buffer.from(secret);
   if (supplied.length !== expected.length || !timingSafeEqual(supplied, expected)) return { status: 401, body: { error: 'Unauthorized' } };
   return undefined;
-}
-
-function createPaymentAdapter(): DemoProofPaymentAdapter | SolanaDevnetEscrowPaymentAdapter {
-  if (process.env.LIVE_DEVNET_PAYMENT !== '1') return new DemoProofPaymentAdapter();
-  const encodedSigner = process.env.SOLANA_DEVNET_INSTITUTION_KEY;
-  if (!encodedSigner) throw new Error('SOLANA_DEVNET_INSTITUTION_KEY is required for live Devnet payment');
-  let value: unknown;
-  try { value = JSON.parse(encodedSigner); } catch { throw new Error('Invalid institution signer JSON'); }
-  const secretKey = Array.isArray(value)
-    ? value
-    : value && typeof value === 'object' && Array.isArray((value as { secretKey?: unknown }).secretKey)
-      ? (value as { secretKey: number[] }).secretKey
-      : undefined;
-  if (!secretKey || !secretKey.every(byte => Number.isInteger(byte) && byte >= 0 && byte <= 255)) {
-    throw new Error('Invalid institution signer bytes');
-  }
-  const institutionSigner = Keypair.fromSecretKey(Uint8Array.from(secretKey));
-  secretKey.fill(0);
-  return new SolanaDevnetEscrowPaymentAdapter({
-    rpcUrl: process.env.SOLANA_RPC_URL ?? 'https://api.devnet.solana.com',
-    institutionSigner,
-    merchant: new PublicKey(process.env.SOLANA_MERCHANT_ADDRESS ?? '67fxkr8sXc98ThKX6HnoEytCRCJJHHnsGaQV3bLB5vk3'),
-    deliveryAuthority: new PublicKey(process.env.SOLANA_DELIVERY_AUTHORITY ?? 'FvYotQ7hCPQuPxqeti4Lp7o7JpQ5dxuHysGjqdPy2c8C'),
-    programId: PROGRAM_ID,
-    traceDirectory: process.env.SOLANA_TRACE_DIRECTORY ?? '/tmp/benefit-settlement-x402'
-  });
 }
 
 async function readJson(request: IncomingMessage): Promise<Record<string, unknown>> {

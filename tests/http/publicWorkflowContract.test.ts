@@ -27,15 +27,3 @@ test('public phone demo requires only user confirmation before direct ordering',
   assert.match(phoneDemo, /판매처.*바로 주문/);
   assert.doesNotMatch(phoneDemo, /기관 승인|담당자 승인|담당자 확인|승인함/);
 });
-
-test('ClawOps agent binds tool calls to call_id and feeds confirmed DTMF result to the voice session', async () => {
-  const source = await readFile(new URL('../../scripts/clawops-vertex-agent.py', import.meta.url), 'utf8');
-  assert.doesNotMatch(source, /len\(active_cases\) != 1/);
-  assert.match(source, /call_id: str/);
-  assert.match(source, /active_cases\.get\(call_id\)/);
-  assert.match(source, /server_result/);
-  assert.match(source, /feed_dtmf/);
-  assert.match(source, /except Exception:/);
-  assert.match(source, /아직 주문하지 않았습니다/);
-  assert.doesNotMatch(source, /담당자 확인으로 넘/);
-});
