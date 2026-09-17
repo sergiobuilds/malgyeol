@@ -197,10 +197,10 @@
   const DELIVERY_LABEL = { PREPARING: '배송 준비', SHIPPED: '발송', IN_TRANSIT: '배송 중', DELIVERED: '배송 완료', CANCELLED: '취소' };
   let loading = false;
   const VIEW_TITLE = {
-    overview:'프로그램 현황',
-    cases:'전화 요청 사건',
-    suppliers:'지정 공급자',
-    settlement:'정산 증거',
+    overview:'예산과 정책',
+    cases:'오늘 처리할 요청',
+    suppliers:'공급자 운영 현황',
+    settlement:'주문 증거 확인',
   };
 
   /* =========================================================
@@ -231,9 +231,17 @@
     renderAlerts();
     updateStamp();
     loadAll();
+    switchView('cases');
   }
 
   function bind() {
+    $$('[data-case-status]').forEach(button => button.addEventListener('click', () => {
+      state.caseFilter = { status: button.dataset.caseStatus, prio: 'all', q: '' };
+      $('#case-status').value = state.caseFilter.status;
+      $('#case-prio').value = 'all';
+      $('#case-search').value = '';
+      renderCases();
+    }));
     const tabs = $$('.nav-btn');
     tabs.forEach((tab, index) => {
       tab.tabIndex = index === 0 ? 0 : -1;
@@ -284,6 +292,7 @@
   function switchView(view) {
     if (!Object.hasOwn(VIEW_TITLE, view) || view === state.view) return;
     state.view = view;
+    $('#page-title').textContent = VIEW_TITLE[view];
     $$('.nav-btn').forEach((b) => {
       const on = b.dataset.view === view;
       b.classList.toggle('active', on);
@@ -628,6 +637,10 @@
    * 사건 (전화 요청 목록 + 상세 타임라인)
    * ========================================================= */
   function renderCases() {
+    ['hold', 'processing', 'delivering'].forEach(status => {
+      $('#summary-' + status).textContent = SYN.cases.filter(c => mapOrderToFilter(c.orderStatus, c.policy) === status).length;
+    });
+    $$('[data-case-status]').forEach(button => button.setAttribute('aria-pressed', String(button.dataset.caseStatus === state.caseFilter.status)));
     const tb = $('#cases-tbody'); if (!tb) return;
     const info = $('#case-result');
     tb.innerHTML = '';
@@ -651,7 +664,7 @@
 
     if (rows.length === 0) {
       const tr = document.createElement('tr');
-      tr.innerHTML = '<td colspan="7" class="tbl-empty">조건에 맞는 사건이 없습니다.</td>';
+      tr.innerHTML = '<td colspan="8" class="tbl-empty">조건에 맞는 사건이 없습니다.</td>';
       tb.appendChild(tr);
       renderCaseDetail(null);
       return;
@@ -694,6 +707,15 @@
       tdPr.appendChild(pill);
       tr.appendChild(tdPr);
 
+      const actionCell = document.createElement('td');
+      const action = document.createElement('button');
+      action.type = 'button'; action.className = 'text-link case-open';
+      action.textContent = nextCaseTask(c) + ' →';
+      action.setAttribute('aria-label', c.id + ' 상세 보기: ' + nextCaseTask(c));
+      action.addEventListener('click', event => { event.stopPropagation(); selectCase(c.id); $('#case-detail').focus(); });
+      action.addEventListener('keydown', event => event.stopPropagation());
+      actionCell.appendChild(action); tr.appendChild(actionCell);
+
       tr.addEventListener('click', () => selectCase(c.id));
       tr.addEventListener('keydown', (e) => {
         if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); selectCase(c.id); }
@@ -711,6 +733,12 @@
     if (orderStatus === 'delivering') return 'delivering';
     if (orderStatus === 'new' || orderStatus === 'processing') return 'processing';
     return 'hold';
+  }
+  function nextCaseTask(c) {
+    if (c.policy === 'hold') return '대안 품목 확인';
+    if (c.orderStatus === 'new') return '공급자 확인';
+    if (c.orderStatus === 'delivering') return '배송 상태 확인';
+    return '처리 기록 보기';
   }
   function td(t) { const el = document.createElement('td'); el.textContent = t; return el; }
   function statusBadge(s) {
@@ -732,8 +760,20 @@
   function renderCaseDetail(c) {
     const box = $('#case-detail'); if (!box) return;
     box.innerHTML = '';
+    box.hidden = !c;
+    $('.cases-layout').classList.toggle('has-detail', !!c);
     const h = document.createElement('h3'); h.textContent = '사건 상세';
     box.appendChild(h);
+    if (c) {
+      const close = document.createElement('button'); close.type = 'button'; close.className = 'detail-close'; close.textContent = '닫기 ×';
+      close.addEventListener('click', () => {
+        const previous = state.selectedCaseId;
+        state.selectedCaseId = null; renderCases();
+        $$('.case-open').find(button => button.getAttribute('aria-label').startsWith(previous + ' '))?.focus();
+      });
+      box.appendChild(close);
+      const next = document.createElement('p'); next.className = 'next-task'; next.textContent = '다음 확인 · ' + nextCaseTask(c); box.appendChild(next);
+    }
 
     if (!c) {
       const p = document.createElement('p'); p.className = 'muted';

@@ -709,8 +709,6 @@ function checkPublicCostLimit(
 
 async function serveStatic(url: URL, response: ServerResponse, headOnly = false): Promise<void> {
   const pathname = url.pathname;
-
-
   const appRoutes = new Set(['/app', '/ops', '/verify']);
   const techRoutes = new Set(['/tech', '/tech.html']);
   const file = pathname === '/'
