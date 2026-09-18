@@ -22,12 +22,12 @@ test('public entrypoints serve their actual local styles and scripts', async t =
   }
 });
 
-test('public entrypoints cannot expose private runtime files or request records', async t=>{
+test('public entrypoints protect runtime files while requests are login-free', async t=>{
   const server=createCareApp();server.listen(0,'127.0.0.1');await once(server,'listening');t.after(()=>server.close());
   const address=server.address();assert.ok(address&&typeof address!=='string');
   const base=`http://127.0.0.1:${address.port}`;
   for(const path of ['/.env','/.private/care-ledger.sqlite','/.private/coordination-routing.json','/src/careApp.ts','/assets/../../.secrets/care.env']) {
     assert.equal((await fetch(base+path)).status,404,path);
   }
-  assert.equal((await fetch(base+'/api/coordination/requests')).status,403);
+  assert.equal((await fetch(base+'/api/coordination/requests')).status,200);
 });

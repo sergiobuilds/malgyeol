@@ -12,11 +12,11 @@
 
 현재 검토 주소: [말결 웹앱](https://qualifying-grande-bags-characterized.trycloudflare.com) · [지원망](https://qualifying-grande-bags-characterized.trycloudflare.com/app) · [담당자 업무](https://qualifying-grande-bags-characterized.trycloudflare.com/ops).
 
-Campbell의 `malgyeol-web-preview`가 기존 API에 연결하는 임시 HTTPS 주소입니다. 터널을 다시 만들면 주소가 바뀔 수 있습니다. 실제 사용 주소와 API의 `PUBLIC_BASE_URL`을 동일하게 설정해야 담당자 인증과 변경 요청의 Origin 검사가 통과합니다. 현재 설정은 API user unit의 `preview-origin.conf`에 보존합니다. 전화 런타임과 별도입니다.
+Campbell의 `malgyeol-web-preview`가 기존 API에 연결하는 임시 HTTPS 주소입니다. 터널을 다시 만들면 주소가 바뀔 수 있습니다. 실제 사용 주소와 API의 `PUBLIC_BASE_URL`을 동일하게 설정해야 변경 요청의 Origin 검사가 통과합니다. 현재 설정은 API user unit의 `preview-origin.conf`에 보존합니다. 전화 런타임과 별도입니다.
 
 현재 웹 요청 화면에는 사용자 요청에 따른 발표용 5명·6개 요청 사례를 연결합니다. `presentation-ledger.conf`의 `COORDINATION_LEDGER_PATH`가 `.private/coordination-presentation.sqlite`를 가리키며 기존 전화용 저장소와 분리합니다. 원본 생성 근거는 비공개 `presentation-provenance.json`에 보존합니다. 이 사례의 문의·답변은 실제 발신 실적으로 집계하지 않습니다. 실전화 검증 전에는 원래 coordination 저장소로 전환해야 합니다.
 
-담당자 인증은 `CARE_OPERATOR_TOKEN`과 서버 발급 HttpOnly 세션을 사용합니다. 인증값을 URL·채팅·공개 문서에 넣지 않습니다. 브라우저 세션은 8시간이며 API 재시작 시 다시 인증해야 합니다. 접속 코드의 별도 배포 기능은 아직 없습니다.
+웹앱은 인증 코드 없이 요청 진행 화면에 바로 접속합니다. 변경 요청은 같은 Origin에서만 허용합니다.
 
 ## 문서 및 산출물
 
@@ -45,16 +45,16 @@ npm start
 |---|---|
 | `/` | 제품 소개 |
 | `/app` | 네 사업 지원망·기관·이용절차 |
-| `/ops` | 담당자 접속·요청 진행·정정·중단·수동 재시도 |
+| `/ops` | 요청 진행·정정·중단·수동 재시도 |
 | `/health` | HTTP 서비스 상태; 실통화 성공 판정용 아님 |
 
-담당자 접속 코드는 서버의 `CARE_OPERATOR_TOKEN`입니다. 화면 입력 후 서버가 8시간 HttpOnly·SameSite=Strict 세션을 발급하며 브라우저 저장소에 원본 토큰을 보관하지 않습니다. 서버 재시작 후에는 재접속합니다. `PUBLIC_BASE_URL`을 설정한 서비스는 해당 Origin으로 접속해야 합니다. 세션 변경 요청은 동일 Origin만 허용합니다. 내부 음성 에이전트는 기존 Bearer 인증을 사용합니다.
+웹앱은 로그인·세션 만료 없이 사용합니다. `PUBLIC_BASE_URL`을 설정한 서비스는 해당 Origin에서 변경 요청을 보냅니다. 내부 음성 에이전트는 기존 Bearer 인증을 사용합니다.
 
 ## 데이터 및 저장
 
 공식 푸드뱅크·그냥드림 목록 65행을 37개 기관으로 정규화하고 3개 보완 창구를 더해 40개 기관을 수록했습니다. 같은 기관의 복수 사업을 분리 보존합니다. 서울 25구의 기본 목록과 확보한 상세 경로를 구별하며, 모든 동주민센터·찾아가는 운영의 상세 구축 완료를 뜻하지 않습니다.
 
-`/api/support/`는 공개 기관 조회, `/api/coordination/`는 인증된 시민 요청·동의·기관 문의·통화·답변·회신입니다. 화면과 음성은 이 공통 API를 사용합니다.
+`/api/support/`는 공개 기관 조회, `/api/coordination/`는 시민 요청·동의·기관 문의·통화·답변·회신입니다. 화면과 음성은 이 공통 API를 사용합니다.
 
 `COORDINATION_LEDGER_PATH` 또는 `CARE_LEDGER_PATH`가 SQLite 위치입니다. coordination 원장은 별도 테이블에 저장되어 기존 care 원장을 보존합니다. 운영 환경에서 영속 경로가 없으면 coordination 요청 API는 503으로 닫힙니다. 개발 환경의 경로 미설정 상태는 인메모리이며 재시작 보존을 보장하지 않습니다.
 
