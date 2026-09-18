@@ -1,12 +1,14 @@
 ---
 handoff_schema: project-handoff/v1
 project_mode: observe-only
-verified_at: 2026-09-18T04:33:45.047695+00:00
+verified_at: 2026-09-18T04:40:37.707759+00:00
 canonical_ref: refs/heads/master
-verified_commit: 2fbef4a7d3c16305e5f66240233cfcbef9b9b34d
+verified_commit: 12d9daf04b1c72317bce97499933fd2daf990d25
 ---
 
 ## Next
+
+- 사용자 실제 음성 지적: 식사 준비가 필요하다고 들었다는 불필요한 표현. 고정 문구는 발견되지 않았고, 과거 history를 현재 요청으로 쓰지 않으며 음식 전달 요청의 의미를 보존하도록 지침 보강. Python83 통과. 운영 반영 전 진행 중 전화 1건이 있어 종료 대기.
 
 - 실제 기관 발신은 04:29:17 UTC에 시작해 약 26초 후 무응답으로 끝났고, 시민 회신은 04:29:43 UTC에 발신되어 19초 통화 후 종료됐다. 기관의 음식·배달 답변은 없었다. 전체 50초 성공 증거가 아니다. 사용자 지적으로 전화의 내부 업무 용어를 생활 언어로 바꾸는 지침을 추가했다. Python83 통과, 반영 전 활성 통화 0건 확인.
 
