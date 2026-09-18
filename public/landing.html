@@ -5,93 +5,183 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="description" content="말결 · 생활지원 연계 서비스 · 전화 접수 · 필요별 분해 · 기관 창구 문의 · 시민 회신">
 <title>말결 — 생활지원 연계 서비스</title>
-<link rel="preload" as="font" type="font/woff2" href="/assets/fonts/PretendardGOV-Bold.subset.woff2" crossorigin>
-<link rel="stylesheet" href="/tokens.css">
-<link rel="stylesheet" href="/styles.css">
+<style>
+@font-face{font-family:'SCDream';font-weight:400;font-style:normal;src:url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_six@1.2/S-CoreDream-4Regular.woff') format('woff');font-display:swap}
+@font-face{font-family:'SCDream';font-weight:500;font-style:normal;src:url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_six@1.2/S-CoreDream-5Medium.woff') format('woff');font-display:swap}
+@font-face{font-family:'SCDream';font-weight:700;font-style:normal;src:url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_six@1.2/S-CoreDream-6Bold.woff') format('woff');font-display:swap}
+@font-face{font-family:'SCDream';font-weight:800;font-style:normal;src:url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_six@1.2/S-CoreDream-7ExtraBold.woff') format('woff');font-display:swap}
+html,body{margin:0;padding:0}
+body{background:#fff;-webkit-font-smoothing:antialiased}
+a{color:#333;text-decoration:none}
+a:hover{color:#e76211}
+h1,h2,h3,p,ul,li,ol,dl,dt,dd,figure,figcaption{margin:0;padding:0}
+li{list-style:none}
+img{display:block;max-width:100%}
+</style>
 </head>
-<body class="mg-home">
-<a class="mg-skip" href="#main">본문 바로가기</a>
+<body>
+<a href="#main" style="position:absolute;left:-999px;top:0">본문 바로가기</a>
+<div style="font-family: SCDream, &quot;Malgun Gothic&quot;, sans-serif; font-weight: 400; color: rgb(86, 80, 75); background: rgb(255, 255, 255); font-size: 16px; line-height: 1.6; text-wrap: pretty;">
 
-<header class="mg-header">
-  <div class="mg-header__in">
-    <a class="mg-brand" href="/">
-      <span class="mg-brand__name">말결</span>
-    </a>
-    <nav class="mg-tabline" aria-label="주요 화면">
-      <a href="/tech">작동 방식</a>
-      <a href="/app">지원망</a>
-      <a href="/ops">요청 진행</a>
-    </nav>
-  </div>
-</header>
+  <header style="background: rgb(255, 255, 255); border-bottom: 1px solid rgb(217, 217, 217);">
+    <div style="max-width: 1280px; margin: 0px auto; padding: 0px 24px; min-height: 80px; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px 28px;">
+      <a href="/" style="font-size: 26px; font-weight: 800; color: rgb(231, 98, 17); letter-spacing: -0.03em;">말결</a>
+      <nav style="display: flex; flex-wrap: wrap; align-items: center; gap: 10px 28px; font-size: 16px; font-weight: 500;">
+        <a href="/tech" style="color: rgb(51, 51, 51);">작동 방식</a>
+        <a href="/app" style="color: rgb(51, 51, 51);">지원망</a>
+        <a href="/ops" style="color: rgb(51, 51, 51);">요청 진행</a>
+      </nav>
+    </div>
+  </header>
 
-<main id="main" tabindex="-1">
-  <section class="mg-hero">
-    <div class="mg-hero__in">
-      <h1>생활지원 연계 서비스</h1>
-      <p class="mg-hero__lead">전화 접수 · 필요별 분해 · 기관 창구 조건 확인 · 시민 회신</p>
-      <div class="mg-hero__actions">
-        <a class="krds-btn large primary" href="/app">지원망 조회</a>
-        <a class="krds-btn large secondary" href="/tech">작동 방식</a>
+  <section id="main" tabindex="-1" style="border-bottom: 1px solid rgb(217, 217, 217);">
+    <div style="max-width: 1280px; margin: 0px auto; padding: 0px 24px; display: flex; flex-wrap: wrap; gap: 0px;">
+      <div style="flex: 1 1 440px; min-width: 0px; padding: 64px 0px 56px; display: flex; flex-direction: column; align-items: flex-start; gap: 20px;">
+        <span style="border: 1px solid rgb(215, 215, 215); border-radius: 5px; padding: 5px 12px; font-size: 14px; color: rgb(86, 80, 75);">전화 한 통 접수</span>
+        <h1 style="font-size: clamp(36px, 5.2vw, 64px); font-weight: 800; color: rgb(51, 51, 51); letter-spacing: -0.045em; line-height: 1.18;">생활지원<br>연계 서비스</h1>
+        <p style="font-size: 18px; line-height: 1.7; color: rgb(86, 80, 75); max-width: 30em;">전화 접수 · 필요별 분해 · 기관 창구 조건 확인 · 시민 회신</p>
+        <div style="display: flex; flex-wrap: wrap; gap: 10px; padding-top: 4px;">
+          <a href="/app" class="scp0" style="padding: 15px 34px; border: 1px solid rgb(231, 98, 17); border-radius: 5px; background: rgb(231, 98, 17); color: rgb(255, 255, 255); font-size: 16px; font-weight: 500;">지원망 조회</a>
+          <a href="/tech" class="scp1" style="padding: 15px 34px; border: 1px solid rgb(86, 80, 75); border-radius: 5px; background: rgb(86, 80, 75); color: rgb(255, 255, 255); font-size: 16px; font-weight: 500;">작동 방식</a>
+        </div>
       </div>
-      <dl class="mg-hero__facts">
-        <div><dt>대상 지원사업</dt><dd id="fact-programs">4개</dd></div>
-        <div><dt>등록 기관</dt><dd id="fact-institutions">40개소</dd></div>
-        <div><dt>접수 방식</dt><dd>전화 접수</dd></div>
+      <figure style="flex: 1 1 520px; min-width: 0px; align-self: stretch; position: relative;">
+        <img src="/assets/story/elder-voice-hero-1536.webp" alt="전화로 요청을 접수하는 어르신" style="width: 100%; height: 100%; min-height: 340px; max-height: 560px; object-fit: cover; border-left: 1px solid rgb(217, 217, 217); border-right: 1px solid rgb(217, 217, 217);">
+      </figure>
+    </div>
+    <div style="max-width: 1280px; margin: 0px auto; padding: 0px 24px;">
+      <dl style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); border-top: 1px solid rgb(217, 217, 217);">
+        <div style="padding: 26px 24px 30px; border-right: 1px solid rgb(217, 217, 217); display: flex; flex-direction: column; gap: 8px;">
+          <dt style="font-size: 15px; color: rgb(86, 80, 75);">대상 지원사업</dt>
+          <dd id="fact-programs" style="font-size: 32px; font-weight: 800; color: rgb(231, 98, 17); letter-spacing: -0.03em;">4개</dd>
+        </div>
+        <div style="padding: 26px 24px 30px; border-right: 1px solid rgb(217, 217, 217); display: flex; flex-direction: column; gap: 8px;">
+          <dt style="font-size: 15px; color: rgb(86, 80, 75);">등록 기관</dt>
+          <dd id="fact-institutions" style="font-size: 32px; font-weight: 800; color: rgb(231, 98, 17); letter-spacing: -0.03em;">40개소</dd>
+        </div>
+        <div style="padding: 26px 24px 30px; display: flex; flex-direction: column; gap: 8px;">
+          <dt style="font-size: 15px; color: rgb(86, 80, 75);">접수 방식</dt>
+          <dd style="font-size: 32px; font-weight: 800; color: rgb(231, 98, 17); letter-spacing: -0.03em;">전화 접수</dd>
+        </div>
       </dl>
     </div>
   </section>
 
-  <section class="mg-band">
-    <div class="mg-band__in">
-      <h2>시민이 겪는 확인 부담</h2>
-      <div class="mg-grid3">
-        <article><h3>문의처 확인 부담</h3><p>시설별 복수 사업 운영 · 사업별 상이한 창구·절차 · 주소지 관할과 기관 위치 불일치</p></article>
-        <article><h3>동일 사정 반복 설명</h3><p>기관 이용 불가 시 다음 기관 재설명 · 관할·절차·일정 중 사유 구분 불가</p></article>
-        <article><h3>확인 이후 진행 중단</h3><p>조건 변경 시 재확인 필요 · 직접 연락 곤란 시 진행 중단</p></article>
+  <section style="max-width: 1280px; margin: 0px auto; padding: 80px 24px 0px;">
+    <div style="display: flex; flex-wrap: wrap; gap: 12px 28px; align-items: baseline; justify-content: space-between; padding-bottom: 18px; border-bottom: 2px solid rgb(86, 80, 75);">
+      <h2 style="font-size: 33px; font-weight: 700; color: rgb(51, 51, 51); letter-spacing: -0.035em;">시민이 겪는 확인 부담</h2>
+      <p style="font-size: 15px; color: rgb(86, 80, 75);">전화 접수 사유 · 3개 장면</p>
+    </div>
+    <ul style="margin-top: 32px; display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px;">
+      <li style="border: 1px solid rgb(215, 215, 215); border-radius: 8px; overflow: hidden; background: rgb(255, 255, 255); display: flex; flex-direction: column;">
+        <img src="/assets/story/app-only-barrier-1536.webp" alt="앱 전용 창구 앞의 시민" style="width: 100%; height: 230px; object-fit: cover;">
+        <div style="padding: 24px 22px 26px; display: flex; flex-direction: column; gap: 12px; flex: 1 1 auto;">
+          <h3 style="font-size: 20px; font-weight: 700; color: rgb(51, 51, 51); letter-spacing: -0.02em;">문의처 확인 부담</h3>
+          <p style="font-size: 15px; line-height: 1.8; color: rgb(86, 80, 75);">시설별 복수 사업 운영 · 사업별 상이한 창구·절차 · 주소지 관할과 기관 위치 불일치</p>
+        </div>
+      </li>
+      <li style="border: 1px solid rgb(215, 215, 215); border-radius: 8px; overflow: hidden; background: rgb(255, 255, 255); display: flex; flex-direction: column;">
+        <img src="/assets/story/subsidy-choice-burden-1536.webp" alt="여러 지원사업 중 선택을 고민하는 시민" style="width: 100%; height: 230px; object-fit: cover;">
+        <div style="padding: 24px 22px 26px; display: flex; flex-direction: column; gap: 12px; flex: 1 1 auto;">
+          <h3 style="font-size: 20px; font-weight: 700; color: rgb(51, 51, 51); letter-spacing: -0.02em;">동일 사정 반복 설명</h3>
+          <p style="font-size: 15px; line-height: 1.8; color: rgb(86, 80, 75);">기관 이용 불가 시 다음 기관 재설명 · 관할·절차·일정 중 사유 구분 불가</p>
+        </div>
+      </li>
+      <li style="border: 1px solid rgb(215, 215, 215); border-radius: 8px; overflow: hidden; background: rgb(255, 255, 255); display: flex; flex-direction: column;">
+        <img src="/assets/story/wheelchair-independent-shopper-1536.webp" alt="휠체어를 이용해 장을 보는 시민" style="width: 100%; height: 230px; object-fit: cover;">
+        <div style="padding: 24px 22px 26px; display: flex; flex-direction: column; gap: 12px; flex: 1 1 auto;">
+          <h3 style="font-size: 20px; font-weight: 700; color: rgb(51, 51, 51); letter-spacing: -0.02em;">확인 이후 진행 중단</h3>
+          <p style="font-size: 15px; line-height: 1.8; color: rgb(86, 80, 75);">조건 변경 시 재확인 필요 · 직접 연락 곤란 시 진행 중단</p>
+        </div>
+      </li>
+    </ul>
+  </section>
+
+  <section style="margin-top: 80px; background: rgb(245, 245, 245); border-top: 1px solid rgb(217, 217, 217); border-bottom: 1px solid rgb(217, 217, 217);">
+    <div style="max-width: 1280px; margin: 0px auto; padding: 64px 24px 72px;">
+      <div style="display: flex; flex-wrap: wrap; gap: 12px 28px; align-items: baseline; justify-content: space-between;">
+        <h2 style="font-size: 33px; font-weight: 700; color: rgb(51, 51, 51); letter-spacing: -0.035em;">요청 처리 순서</h2>
+        <p style="font-size: 15px; color: rgb(86, 80, 75);">전화 접수 → 기관 문의 → 후속 처리 → 시민 회신</p>
       </div>
-    </div>
-  </section>
-
-  <section class="mg-band mg-band--flow">
-    <div class="mg-band__in">
-      <h2>요청 처리 순서</h2>
-      <ol class="mg-flow">
-        <li><span class="mg-flow__no" aria-hidden="true">1</span>
-          <h3>요청 접수·항목 분해</h3>
-          <p>사업명 미상 상태 접수 가능 · 식사·생필품·방문 제약 등 개별 항목 분해</p></li>
-        <li><span class="mg-flow__no" aria-hidden="true">2</span>
-          <h3>기관 창구 문의</h3>
-          <p>지원망 등록 목적별 연락처 문의 · 연락 사유 고지 · 이용 가능 여부·준비물·절차 확인</p></li>
-        <li><span class="mg-flow__no" aria-hidden="true">3</span>
-          <h3>답변별 후속 처리</h3>
-          <p>일부 기관 이용 불가 시에도 요청 전체 유지 · 확인 항목 유지 · 잔여 항목 대체 경로 확인</p></li>
-        <li><span class="mg-flow__no" aria-hidden="true">4</span>
-          <h3>시민 회신</h3>
-          <p>확인 결과·이용 방법 전화 회신 · 조건 변경 시 시민 직접 선택</p></li>
+      <ol style="margin-top: 36px; display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 0px; border-top: 2px solid rgb(231, 98, 17);">
+        <li style="background: rgb(255, 255, 255); border-right: 1px solid rgb(217, 217, 217); border-bottom: 1px solid rgb(217, 217, 217); padding: 26px 24px 30px; display: flex; flex-direction: column; gap: 14px;">
+          <div style="display: flex; align-items: center; gap: 12px;">
+            <span style="width: 34px; height: 34px; border-radius: 50%; background: rgb(231, 98, 17); color: rgb(255, 255, 255); font-size: 15px; font-weight: 700; display: flex; align-items: center; justify-content: center;">1</span>
+            <span style="font-size: 14px; color: rgb(86, 80, 75);">접수</span>
+          </div>
+          <h3 style="font-size: 19px; font-weight: 700; color: rgb(51, 51, 51); letter-spacing: -0.02em;">요청 접수·항목 분해</h3>
+          <p style="font-size: 15px; line-height: 1.8; color: rgb(86, 80, 75);">사업명 미상 상태 접수 가능 · 식사·생필품·방문 제약 등 개별 항목 분해</p>
+        </li>
+        <li style="background: rgb(255, 255, 255); border-right: 1px solid rgb(217, 217, 217); border-bottom: 1px solid rgb(217, 217, 217); padding: 26px 24px 30px; display: flex; flex-direction: column; gap: 14px;">
+          <div style="display: flex; align-items: center; gap: 12px;">
+            <span style="width: 34px; height: 34px; border-radius: 50%; background: rgb(231, 98, 17); color: rgb(255, 255, 255); font-size: 15px; font-weight: 700; display: flex; align-items: center; justify-content: center;">2</span>
+            <span style="font-size: 14px; color: rgb(86, 80, 75);">문의</span>
+          </div>
+          <h3 style="font-size: 19px; font-weight: 700; color: rgb(51, 51, 51); letter-spacing: -0.02em;">기관 창구 문의</h3>
+          <p style="font-size: 15px; line-height: 1.8; color: rgb(86, 80, 75);">지원망 등록 목적별 연락처 문의 · 연락 사유 고지 · 이용 가능 여부·준비물·절차 확인</p>
+        </li>
+        <li style="background: rgb(255, 255, 255); border-right: 1px solid rgb(217, 217, 217); border-bottom: 1px solid rgb(217, 217, 217); padding: 26px 24px 30px; display: flex; flex-direction: column; gap: 14px;">
+          <div style="display: flex; align-items: center; gap: 12px;">
+            <span style="width: 34px; height: 34px; border-radius: 50%; background: rgb(231, 98, 17); color: rgb(255, 255, 255); font-size: 15px; font-weight: 700; display: flex; align-items: center; justify-content: center;">3</span>
+            <span style="font-size: 14px; color: rgb(86, 80, 75);">후속</span>
+          </div>
+          <h3 style="font-size: 19px; font-weight: 700; color: rgb(51, 51, 51); letter-spacing: -0.02em;">답변별 후속 처리</h3>
+          <p style="font-size: 15px; line-height: 1.8; color: rgb(86, 80, 75);">일부 기관 이용 불가 시에도 요청 전체 유지 · 확인 항목 유지 · 잔여 항목 대체 경로 확인</p>
+        </li>
+        <li style="background: rgb(255, 255, 255); border-bottom: 1px solid rgb(217, 217, 217); padding: 26px 24px 30px; display: flex; flex-direction: column; gap: 14px;">
+          <div style="display: flex; align-items: center; gap: 12px;">
+            <span style="width: 34px; height: 34px; border-radius: 50%; background: rgb(231, 98, 17); color: rgb(255, 255, 255); font-size: 15px; font-weight: 700; display: flex; align-items: center; justify-content: center;">4</span>
+            <span style="font-size: 14px; color: rgb(86, 80, 75);">회신</span>
+          </div>
+          <h3 style="font-size: 19px; font-weight: 700; color: rgb(51, 51, 51); letter-spacing: -0.02em;">시민 회신</h3>
+          <p style="font-size: 15px; line-height: 1.8; color: rgb(86, 80, 75);">확인 결과·이용 방법 전화 회신 · 조건 변경 시 시민 직접 선택</p>
+        </li>
       </ol>
-    </div>
-  </section>
-
-  <section class="mg-band">
-    <div class="mg-band__in">
-      <h2>대리 문의 범위·한계</h2>
-      <ul class="mg-rules">
-        <li><strong>자격·제공 여부 판단 주체 · 기관</strong><span>말결 · 조건 확인·전달 한정 · 선정·제공 결정 없음</span></li>
-        <li><strong>주요 선택 주체 · 시민</strong><span>수령 방법·일정 등 조건 변경 사항 · 시민 재확인</span></li>
-        <li><strong>전달 범위 사전 확인</strong><span>확인된 범위 내 기관 문의 한정</span></li>
-        <li><strong>이용 경로 연결과 지원 제공 구분</strong><span>이용 방법 확인과 지원 수령 · 별도 기록</span></li>
+      <ul style="margin-top: 24px; display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px;">
+        <li><img src="/assets/story/student-everyday-request-1536.webp" alt="일상 요청을 접수하는 학생" style="width: 100%; height: 170px; object-fit: cover; border: 1px solid rgb(215, 215, 215); border-radius: 8px;"></li>
+        <li><img src="/assets/story/parent-hands-full-1536.webp" alt="아이를 안은 부모" style="width: 100%; height: 170px; object-fit: cover; border: 1px solid rgb(215, 215, 215); border-radius: 8px;"></li>
+        <li><img src="/assets/story/household-order-arrival-1536.webp" alt="가정 배송 도착" style="width: 100%; height: 170px; object-fit: cover; border: 1px solid rgb(215, 215, 215); border-radius: 8px;"></li>
+        <li><img src="/assets/story/elder-support-arrival-1536.webp" alt="지원 물품을 받는 어르신" style="width: 100%; height: 170px; object-fit: cover; border: 1px solid rgb(215, 215, 215); border-radius: 8px;"></li>
       </ul>
     </div>
   </section>
-</main>
 
-<footer class="mg-foot">
-  <div class="mg-foot__in">
-    <p><strong>말결</strong> | 생활지원 연계 서비스</p>
-    <p>푸드뱅크·푸드마켓 · 찾아가는 푸드마켓 · 그냥드림 · 돌봄SOS</p>
-  </div>
-</footer>
+  <section style="max-width: 1280px; margin: 0px auto; padding: 80px 24px 88px;">
+    <div style="display: flex; flex-wrap: wrap; gap: 44px;">
+      <div style="flex: 1 1 380px; min-width: 0px; display: flex; flex-direction: column; gap: 24px;">
+        <h2 style="font-size: 33px; font-weight: 700; color: rgb(51, 51, 51); letter-spacing: -0.035em;">대리 문의 범위·한계</h2>
+        <dl style="border-top: 1px solid rgb(217, 217, 217);">
+          <div style="display: flex; flex-wrap: wrap; border-bottom: 1px solid rgb(217, 217, 217);">
+            <dt style="flex: 0 0 200px; padding: 18px 16px 18px 0px; font-size: 15px; font-weight: 500; color: rgb(51, 51, 51);">자격·제공 여부 판단 주체 · 기관</dt>
+            <dd style="flex: 1 1 220px; padding: 18px 0px; font-size: 15px; line-height: 1.7; color: rgb(86, 80, 75);">말결 · 조건 확인·전달 한정 · 선정·제공 결정 없음</dd>
+          </div>
+          <div style="display: flex; flex-wrap: wrap; border-bottom: 1px solid rgb(217, 217, 217);">
+            <dt style="flex: 0 0 200px; padding: 18px 16px 18px 0px; font-size: 15px; font-weight: 500; color: rgb(51, 51, 51);">주요 선택 주체 · 시민</dt>
+            <dd style="flex: 1 1 220px; padding: 18px 0px; font-size: 15px; line-height: 1.7; color: rgb(86, 80, 75);">수령 방법·일정 등 조건 변경 사항 · 시민 재확인</dd>
+          </div>
+          <div style="display: flex; flex-wrap: wrap; border-bottom: 1px solid rgb(217, 217, 217);">
+            <dt style="flex: 0 0 200px; padding: 18px 16px 18px 0px; font-size: 15px; font-weight: 500; color: rgb(51, 51, 51);">전달 범위 사전 확인</dt>
+            <dd style="flex: 1 1 220px; padding: 18px 0px; font-size: 15px; line-height: 1.7; color: rgb(86, 80, 75);">확인된 범위 내 기관 문의 한정</dd>
+          </div>
+          <div style="display: flex; flex-wrap: wrap; border-bottom: 1px solid rgb(217, 217, 217);">
+            <dt style="flex: 0 0 200px; padding: 18px 16px 18px 0px; font-size: 15px; font-weight: 500; color: rgb(51, 51, 51);">이용 경로 연결과 지원 제공 구분</dt>
+            <dd style="flex: 1 1 220px; padding: 18px 0px; font-size: 15px; line-height: 1.7; color: rgb(86, 80, 75);">이용 방법 확인과 지원 수령 · 별도 기록</dd>
+          </div>
+        </dl>
+      </div>
+      <figure style="flex: 1 1 400px; min-width: 0px; display: flex; flex-direction: column; gap: 12px;">
+        <img src="/assets/story/universal-agent-hero-1536.webp" alt="공공 공간을 걷는 다양한 시민" style="width: 100%; height: 100%; min-height: 300px; object-fit: cover; border: 1px solid rgb(215, 215, 215); border-radius: 8px;">
+        <figcaption style="font-size: 14px; color: rgb(86, 80, 75);">대상 · 서울시 거주 시민</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <footer style="background: rgb(245, 245, 245); border-top: 1px solid rgb(217, 217, 217);">
+    <div style="max-width: 1280px; margin: 0px auto; padding: 32px 24px 44px; display: flex; flex-wrap: wrap; gap: 10px 30px; align-items: baseline; justify-content: space-between;">
+      <div style="font-size: 16px; color: rgb(51, 51, 51);"><span style="font-weight: 700; color: rgb(231, 98, 17);">말결</span> <span style="color: rgb(215, 215, 215);">|</span> 생활지원 연계 서비스</div>
+      <div style="font-size: 14px; color: rgb(86, 80, 75);">푸드뱅크·푸드마켓 · 찾아가는 푸드마켓 · 그냥드림 · 돌봄SOS</div>
+    </div>
+  </footer></div>
 <script src="/landing.js" defer></script>
 </body>
 </html>

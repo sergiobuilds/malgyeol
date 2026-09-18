@@ -1,12 +1,16 @@
 ---
 handoff_schema: project-handoff/v1
 project_mode: observe-only
-verified_at: 2026-09-18T04:52:09.599254+00:00
+verified_at: 2026-09-18T05:51:14.000000+00:00
 canonical_ref: refs/heads/master
-verified_commit: 9b3635d6a700a2384f238b8b4594f6d6556e352d
+verified_commit: 22b85f7e51ceb6b9b45e14b1dca16c93870b8e9b
 ---
 
 ## Next
+
+- 2026-09-18 웹 시각 전환(HTML 불변, public/styles.css만): 사용자 지정 레퍼런스 서울복지포털 복지서비스 찾기(wis.seoul.go.kr/sec/ctg/categorySearch.do) 100% 기준. claude.ai/design 프로젝트 f9eeebac(랜딩·지원망·요청진행 3파일)을 생성해 그 값을 CSS로 이식. 서체 S-CoreDream(jsdelivr noonnu, CSP 허용). 랜딩은 유지하되 사용자 지시로 뼈대부터 재구성: Claude Design '말결 랜딩 v2'(같은 프로젝트) HTML을 public/landing.html로 이식(사진 히어로·장면 카드·흐름 띠, 스토리 이미지만 사용). 남색·올리브(59a49652)와 크림·주황 시안은 사용자가 거부했으므로 되살리지 않는다. verify(typecheck·207 tests·audit) 통과. 사용자 지시로 production 반영.
+
+- 2026-09-18 정책·기술 발표 8장 PPTX: artifacts/hackathon/말결_정책기술발표_8장.pptx(+pdf·미리보기). 비보북 양식(말결 (+3)의 사본.pptx) 기반, 생성기 build_8slides_from_template.py. 양식 DEMO장은 8장 제약으로 제외.
 
 - 운영 반영 완료: demoCallbackOnly=true, API/voice health 정상. 실제 두 통화의 음성·60초 검증은 아직 미완료. 과거 3통화 검사에서는 첫 접수35초, 기관무응답26초, 회신19초여서 목표미달이었다. synthetic/live 시드 구분 수정·적용 완료. 상세 이력은 [전화 검증 기록](dev/active/phone-dual-track-plan.md)과 Git. API transient unit은 stop 대신 restart 사용.
 
