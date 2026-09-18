@@ -1,12 +1,14 @@
 ---
 handoff_schema: project-handoff/v1
 project_mode: observe-only
-verified_at: 2026-09-18T04:43:09.539440+00:00
+verified_at: 2026-09-18T04:51:29.586601+00:00
 canonical_ref: refs/heads/master
-verified_commit: 06b62511665c61f4e3a4ba4a5ec2c1a693732f57
+verified_commit: d2bec89f4699e7c283a4202138da291234afdf58
 ---
 
 ## Next
+
+- 최신 사용자 승인으로 등록 시연은 2통화로 변경: 기본 프로필만 알고 첫 인사→현재 증상/요청 수신→기관에 알아보고 회신하겠다는 시연 대사→실제 기관 발신 없이 operator-demo-fixture 응답→시민 콜백. 식사 fixture는 도시락1개/무료/등록주소 전달/20분. demoCallbackOnly 명시 설정과 신규 marker/등록번호 검증 필수, 과거요청 자동재발신 없음. 실제기관 attempt/answer를 만들지 않으며 회신 기록에 시연 출처를 남긴다. 일반 신규 시민은 기존 경로 유지. Python93 통과(기관발신0/콜백1/반복0/과거0/공개경로/프롬프트/목업답변 경계). 실제 두 통화 전체60초 검증은 남아 있다.
 
 - 세 번째 전화의 반복 본인확인 제거: 운영자 승인+등록된 목업 시민+요청 소유자 대조에 한해 confirm_recipient(demo, 빈발화)로 연결한다. 실제 본인확인 발화를 만들지 않으며 일반 신규 시민 경로는 유지. 등록 회신은 이름 인사→실제 기관 답변→필요 선택→종료. Python84 통과. 전체 시연60초 제한, 통화50초 목표의 실제 음성 검증은 남아 있다.
 
