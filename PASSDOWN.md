@@ -1,12 +1,14 @@
 ---
 handoff_schema: project-handoff/v1
 project_mode: observe-only
-verified_at: 2026-09-18T04:40:37.707759+00:00
+verified_at: 2026-09-18T04:42:36.136832+00:00
 canonical_ref: refs/heads/master
-verified_commit: 12d9daf04b1c72317bce97499933fd2daf990d25
+verified_commit: a0b7ff736c26d1412657187b40319a8eeefd5e1e
 ---
 
 ## Next
+
+- 세 번째 전화의 반복 본인확인 제거: 운영자 승인+등록된 목업 시민+요청 소유자 대조에 한해 confirm_recipient(demo, 빈발화)로 연결한다. 실제 본인확인 발화를 만들지 않으며 일반 신규 시민 경로는 유지. 등록 회신은 이름 인사→실제 기관 답변→필요 선택→종료. Python84 통과. 전체 시연60초 제한, 통화50초 목표의 실제 음성 검증은 남아 있다.
 
 - 사용자 실제 음성 지적: 식사 준비가 필요하다고 들었다는 불필요한 표현. 고정 문구는 발견되지 않았고, 과거 history를 현재 요청으로 쓰지 않으며 음식 전달 요청의 의미를 보존하도록 지침 보강. Python83 통과. 운영 반영 전 진행 중 전화 1건이 있어 종료 대기.
 - 2026-09-18 대표이미지: artifacts/hackathon/malgyeol-submission-cover-v1.png 및 .prompt.txt. 내장 image_gen 생성, 전화 이용 시민과 실제 담당자 대시보드 참조. Milgram 말결 제출 폼의 첫 번째 이미지 CDN 반영 확인. 본 세션은 Submit again 미클릭.
