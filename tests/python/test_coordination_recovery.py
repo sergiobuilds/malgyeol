@@ -60,6 +60,38 @@ class FinalizationAPI:
 
 
 class FinalizationRecoveryTests(unittest.IsolatedAsyncioTestCase):
+    async def test_orphan_result_failure_is_retried_by_idle_worker_without_redial(self):
+        from unittest.mock import AsyncMock
+        for code in ['TRANSPORT_UNKNOWN', 'HTTP_409']:
+            with self.subTest(code=code), tempfile.TemporaryDirectory() as directory:
+                class API(FinalizationAPI):
+                    posts = 0
+                    async def send(self, method, path, body=None):
+                        if method == 'POST':
+                            self.posts += 1
+                            if self.posts == 1:raise ToolError('private error', code=code)
+                        return await super().send(method, path, body)
+                api = API(None)
+                journal = Journal(Path(directory) / 'voice.sqlite')
+                runtime = VoiceRuntime(api, journal, Routing({'allowedNumbers': [], 'citizenNumbers': {}, 'institutionNumbers': {}}))
+                journal.put('dispatch:q:0', {'state': 'dispatching'})
+                journal.put('call:intake', {'role': 'citizen', 'callId': 'intake', 'requestId': 'r', 'citizenRef': 'c'})
+                journal.put('final:intake', {'state': 'applied', 'status': 'completed'})
+                runtime.dial = AsyncMock()
+                try:
+                    await runtime.recover()
+                    self.assertIsNotNone(journal.get('orphan-final:a'))
+                    runtime.dispatch_request = AsyncMock(side_effect=asyncio.CancelledError)
+                    runtime.wake.set()
+                    with self.assertRaises(asyncio.CancelledError):await runtime.worker()
+                    expected = 'applied' if code == 'TRANSPORT_UNKNOWN' else 'manual-reconciliation'
+                    self.assertEqual(journal.get('orphan-final:a')['state'], expected)
+                    self.assertEqual(api.posts, 2 if code == 'TRANSPORT_UNKNOWN' else 1)
+                    if code == 'TRANSPORT_UNKNOWN':self.assertEqual(api.request['attempts'][0]['status'], 'unknown')
+                    runtime.dial.assert_not_awaited()
+                finally:
+                    journal.close()
+
     async def test_conflicting_or_transient_finalization_does_not_starve_other_work(self):
         from unittest.mock import AsyncMock
         for code in ['HTTP_409', 'TRANSPORT_UNKNOWN']:

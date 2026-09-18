@@ -184,4 +184,32 @@ class AdapterTests(unittest.IsolatedAsyncioTestCase):
                 self.assertIn('stage=model_generation',logs.output[0])
                 self.assertNotIn('네 동의합니다',str(logs.output))
                 self.assertIsNone(journal.get('finish:x'))
+                # Finishing must await final speech and the SDK's playout mark,
+                # without adding an arbitrary two-second sleep before hangup.
+                from clawops.agent._media_ws import MediaWebSocket
+                from unittest.mock import AsyncMock
+                media=object.__new__(MediaWebSocket)
+                media.flush=AsyncMock()
+                media.send_mark=AsyncMock()
+                played=asyncio.Event();waiting=asyncio.Event()
+                async def playback_mark(*args,**kwargs):
+                    waiting.set();await played.wait()
+                media.wait_for_mark=playback_mark
+                media.close=AsyncMock()
+                call=agent._active_sessions['x']
+                call.bind_transport(send_audio=AsyncMock(),send_clear=AsyncMock(),hangup=media.graceful_close)
+                session._call=call
+                journal.put('finish:x',{'summary':'안내 완료'})
+                completed=SimpleNamespace(server_content=SimpleNamespace(turn_complete=True))
+                with patch.object(GeminiRealtime,'_handle_response'):
+                    await session._handle_response(completed)
+                    self.assertFalse(getattr(session,'_ending',False),'Tool completion alone is not final speech')
+                    speech=SimpleNamespace(server_content=SimpleNamespace(turn_complete=True,model_turn=SimpleNamespace(parts=[SimpleNamespace(inline_data=SimpleNamespace(mime_type='audio/pcm',data=b'00'))])))
+                    await session._handle_response(speech)
+                    await asyncio.wait_for(waiting.wait(),timeout=0.2)
+                    media.flush.assert_awaited_once();media.send_mark.assert_awaited_once()
+                    media.close.assert_not_awaited()
+                    played.set()
+                    await asyncio.sleep(0)
+                    media.close.assert_awaited_once()
             finally:OUTBOUND.reset(tok);journal.close()
