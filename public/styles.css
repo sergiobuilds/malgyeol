@@ -1,5 +1,4 @@
 @charset "utf-8";
-@import url("https://cdn.jsdelivr.net/npm/@fontsource/gowun-batang@5/index.css");
 /*
  * 말결 담당자 화면 스타일시트
  * 1) 공식 서체 연결  2) KRDS 공통 스타일  3) KRDS 컴포넌트 스타일  4) 말결 제품 레이어
@@ -13242,56 +13241,59 @@ label {
 }
 /*# sourceMappingURL=component.css.map */
 
+/* S-CoreDream — 레퍼런스(서울복지포털)와 같은 서체. Claude Design 시안이 선언한 jsdelivr(noonnu) 배포본을 그대로 씁니다. CSP font-src 허용 출처 */
+@font-face{font-family:"S-CoreDream";font-weight:400;font-style:normal;font-display:swap;src:url("https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_six@1.2/S-CoreDream-4Regular.woff") format("woff")}
+@font-face{font-family:"S-CoreDream";font-weight:500;font-style:normal;font-display:swap;src:url("https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_six@1.2/S-CoreDream-5Medium.woff") format("woff")}
+@font-face{font-family:"S-CoreDream";font-weight:700;font-style:normal;font-display:swap;src:url("https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_six@1.2/S-CoreDream-6Bold.woff") format("woff")}
 /* ── 말결 색 ─────────────────────────────────────
- * KRDS 원시 색 단계(primary·secondary·gray)를 말결 값으로 덮어씁니다.
- * 의미 토큰과 구성 요소 CSS는 그대로 이 단계를 참조하므로 화면 전체가 함께 바뀝니다.
- * 방향: 종이 위의 먹. 깊은 남색 먹(그냥드림·서울잇다푸드뱅크 남색 계열)을 바탕으로 크게 쓰고,
- * 강조는 푸드뱅크 트럭의 올리브 초록 한 가지. 회색은 중립. (실측 2026-09-18)
+ * 레퍼런스: 서울복지포털 복지서비스 찾기(https://wis.seoul.go.kr/sec/ctg/categorySearch.do) 실측 2026-09-18.
+ * 주황 #e76211(주 버튼·활성 메뉴·강조 숫자), 진회색 #56504b(본문·보조 버튼), 제목 #333,
+ * 연회색 #f5f5f5(라벨 셀·띠), 테두리 #d7d7d7·#d9d9d9, 보조 파랑 #5074b2, 호버 주황 #ff8542.
+ * KRDS 원시 색 단계를 이 값으로 덮어써 의미 토큰·구성 요소가 함께 바뀝니다.
  */
 :root{
-  --krds-color-light-primary-5:#eef0f6;
-  --krds-color-light-primary-10:#d9dcea;
-  --krds-color-light-primary-20:#b5bbd6;
-  --krds-color-light-primary-30:#8891b8;
-  --krds-color-light-primary-40:#5b679a;
-  --krds-color-light-primary-50:#3a4780;
-  --krds-color-light-primary-60:#2b3668;
-  --krds-color-light-primary-70:#1f2a5a;
-  --krds-color-light-primary-80:#17204a;
-  --krds-color-light-primary-90:#101636;
-  --krds-color-light-primary-95:#0a0e24;
-  --krds-color-light-secondary-5:#eef0f6;
-  --krds-color-light-secondary-10:#d9dcea;
-  --krds-color-light-secondary-20:#b5bbd6;
-  --krds-color-light-secondary-30:#8891b8;
-  --krds-color-light-secondary-40:#5b679a;
-  --krds-color-light-secondary-50:#3a4780;
-  --krds-color-light-secondary-60:#2b3668;
-  --krds-color-light-secondary-70:#1f2a5a;
-  --krds-color-light-secondary-80:#17204a;
-  --krds-color-light-secondary-90:#101636;
-  --krds-color-light-secondary-95:#0a0e24;
-  --krds-color-light-gray-5:#f5f5f2;
-  --krds-color-light-gray-10:#e8e8e4;
-  --krds-color-light-gray-20:#d3d3ce;
-  --krds-color-light-gray-30:#b7b7b1;
-  --krds-color-light-gray-40:#92928c;
-  --krds-color-light-gray-50:#74746e;
-  --krds-color-light-gray-60:#5c5c57;
-  --krds-color-light-gray-70:#474743;
-  --krds-color-light-gray-80:#333331;
-  --krds-color-light-gray-90:#1f1f1e;
-  --krds-color-light-gray-95:#141413;
-  /* 올리브 강조 (말결 고유) */
-  --mg-olive-5:#f2f4e3;
-  --mg-olive-20:#d7dfa3;
-  --mg-olive-50:#7a8a24;
-  --mg-olive-60:#6a7a1e;
-  --mg-olive-70:#4f5a10;
-  --mg-ink-navy:#1f2a5a;
-  --mg-ink-navy-deep:#17204a;
-  --mg-ink-navy-line:#33407a;
-  --mg-serif:"Gowun Batang","Pretendard GOV",serif;
+  --krds-color-light-primary-5:#fff4ec;
+  --krds-color-light-primary-10:#ffe3d1;
+  --krds-color-light-primary-20:#ffc4a0;
+  --krds-color-light-primary-30:#ffa06b;
+  --krds-color-light-primary-40:#ff8542;
+  --krds-color-light-primary-50:#e76211;
+  --krds-color-light-primary-60:#c9540e;
+  --krds-color-light-primary-70:#b26612;
+  --krds-color-light-primary-80:#7d3a08;
+  --krds-color-light-primary-90:#4d2405;
+  --krds-color-light-primary-95:#2e1503;
+  --krds-color-light-secondary-5:#f1f5fb;
+  --krds-color-light-secondary-10:#dbe5f3;
+  --krds-color-light-secondary-20:#b9cbe6;
+  --krds-color-light-secondary-30:#8fa9d2;
+  --krds-color-light-secondary-40:#6b8bc2;
+  --krds-color-light-secondary-50:#5074b2;
+  --krds-color-light-secondary-60:#3f5f98;
+  --krds-color-light-secondary-70:#324b79;
+  --krds-color-light-secondary-80:#26385a;
+  --krds-color-light-secondary-90:#1a263d;
+  --krds-color-light-secondary-95:#111827;
+  --krds-color-light-gray-5:#f5f5f5;
+  --krds-color-light-gray-10:#e7e7e7;
+  --krds-color-light-gray-20:#d7d7d7;
+  --krds-color-light-gray-30:#c6c6c6;
+  --krds-color-light-gray-40:#9c9c9c;
+  --krds-color-light-gray-50:#727272;
+  --krds-color-light-gray-60:#5f5954;
+  --krds-color-light-gray-70:#56504b;
+  --krds-color-light-gray-80:#444;
+  --krds-color-light-gray-90:#333;
+  --krds-color-light-gray-95:#222;
+  --mg-ref-orange:#e76211;
+  --mg-ref-orange-hover:#ff8542;
+  --mg-ref-dark:#56504b;
+  --mg-ref-title:#333;
+  --mg-ref-cell:#f5f5f5;
+  --mg-ref-line:#d7d7d7;
+  --mg-ref-blue:#5074b2;
+  --mg-ref-yellow:#fbae12;
+  --mg-sans:"S-CoreDream","Pretendard GOV",sans-serif;
 }
 
 /* ── 말결 제품 레이어 ──────────────────────────────
@@ -13308,7 +13310,7 @@ label {
   --mg-ink-soft:var(--krds-light-color-text-subtle);
   --mg-deep:var(--krds-color-light-secondary-80);
   --mg-deeper:var(--krds-color-light-secondary-90);
-  --mg-brand:var(--mg-olive-50);
+  --mg-brand:var(--mg-ref-orange);
   --mg-ease:cubic-bezier(.2,.7,.3,1);
   --mg-dur:220ms;
 }
@@ -13691,81 +13693,318 @@ html{background:var(--mg-canvas)}
   .mg-quote p{font-size:var(--krds-mobile-font-size-body-medium)}
 }
 
-/* ── 말결 결(texture) 레이어 ─────────────────────
- * 구조(HTML)는 그대로 두고 느낌만 바꿉니다. 제목은 명조, 머리말과 소개 머리부는 남색 먹 바탕.
+/* ── 말결 레퍼런스 레이어 ─────────────────────────
+ * 서울복지포털 복지서비스 찾기 화면을 100% 기준으로 Claude Design이 만든 시안
+ * (claude.ai/design 프로젝트 f9eeebac, 2026-09-18)을 기존 HTML 구조 위에 그대로 옮긴 것입니다.
+ * 값은 시안의 인라인 스타일을 그대로 씁니다. HTML은 바꾸지 않습니다.
  */
-.mg-brand__name,.mg-hero h1,.mg-pagehead h1,.mg-band h2,.mg-doc h2,.mg-section__head h2,.mg-overview__top h2,.mg-rail__head h2,.mg-dialog__head h2,.mg-gate h1,.mg-empty h3{
-  font-family:var(--mg-serif);font-weight:700;letter-spacing:-.01em;
+:root{
+  --mg-canvas:#fff;--mg-surface:#fff;--mg-line:#d7d7d7;--mg-line-soft:#e7e7e7;
+  --mg-ink:#333;--mg-ink-soft:#56504b;--mg-deep:#56504b;--mg-deeper:#56504b;--mg-brand:#e76211;
+  --mg-shell:1240px;
 }
-.mg-brand__name{font-size:2.4rem}
+html,body,body.mg-home{background:#fff}
+body{font-family:var(--mg-sans);font-size:1.6rem;line-height:1.6;color:#56504b;text-wrap:pretty}
+h1,h2,h3,h4{font-family:var(--mg-sans);color:#333}
+a{color:#333}
+a:hover{color:#e76211}
 
-/* 머리말: 남색 먹 */
-.mg-header{background:var(--mg-ink-navy);border-bottom:1px solid var(--mg-ink-navy-line)}
-.mg-brand{color:#fff}
-.mg-brand__role{color:var(--krds-color-light-primary-20)}
-.mg-tabline a{color:var(--krds-color-light-primary-10);font-weight:500}
-.mg-tabline a:hover{color:#fff;text-decoration:none}
-.mg-tabline a[aria-current="page"]{color:#fff;border-bottom-color:var(--mg-olive-20)}
-.mg-header a:focus-visible,.mg-hero a:focus-visible{outline-color:#fff}
-#session-slot,#session-slot *{color:#fff}
+/* 버튼: 주황 채움 / 진회색 채움 / 흰 바탕 테두리. 모서리 5px */
+.krds-btn{border-radius:5px;font-family:var(--mg-sans);font-weight:500}
+.krds-btn.primary{background:#e76211;border-color:#e76211;color:#fff}
+.krds-btn.primary:hover,.krds-btn.primary:focus-visible{background:#ff8542;border-color:#ff8542;color:#fff}
+.krds-btn.secondary{background:#56504b;border-color:#56504b;color:#fff}
+.krds-btn.secondary:hover,.krds-btn.secondary:focus-visible{background:#3e3a37;border-color:#3e3a37;color:#fff}
+.krds-btn.tertiary{background:#fff;border-color:#d7d7d7;color:#56504b}
+.krds-btn.tertiary:hover{background:#f5f5f5;color:#333}
+.krds-btn.large{height:auto;padding:1.4rem 3.2rem;font-size:1.6rem;border-radius:5px}
+.krds-btn.medium{height:auto;padding:1.1rem 2.2rem;font-size:1.5rem;border-radius:5px}
+.krds-btn.small{height:auto;padding:.8rem 1.4rem;font-size:1.4rem;border-radius:5px}
+:focus-visible{outline:2px solid #e76211;outline-offset:2px}
 
-/* 소개 머리부: 머리말과 이어지는 한 덩어리의 먹 */
-.mg-hero{background:var(--mg-ink-navy);border-bottom:0;color:#fff}
-.mg-hero__in{padding-top:9.6rem;padding-bottom:8rem}
-.mg-hero h1{font-size:6.4rem;line-height:1.18;max-width:18ch;color:#fff;font-weight:400}
-.mg-hero__lead{color:var(--krds-color-light-primary-20);font-size:var(--krds-pc-font-size-body-large)}
-.mg-hero .krds-btn.primary{background:var(--mg-olive-60);color:#fff;border-color:var(--mg-olive-60);font-weight:700}
-.mg-hero .krds-btn.primary:hover{background:var(--mg-olive-70);border-color:var(--mg-olive-70);color:#fff}
-.mg-hero .krds-btn.secondary{background:transparent;color:#fff;border-color:var(--krds-color-light-primary-30)}
-.mg-hero .krds-btn.secondary:hover{background:var(--mg-ink-navy-deep);color:#fff;border-color:#fff}
-.mg-hero__facts{border:0;border-top:1px solid var(--mg-ink-navy-line);border-radius:0;margin-top:var(--krds-gap-9)}
-.mg-hero__facts>div{border-right:0;padding:1.8rem 0;margin-right:var(--krds-gap-8)}
-.mg-hero__facts dt{color:var(--krds-color-light-primary-20)}
-.mg-hero__facts dd{color:#fff;font-family:var(--mg-serif);font-size:3.2rem;font-weight:400;line-height:1.2}
+/* 머리말 */
+.mg-header{background:#fff;border-bottom:1px solid #d9d9d9}
+.mg-header__in{min-height:8rem;gap:1.6rem 2.8rem}
+.mg-brand__name{font-size:2.6rem;font-weight:800;color:#e76211;letter-spacing:-.03em}
+.mg-brand__role{color:#56504b}
+.mg-header nav.mg-tabline,.mg-tabline{gap:2.8rem}
+.mg-tabline a{height:auto;padding:0;font-size:1.6rem;font-weight:500;color:#333;border-bottom:0}
+.mg-tabline a:hover{color:#e76211;text-decoration:none}
+.mg-tabline a[aria-current="page"]{color:#e76211;font-weight:700;border-bottom:0}
+#session-slot,#session-slot *{color:#56504b}
 
-/* 본문 띠: 종이. 구분은 괘선 한 줄 */
-body.mg-home{background:#fff}
-.mg-band{border-top:1px solid var(--mg-line)}
-.mg-band--flow{background:var(--krds-color-light-gray-5)}
-.mg-band h2{font-size:var(--krds-pc-font-size-heading-large);margin-bottom:var(--krds-gap-7)}
-.mg-grid3 article{background:transparent;border-top:1px solid var(--mg-olive-50);border-radius:0;padding:var(--krds-padding-6) 0 0}
-.mg-band--flow .mg-grid3 article{background:transparent}
-.mg-flow{gap:0;background:transparent;border:0;border-radius:0;border-top:1px solid var(--mg-line)}
-.mg-flow li{background:transparent;padding:var(--krds-padding-6) var(--krds-padding-6) var(--krds-padding-6) 0;border-right:1px solid var(--mg-line)}
-.mg-flow li:last-child{border-right:0}
-.mg-flow li+li{padding-left:var(--krds-padding-6)}
-.mg-flow__no,.mg-steps li::before{background:var(--mg-olive-5);color:var(--mg-olive-70)}
-.mg-flow h3,.mg-grid3 h3{font-size:var(--krds-pc-font-size-heading-small)}
-.mg-rules li{border-bottom-color:var(--mg-line)}
-.mg-rules strong{font-family:var(--mg-serif);font-size:var(--krds-pc-font-size-heading-xsmall)}
+/* 빵부스러기 띠 (소개 화면) */
+.mg-hero{background:#fff;border-bottom:0}
+.mg-hero::before{content:"홈 · 생활지원 연계 서비스";display:block;background:#f5f5f5;border-bottom:1px solid #d9d9d9;padding:1.3rem max(2rem,calc((100% - 120rem)/2 + 2rem));font-size:1.4rem;color:#56504b}
+.mg-hero__in{max-width:124rem;padding:5.2rem 2rem 0}
+.mg-hero h1{font-size:3.3rem;font-weight:700;color:#333;letter-spacing:-.03em;line-height:1.35;max-width:none}
+.mg-hero__lead{margin-top:1.4rem;font-size:1.7rem;color:#56504b;max-width:none}
+.mg-hero__actions{margin-top:2.8rem;gap:1rem}
+.mg-hero__facts{display:grid;grid-template-columns:repeat(auto-fit,minmax(22rem,1fr));gap:2rem;margin-top:3.6rem;border:0;border-radius:0;overflow:visible}
+.mg-hero__facts>div{border:1px solid #d7d7d7;border-radius:8px;text-align:center;padding:2.4rem 1.8rem 1.8rem;background:#fff;margin:0;flex:none}
+.mg-hero__facts dt{margin:0;font-size:1.5rem;font-weight:400;color:#56504b}
+.mg-hero__facts dd{margin:1.4rem 0 0;background:#f5f5f5;border-radius:5px;padding:1.4rem 1rem;font-size:2.6rem;font-weight:700;color:#333;line-height:1.3}
 
-/* 내부 화면: 종이 위 제목 */
-.mg-pagehead{border-bottom-color:var(--mg-ink-navy)}
-.mg-pagehead h1{font-size:4rem}
-.mg-eyebrow{color:var(--mg-olive-70)}
-.mg-need__cat{color:var(--mg-olive-70);letter-spacing:0}
-.mg-resultbar strong{color:var(--mg-ink-navy)}
-.mg-reqbtn:hover{border-left-color:var(--mg-olive-20)}
-.mg-reqbtn[aria-current="true"]{border-color:var(--mg-olive-20);border-left-color:var(--mg-olive-50);background:var(--mg-olive-5)}
-.mg-trail li::before{border-color:var(--mg-olive-50)}
-.mg-quote{border-left-color:var(--mg-olive-50)}
-.mg-quote p{font-family:var(--mg-serif)}
-.mg-inst:focus-within{border-color:var(--mg-ink-navy)}
-.mg-foot{background:#fff}
-.mg-foot strong{font-family:var(--mg-serif)}
+/* 본문 띠와 카드 */
+.mg-band,.mg-band--flow{background:#fff;border-top:0}
+.mg-band__in{max-width:124rem;padding:6rem 2rem 0}
+.mg-band h2{font-size:2.4rem;font-weight:700;color:#333;letter-spacing:-.02em;padding-bottom:1.4rem;border-bottom:2px solid #56504b;margin:0 0 2.4rem;max-width:none}
+.mg-grid3{gap:2rem}
+.mg-grid3 article,.mg-band--flow .mg-grid3 article{border:1px solid #d7d7d7;border-radius:8px;padding:2.6rem 2.4rem;background:#fff}
+.mg-grid3 h3,.mg-flow h3{margin:0;font-size:1.8rem;font-weight:700;color:#333}
+.mg-grid3 p,.mg-flow p{margin:1.2rem 0 0;font-size:1.5rem;line-height:1.75;color:#56504b}
+.mg-flow{gap:2rem;background:transparent;border:0;border-radius:0}
+.mg-flow li{border:1px solid #d7d7d7;border-radius:8px;padding:2.6rem 2.4rem;background:#fff}
+.mg-flow__no{width:2.8rem;height:2.8rem;margin-bottom:1.4rem;background:#e76211;color:#fff;font-size:1.4rem}
+.mg-rules{gap:0 4rem}
+.mg-rules li{padding:2.4rem 0;border-bottom:1px solid #d7d7d7}
+.mg-rules strong{font-size:1.8rem;font-weight:700;color:#333;margin-bottom:.8rem}
+.mg-rules span{font-size:1.5rem;line-height:1.75;color:#56504b}
 
+/* 내부 화면 공통 */
+.mg-main{max-width:124rem;padding:5.2rem 2rem 7rem}
+.mg-pagehead{border-bottom:2px solid #56504b;padding-bottom:2.4rem}
+.mg-pagehead h1{font-size:3.3rem;font-weight:700;color:#333;letter-spacing:-.03em;line-height:1.35}
+.mg-pagehead p{font-size:1.7rem;color:#56504b}
+.mg-eyebrow{font-size:1.5rem;font-weight:500;color:#56504b}
+.mg-section__head h2{font-size:2.4rem;font-weight:700;color:#333;letter-spacing:-.02em}
+.mg-section__head h3,.mg-rail__head h2,.mg-overview__top h2,.mg-dialog__head h2{color:#333}
+.mg-card,.mg-inst,.mg-need,.mg-program,.mg-inq>li,.mg-reqbtn,.mg-facts,.mg-gate__card,.mg-empty,.mg-dialog__panel{border-color:#d7d7d7;border-radius:8px}
+.mg-inst:hover{border-color:#56504b}
+.mg-inst:focus-within{border-color:#e76211}
+.mg-inst__name,.mg-need__desc,.mg-inq__inst,.mg-program__head h4{color:#333}
+.mg-program__head,.mg-need__actions,.mg-inq__head,.mg-dialog__foot,.mg-skeleton span,.mg-note--quiet{background:#f5f5f5}
+.mg-facts dt,.mg-hero__facts dt{font-weight:400}
+.mg-facts dd{color:#333}
+.mg-defs{border-top-color:#56504b}
+.mg-defs dt{color:#56504b;font-weight:500}
+.mg-steps li::before{background:#e76211;color:#fff}
+.mg-need__cat{color:#e76211;letter-spacing:0}
+.mg-resultbar strong{color:#e76211}
+.mg-reqbtn{border-left-width:3px}
+.mg-reqbtn:hover{background:#f5f5f5;border-left-color:#ff8542}
+.mg-reqbtn[aria-current="true"]{border-color:#d7d7d7;border-left-color:#e76211;background:#fff4ec}
+.mg-trail li::before{border-color:#e76211}
+.mg-quote{border-left-color:#e76211}
+.mg-quote p{color:#333}
+.mg-required{color:#e76211}
+/* 표: 연회색 머리행, 회색 괘선 */
+.tbl th,.krds-table-wrap th{background:#f5f5f5;color:#56504b;font-weight:500;border-color:#d7d7d7}
+.tbl td,.krds-table-wrap td{border-color:#d7d7d7;color:#56504b}
+/* 사업 탭: 주황 활성 */
+.tab.full>ul>li>a,.tab.full>ul>li>button{color:#56504b;font-weight:500}
+.tab.full>ul>li.active>a,.tab.full>ul>li.active>button,.tab.full>ul>li>[aria-selected="true"]{color:#e76211;font-weight:700;border-bottom-color:#e76211}
+/* 바닥글 */
+.mg-foot{margin-top:7rem;border-top:1px solid #d9d9d9;background:#f5f5f5}
+.mg-foot__in{max-width:124rem;padding:2.8rem 2rem}
+.mg-foot p{font-size:1.4rem;color:#56504b}
+.mg-foot strong{color:#e76211;font-weight:800}
+
+@media (max-width:767px){
+  body{font-size:1.5rem}
+  .mg-hero::before{padding-left:2rem;padding-right:2rem}
+  .mg-hero__in{padding:3.6rem 2rem 0}
+  .mg-hero h1,.mg-pagehead h1{font-size:2.6rem}
+  .mg-hero__facts{grid-template-columns:minmax(0,1fr)}
+  .mg-hero__facts>div{border:1px solid #d7d7d7;border-radius:8px}
+  .mg-band__in{padding:4.4rem 2rem 0}
+  .mg-band h2,.mg-section__head h2{font-size:2.1rem}
+  .mg-flow{grid-template-columns:minmax(0,1fr);gap:1.6rem}
+  .mg-flow li{border:1px solid #d7d7d7;padding:2.2rem 2rem}
+  .mg-main{padding:3.6rem 2rem 5.6rem}
+  .mg-foot{margin-top:5rem}
+}
+
+/* ── 내부 화면: 지원망 (Claude Design '말결 지원망' 시안 값) ── */
+.mg-main{padding-top:0}
+.mg-main::before{content:"홈";display:block;margin:0;padding:1.3rem 0;background:#f5f5f5;box-shadow:0 0 0 100vw #f5f5f5,0 1px 0 100vw #d9d9d9;clip-path:inset(0 -100vw -1px -100vw);font-size:1.4rem;color:#56504b}
+body:has(.mg-tabline a[aria-current="page"][href="/app"]) .mg-main::before{content:"홈 · 지원망 · 지원사업별 기관·이용절차"}
+body:has(.mg-tabline a[aria-current="page"][href="/ops"]) .mg-main::before{content:"홈 · 요청 진행 · 접수한 요청"}
+body:has(.mg-tabline a[aria-current="page"][href="/tech"]) .mg-main::before{content:"홈 · 작동 방식"}
+.mg-pagehead{border-bottom:0;padding:5.2rem 0 2.6rem;gap:1rem 2rem}
+.mg-pagehead p{margin-top:1rem}
+.mg-eyebrow{display:none}
+/* 사업 탭: 접힌 폴더형 */
+.tab.line>ul{display:flex;flex-wrap:wrap;gap:.8rem;border-bottom:1px solid #d9d9d9;padding:0;margin:0}
+.tab.line>ul>li,.tab.full>ul>li{flex:none;min-width:0}
+.tab.line .btn-tab{height:auto;padding:1.4rem 2.6rem;border:1px solid #d7d7d7;border-bottom:0;border-radius:5px 5px 0 0;background:#f5f5f5;color:#56504b;font-size:1.6rem;font-weight:500;font-family:var(--mg-sans)}
+.tab.line .btn-tab::after,.tab.line .btn-tab::before{display:none}
+.tab.line li.active .btn-tab,.tab.line .btn-tab[aria-selected="true"]{background:#e76211;border-color:#e76211;color:#fff}
+.tab.line .btn-tab:hover{color:#e76211}
+.tab.line li.active .btn-tab:hover{color:#fff}
+/* 검색 조건: 표 형식 */
+#search-form.mg-card{margin-top:3rem;padding:0;border:0;border-top:2px solid #56504b;border-radius:0}
+.mg-filters{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0;align-items:stretch}
+.mg-filters .form-group{display:flex;flex-direction:row;align-items:stretch;margin:0;border-bottom:1px solid #d9d9d9}
+.mg-filters .form-tit{flex:0 0 16rem;margin:0;padding:1.6rem 2rem;background:#f5f5f5;display:flex;align-items:center;font-size:1.5rem;font-weight:500;color:#333}
+.mg-filters .form-tit label{font-size:1.5rem;font-weight:500;color:#333}
+.mg-filters .form-conts{flex:1 1 auto;padding:1.2rem 2rem;display:flex;flex-direction:row;align-items:center;min-width:0;margin:0}
+.mg-filters .krds-input,.mg-filters .krds-form-select{width:100%;height:4.4rem;padding:0 1.2rem;border:1px solid #d7d7d7;border-radius:5px;font-size:1.5rem;color:#333;background-color:#fff;font-family:var(--mg-sans)}
+.mg-filters .krds-form-select{max-width:30rem}
+.mg-filters__actions{grid-column:1/-1;justify-content:center;gap:1rem;padding:2.4rem 0 0}
+.mg-filters__actions .krds-btn.medium{padding:1.3rem 4rem;font-size:1.6rem}
+.mg-filters__actions #reset.krds-btn{background:#56504b;border-color:#56504b;color:#fff;padding:1.3rem 3.4rem}
+.mg-filters__actions #reset.krds-btn:hover{background:#3e3a37;border-color:#3e3a37}
+.mg-resultbar{margin:4rem 0 0;padding-bottom:1.4rem;border-bottom:1px solid #d9d9d9;align-items:baseline}
+.mg-resultbar p{font-size:1.7rem;color:#333}
+.mg-resultbar p+p,.mg-resultbar .mg-status{font-size:1.4rem;color:#56504b}
+.mg-list{margin-top:2.4rem;gap:2rem}
+.mg-list--network,.mg-list.mg-list--network{grid-template-columns:repeat(auto-fit,minmax(27rem,1fr));gap:2rem}
+.mg-inst,.mg-list--network .mg-inst{display:flex;flex-direction:column;gap:1.4rem;text-align:center;padding:2.6rem 2.2rem 2.2rem;border:1px solid #d7d7d7;border-radius:8px;grid-template-columns:none;grid-template-rows:none}
+.mg-inst:hover{border-color:#d7d7d7}
+.mg-inst__name{margin:0;font-size:1.9rem;font-weight:700;color:#333;letter-spacing:-.02em}
+.mg-inst__meta{margin:0;font-size:1.5rem;color:#56504b}
+.mg-inst__tags{margin:0;justify-content:center;gap:.6rem}
+.mg-inst__contact{margin:auto 0 0;background:#f5f5f5;border-radius:5px;padding:1.4rem 1.2rem;display:flex;flex-direction:column;gap:.4rem;align-items:center;font-size:1.3rem;color:#56504b}
+.mg-inst__contact span{color:#56504b}
+.mg-inst__contact b{font-size:1.7rem;font-weight:700;color:#333}
+.mg-inst>.krds-btn,.mg-list--network .mg-inst>.krds-btn{width:100%;justify-self:stretch;align-self:auto;margin-top:0;padding:1.2rem 1.8rem;font-size:1.5rem;background:#fff;border:1px solid #d7d7d7;color:#333;border-radius:5px}
+.mg-inst>.krds-btn:hover{background:#f5f5f5;color:#333}
+/* 배지: 테두리형, 상태색 글자 */
+.krds-badge{height:auto;line-height:1.5;padding:.3rem 1rem;border-radius:5px;border:1px solid currentColor;background:#fff;font-size:1.3rem;font-weight:500;font-family:var(--mg-sans)}
+.krds-badge.bg-light-primary,.krds-badge.bg-light-warning{color:#e76211;background:#fff}
+.krds-badge.bg-light-secondary,.krds-badge.bg-light-information{color:#5074b2;background:#fff}
+.krds-badge.bg-light-success{color:#2b7a4b;background:#fff}
+.krds-badge.bg-light-danger{color:#d0021b;background:#fff}
+.krds-badge.bg-light-gray{color:#56504b;background:#f5f5f5;border-color:#d7d7d7}
+
+/* ── 내부 화면: 요청 진행 (Claude Design '말결 요청진행' 시안 값) ── */
+.mg-work{gap:2.4rem;margin-top:0;grid-template-columns:34rem minmax(0,1fr)}
+.mg-rail{gap:0;padding:0;border:1px solid #d7d7d7;border-radius:8px;overflow:hidden;background:#fff;top:2rem}
+.mg-rail__head{background:#f5f5f5;border-bottom:1px solid #d9d9d9;padding:1.6rem 2rem;align-items:center}
+.mg-rail__head h2{font-size:1.7rem;font-weight:700;color:#333}
+.mg-rail__count{font-size:1.3rem}
+.mg-reqbtn{border:0;border-bottom:1px solid #d9d9d9;border-left:3px solid transparent;border-radius:0;padding:1.6rem 2rem;background:#fff}
+.mg-reqbtn:hover{background:#f5f5f5;border-left-color:#ffc4a0}
+.mg-reqbtn[aria-current="true"]{background:#f5f5f5;border-color:#d9d9d9;border-left-color:#e76211}
+.mg-rail .mg-reqbtn:last-child{border-bottom:0}
+.mg-reqbtn__top{margin-bottom:.8rem}
+.mg-reqbtn__dist{font-size:1.6rem;color:#333}
+.mg-reqbtn__time{font-size:1.3rem}
+.mg-reqbtn__sum{font-size:1.4rem}
+.mg-reqbtn__tags{margin-top:.8rem}
+.mg-canvas{gap:2.4rem}
+.mg-overview__top h2{font-size:2rem;color:#333}
+.mg-facts{display:grid;grid-template-columns:repeat(auto-fit,minmax(30rem,1fr));gap:0;border:1px solid #d7d7d7;border-radius:8px;overflow:hidden;background:#fff}
+.mg-facts>div{display:flex;flex:none;padding:0;border-right:0;border-bottom:1px solid #d9d9d9;min-width:0}
+.mg-facts>div:last-child{border-bottom:1px solid #d9d9d9}
+.mg-facts dt{flex:0 0 12rem;margin:0;background:#f5f5f5;padding:1.4rem 1.8rem;font-size:1.4rem;font-weight:500;color:#333}
+.mg-facts dd{flex:1 1 auto;padding:1.4rem 1.8rem;font-size:1.5rem;font-weight:400;color:#56504b;min-width:0}
+/* 구역: 머리띠가 있는 상자. '필요별 진행'만 밑줄 제목 */
+.mg-canvas .mg-section{margin-top:0;border:1px solid #d7d7d7;border-radius:8px;overflow:hidden;background:#fff}
+.mg-canvas .mg-section__head{margin:0;padding:1.6rem 2rem;background:#f5f5f5;border-bottom:1px solid #d9d9d9}
+.mg-canvas .mg-section__head h2{font-size:1.7rem;font-weight:700;color:#333}
+.mg-canvas .mg-section>*:not(.mg-section__head){margin:1.8rem 2rem}
+.mg-canvas .mg-section:has(.mg-need){border:0;border-radius:0;overflow:visible}
+.mg-canvas .mg-section:has(.mg-need) .mg-section__head{background:transparent;border-bottom:2px solid #56504b;padding:0 0 1.2rem}
+.mg-canvas .mg-section:has(.mg-need) .mg-section__head h2{font-size:2rem}
+.mg-canvas .mg-section:has(.mg-need)>*:not(.mg-section__head){margin:1.8rem 0 0}
+.mg-need{border:1px solid #d7d7d7;border-radius:8px;padding:2rem 2rem 1.8rem;display:flex;flex-direction:column;gap:1.2rem}
+.mg-need+.mg-need{margin-top:1.8rem}
+.mg-need__head{padding:0;border-bottom:0;align-items:center}
+.mg-need__cat{margin:0 0 .4rem;font-size:1.3rem;font-weight:500;color:#e76211}
+.mg-need__desc{font-size:1.7rem;color:#333}
+.mg-need__state{margin:.4rem 0 0;font-size:1.4rem}
+.mg-need__body{padding:0}
+.mg-need__actions{padding:0;background:transparent;border-top:0}
+.mg-note{margin:0 0 1.2rem;padding:1.2rem 1.4rem;border-left:0;border-radius:5px;background:#f5f5f5;font-size:1.4rem;color:#333}
+.mg-note strong{color:#333}
+.mg-note--result,.mg-note--attention,.mg-note--quiet{background:#f5f5f5;border-left:0}
+.mg-note--attention{border:1px solid #e76211}
+.mg-inq>li{border:1px solid #d7d7d7;border-radius:8px}
+.mg-inq__head{background:#f5f5f5;padding:1.2rem 1.6rem}
+.mg-inq__inst{font-size:1.5rem;color:#333}
+.mg-defs{border-top:0;border:1px solid #d7d7d7;border-radius:8px;overflow:hidden;gap:0}
+.mg-defs dt{background:#f5f5f5;padding:1.2rem 1.8rem;border-bottom:1px solid #d9d9d9;color:#333;font-size:1.4rem}
+.mg-defs dd{padding:1.2rem 1.8rem;border-bottom:1px solid #d9d9d9;font-size:1.5rem}
+.mg-trail li{font-size:1.5rem}
+.mg-trail li::before{border-color:#e76211;background:#fff}
+.mg-quote{border-left:3px solid #e76211;background:#f5f5f5;border-radius:0 5px 5px 0;padding:1.2rem 1.6rem}
+.mg-quote p{font-size:1.6rem;color:#333}
+.mg-empty{border:1px dashed #d7d7d7;border-radius:8px}
+.mg-empty h3{color:#333}
+.mg-dialog__panel{border-radius:8px}
+.mg-dialog__head{padding:1.6rem 2rem;background:#f5f5f5;border-bottom:1px solid #d9d9d9}
+.mg-dialog__head h2{font-size:1.7rem}
+.mg-dialog__body{padding:1.8rem 2rem}
+.mg-dialog__foot{background:#fff;border-top:1px solid #d9d9d9;padding:1.4rem 2rem}
+/* 작동 방식: 표 */
+.mg-doc h2{font-size:2.4rem;color:#333;padding-bottom:1.2rem;border-bottom:2px solid #56504b}
+.mg-doc h3{font-size:1.8rem;color:#333}
+.mg-doc p{color:#56504b}
+.tbl{border-top:0}
+.tbl th{background:#f5f5f5;color:#333;font-weight:500;font-size:1.5rem;border-bottom:1px solid #d9d9d9}
+.tbl td{font-size:1.5rem;border-bottom:1px solid #d9d9d9}
 @media (max-width:1023px){
-  .mg-flow li{border-right:0;border-bottom:1px solid var(--mg-line);padding-left:0}
-  .mg-flow li+li{padding-left:0}
-  .mg-flow li:last-child{border-bottom:0}
+  .mg-work{grid-template-columns:minmax(0,1fr)}
+  .mg-header nav.mg-tabline{width:auto;gap:2rem}
+  .mg-tabline a{flex:none;padding:0}
+  .mg-header__in{padding-bottom:0}
 }
 @media (max-width:767px){
-  .mg-hero h1{font-size:3.8rem}
-  .mg-hero__in{padding-top:5.6rem;padding-bottom:4.8rem}
-  .mg-hero__facts dd{font-size:2.6rem}
-  .mg-hero__facts>div{margin-right:0;border-bottom:1px solid var(--mg-ink-navy-line)}
-  .mg-hero__facts>div:last-child{border-bottom:0}
-  .mg-pagehead h1{font-size:3rem}
-  .mg-band h2{font-size:var(--krds-mobile-font-size-heading-large)}
-  .mg-flow{grid-template-columns:minmax(0,1fr)}
+  .mg-filters{grid-template-columns:minmax(0,1fr)}
+  .mg-pagehead{padding:3.6rem 0 2rem}
+  .tab.line .btn-tab{padding:1.1rem 1.6rem;font-size:1.5rem}
+  .mg-filters .form-group{flex-direction:column}
+  .mg-filters .form-tit{flex:none;padding:1rem 1.6rem}
+  .mg-filters .form-conts{padding:1.2rem 1.6rem}
+  .mg-filters .krds-form-select{max-width:none}
+  .mg-filters__actions .krds-btn{flex:1 1 auto}
+  .mg-facts>div{flex-direction:column}
+  .mg-facts dt{flex:none}
+  .mg-list--network .mg-inst>.krds-btn{width:100%}
+  .mg-header__in{min-height:6.4rem;gap:1rem 2rem}
 }
+
+/* 표 머리행 */
+.krds-table-wrap .tbl thead th,.krds-table-wrap .tbl.data thead th,.tbl thead th{background:#f5f5f5;color:#333;font-weight:500;border-color:#d9d9d9}
+/* 기관 카드 연락처: 작은 라벨 + 굵은 번호 */
+.mg-inst__contact b{font-size:1.3rem;font-weight:400;color:#56504b}
+.mg-inst__contact span{display:flex;flex-direction:column;align-items:center;gap:.2rem;font-size:1.7rem;font-weight:700;color:#333;white-space:nowrap}
+
+/* ── 소개 화면(첫 화면): 서울복지포털 메인의 어법 — 복숭아빛 둥근 패널, 흰 카드, 주황 강조 ── */
+.mg-hero::before{display:none}
+.mg-hero__in{max-width:124rem;margin:3rem auto 0;padding:0 2rem}
+.mg-hero__in{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);grid-template-rows:auto auto auto auto;column-gap:5rem;row-gap:0;align-items:center;background:#fff2de;border-radius:20px;padding:5.6rem 6rem 4.4rem}
+.mg-hero h1{grid-column:1;font-size:4.4rem;line-height:1.25;letter-spacing:-.03em;color:#333;margin:0}
+.mg-hero__lead{grid-column:1;margin-top:1.6rem;font-size:1.8rem;line-height:1.7;color:#56504b}
+.mg-hero__actions{grid-column:1;margin-top:3rem;align-self:start}
+.mg-hero__actions .krds-btn.large{padding:1.5rem 3.4rem;font-size:1.7rem;border-radius:8px}
+.mg-hero__in::after{content:"";grid-column:2;grid-row:1/4;align-self:stretch;min-height:34rem;border-radius:16px;background:#fff url("/assets/story/elder-voice-hero-960.webp") center/cover no-repeat;box-shadow:0 2px 5px rgba(255,140,0,.1)}
+.mg-hero__facts{grid-column:1/-1;margin-top:4rem;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1.6rem}
+.mg-hero__facts>div{background:#fff;border:0;border-radius:12px;padding:2rem 2rem 1.8rem;text-align:center}
+.mg-hero__facts dt{font-size:1.4rem;color:#56504b}
+.mg-hero__facts dd{margin-top:.8rem;background:transparent;padding:0;font-size:2.8rem;font-weight:700;color:#e76211;line-height:1.2}
+.mg-band__in{padding-top:6.4rem}
+.mg-band:not(.mg-band--flow) .mg-grid3{background:#f8f8f8;border-radius:20px;padding:3rem}
+.mg-band:not(.mg-band--flow) .mg-grid3 article{border:0;border-radius:12px;padding:2.6rem 2.4rem}
+.mg-flow li{border-radius:12px}
+.mg-flow__no{width:3.2rem;height:3.2rem;font-size:1.5rem;font-weight:700}
+.mg-rules{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0;border:1px solid #d9d9d9;border-radius:8px;overflow:hidden}
+.mg-rules li{display:flex;padding:0;border-bottom:1px solid #d9d9d9}
+.mg-rules li:nth-last-child(-n+2){border-bottom:0}
+.mg-rules li:nth-child(odd){border-right:1px solid #d9d9d9}
+.mg-rules strong{flex:0 0 42%;margin:0;padding:1.6rem 1.8rem;background:#f5f5f5;font-size:1.5rem;font-weight:500;color:#333;display:block}
+.mg-rules span{flex:1 1 auto;padding:1.6rem 1.8rem;font-size:1.5rem;line-height:1.7}
+@media (max-width:1023px){
+  .mg-hero__in{grid-template-columns:minmax(0,1fr);padding:4rem 3.2rem 3.2rem;column-gap:0}
+  .mg-hero__in::after{grid-column:1;grid-row:auto;min-height:24rem;margin-top:2.8rem;aspect-ratio:16/10}
+  .mg-hero__facts{grid-template-columns:repeat(3,minmax(0,1fr));margin-top:2.8rem}
+  .mg-rules{grid-template-columns:minmax(0,1fr)}
+  .mg-rules li:nth-child(odd){border-right:0}
+  .mg-rules li:nth-last-child(-n+2){border-bottom:1px solid #d9d9d9}
+  .mg-rules li:last-child{border-bottom:0}
+}
+@media (max-width:767px){
+  .mg-hero__in{margin-top:1.6rem;padding:2.8rem 2rem 2.4rem;border-radius:16px}
+  .mg-hero h1{font-size:3rem}
+  .mg-hero__lead{font-size:1.5rem}
+  .mg-hero__in::after{min-height:20rem;margin-top:2rem}
+  .mg-hero__facts{grid-template-columns:minmax(0,1fr);gap:1rem;margin-top:2rem}
+  .mg-hero__facts>div{display:flex;justify-content:space-between;align-items:center;padding:1.4rem 1.8rem}
+  .mg-hero__facts dd{margin:0;font-size:2.2rem}
+  .mg-band:not(.mg-band--flow) .mg-grid3{padding:1.6rem;border-radius:16px}
+  .mg-rules strong{flex:0 0 38%;padding:1.2rem 1.4rem}
+  .mg-rules span{padding:1.2rem 1.4rem}
+}
+
