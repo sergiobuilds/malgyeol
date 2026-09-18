@@ -13831,7 +13831,7 @@ body:has(.mg-tabline a[aria-current="page"][href="/tech"]) .mg-main::before{cont
 .tab.line .btn-tab::after,.tab.line .btn-tab::before{display:none}
 .tab.line li.active .btn-tab,.tab.line .btn-tab[aria-selected="true"]{background:#e76211;border-color:#e76211;color:#fff}
 .tab.line .btn-tab:hover{color:#e76211}
-.tab.line li.active .btn-tab:hover{color:#fff}
+.tab.line li.active .btn-tab:hover,.tab.line .btn-tab[aria-selected="true"]:hover{color:#fff}
 /* 검색 조건: 표 형식 */
 #search-form.mg-card{margin-top:3rem;padding:0;border:0;border-top:2px solid #56504b;border-radius:0}
 .mg-filters{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0;align-items:stretch}
