@@ -60,21 +60,23 @@ npm start
 
 ## 전화 실행 및 전환
 
-Campbell의 기존 `malgyeol-care-api`는 18081, 기존 `malgyeol-care-voice`는 18082를 사용합니다. 기존 `voice` 명령은 단일 품목의 `clawops-care-agent.py`입니다. **새 `coordination_voice.py`로 서비스 전환한 상태가 아닙니다.** 기존 서비스의 health와 새 업무의 실제 전화 왕복은 별개입니다.
+2026-09-18 사용자 승인으로 `malgyeol-care-voice`를 새 `coordination_voice.py`로 전환했습니다. API는 18081, 새 음성 health는 18083입니다. 이전 `voice` 실행은 중단했습니다. 현재 서비스 ExecStart는 `run-care-runtime.py coordination`이며 시민 접수·기관 문의·시민 회신 도구를 사용합니다. health 준비 응답은 실제 전화 왕복 성공과 별개입니다.
 
 ```bash
+python3 scripts/configure-phone-roles.py
 python3 scripts/run-care-runtime.py coordination-check
 python3 scripts/run-care-runtime.py coordination
 ```
 
-첫 명령은 비공개 라우팅 검사만 수행하고 발신하지 않습니다. 두 번째는 새 음성 브리지 실행이며, 정상 라우팅과 기존 서비스 점유·전환 조건을 확인한 실행자만 사용합니다. 기존 서비스와 같은 번호를 경쟁 구독하도록 임의로 함께 띄우지 않습니다.
+첫 명령은 A/B 번호를 숨김 입력받아 비공개 라우팅을 교체합니다. 두 번째는 설정 검사만 수행하고 발신하지 않습니다. 세 번째는 새 음성 브리지 실행이며, 정상 라우팅과 기존 서비스 점유·전환 조건을 확인한 실행자만 사용합니다. 기존 서비스와 같은 번호를 경쟁 구독하도록 임의로 함께 띄우지 않습니다.
 
 비공개 `.private/coordination-routing.json`의 최상위 필드는 `allowedNumbers`, `citizenNumbers`, `institutionNumbers`입니다. 시민 참조와 기관 ID를 승인된 A/B 번호에 결박하며 실제 번호는 Git에 넣지 않습니다. 파일은 일반 파일·0600 권한이어야 합니다. 시민·기관 역할의 번호 중복과 서비스 자기발신은 차단합니다. 공개 기관 연락처는 시험 번호로 덮어쓰지 않습니다.
 
 - A: 시민 역할 접수와 결과 회신 수신.
 - B: 기관 역할의 실제 음성 응답.
 - 새 브리지 기본 health: 18083. 통화 작업 기록: `.private/coordination-voice.sqlite`.
-- 현재 A/B 라우팅 설정과 실제 전화망 왕복·양방향 오디오 검증은 남아 있습니다.
+- A/B 비공개 라우팅 설정·검사 완료. 팀원 번호 교체는 위 숨김 입력 명령 후 통화 종료 상태에서 음성 서비스 재시작. 실제 전화망 왕복·양방향 오디오 검증은 별도 수행.
+- 현재 음성은 대시보드와 같은 API·coordination 원장을 사용합니다. 기존 화면 사례는 음성 journal의 수신 기록에 없으므로 자동 발신 대상이 아닙니다. 새 수신에서 생성한 요청만 자동 후속 처리합니다.
 - 임의 공공기관 발신, 다른 세션 서비스 종료, 광범위한 `pkill`은 금지합니다.
 
 비밀 입력은 기존 `CARE_SECRET_DIR`의 `clawops.env`, `bridge.env` 및 `.secrets/care.env`입니다. launcher가 읽으며 값은 명령행·로그·문서에 출력하지 않습니다. `CARE_PHONE_NUMBER`, `CARE_API_BASE_URL`, `CARE_PORT`는 기존 실행 override입니다. 새 브리지는 `COORDINATION_ROUTING_PATH`, `COORDINATION_VOICE_STATE_PATH`, `COORDINATION_HEALTH_PORT`를 사용합니다.
@@ -84,7 +86,7 @@ python3 scripts/run-care-runtime.py coordination
 ```bash
 systemctl --user status malgyeol-care-api malgyeol-care-voice
 curl -fsS http://127.0.0.1:18081/health
-curl -fsS http://127.0.0.1:18082/healthz
+curl -fsS http://127.0.0.1:18083/health
 ```
 
 `python3 scripts/run-care-runtime.py backup`은 기본 care DB의 SQLite backup API·integrity_check를 사용합니다. 기본 DB에 함께 저장된 coordination 테이블도 포함합니다. 별도 `COORDINATION_LEDGER_PATH` 사용 시 그 파일의 백업은 별도로 구성해야 합니다. 실행 중 DB를 WAL 없이 단순 복사하지 않습니다.
