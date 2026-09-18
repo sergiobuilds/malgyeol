@@ -1,14 +1,14 @@
 ---
 handoff_schema: project-handoff/v1
 project_mode: observe-only
-verified_at: 2026-09-18T05:43:17.000000+00:00
+verified_at: 2026-09-18T05:50:25.000000+00:00
 canonical_ref: refs/heads/master
-verified_commit: d87f5bce68111da2f6b25f97970c7e0c9b50167f
+verified_commit: dc81cdcff56658678e7652e5fd88b7159269e904
 ---
 
 ## Next
 
-- 2026-09-18 웹 시각 전환(HTML 불변, public/styles.css만): 사용자 지정 레퍼런스 서울복지포털 복지서비스 찾기(wis.seoul.go.kr/sec/ctg/categorySearch.do) 100% 기준. claude.ai/design 프로젝트 f9eeebac(랜딩·지원망·요청진행 3파일)을 생성해 그 값을 CSS로 이식. 서체 S-CoreDream(jsdelivr noonnu, CSP 허용). 랜딩은 유지하고 서울복지포털 메인 어법으로 첫 화면화. 남색·올리브(59a49652)와 크림·주황 시안은 사용자가 거부했으므로 되살리지 않는다. verify(typecheck·207 tests·audit) 통과. 사용자 지시로 production 반영.
+- 2026-09-18 웹 시각 전환(HTML 불변, public/styles.css만): 사용자 지정 레퍼런스 서울복지포털 복지서비스 찾기(wis.seoul.go.kr/sec/ctg/categorySearch.do) 100% 기준. claude.ai/design 프로젝트 f9eeebac(랜딩·지원망·요청진행 3파일)을 생성해 그 값을 CSS로 이식. 서체 S-CoreDream(jsdelivr noonnu, CSP 허용). 랜딩은 유지하되 사용자 지시로 뼈대부터 재구성: Claude Design '말결 랜딩 v2'(같은 프로젝트) HTML을 public/landing.html로 이식(사진 히어로·장면 카드·흐름 띠, 스토리 이미지만 사용). 남색·올리브(59a49652)와 크림·주황 시안은 사용자가 거부했으므로 되살리지 않는다. verify(typecheck·207 tests·audit) 통과. 사용자 지시로 production 반영.
 
 - 2026-09-18 정책·기술 발표 8장 PPTX: artifacts/hackathon/말결_정책기술발표_8장.pptx(+pdf·미리보기). 비보북 양식(말결 (+3)의 사본.pptx) 기반, 생성기 build_8slides_from_template.py. 양식 DEMO장은 8장 제약으로 제외.
 
