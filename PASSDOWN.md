@@ -1,12 +1,14 @@
 ---
 handoff_schema: project-handoff/v1
 project_mode: observe-only
-verified_at: 2026-09-18T04:52:09.599254+00:00
+verified_at: 2026-09-18T05:11:34.000000+00:00
 canonical_ref: refs/heads/master
-verified_commit: 9b3635d6a700a2384f238b8b4594f6d6556e352d
+verified_commit: 33d6b9203bd6e3d7f57e485f948970294146d7fd
 ---
 
 ## Next
+
+- 2026-09-18 정책·기술 발표 8장 PPTX: artifacts/hackathon/말결_정책기술발표_8장.pptx(+pdf·미리보기). 비보북 양식(말결 (+3)의 사본.pptx) 기반, 생성기 build_8slides_from_template.py. 양식 DEMO장은 8장 제약으로 제외.
 
 - 운영 반영 완료: demoCallbackOnly=true, API/voice health 정상. 실제 두 통화의 음성·60초 검증은 아직 미완료. 과거 3통화 검사에서는 첫 접수35초, 기관무응답26초, 회신19초여서 목표미달이었다. synthetic/live 시드 구분 수정·적용 완료. 상세 이력은 [전화 검증 기록](dev/active/phone-dual-track-plan.md)과 Git. API transient unit은 stop 대신 restart 사용.
 
