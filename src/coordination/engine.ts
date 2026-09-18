@@ -1,4 +1,4 @@
-import { randomUUID } from "node:crypto";
+import { randomUUID, createHash } from "node:crypto";
 import { CoordinationStore, type CoordinationLedger } from "./store.ts";
 import type {
   SupportRequest,
@@ -112,6 +112,8 @@ function liveNeed(r: SupportRequest, q: Inquiry): Need {
 export class CoordinationEngine {
   constructor(private readonly store: CoordinationStore) {}
   createRequest(input: CreateRequestInput): SupportRequest {
+    if (input?.intakeKey !== undefined && (!text(input.intakeKey) || input.intakeKey.length > 160))
+      fail("INVALID_INTAKE_KEY", 400);
     if (
       !input ||
       !text(input.summary) ||
@@ -138,8 +140,22 @@ export class CoordinationEngine {
       if (n.requestDetails !== undefined)
         validateRequestDetails(n.requestDetails);
     return this.store.transaction((l) => {
+      const canonical = (value: unknown): unknown =>
+        Array.isArray(value) ? value.map(canonical) :
+        value !== null && typeof value === "object" ? Object.fromEntries(
+          Object.entries(value).filter(([,v]) => v !== undefined).sort(([a],[b]) => a.localeCompare(b)).map(([k,v]) => [k,canonical(v)])
+        ) : value;
+      const intakeSignature = input.intakeKey ? createHash("sha256").update(JSON.stringify(canonical(input))).digest("hex") : undefined;
+      if (input.intakeKey) {
+        const previous = Object.values(l.requests).find(r => r.intakeKey === input.intakeKey);
+        if (previous) {
+          if (previous.intakeSignature !== intakeSignature) fail("INTAKE_KEY_CONFLICT", 409);
+          return previous;
+        }
+      }
       const at = now();
       const r: SupportRequest = {
+        ...(input.intakeKey && intakeSignature ? { intakeKey: input.intakeKey, intakeSignature } : {}),
         id: randomUUID(),
         citizenRef: input.citizenRef,
         ...(profile === undefined ? {} : { citizenProfile: profile }),
@@ -415,21 +431,28 @@ export class CoordinationEngine {
       summary?: string;
       constraints?: string[];
       district?: string;
+      citizenProfile?: CitizenProfile;
     },
   ): SupportRequest {
     if (
       !input ||
       !Object.keys(input).length ||
       Object.keys(input).some(
-        (k) => !["summary", "constraints", "district"].includes(k),
+        (k) => !["summary", "constraints", "district", "citizenProfile"].includes(k),
       ) ||
       (input.summary !== undefined && !text(input.summary)) ||
       (input.district !== undefined && !text(input.district)) ||
       (input.constraints !== undefined && !strings(input.constraints))
     )
       fail("INVALID_REVISION", 400);
+    const profile = input.citizenProfile === undefined ? undefined : validateCitizenProfile(input.citizenProfile);
     return this.store.transaction((l) => {
       const r = request(l, id);
+      const mergedProfile = profile === undefined ? r.citizenProfile : { ...r.citizenProfile, ...profile };
+      const profileChanged = profile !== undefined && (Object.keys(profile) as (keyof CitizenProfile)[]).some((key) => profile[key] !== r.citizenProfile?.[key]);
+      const changedSharingFields = ["name", "address"].filter((key) =>
+        profileChanged && mergedProfile?.[key as "name" | "address"] !== r.citizenProfile?.[key as "name" | "address"]
+      ).map((key) => `citizenProfile.${key}`);
       const summaryChanged =
         input.summary !== undefined && input.summary !== r.summary;
       const districtChanged =
@@ -438,15 +461,19 @@ export class CoordinationEngine {
         input.constraints !== undefined &&
         JSON.stringify([...new Set(input.constraints)].sort()) !==
           JSON.stringify([...new Set(r.constraints)].sort());
-      if (!summaryChanged && !districtChanged && !constraintsChanged) return r;
+      if (!summaryChanged && !districtChanged && !constraintsChanged && !profileChanged) return r;
+      if (profileChanged && mergedProfile) {
+        r.citizenProfile = mergedProfile;
+        if (r.consent) r.consent.sharedFields = r.consent.sharedFields.filter((field) => !changedSharingFields.includes(field));
+      }
       if (input.summary !== undefined) r.summary = input.summary;
       if (input.district !== undefined) r.district = input.district;
       if (input.constraints !== undefined)
         r.constraints = [...input.constraints];
       // Revision is the operational agreement version, not a display-edit counter.
       // Shared district/constraints affect all active needs; a summary correction does not.
+      if (districtChanged || constraintsChanged || profileChanged) r.revision++;
       if (districtChanged || constraintsChanged) {
-        r.revision++;
         for (const n of r.needs) {
           if (n.status === "stopped") continue;
           n.status = "open";
@@ -457,7 +484,7 @@ export class CoordinationEngine {
       event(
         l,
         r,
-        summaryChanged && !districtChanged && !constraintsChanged
+        summaryChanged && !districtChanged && !constraintsChanged && !profileChanged
           ? "summary-corrected"
           : "request-revised",
         String(r.revision),
@@ -482,6 +509,7 @@ export class CoordinationEngine {
   recordCallback(
     id: string,
     input: {
+      idempotencyKey?: string;
       status: "completed" | "no-answer" | "failed";
       summary: string;
     },
@@ -489,11 +517,21 @@ export class CoordinationEngine {
     if (
       !input ||
       !["completed", "no-answer", "failed"].includes(input.status) ||
-      !text(input.summary)
+      !text(input.summary) ||
+      (input.idempotencyKey !== undefined && (!text(input.idempotencyKey) || input.idempotencyKey.length > 160))
     )
       fail("INVALID_CALLBACK", 400);
     return this.store.transaction((l) => {
       const r = request(l, id);
+      if (input.idempotencyKey !== undefined) {
+        for (const candidate of Object.values(l.requests)) {
+          const existing = candidate.callbacks.find(callback => callback.idempotencyKey === input.idempotencyKey);
+          if (!existing) continue;
+          if (candidate.id !== id || existing.status !== input.status || existing.summary !== input.summary)
+            fail("IDEMPOTENCY_CONFLICT");
+          return r;
+        }
+      }
       r.callbacks.push({ ...input, at: now() });
       event(l, r, "callback-recorded", input.summary);
       return r;

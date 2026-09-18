@@ -77,3 +77,34 @@ class RoutingTests(unittest.TestCase):
 
 if __name__ == '__main__':
     unittest.main()
+
+class PublicRoutingTests(unittest.TestCase):
+    def test_explicit_demo_mapping_and_public_intake_preserve_role_overlap(self):
+        import sys
+        sys.path.insert(0,str(SCRIPT.parent))
+        from coordination_config import load_routing
+        with tempfile.TemporaryDirectory() as d:
+            p=Path(d)/'routing.json'
+            p.write_text(json.dumps({'allowedNumbers':['01000000001','01000000002'],
+                'citizenNumbers':{'old':'01000000001'},'institutionNumbers':{'i':'01000000002'},
+                'demoCallers':{'01000000001':'demo-person','01000000002':'demo-person'},
+                'publicIntake':True,'demoTime':'23:00'}));p.chmod(0o600)
+            result=load_routing(p)
+            self.assertEqual(result['demoCallers']['+821000000002'],'demo-person')
+            self.assertTrue(result['publicIntake'])
+            self.assertEqual(result['demoTime'],'23:00')
+
+    def test_upgrade_existing_routing_reuses_numbers_without_prompting(self):
+        with tempfile.TemporaryDirectory() as d:
+            root=Path(d);p=root/'routing.json'
+            p.write_text(json.dumps({'allowedNumbers':['+821000000001','+821000000002'],
+                'citizenNumbers':{'old':'+821000000001'},'institutionNumbers':{'i':'+821000000002'}}));p.chmod(0o600)
+            result=subprocess.run(['python3',str(SCRIPT.parent/'configure-phone-roles.py'),
+                '--routing-file',str(p),'--reuse-existing','--demo-citizen-ref','demo-person','--demo-time','23:00','--public-intake'],
+                stdin=subprocess.DEVNULL,capture_output=True,text=True)
+            self.assertEqual(result.returncode,0,result.stderr)
+            data=json.loads(p.read_text())
+            self.assertEqual(data['demoCallers'],{'+821000000001':'demo-person','+821000000002':'demo-person'})
+            self.assertTrue(data['publicIntake'])
+            self.assertNotIn('01000000001',result.stdout+result.stderr)
+            self.assertEqual(p.stat().st_mode & 0o777,0o600)

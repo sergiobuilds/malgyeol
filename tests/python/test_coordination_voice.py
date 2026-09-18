@@ -90,6 +90,58 @@ class VoiceTests(unittest.IsolatedAsyncioTestCase):
             journal.close()
 
 class AdapterTests(unittest.IsolatedAsyncioTestCase):
+    async def test_native_intake_schema_and_sdk_dispatch_preserve_request(self):
+        from unittest.mock import AsyncMock
+        try:
+            from clawops.agent._tool import ToolRegistry
+        except ImportError:self.skipTest('Run with the installed ClawOps environment for SDK contract verification')
+        from coordination_voice import configure_intake_schema
+        import json
+        registry=ToolRegistry()
+        received=AsyncMock(return_value='{"request":{"id":"saved"}}')
+        async def create_request(input_json:str):
+            return await received(input_json)
+        registry.register(create_request)
+        configure_intake_schema(registry)
+        tool=registry['create_request']
+        self.assertEqual(tool.required,['request_data'])
+        schema=tool.parameters['request_data']
+        self.assertEqual(schema['type'],'object')
+        self.assertEqual(schema['properties']['needs']['type'],'array')
+        self.assertNotIn('citizenRef',schema['properties'])
+        payload={'summary':'식사와 물품','district':'서대문구','needs':[
+            {'description':'저녁 식사','category':'식사'},
+            {'description':'비누','category':'생필품'}]}
+        result=await registry.call('create_request',{'request_data':payload})
+        self.assertEqual(json.loads(received.await_args.args[0]),payload)
+        self.assertEqual(json.loads(result)['request']['id'],'saved')
+
+    async def test_native_consent_answer_and_profile_changes_reach_validated_handlers(self):
+        try:
+            from clawops.agent._tool import ToolRegistry
+        except ImportError:self.skipTest('Run with the installed ClawOps environment for SDK contract verification')
+        from coordination_voice import configure_intake_schema
+        import json
+        for name,parameter,payload in [
+            ('record_consent','consent_data',{'purpose':'문의','institutionIds':['i'],'sharedFields':['needs'],'allowCoordination':False,'utterance':'네'}),
+            ('record_answer','answer_data',{'outcome':'available','summary':'죽 2개','conditions':['45분','무료'],'nextAction':'선택 확인','requiresChoice':True}),
+            ('revise_request','changes',{'citizenProfile':{'name':'김서연','address':'서대문구 연희로 32'}}),
+        ]:
+            with self.subTest(tool=name):
+                received=[]
+                async def handler(input_json:str):
+                    received.append(json.loads(input_json));return '{}'
+                handler.__name__=name
+                registry=ToolRegistry();registry.register(handler)
+                configure_intake_schema(registry)
+                self.assertEqual(registry[name].parameters[parameter]['type'],'object')
+                await registry.call(name,{parameter:payload})
+                self.assertEqual(received,[payload])
+                # Observed Live output adds status outside the declared object.
+                # Never use it as consent/answer evidence; validate payload only.
+                await registry.call(name,{parameter:payload,'status':'approved'})
+                self.assertEqual(received,[payload,payload])
+
     async def test_role_and_tools_bound_before_prewarm_in_real_sdk(self):
         try:
             from clawops.agent import ClawOpsAgent, GeminiRealtime
@@ -121,4 +173,15 @@ class AdapterTests(unittest.IsolatedAsyncioTestCase):
                     self.assertEqual(session.context['_heard'],'네 동의합니다')
                 with patch.object(GeminiRealtime,'_handle_response',side_effect=observe_response):
                     await session._handle_response(SimpleNamespace(server_content=SimpleNamespace(input_transcription=SimpleNamespace(text='네 동의합니다'),turn_complete=False)))
+                # Provider-side generation failures never reach a tool handler.
+                # Record their reason without retaining input/audio/provider text.
+                failure=SimpleNamespace(server_content=SimpleNamespace(
+                    input_transcription=None,turn_complete=True,
+                    turn_complete_reason='MALFORMED_FUNCTION_CALL'))
+                with patch.object(GeminiRealtime,'_handle_response'), self.assertLogs('coordination',level='WARNING') as logs:
+                    await session._handle_response(failure)
+                self.assertIn('code=MALFORMED_FUNCTION_CALL',logs.output[0])
+                self.assertIn('stage=model_generation',logs.output[0])
+                self.assertNotIn('네 동의합니다',str(logs.output))
+                self.assertIsNone(journal.get('finish:x'))
             finally:OUTBOUND.reset(tok);journal.close()

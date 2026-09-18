@@ -53,11 +53,11 @@ elif sys.argv[1:] in (['coordination'], ['coordination-check']):
     from coordination_config import load_routing, normalize_number
     try:
         routing = load_routing(env['COORDINATION_ROUTING_PATH'])
-        if not routing['citizenNumbers'] or not routing['institutionNumbers']:
+        if (not routing['citizenNumbers'] and not routing.get('demoCallers') and not routing.get('publicIntake')) or not routing['institutionNumbers']:
             raise ValueError('ROUTING_ROLES_REQUIRED')
         citizens = set(routing['citizenNumbers'].values())
         institutions = set(routing['institutionNumbers'].values())
-        if citizens & institutions:
+        if (citizens & institutions)-set(routing.get('demoCallers',{})):
             raise ValueError('ROUTING_ROLES_MUST_BE_DISTINCT')
         if normalize_number(env['CLAWOPS_PHONE_NUMBER']) in routing['allowedNumbers']:
             raise ValueError('ROUTING_SELF_CALL_FORBIDDEN')

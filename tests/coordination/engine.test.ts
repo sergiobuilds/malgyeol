@@ -454,3 +454,41 @@ test("manual retry waits for other active calls and completed calls pending answ
     f.store.close();
   }
 });
+
+test('intake key prevents duplicate creation and rejects reuse by another citizen', () => {
+  const store = new CoordinationStore();
+  const engine = new CoordinationEngine(store);
+  try {
+    const first = engine.createRequest({ ...input, intakeKey: 'call-test-intake-1' });
+    const retry = engine.createRequest({ ...input, intakeKey: 'call-test-intake-1' });
+    assert.equal(retry.id, first.id);
+    assert.equal(engine.listRequests().length, 1);
+    assert.throws(() => engine.createRequest({ ...input, citizenRef:'other', intakeKey:'call-test-intake-1' }), /INTAKE_KEY_CONFLICT/);
+    assert.throws(() => engine.createRequest({ ...input, summary:'different', intakeKey:'call-test-intake-1' }), /INTAKE_KEY_CONFLICT/);
+    assert.equal(engine.events(first.id).filter(e => e.type==='request-created').length, 1);
+  } finally { store.close(); }
+});
+
+
+test("profile completion preserves chosen conditions and requires renewed sharing consent", () => {
+  const f = fixture();
+  try {
+    consent(f);
+    answered(f, 0);
+    const before = f.engine.getRequest(f.request.id)!;
+    const q = inquiry(f, 1);
+    const profile = { name: "시험 시민", address: "서대문구 시험로 1" };
+    const changed = f.engine.reviseRequest(f.request.id, { citizenProfile: profile });
+    assert.deepEqual(changed.citizenProfile, profile);
+    assert.equal(changed.citizenRef, before.citizenRef);
+    assert.equal(changed.revision, before.revision + 1);
+    assert.deepEqual(changed.needs, before.needs);
+    assert.deepEqual(changed.consent, before.consent);
+    assert.throws(() => f.engine.startAttempt(f.request.id, q.id, "stale-profile"));
+    assert.equal(f.engine.reviseRequest(f.request.id, { citizenProfile: profile }).revision, changed.revision);
+    f.engine.recordConsent(f.request.id, { ...changed.consent!, sharedFields: ["needs", "citizenProfile.name", "citizenProfile.address"] });
+    const corrected = f.engine.reviseRequest(f.request.id, { citizenProfile: { ...profile, address: "서대문구 시험로 2" } });
+    assert.deepEqual(corrected.consent!.sharedFields, ["needs", "citizenProfile.name"]);
+    assert.deepEqual(corrected.needs, before.needs);
+  } finally { f.store.close(); }
+});

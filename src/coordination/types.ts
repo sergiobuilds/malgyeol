@@ -64,6 +64,7 @@ export interface ConsentInput {
   allowCoordination: boolean;
 }
 export interface CreateRequestInput {
+  intakeKey?: string;
   summary: string;
   district: string;
   constraints: string[];
@@ -77,6 +78,8 @@ export interface CreateRequestInput {
   citizenProfile?: CitizenProfile;
 }
 export interface SupportRequest {
+  intakeKey?: string;
+  intakeSignature?: string;
   id: string;
   citizenRef: string;
   citizenProfile?: CitizenProfile;
@@ -91,6 +94,7 @@ export interface SupportRequest {
   inquiries: Inquiry[];
   attempts: CallAttempt[];
   callbacks: {
+    idempotencyKey?: string;
     status: "completed" | "no-answer" | "failed";
     summary: string;
     at: string;

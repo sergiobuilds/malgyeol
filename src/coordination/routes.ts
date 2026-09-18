@@ -124,6 +124,7 @@ export function createCoordinationRoutes(
             throw new InvalidInput();
           return reply(201, {
             request: engine.createRequest({
+              ...(body.intakeKey === undefined ? {} : { intakeKey: str(body.intakeKey, 160) }),
               citizenRef: str(body.citizenRef, 160),
               ...(body.citizenProfile === undefined
                 ? {}
@@ -174,6 +175,9 @@ export function createCoordinationRoutes(
       if (method === "PATCH" && !action)
         return reply(200, {
           request: engine.reviseRequest(id, {
+            ...(body.citizenProfile === undefined
+              ? {}
+              : { citizenProfile: validateCitizenProfile(body.citizenProfile) }),
             ...(body.summary === undefined
               ? {}
               : { summary: str(body.summary) }),
@@ -277,6 +281,7 @@ export function createCoordinationRoutes(
       if (action === "callback")
         return reply(200, {
           request: engine.recordCallback(id, {
+            ...(body.idempotencyKey !== undefined ? { idempotencyKey: str(body.idempotencyKey) } : {}),
             status: choice(body.status, [
               "completed",
               "no-answer",

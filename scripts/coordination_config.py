@@ -34,7 +34,8 @@ def load_routing(path):
             value = json.load(stream)
         except (ValueError, UnicodeError):
             raise ValueError('ROUTING_SCHEMA') from None
-    if not isinstance(value, dict) or set(value) != {'allowedNumbers', 'citizenNumbers', 'institutionNumbers'}:
+    required={'allowedNumbers','citizenNumbers','institutionNumbers'}
+    if not isinstance(value, dict) or not required<=set(value) or set(value)-required-{'demoCallers','publicIntake','demoTime'}:
         raise ValueError('ROUTING_SCHEMA')
     if not isinstance(value['allowedNumbers'], list) or not value['allowedNumbers']:
         raise ValueError('ROUTING_SCHEMA')
@@ -52,4 +53,21 @@ def load_routing(path):
                 raise ValueError('ROUTING_DESTINATION_NOT_ALLOWED')
             targets[key] = normalized
         result[role] = targets
+    if 'publicIntake' in value:
+        if type(value['publicIntake']) is not bool:raise ValueError('ROUTING_SCHEMA')
+        result['publicIntake']=value['publicIntake']
+    if 'demoCallers' in value:
+        if not isinstance(value['demoCallers'],dict):raise ValueError('ROUTING_SCHEMA')
+        demo={}
+        for number,ref in value['demoCallers'].items():
+            normalized=normalize_number(number)
+            if normalized not in allowed:raise ValueError('ROUTING_DESTINATION_NOT_ALLOWED')
+            if not isinstance(ref,str) or not re.fullmatch(r'[A-Za-z0-9_-]{1,160}',ref):raise ValueError('ROUTING_SCHEMA')
+            if normalized in demo and demo[normalized]!=ref:raise ValueError('ROUTING_SCHEMA')
+            demo[normalized]=ref
+        result['demoCallers']=demo
+    if 'demoTime' in value:
+        if not isinstance(value['demoTime'],str) or not re.fullmatch(r'(?:[01][0-9]|2[0-3]):[0-5][0-9]',value['demoTime']):raise ValueError('ROUTING_SCHEMA')
+        if not result.get('demoCallers'):raise ValueError('ROUTING_SCHEMA')
+        result['demoTime']=value['demoTime']
     return result
