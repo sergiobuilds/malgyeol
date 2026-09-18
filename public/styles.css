@@ -13286,6 +13286,7 @@ label {
   --mg-olive-5:#f2f4e3;
   --mg-olive-20:#d7dfa3;
   --mg-olive-50:#7a8a24;
+  --mg-olive-60:#6a7a1e;
   --mg-olive-70:#4f5a10;
   --mg-ink-navy:#1f2a5a;
   --mg-ink-navy-deep:#17204a;
@@ -13713,7 +13714,7 @@ html{background:var(--mg-canvas)}
 .mg-hero__in{padding-top:9.6rem;padding-bottom:8rem}
 .mg-hero h1{font-size:6.4rem;line-height:1.18;max-width:18ch;color:#fff;font-weight:400}
 .mg-hero__lead{color:var(--krds-color-light-primary-20);font-size:var(--krds-pc-font-size-body-large)}
-.mg-hero .krds-btn.primary{background:var(--mg-olive-50);color:#fff;border-color:var(--mg-olive-50);font-weight:700}
+.mg-hero .krds-btn.primary{background:var(--mg-olive-60);color:#fff;border-color:var(--mg-olive-60);font-weight:700}
 .mg-hero .krds-btn.primary:hover{background:var(--mg-olive-70);border-color:var(--mg-olive-70);color:#fff}
 .mg-hero .krds-btn.secondary{background:transparent;color:#fff;border-color:var(--krds-color-light-primary-30)}
 .mg-hero .krds-btn.secondary:hover{background:var(--mg-ink-navy-deep);color:#fff;border-color:#fff}
