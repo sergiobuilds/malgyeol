@@ -1,12 +1,15 @@
 ---
 handoff_schema: project-handoff/v1
 project_mode: observe-only
-verified_at: 2026-09-18T04:22:16.311869+00:00
+verified_at: 2026-09-18T04:28:50.557589+00:00
 canonical_ref: refs/heads/master
-verified_commit: b3facce844c3731a050867154f1c8fea5a0cdbda
+verified_commit: b796237c221db2299e76cc21bb2b5bf98c4a479c
 ---
 
 ## Next
+
+- 실제 첫 통화 접수는 저장·종료됐으나 35초였고 B 발신은 CALL_ACTIVE로 막혔다. 원인은 명시된 발표용 시드의 started attempt. synthetic/live 구분 및 확정 실패 dispatch claim 복구를 수정, Node207/Python83 통과. provenance의 realCalls=false인 5개 요청·7개 attempt만 synthetic 표시 대상으로 확인했다. 실제 전화 완료/전체50초는 아직 미달이다.
+- 사용자 추가 승인: 정미경 목업 시연은 이름주소 공유 동의를 재질문하지 않는다. private demoAuthorization=true를 등록 mock 번호·승인 기관 경로에만 적용하고 운영자 사전승인 출처를 남긴다. 주소는 짧게 말하고 현재 거동 상태를 확인한다. 일반 신규 시민의 동의 절차는 유지한다.
 
 - 최신 필수 제약: 등록 대표 시연의 시민 접수→기관 문의→시민 회신 전체 50초(발표 1분). 반복 발화를 줄이고 통화마다 중복되던 2초 대기를 제거했다. SDK 재생완료 확인은 유지한다. 전체 50초는 실제 전화망에서 아직 측정하지 않았으며 완료로 주장하지 않는다.
 
