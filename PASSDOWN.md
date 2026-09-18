@@ -1,19 +1,21 @@
 ---
 handoff_schema: project-handoff/v1
 project_mode: observe-only
-verified_at: 2026-09-18T03:49:13.552059+00:00
+verified_at: 2026-09-18T04:17:13.192381+00:00
 canonical_ref: refs/heads/master
-verified_commit: e4e8af80338bdbe993fbdf8c4f1b5d8c5473531c
+verified_commit: f86b6678e508e47113bade22b897c3048911504e
 ---
 
 ## Next
+
+- 2026-09-18 사용자 승인으로 Vercel 공개 배포: https://malgyeol-vert.vercel.app (요청 화면 /ops). 배포 dpl_7dRYY2rfRoDkmAMLhu35DjGWMMp8, 소스 f86b667. 프론트 Vercel / API·SQLite·전화 Campbell. 203개 테스트와 실제 공개 브라우저·API 검증 통과. 터널 주소 변경 시 vercel.json 목적지 갱신 필요. 웹 Origin은 API unit vercel-origin.conf에 등록. 재배포 절차 README 참조.
 
 - 2026-09-18 사용자 명시 요청으로 웹앱 담당자 인증·로그아웃·세션 확인 제거. 로그인 없이 요청 조회·변경, 동일 Origin 변경 검사 유지. 실행 API 반영 및 새 브라우저 /ops 요청 6건 확인. 타입 검사·202개 테스트·Codex 리뷰 통과. 내부 전화 Bearer 인증 유지.
 
 - 사용자 최신 정정: 랜딩 KRDS 제외, 문장형 카피 금지, 네 사업 실제 시각 레퍼런스 기반·짧은 히어로. 현재 프론트 작업 중단 요청, 전화 검증 최우선. Figma 생성은 기존 웹앱에 적용하지 않음.
 
 - 최신 사용자 정정 반영: 고정 화면 문구 명사형, 모노그램·상단설명·장문바닥글 제거, 이름·주소·품목수량·일정·수령방법·동일인 이력. Claude 프론트 전담, Node202 검사.
-- [현재 웹앱](https://qualifying-grande-bags-characterized.trycloudflare.com/ops): 5명·6개 요청의 발표용 별도 SQLite. 원래 전화용 ledger와 분리. 2026-09-18 사용자 승인 후 새 음성도 해당 API·coordination 원장에 연결. 기존 화면 사례는 voice journal에 없으므로 자동 발신 제외. 웹앱 로그인 제거, PUBLIC_BASE_URL 일치 설정. 외부 주소·저장소 전환 상세는 README의 웹 접속 절.
+- [현재 웹앱](https://malgyeol-vert.vercel.app/ops): 5명·6개 요청의 발표용 별도 SQLite. 원래 전화용 ledger와 분리. 2026-09-18 사용자 승인 후 새 음성도 해당 API·coordination 원장에 연결. 기존 화면 사례는 voice journal에 없으므로 자동 발신 제외. 웹앱 로그인 제거, PUBLIC_BASE_URL 일치 설정. 외부 주소·저장소 전환 상세는 README의 웹 접속 절.
 
 - [실행계획](dev/active/malgyeol-product-completion/plan.md) · [체크리스트](dev/active/malgyeol-product-completion/tasks.md) · [실행기록](dev/active/malgyeol-product-completion/context.md). looprun-auto 섹션5, supervisor 게이트 승인.
 - 섹션1~4 완료. 실제 공개65목록행·37기관 및3보완창구, 복수필요 API/SQLite, 역할별전화코드, Claude KRDS프론트, 정책제안서6쪽·3분6장덱과편집원본/LaTeX. Node198/Python32, 브라우저검사23+24 및root실제API조작.
