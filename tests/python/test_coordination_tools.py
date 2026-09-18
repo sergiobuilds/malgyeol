@@ -86,6 +86,30 @@ class ToolsTests(unittest.IsolatedAsyncioTestCase):
         await self.tools.prepare_inquiry(0,'i','care-sos','신청','["재고 전달 조건"]')
         self.assertFalse(any(path.endswith('/consent') for _,path,_ in self.api.calls))
 
+    async def test_demo_callback_authorization_requires_every_gate_and_matching_request(self):
+        import json
+        routing=Routing({'allowedNumbers':['+821000000001'],'citizenNumbers':{},'institutionNumbers':{},'demoCallers':{'+821000000001':'c'},'demoAuthorization':True})
+        ctx={'role':'callback','requestId':'r','citizenRef':'c','callId':'demo-cb','demoAuthorization':True}
+        tools=VoiceTools(self.api,self.j,ctx);tools.routing=routing
+        result=json.loads(await tools.confirm_recipient('demo',''))
+        self.assertEqual(result['request']['id'],'r')
+        marker=self.j.get('recipient:demo-cb')
+        self.assertEqual(marker['source'],'demo-operator-authorization')
+        self.assertNotIn('utterance',marker)
+        await tools.current()
+        for gate in ['context','routing','ref','request']:
+            with self.subTest(gate=gate):
+                badctx={**ctx,'callId':'bad-'+gate}
+                bad=VoiceTools(self.api,self.j,badctx);bad.routing=routing
+                if gate=='context':badctx['demoAuthorization']=False
+                if gate=='routing':bad.routing=None
+                if gate=='ref':badctx['citizenRef']='not-mock'
+                if gate=='request':self.api.request['citizenRef']='other-request-owner'
+                with self.assertRaises(ToolError):await bad.confirm_recipient('demo','')
+                self.assertIsNone(self.j.get('recipient:bad-'+gate))
+                self.api.request['citizenRef']='c'
+        with self.assertRaises(ToolError):await tools.confirm_recipient('demo','네')
+
     async def test_role_blocks_answer(self):
         with self.assertRaises(ToolError): await self.tools.record_answer('{"outcome":"available"}')
         self.assertEqual(self.api.calls,[])

@@ -121,9 +121,17 @@ class VoiceTools:
             raise ToolError('요청 연결을 확인해 주세요.')
         return r
     async def confirm_recipient(self,recipient_role:str,utterance:str):
-        """요청한 본인 여부 질문 후 실제 최근 답변 전체를 기록. 확인 후에만 요청 내용을 반환."""
+        """일반 시민은 본인 여부 질문 후 실제 최근 답변 전체를 기록.
+        운영자 사전승인된 등록 목업 회신에 한해 recipient_role='demo', utterance=''로 자료 연결.
+        목업 승인 경로는 본인 확인 발화를 생성하지 않으며 일반 시민에게 적용하지 않음.
+        """
         if self.context['role']!='callback': raise ToolError('회신 통화에서만 수신자를 확인합니다.')
-        quote=text(utterance)
+        demo=(recipient_role=='demo' and utterance=='' and self.context.get('demoAuthorization') is True
+              and self.routing is not None and self.routing.demo_authorization
+              and self.context.get('citizenRef') in self.routing.demo_callers.values())
+        if recipient_role=='demo' and not demo:
+            raise ToolError('사전승인된 목업 회신 경로가 아닙니다. 일반 시민은 실제 본인 확인 답변을 받아 진행하세요.',code='RECIPIENT_AUTH_REQUIRED')
+        quote='' if demo else text(utterance)
         normalize=lambda v:re.sub(r'[\s.,!?。]', '',v)
         heard=normalize(self.context.get('_heard',''))
         actual=normalize(quote)
@@ -136,14 +144,15 @@ class VoiceTools:
                      r'(?:제가|저는)?본인(?:이)?(?:맞아요|맞습니다|입니다)|'
                      r'제가(?:요청|전화)(?:했습니다|했어요)|제가맞(?:아요|습니다))')
         positive=re.fullmatch(affirmative,actual) is not None
-        if not actual or actual!=heard or recipient_role not in accepted_roles or not positive or any(v in actual for v in negative):
+        if not demo and (not actual or actual!=heard or recipient_role not in accepted_roles or not positive or any(v in actual for v in negative)):
             self.journal.put('recipient:'+self.context['callId'],{'status':'not-confirmed','requestId':self.context.get('requestId')})
             raise ToolError('상세 안내를 진행하지 않습니다. 요청하신 분께 다시 연결하겠습니다.')
         # Do not release data merely because the destination number matched.
         r=(await self.api.send('GET',self.path()))['request']
         if not self.context.get('citizenRef') or r['citizenRef']!=self.context['citizenRef']:
             raise ToolError('요청 연결을 확인해 주세요.')
-        self.journal.put('recipient:'+self.context['callId'],{'status':'confirmed','requestId':r['id'],'role':recipient_role,'utterance':quote[:160]})
+        self.journal.put('recipient:'+self.context['callId'],{'status':'confirmed','requestId':r['id'],'role':recipient_role,
+                         **({'source':'demo-operator-authorization'} if demo else {'utterance':quote[:160]})})
         targets=[]
         if r.get('inquiries'):
             known={i['id']:i for i in (await self.api.send('GET','/api/support/institutions'))['institutions']}
