@@ -1,12 +1,15 @@
 ---
 handoff_schema: project-handoff/v1
 project_mode: observe-only
-verified_at: 2026-09-18T03:49:13.552059+00:00
+verified_at: 2026-09-18T04:13:05.753442+00:00
 canonical_ref: refs/heads/master
-verified_commit: e4e8af80338bdbe993fbdf8c4f1b5d8c5473531c
+verified_commit: c94c473ea2a54238e30b78d22570c25770a7faa9
 ---
 
 ## Next
+
+- 2026-09-18 전화 이중 경로 수정본: 기존 정미경 demoCallers 2개와 publicIntake, 통화별 회신 경로, native 객체 도구, 필드 동의·주소 추가·동일기관 재문의, 기관/회신 저장 멱등 복구. [검증 기록](dev/active/phone-dual-track-plan.md). 팀원의 로그인 제거 커밋 cac18af까지 통합. 통합본 Node205/Python78, typecheck, dependency audit 통과. 격리 Live 모델에서 접수·기관답변·시민회신 업무를 실행했으나 실제 전화망/사람 왕복 증거는 아직 없음.
+- 운영 전환 전 상태: API는 팀원의 웹 변경 반영본, voice는 기존 09:38 실행본. 새 전화 코드·비공개 draft routing은 아직 운영에 반영하지 않았다. 기존 서비스 재시작 승인과 준비된 A/B 실제 왕복 3경로가 남았다. health/자동검사/텍스트 모델 시험을 실전화 성공으로 집계하지 않는다.
 
 - 2026-09-18 사용자 명시 요청으로 웹앱 담당자 인증·로그아웃·세션 확인 제거. 로그인 없이 요청 조회·변경, 동일 Origin 변경 검사 유지. 실행 API 반영 및 새 브라우저 /ops 요청 6건 확인. 타입 검사·202개 테스트·Codex 리뷰 통과. 내부 전화 Bearer 인증 유지.
 
