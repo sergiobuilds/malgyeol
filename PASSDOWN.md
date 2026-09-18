@@ -1,12 +1,14 @@
 ---
 handoff_schema: project-handoff/v1
 project_mode: observe-only
-verified_at: 2026-09-18T04:33:45.047695+00:00
+verified_at: 2026-09-18T04:36:32.273051+00:00
 canonical_ref: refs/heads/master
-verified_commit: 2fbef4a7d3c16305e5f66240233cfcbef9b9b34d
+verified_commit: 0d09a2d4bdb3c0f625b821bc82467a1fe8dd433b
 ---
 
 ## Next
+
+- 2026-09-18 대표이미지: artifacts/hackathon/malgyeol-submission-cover-v1.png 및 .prompt.txt. 내장 image_gen 생성, 전화 이용 시민과 실제 담당자 대시보드 참조. Milgram 말결 제출 폼의 첫 번째 이미지 CDN 반영 확인. 본 세션은 Submit again 미클릭.
 
 - 실제 기관 발신은 04:29:17 UTC에 시작해 약 26초 후 무응답으로 끝났고, 시민 회신은 04:29:43 UTC에 발신되어 19초 통화 후 종료됐다. 기관의 음식·배달 답변은 없었다. 전체 50초 성공 증거가 아니다. 사용자 지적으로 전화의 내부 업무 용어를 생활 언어로 바꾸는 지침을 추가했다. Python83 통과, 반영 전 활성 통화 0건 확인.
 
