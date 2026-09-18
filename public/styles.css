@@ -13710,17 +13710,17 @@ html{background:var(--mg-canvas)}
 
 /* 소개 머리부: 머리말과 이어지는 한 덩어리의 먹 */
 .mg-hero{background:var(--mg-ink-navy);border-bottom:0;color:#fff}
-.mg-hero__in{padding-top:var(--krds-padding-10);padding-bottom:var(--krds-padding-10)}
-.mg-hero h1{font-size:5.2rem;line-height:1.22;max-width:22ch;color:#fff}
+.mg-hero__in{padding-top:9.6rem;padding-bottom:8rem}
+.mg-hero h1{font-size:6.4rem;line-height:1.18;max-width:18ch;color:#fff;font-weight:400}
 .mg-hero__lead{color:var(--krds-color-light-primary-20);font-size:var(--krds-pc-font-size-body-large)}
-.mg-hero .krds-btn.primary{background:#fff;color:var(--mg-ink-navy);border-color:#fff}
-.mg-hero .krds-btn.primary:hover{background:var(--krds-color-light-primary-5);color:var(--mg-ink-navy)}
+.mg-hero .krds-btn.primary{background:var(--mg-olive-50);color:#fff;border-color:var(--mg-olive-50);font-weight:700}
+.mg-hero .krds-btn.primary:hover{background:var(--mg-olive-70);border-color:var(--mg-olive-70);color:#fff}
 .mg-hero .krds-btn.secondary{background:transparent;color:#fff;border-color:var(--krds-color-light-primary-30)}
 .mg-hero .krds-btn.secondary:hover{background:var(--mg-ink-navy-deep);color:#fff;border-color:#fff}
 .mg-hero__facts{border:0;border-top:1px solid var(--mg-ink-navy-line);border-radius:0;margin-top:var(--krds-gap-9)}
 .mg-hero__facts>div{border-right:0;padding:1.8rem 0;margin-right:var(--krds-gap-8)}
 .mg-hero__facts dt{color:var(--krds-color-light-primary-20)}
-.mg-hero__facts dd{color:#fff;font-family:var(--mg-serif);font-size:var(--krds-pc-font-size-heading-small)}
+.mg-hero__facts dd{color:#fff;font-family:var(--mg-serif);font-size:3.2rem;font-weight:400;line-height:1.2}
 
 /* 본문 띠: 종이. 구분은 괘선 한 줄 */
 body.mg-home{background:#fff}
@@ -13759,7 +13759,9 @@ body.mg-home{background:#fff}
   .mg-flow li:last-child{border-bottom:0}
 }
 @media (max-width:767px){
-  .mg-hero h1{font-size:3.4rem}
+  .mg-hero h1{font-size:3.8rem}
+  .mg-hero__in{padding-top:5.6rem;padding-bottom:4.8rem}
+  .mg-hero__facts dd{font-size:2.6rem}
   .mg-hero__facts>div{margin-right:0;border-bottom:1px solid var(--mg-ink-navy-line)}
   .mg-hero__facts>div:last-child{border-bottom:0}
   .mg-pagehead h1{font-size:3rem}
