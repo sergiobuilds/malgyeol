@@ -6,7 +6,7 @@ import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { createCareApp } from '../../src/careApp.ts';
 
-test('support network and protected multi-need requests share real HTTP storage', async t => {
+test('support network and login-free multi-need requests share real HTTP storage', async t => {
   const token = 'coordination-test-operator-token-000000000000';
   const prior = process.env.CARE_OPERATOR_TOKEN;
   process.env.CARE_OPERATOR_TOKEN = token;
@@ -21,7 +21,7 @@ test('support network and protected multi-need requests share real HTTP storage'
   const programs = await fetch(base+'/api/support/programs');
   assert.equal(programs.status, 200);
   assert.equal((await programs.json()).programs.length, 4);
-  assert.equal((await fetch(base+'/api/coordination/requests')).status,403);
+  assert.equal((await fetch(base+'/api/coordination/requests')).status,200);
   const created = await fetch(base+'/api/coordination/requests',{method:'POST',headers,body:JSON.stringify({
     citizenRef:'citizen-a', summary:'쌀은 있지만 조리가 어렵고 비누가 필요합니다',district:'마포구',
     constraints:['직접 방문 어려움'], needs:[{description:'조리된 식사',category:'식사'},{description:'비누',category:'생필품'}]
@@ -79,26 +79,21 @@ test('coordination reuses configured care ledger and survives HTTP server restar
   assert.equal((await restored.json()).request.summary,'식사 지원');
 });
 
-test('operator browser session protects mutations and never returns the access code', async t=>{
-  const savedToken=process.env.CARE_OPERATOR_TOKEN, savedBase=process.env.PUBLIC_BASE_URL;
-  const token='browser-session-access-code-0000000000000';
-  process.env.CARE_OPERATOR_TOKEN=token;delete process.env.PUBLIC_BASE_URL;
+test('browser requests need no login and reject cross-origin changes', async t=>{
+  const savedBase=process.env.PUBLIC_BASE_URL;
+  delete process.env.PUBLIC_BASE_URL;
   const server=createCareApp();
-  if(savedToken===undefined)delete process.env.CARE_OPERATOR_TOKEN;else process.env.CARE_OPERATOR_TOKEN=savedToken;
-  if(savedBase===undefined)delete process.env.PUBLIC_BASE_URL;else process.env.PUBLIC_BASE_URL=savedBase;
+  if(savedBase!==undefined)process.env.PUBLIC_BASE_URL=savedBase;
   server.listen(0,'127.0.0.1');await once(server,'listening');t.after(()=>server.close());
   const address=server.address();assert.ok(address&&typeof address!=='string');
   const base=`http://127.0.0.1:${address.port}`;
-  const login=await fetch(base+'/api/coordination/session',{method:'POST',headers:{'content-type':'application/json',origin:base},body:JSON.stringify({accessCode:token})});
-  assert.equal(login.status,200);
-  assert.deepEqual(await login.json(),{authenticated:true});
-  const setCookie=login.headers.get('set-cookie')!;assert.match(setCookie,/HttpOnly/);assert.ok(!setCookie.includes(token));
-  const cookie=setCookie.split(';')[0]!;
-  assert.equal((await fetch(base+'/api/coordination/requests',{headers:{cookie}})).status,200);
+  assert.equal((await fetch(base+'/api/coordination/requests')).status,200);
   const body=JSON.stringify({citizenRef:'browser-request',summary:'식사',district:'성동구',constraints:[],needs:[{description:'식사',category:'식사'}]});
-  const post=(origin:string)=>fetch(base+'/api/coordination/requests',{method:'POST',headers:{cookie,origin,'content-type':'application/json'},body});
+  const post=(origin?:string)=>fetch(base+'/api/coordination/requests',{method:'POST',headers:{...(origin?{origin}:{}),'content-type':'application/json'},body});
   assert.equal((await post('https://unrelated.example')).status,403);
+  assert.equal((await post()).status,403);
   assert.equal((await post(base)).status,201);
-  assert.equal((await fetch(base+'/api/coordination/session',{method:'DELETE',headers:{cookie,origin:base}})).status,200);
-  assert.equal((await fetch(base+'/api/coordination/requests',{headers:{cookie}})).status,403);
+  assert.equal((await fetch(base+'/api/coordination/session')).status,404);
+  const script=await fetch(base+'/app.js').then(r=>r.text());
+  assert.doesNotMatch(script,/담당자 인증|access-code|coordination\/session/);
 });

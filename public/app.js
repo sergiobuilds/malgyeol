@@ -1,6 +1,6 @@
 /* 말결 담당자 화면.
  * 공통 조회 API(/api/support)와 요청 진행 API(/api/coordination)에만 연결합니다.
- * 접속 인증은 서버가 발급한 HttpOnly 쿠키로만 유지하며 브라우저에 저장하지 않습니다.
+ * 로그인 없이 요청 진행 화면을 열며 변경 요청은 같은 Origin에서 보냅니다.
  */
 (() => {
   "use strict";
@@ -445,86 +445,17 @@
 
   /* ── 요청 진행 화면 ─────────────────────────── */
   const work = {
-    authenticated: false,
     requests: [], events: [], eventsLoading: false, queued: false, institutions: new Map(),
     history: [], historyLoading: false,
     selectedId: null, timer: null, busy: false, lastLoadedAt: null,
 
     async start() {
-      try {
-        const { authenticated } = await api("GET", "/api/coordination/session");
-        this.authenticated = Boolean(authenticated);
-      } catch { this.authenticated = false; }
-      if (!this.authenticated) return this.renderGate();
+      sessionSlot.innerHTML = "";
       await this.loadCatalog();
       view.innerHTML = this.frame();
       this.bind();
-      this.renderSession();
       await this.refresh(true);
       this.startPolling();
-    },
-
-    /* 접속 */
-    renderGate(message) {
-      this.stopPolling();
-      sessionSlot.innerHTML = "";
-      view.innerHTML = `
-        <div class="mg-gate">
-          <div class="mg-gate__card">
-            <h1>담당자 인증</h1>
-            <form id="gate-form" novalidate>
-              <div class="form-group">
-                <div class="form-tit">
-                  <label for="access-code">인증 코드</label>
-                  <span class="mg-required">필수</span>
-                </div>
-                <div class="form-conts">
-                  <input type="password" id="access-code" class="krds-input${message ? " is-error" : ""}"
-                         autocomplete="current-password" required aria-required="true"
-                         aria-describedby="gate-hint"${message ? ' aria-invalid="true"' : ""}>
-                </div>
-                <p class="${message ? "form-hint-invalid" : "form-hint"}" id="gate-hint" role="status" aria-live="polite">${
-                  esc(message ?? "인증 코드 입력")}</p>
-              </div>
-              <div class="btn-wrap">
-                <button type="submit" class="krds-btn large primary" id="gate-submit">인증</button>
-              </div>
-            </form>
-          </div>
-        </div>`;
-      const form = document.getElementById("gate-form");
-      form.addEventListener("submit", async (event) => {
-        event.preventDefault();
-        const field = document.getElementById("access-code");
-        const submit = document.getElementById("gate-submit");
-        submit.disabled = true; submit.textContent = "인증 확인 중";
-        try {
-          await api("POST", "/api/coordination/session", { accessCode: field.value });
-          field.value = "";
-          announce("담당자 인증 완료");
-          this.authenticated = true;
-          await this.start();
-        } catch (error) {
-          this.renderGate(error.status === 403
-            ? "인증 코드 불일치 · 재입력 필요"
-            : error.message);
-          document.getElementById("access-code")?.focus();
-        }
-      });
-      document.getElementById("access-code")?.focus();
-    },
-
-    renderSession() {
-      sessionSlot.innerHTML = `<button type="button" class="krds-btn small tertiary" id="logout">인증 해제</button>`;
-      document.getElementById("logout").addEventListener("click", async () => {
-        this.stopPolling();
-        try { await api("DELETE", "/api/coordination/session"); } catch { /* 이미 해제된 상태 */ }
-        this.authenticated = false;
-        this.requests = []; this.selectedId = null;
-        this.events = []; this.history = [];
-        announce("인증 해제");
-        this.renderGate();
-      });
     },
 
     async loadCatalog() {
@@ -665,7 +596,6 @@
           ? `요청 ${requests.length}건 조회 완료`
           : "접수 요청 없음");
       } catch (error) {
-        if (error.status === 403) { this.stopPolling(); this.authenticated = false; return this.renderGate("인증 해제됨 · 인증 코드 재입력 필요"); }
         this.status(`${error.message} · 자동 갱신 유지`, "error");
       } finally {
         window.clearTimeout(slow); window.clearTimeout(slower);

@@ -59,6 +59,7 @@ export function createCoordinationRoutes(
     url: URL,
     authorization: string,
     body: Body = {},
+    browserAccess = false,
   ): CoordinationHttpResult | undefined => {
     if (
       !url.pathname.startsWith("/api/support/") &&
@@ -104,6 +105,7 @@ export function createCoordinationRoutes(
           : error(404, "NOT_FOUND", "기관을 찾을 수 없습니다.");
       }
       if (
+        !browserAccess &&
         !validToken(authorization, credentials.operator) &&
         !validToken(authorization, credentials.agent)
       )

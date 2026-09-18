@@ -12,7 +12,6 @@ import { CareProviderDispatcher, SandboxCareProvider } from './care-support/prov
 import { CoordinationStore } from './coordination/store.ts';
 import { CoordinationEngine } from './coordination/engine.ts';
 import { createCoordinationRoutes } from './coordination/routes.ts';
-import { OperatorSessions } from './coordination/operatorSession.ts';
 
 export function createCareApp() {
   const operationalEnabled = process.env.NODE_ENV !== 'production' || Boolean(process.env.CARE_LEDGER_PATH);
@@ -35,7 +34,6 @@ export function createCareApp() {
     ...(roleTokens.OPERATOR ? {operator:roleTokens.OPERATOR}:{}), ...(agentSecret?{agent:agentSecret}:{})
   });
   const publicBaseUrl = process.env.PUBLIC_BASE_URL;
-  const operatorSessions = new OperatorSessions(roleTokens.OPERATOR);
   const configuredOrigin = publicBaseUrl ? new URL(publicBaseUrl).origin : undefined;
   const twilioAuthToken = process.env.TWILIO_AUTH_TOKEN;
   const dispatchConfirmed = async (caseId: string) => {
@@ -55,27 +53,18 @@ export function createCareApp() {
           return sendJson(response, 503, {error:{code:'DURABLE_LEDGER_REQUIRED',message:'요청 저장 연결을 준비하고 있습니다.'}});
         }
         const expectedOrigin = configuredOrigin ?? url.origin;
-        const cookieOptions = {secure: expectedOrigin.startsWith('https:')};
-        if (url.pathname === '/api/coordination/session') {
-          if (request.method === 'GET') return sendJson(response,200,{authenticated:operatorSessions.isValid(request.headers.cookie)});
-          if (request.headers.origin !== expectedOrigin) return sendJson(response,403,{error:{code:'FORBIDDEN',message:'담당자 연결이 필요합니다.'}});
-          if (request.method === 'POST') {
-            const body=await readJson(request);
-            const session=operatorSessions.login(body.accessCode,cookieOptions);
-            if (!session) return sendJson(response,403,{error:{code:'FORBIDDEN',message:'접속 정보를 확인해 주세요.'}});
-            response.setHeader('set-cookie',session.cookie);
-            return sendJson(response,200,{authenticated:true});
+        const authorization = String(request.headers.authorization ?? '');
+        const browserAccess = !authorization;
+        const method = request.method ?? 'GET';
+        if (browserAccess && url.pathname.startsWith('/api/coordination/')) {
+          const origin = request.headers.origin;
+          if ((origin && origin !== expectedOrigin) ||
+              (!['GET', 'HEAD', 'OPTIONS'].includes(method) && origin !== expectedOrigin)) {
+            return sendJson(response,403,{error:{code:'FORBIDDEN',message:'같은 웹앱에서 요청해 주세요.'}});
           }
-          if (request.method === 'DELETE') {
-            response.setHeader('set-cookie',operatorSessions.logout(request.headers.cookie,cookieOptions));
-            return sendJson(response,200,{authenticated:false});
-          }
-          return sendJson(response,405,{error:{code:'METHOD_NOT_ALLOWED',message:'요청 방식이 올바르지 않습니다.'}});
         }
-        const cookieAuthorized=operatorSessions.authenticate(request.headers.cookie,request.headers.origin,expectedOrigin,request.method ?? 'GET');
-        const authorization=String(request.headers.authorization ?? (cookieAuthorized ? `Bearer ${roleTokens.OPERATOR}` : ''));
-        const result = coordination(request.method ?? 'GET',url,authorization,
-          ['POST','PATCH'].includes(request.method ?? '') ? await readJson(request) : {});
+        const result = coordination(method,url,authorization,
+          ['POST','PATCH'].includes(method) ? await readJson(request) : {}, browserAccess);
         if(result) return sendJson(response,result.status,result.body);
       }
       if (request.method === 'GET' && ['/health', '/healthz', '/api/health'].includes(url.pathname)) {
