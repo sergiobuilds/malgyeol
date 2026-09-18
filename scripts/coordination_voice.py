@@ -404,7 +404,7 @@ class VoiceRuntime:
             number=destination['number']
         else:number=self.routing.destination('callback',r['citizenRef'])
         if not self.journal.claim(key,{'state':'dispatching'}):return
-        await self.dial({'role':'callback','requestId':r['id'],'citizenRef':r['citizenRef'],'demoBrief':r['citizenRef'] in self.routing.demo_callers.values(),'demoAuthorization':self.routing.demo_authorization and r['citizenRef'] in self.routing.demo_callers.values()},number)
+        await self.dial({'role':'callback','requestId':r['id'],'citizenRef':r['citizenRef'],'demoBrief':r['citizenRef'] in self.routing.demo_callers.values(),'demoAuthorization':self.routing.demo_authorization and self.routing.demo_callers.get(number)==r['citizenRef']},number)
         self.journal.put(key,{'state':'finished'})
     async def reconcile_orphan(self,marker):
         key='orphan-final:'+marker['attemptId']
