@@ -1,14 +1,14 @@
 ---
 handoff_schema: project-handoff/v1
 project_mode: observe-only
-verified_at: 2026-09-18T05:18:57.000000+00:00
+verified_at: 2026-09-18T05:23:02.000000+00:00
 canonical_ref: refs/heads/master
-verified_commit: 941b33253db1fee639fb530a4fe7f35f3eae1410
+verified_commit: 02e750356c87d01d15c70c1bdb6309a2cfda644b
 ---
 
 ## Next
 
-- 2026-09-18 웹 시각 전환(HTML 불변, public/styles.css만): KRDS 파랑을 버리고 남색 먹 바탕·고운바탕 명조 제목·올리브 강조. KRDS 원시 색 단계를 :root에서 덮어써 구성 요소가 함께 바뀜. 서체는 cdn.jsdelivr.net fontsource(CSP 허용). 근거: 네 사업 누리집 실측색 + Claude Design 시안 https://claude.ai/design/p/59a49652-2c9b-4137-992b-24e935dddf11 (참고용, 생성물 미배포). production 미반영, Vercel 프리뷰는 로그인 벽. 사용자 확인 후 `vercel deploy --prod` 승인 필요. verify(typecheck·207 tests·audit) 통과.
+- 2026-09-18 웹 시각 전환(HTML 불변, public/styles.css만): KRDS 파랑을 버리고 남색 먹 바탕·고운바탕 명조 제목·올리브 강조. KRDS 원시 색 단계를 :root에서 덮어써 구성 요소가 함께 바뀜. 서체는 cdn.jsdelivr.net fontsource(CSP 허용). 근거: 네 사업 누리집 실측색 + Claude Design 시안 https://claude.ai/design/p/59a49652-2c9b-4137-992b-24e935dddf11 (참고용, 생성물 미배포). production 미반영, Vercel 프리뷰는 로그인 벽. 사용자 승인 후 통과한 프리뷰를 `vercel promote <preview-url>`로 승격. verify(typecheck·207 tests·audit) 통과.
 
 - 2026-09-18 정책·기술 발표 8장 PPTX: artifacts/hackathon/말결_정책기술발표_8장.pptx(+pdf·미리보기). 비보북 양식(말결 (+3)의 사본.pptx) 기반, 생성기 build_8slides_from_template.py. 양식 DEMO장은 8장 제약으로 제외.
 
