@@ -90,6 +90,83 @@ class VoiceTests(unittest.IsolatedAsyncioTestCase):
             journal.close()
 
 class AdapterTests(unittest.IsolatedAsyncioTestCase):
+    async def test_final_speech_waits_for_full_audio_and_interruption_cancels_close(self):
+        try:
+            from clawops.agent import ClawOpsAgent, GeminiRealtime
+            from clawops.agent._tool import ToolRegistry
+            from clawops.agent._session import CallSession
+        except ImportError:self.skipTest('Installed SDK required')
+        from coordination_voice import make_agent_class, OUTBOUND
+        from unittest.mock import patch, AsyncMock
+        from types import SimpleNamespace
+        import os
+        os.environ['GEMINI_LIVE_MODEL']='test-model'
+        with tempfile.TemporaryDirectory() as directory:
+            journal=Journal(Path(directory)/'voice.sqlite')
+            runtime=VoiceRuntime(None,journal,Routing({'allowedNumbers':[],'citizenNumbers':{},'institutionNumbers':{}}))
+            cls=make_agent_class(ClawOpsAgent,GeminiRealtime,ToolRegistry)
+            agent=cls(runtime,api_key='test-only',account_id='test',from_='test')
+            call=CallSession(call_id='audio',from_number='test',to_number='test',account_id='test',direction='outbound')
+            agent._active_sessions['audio']=call
+            token=OUTBOUND.set({'role':'institution','requestId':'r','inquiryId':'q','attemptId':'a','disclosure':{}})
+            try:
+                with patch('google.genai.Client'):
+                    session=await agent._open_session('audio')
+                session._call=call
+                clock=[100.0];hangup_times=[];delays=[]
+                original_sleep=asyncio.sleep
+                async def hangup():hangup_times.append(clock[0])
+                call.bind_transport(send_audio=AsyncMock(),send_clear=AsyncMock(),hangup=hangup)
+                def audio(seconds,complete=False):
+                    return SimpleNamespace(server_content=SimpleNamespace(turn_complete=complete,
+                        model_turn=SimpleNamespace(parts=[SimpleNamespace(inline_data=SimpleNamespace(
+                            mime_type='audio/pcm;rate=24000',data=b'\0'*int(48000*seconds)))])))
+                async def advance(delay):
+                    delays.append(delay);clock[0]+=delay+0.000001;await original_sleep(0)
+                with patch.object(GeminiRealtime,'_handle_response'), \
+                     patch('coordination_voice.asyncio.get_running_loop',return_value=SimpleNamespace(time=lambda:clock[0])), \
+                     patch('coordination_voice.asyncio.sleep',side_effect=advance):
+                    # Four seconds already queued, then eight seconds of final
+                    # speech generated immediately: SDK's five-second limit is insufficient.
+                    await session._handle_response(audio(4))
+                    journal.put('finish:audio',{'summary':'완료'})
+                    await session._handle_response(audio(8,True))
+                    self.assertEqual(hangup_times,[])
+                    await session._close_task
+                    self.assertGreaterEqual(hangup_times[0],112.2)
+                    self.assertGreaterEqual(delays[0],12.2-0.00001)
+
+                    # A user interruption clears queued speech and cancels the
+                    # scheduled hangup, so a new reply can finish normally.
+                    session._ending=False;hangup_times.clear()
+                    await session._handle_response(audio(8,True))
+                    pending=session._close_task
+                    await session._handle_response(SimpleNamespace(server_content=SimpleNamespace(interrupted=True,turn_complete=False)))
+                    await asyncio.gather(pending,return_exceptions=True)
+                    self.assertTrue(pending.cancelled())
+                    self.assertFalse(session._ending)
+                    self.assertFalse(session._finish_audio_seen)
+                    self.assertEqual(hangup_times,[])
+
+                    # Complete callback speech may be generated while ringing.
+                    # None of that buffered audio has played before attach.
+                    from clawops.agent.pipeline._buffering_call import _BufferingCall
+                    buffering=_BufferingCall()
+                    await buffering.send_audio(b'\xff'*(8000*9))
+                    session._call=buffering
+                    clock[0]=200.0
+                    await session._handle_response(audio(9,True))
+                    self.assertTrue(session._final_turn_complete)
+                    self.assertFalse(session._ending,'Prewarm stub cannot hang up a real call')
+                    clock[0]=220.0  # Twenty seconds ringing is not audio playback.
+                    await session.attach(call)
+                    self.assertAlmostEqual(session._audio_playout_until,229.0)
+                    self.assertEqual(buffering._buffer,[])
+                    await session._close_task
+                    self.assertGreaterEqual(hangup_times[0],229.2)
+            finally:
+                OUTBOUND.reset(token);journal.close()
+
     async def test_native_intake_schema_and_sdk_dispatch_preserve_request(self):
         from unittest.mock import AsyncMock
         try:
@@ -206,7 +283,7 @@ class AdapterTests(unittest.IsolatedAsyncioTestCase):
                     self.assertFalse(getattr(session,'_ending',False),'Tool completion alone is not final speech')
                     speech=SimpleNamespace(server_content=SimpleNamespace(turn_complete=True,model_turn=SimpleNamespace(parts=[SimpleNamespace(inline_data=SimpleNamespace(mime_type='audio/pcm',data=b'00'))])))
                     await session._handle_response(speech)
-                    await asyncio.wait_for(waiting.wait(),timeout=0.2)
+                    await asyncio.wait_for(waiting.wait(),timeout=0.5)
                     media.flush.assert_awaited_once();media.send_mark.assert_awaited_once()
                     media.close.assert_not_awaited()
                     played.set()

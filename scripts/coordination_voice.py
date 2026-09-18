@@ -522,6 +522,25 @@ class VoiceRuntime:
 
 def make_agent_class(base,gemini,registry_type):
     class BoundGemini(gemini):
+        def _schedule_close(self):
+            if not callable(getattr(self._call,'hangup',None)) or getattr(self,'_ending',False):return
+            self._ending=True
+            async def close_after_audio():
+                while True:
+                    remaining=getattr(self,'_audio_playout_until',0)-asyncio.get_running_loop().time()+0.2
+                    if remaining<=0:break
+                    await asyncio.sleep(remaining)
+                try: await self._call.hangup()
+                except Exception: pass
+            self._close_task=asyncio.create_task(close_after_audio())
+        async def attach(self,call):
+            previous=self._call
+            if hasattr(previous,'drain_buffer'):
+                # Buffered prewarm audio has not played while the phone rang.
+                duration=sum(len(chunk) for chunk in previous._buffer)/8000
+                self._audio_playout_until=asyncio.get_running_loop().time()+duration
+            await super().attach(call)
+            if getattr(self,'_final_turn_complete',False):self._schedule_close()
         async def _handle_response(self,response):
             content=getattr(response,'server_content',None)
             reason=getattr(content,'turn_complete_reason',None) if content else None
@@ -536,22 +555,35 @@ def make_agent_class(base,gemini,registry_type):
             if transcript and getattr(transcript,'text',''):
                 if self.context.pop('_heard_complete',False):self.context['_heard']=''
                 self.context['_heard']=(self.context.get('_heard','')+transcript.text)[-2000:]
+            if content and self._call:
+                now=asyncio.get_running_loop().time()
+                if getattr(content,'interrupted',False):
+                    self._audio_playout_until=now
+                    self._finish_audio_seen=False
+                    self._final_turn_complete=False
+                    pending=getattr(self,'_close_task',None)
+                    if pending and not pending.done():pending.cancel()
+                    self._ending=False
+                else:
+                    for part in getattr(getattr(content,'model_turn',None),'parts',[]) or []:
+                        inline=getattr(part,'inline_data',None)
+                        if inline and 'audio' in (getattr(inline,'mime_type','') or ''):
+                            # Gemini emits PCM16 mono at 24 kHz, often faster
+                            # than the phone plays it. SDK flush only drains
+                            # transport; its playback mark times out at 5 sec.
+                            duration=len(inline.data or b'')/48000
+                            self._audio_playout_until=max(now,getattr(self,'_audio_playout_until',now))+duration
             await super()._handle_response(response)
             finish=self.runtime.journal.get('finish:'+self.context['callId']) or self.runtime.journal.get('end:'+self.context['callId'])
-            if finish and content:
+            if finish and content and not getattr(content,'interrupted',False):
                 parts=getattr(getattr(content,'model_turn',None),'parts',[]) or []
                 if any('audio' in (getattr(getattr(part,'inline_data',None),'mime_type','') or '') for part in parts):
                     self._finish_audio_seen=True
             if content and getattr(content,'turn_complete',False) and self._call:
                 self.context['_heard_complete']=True
-                if finish and getattr(self,'_finish_audio_seen',False) and not getattr(self,'_ending',False):
-                    self._ending=True
-                    async def close_after_audio():
-                        # super has flushed this final model turn. SDK hangup
-                        # drains queued media and awaits the playback mark.
-                        try: await self._call.hangup()
-                        except Exception: pass
-                    asyncio.create_task(close_after_audio())
+                if finish and getattr(self,'_finish_audio_seen',False):
+                    self._final_turn_complete=True
+                    self._schedule_close()
     class BoundAgent(base):
         def __init__(self,runtime,**kwargs):
             self.runtime=runtime
