@@ -1,4 +1,5 @@
 @charset "utf-8";
+@import url("https://cdn.jsdelivr.net/npm/@fontsource/gowun-batang@5/index.css");
 /*
  * 말결 담당자 화면 스타일시트
  * 1) 공식 서체 연결  2) KRDS 공통 스타일  3) KRDS 컴포넌트 스타일  4) 말결 제품 레이어
@@ -13241,8 +13242,59 @@ label {
 }
 /*# sourceMappingURL=component.css.map */
 
+/* ── 말결 색 ─────────────────────────────────────
+ * KRDS 원시 색 단계(primary·secondary·gray)를 말결 값으로 덮어씁니다.
+ * 의미 토큰과 구성 요소 CSS는 그대로 이 단계를 참조하므로 화면 전체가 함께 바뀝니다.
+ * 방향: 종이 위의 먹. 깊은 남색 먹(그냥드림·서울잇다푸드뱅크 남색 계열)을 바탕으로 크게 쓰고,
+ * 강조는 푸드뱅크 트럭의 올리브 초록 한 가지. 회색은 중립. (실측 2026-09-18)
+ */
+:root{
+  --krds-color-light-primary-5:#eef0f6;
+  --krds-color-light-primary-10:#d9dcea;
+  --krds-color-light-primary-20:#b5bbd6;
+  --krds-color-light-primary-30:#8891b8;
+  --krds-color-light-primary-40:#5b679a;
+  --krds-color-light-primary-50:#3a4780;
+  --krds-color-light-primary-60:#2b3668;
+  --krds-color-light-primary-70:#1f2a5a;
+  --krds-color-light-primary-80:#17204a;
+  --krds-color-light-primary-90:#101636;
+  --krds-color-light-primary-95:#0a0e24;
+  --krds-color-light-secondary-5:#eef0f6;
+  --krds-color-light-secondary-10:#d9dcea;
+  --krds-color-light-secondary-20:#b5bbd6;
+  --krds-color-light-secondary-30:#8891b8;
+  --krds-color-light-secondary-40:#5b679a;
+  --krds-color-light-secondary-50:#3a4780;
+  --krds-color-light-secondary-60:#2b3668;
+  --krds-color-light-secondary-70:#1f2a5a;
+  --krds-color-light-secondary-80:#17204a;
+  --krds-color-light-secondary-90:#101636;
+  --krds-color-light-secondary-95:#0a0e24;
+  --krds-color-light-gray-5:#f5f5f2;
+  --krds-color-light-gray-10:#e8e8e4;
+  --krds-color-light-gray-20:#d3d3ce;
+  --krds-color-light-gray-30:#b7b7b1;
+  --krds-color-light-gray-40:#92928c;
+  --krds-color-light-gray-50:#74746e;
+  --krds-color-light-gray-60:#5c5c57;
+  --krds-color-light-gray-70:#474743;
+  --krds-color-light-gray-80:#333331;
+  --krds-color-light-gray-90:#1f1f1e;
+  --krds-color-light-gray-95:#141413;
+  /* 올리브 강조 (말결 고유) */
+  --mg-olive-5:#f2f4e3;
+  --mg-olive-20:#d7dfa3;
+  --mg-olive-50:#7a8a24;
+  --mg-olive-70:#4f5a10;
+  --mg-ink-navy:#1f2a5a;
+  --mg-ink-navy-deep:#17204a;
+  --mg-ink-navy-line:#33407a;
+  --mg-serif:"Gowun Batang","Pretendard GOV",serif;
+}
+
 /* ── 말결 제품 레이어 ──────────────────────────────
- * KRDS 토큰만 사용합니다. 새 색상값을 만들지 않습니다.
+ * 위 색 단계와 KRDS 의미 토큰만 참조합니다. 여기서 새 hex를 만들지 않습니다.
  */
 :root{
   --mg-shell:1280px;
@@ -13255,7 +13307,7 @@ label {
   --mg-ink-soft:var(--krds-light-color-text-subtle);
   --mg-deep:var(--krds-color-light-secondary-80);
   --mg-deeper:var(--krds-color-light-secondary-90);
-  --mg-brand:var(--krds-color-light-primary-50);
+  --mg-brand:var(--mg-olive-50);
   --mg-ease:cubic-bezier(.2,.7,.3,1);
   --mg-dur:220ms;
 }
@@ -13636,4 +13688,81 @@ html{background:var(--mg-canvas)}
 #results:focus-visible{outline:3px solid var(--mg-brand);outline-offset:4px}
 @media (max-width:767px){
   .mg-quote p{font-size:var(--krds-mobile-font-size-body-medium)}
+}
+
+/* ── 말결 결(texture) 레이어 ─────────────────────
+ * 구조(HTML)는 그대로 두고 느낌만 바꿉니다. 제목은 명조, 머리말과 소개 머리부는 남색 먹 바탕.
+ */
+.mg-brand__name,.mg-hero h1,.mg-pagehead h1,.mg-band h2,.mg-doc h2,.mg-section__head h2,.mg-overview__top h2,.mg-rail__head h2,.mg-dialog__head h2,.mg-gate h1,.mg-empty h3{
+  font-family:var(--mg-serif);font-weight:700;letter-spacing:-.01em;
+}
+.mg-brand__name{font-size:2.4rem}
+
+/* 머리말: 남색 먹 */
+.mg-header{background:var(--mg-ink-navy);border-bottom:1px solid var(--mg-ink-navy-line)}
+.mg-brand{color:#fff}
+.mg-brand__role{color:var(--krds-color-light-primary-20)}
+.mg-tabline a{color:var(--krds-color-light-primary-10);font-weight:500}
+.mg-tabline a:hover{color:#fff;text-decoration:none}
+.mg-tabline a[aria-current="page"]{color:#fff;border-bottom-color:var(--mg-olive-20)}
+.mg-header a:focus-visible,.mg-hero a:focus-visible{outline-color:#fff}
+#session-slot,#session-slot *{color:#fff}
+
+/* 소개 머리부: 머리말과 이어지는 한 덩어리의 먹 */
+.mg-hero{background:var(--mg-ink-navy);border-bottom:0;color:#fff}
+.mg-hero__in{padding-top:var(--krds-padding-10);padding-bottom:var(--krds-padding-10)}
+.mg-hero h1{font-size:5.2rem;line-height:1.22;max-width:22ch;color:#fff}
+.mg-hero__lead{color:var(--krds-color-light-primary-20);font-size:var(--krds-pc-font-size-body-large)}
+.mg-hero .krds-btn.primary{background:#fff;color:var(--mg-ink-navy);border-color:#fff}
+.mg-hero .krds-btn.primary:hover{background:var(--krds-color-light-primary-5);color:var(--mg-ink-navy)}
+.mg-hero .krds-btn.secondary{background:transparent;color:#fff;border-color:var(--krds-color-light-primary-30)}
+.mg-hero .krds-btn.secondary:hover{background:var(--mg-ink-navy-deep);color:#fff;border-color:#fff}
+.mg-hero__facts{border:0;border-top:1px solid var(--mg-ink-navy-line);border-radius:0;margin-top:var(--krds-gap-9)}
+.mg-hero__facts>div{border-right:0;padding:1.8rem 0;margin-right:var(--krds-gap-8)}
+.mg-hero__facts dt{color:var(--krds-color-light-primary-20)}
+.mg-hero__facts dd{color:#fff;font-family:var(--mg-serif);font-size:var(--krds-pc-font-size-heading-small)}
+
+/* 본문 띠: 종이. 구분은 괘선 한 줄 */
+body.mg-home{background:#fff}
+.mg-band{border-top:1px solid var(--mg-line)}
+.mg-band--flow{background:var(--krds-color-light-gray-5)}
+.mg-band h2{font-size:var(--krds-pc-font-size-heading-large);margin-bottom:var(--krds-gap-7)}
+.mg-grid3 article{background:transparent;border-top:1px solid var(--mg-olive-50);border-radius:0;padding:var(--krds-padding-6) 0 0}
+.mg-band--flow .mg-grid3 article{background:transparent}
+.mg-flow{gap:0;background:transparent;border:0;border-radius:0;border-top:1px solid var(--mg-line)}
+.mg-flow li{background:transparent;padding:var(--krds-padding-6) var(--krds-padding-6) var(--krds-padding-6) 0;border-right:1px solid var(--mg-line)}
+.mg-flow li:last-child{border-right:0}
+.mg-flow li+li{padding-left:var(--krds-padding-6)}
+.mg-flow__no,.mg-steps li::before{background:var(--mg-olive-5);color:var(--mg-olive-70)}
+.mg-flow h3,.mg-grid3 h3{font-size:var(--krds-pc-font-size-heading-small)}
+.mg-rules li{border-bottom-color:var(--mg-line)}
+.mg-rules strong{font-family:var(--mg-serif);font-size:var(--krds-pc-font-size-heading-xsmall)}
+
+/* 내부 화면: 종이 위 제목 */
+.mg-pagehead{border-bottom-color:var(--mg-ink-navy)}
+.mg-pagehead h1{font-size:4rem}
+.mg-eyebrow{color:var(--mg-olive-70)}
+.mg-need__cat{color:var(--mg-olive-70);letter-spacing:0}
+.mg-resultbar strong{color:var(--mg-ink-navy)}
+.mg-reqbtn:hover{border-left-color:var(--mg-olive-20)}
+.mg-reqbtn[aria-current="true"]{border-color:var(--mg-olive-20);border-left-color:var(--mg-olive-50);background:var(--mg-olive-5)}
+.mg-trail li::before{border-color:var(--mg-olive-50)}
+.mg-quote{border-left-color:var(--mg-olive-50)}
+.mg-quote p{font-family:var(--mg-serif)}
+.mg-inst:focus-within{border-color:var(--mg-ink-navy)}
+.mg-foot{background:#fff}
+.mg-foot strong{font-family:var(--mg-serif)}
+
+@media (max-width:1023px){
+  .mg-flow li{border-right:0;border-bottom:1px solid var(--mg-line);padding-left:0}
+  .mg-flow li+li{padding-left:0}
+  .mg-flow li:last-child{border-bottom:0}
+}
+@media (max-width:767px){
+  .mg-hero h1{font-size:3.4rem}
+  .mg-hero__facts>div{margin-right:0;border-bottom:1px solid var(--mg-ink-navy-line)}
+  .mg-hero__facts>div:last-child{border-bottom:0}
+  .mg-pagehead h1{font-size:3rem}
+  .mg-band h2{font-size:var(--krds-mobile-font-size-heading-large)}
+  .mg-flow{grid-template-columns:minmax(0,1fr)}
 }
