@@ -1,12 +1,14 @@
 ---
 handoff_schema: project-handoff/v1
 project_mode: observe-only
-verified_at: 2026-09-18T04:28:50.557589+00:00
+verified_at: 2026-09-18T04:33:09.296578+00:00
 canonical_ref: refs/heads/master
-verified_commit: b796237c221db2299e76cc21bb2b5bf98c4a479c
+verified_commit: b59e71803940e286df7f15774d5566595685615e
 ---
 
 ## Next
+
+- 실제 기관 발신은 04:29:17 UTC에 시작해 약 26초 후 무응답으로 끝났고, 시민 회신은 04:29:43 UTC에 발신되어 19초 통화 후 종료됐다. 기관의 음식·배달 답변은 없었다. 전체 50초 성공 증거가 아니다. 사용자 지적으로 전화의 내부 업무 용어를 생활 언어로 바꾸는 지침을 추가했다. Python83 통과, 반영 전 활성 통화 0건 확인.
 
 - 실제 첫 통화 접수는 저장·종료됐으나 35초였고 B 발신은 CALL_ACTIVE로 막혔다. 원인은 명시된 발표용 시드의 started attempt. synthetic/live 구분 및 확정 실패 dispatch claim 복구를 수정, Node207/Python83 통과. provenance의 realCalls=false인 5개 요청·7개 attempt만 synthetic 표시 대상으로 확인했다. 실제 전화 완료/전체50초는 아직 미달이다.
 - 사용자 추가 승인: 정미경 목업 시연은 이름주소 공유 동의를 재질문하지 않는다. private demoAuthorization=true를 등록 mock 번호·승인 기관 경로에만 적용하고 운영자 사전승인 출처를 남긴다. 주소는 짧게 말하고 현재 거동 상태를 확인한다. 일반 신규 시민의 동의 절차는 유지한다.
