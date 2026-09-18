@@ -10,9 +10,14 @@
 
 ## 웹 접속
 
-현재 검토 주소: [말결 웹앱](https://qualifying-grande-bags-characterized.trycloudflare.com) · [지원망](https://qualifying-grande-bags-characterized.trycloudflare.com/app) · [담당자 업무](https://qualifying-grande-bags-characterized.trycloudflare.com/ops).
+공개 주소: [말결 웹앱](https://malgyeol-vert.vercel.app) · [지원망](https://malgyeol-vert.vercel.app/app) · [요청 진행](https://malgyeol-vert.vercel.app/ops).
 
-Campbell의 `malgyeol-web-preview`가 기존 API에 연결하는 임시 HTTPS 주소입니다. 터널을 다시 만들면 주소가 바뀔 수 있습니다. 실제 사용 주소와 API의 `PUBLIC_BASE_URL`을 동일하게 설정해야 변경 요청의 Origin 검사가 통과합니다. 현재 설정은 API user unit의 `preview-origin.conf`에 보존합니다. 전화 런타임과 별도입니다.
+Vercel 프로젝트 `malgyeol`이 `public/` 정적 프론트를 제공합니다. `vercel.json`은 지원망·요청 API만 Campbell의 기존 `malgyeol-web-preview` 터널로 전달하며 API 응답은 캐시하지 않습니다. 데이터와 전화 서비스는 Campbell에서 실행됩니다. 터널 주소가 바뀌면 `vercel.json`의 API 목적지도 갱신해야 합니다.
+
+API user unit의 `vercel-origin.conf`에 `PUBLIC_WEB_ORIGINS`로 정확한 Vercel Origin을 허용합니다. 기존 전화용 `PUBLIC_BASE_URL`은 유지합니다. 새 도메인을 추가하면 허용 Origin에도 추가해야 합니다. 웹앱은 담당자 로그인 없이 사용합니다.
+
+배포는 저장소 루트에서 `vercel pull --yes --environment=production`, `vercel build --prod`, `vercel deploy --prebuilt --prod --skip-domain`, 검증 후 `vercel promote <배포URL> --yes` 순서입니다. `.vercelignore`로 공개 파일만 업로드하며 Git 자동 배포는 비활성화했습니다. 2026-09-18 검증: 타입 검사·203개 테스트, 공개 4개 화면 HTTP 200, 브라우저 요청 6건 표시·인증창 없음, 동일 Origin 변경 요청의 입력 검증과 외부 Origin 403, 비공개 파일 경로 404.
+
 
 현재 웹 요청 화면에는 사용자 요청에 따른 발표용 5명·6개 요청 사례를 연결합니다. `presentation-ledger.conf`의 `COORDINATION_LEDGER_PATH`가 `.private/coordination-presentation.sqlite`를 가리키며 기존 전화용 저장소와 분리합니다. 원본 생성 근거는 비공개 `presentation-provenance.json`에 보존합니다. 이 사례의 문의·답변은 실제 발신 실적으로 집계하지 않습니다. 실전화 검증 전에는 원래 coordination 저장소로 전환해야 합니다.
 

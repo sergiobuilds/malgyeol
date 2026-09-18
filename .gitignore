@@ -20,3 +20,5 @@ dev/**/.looprun-permissions.json
 audits/blind-league-*/
 
 artifacts/hackathon/.build/
+
+.vercel/
