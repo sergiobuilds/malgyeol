@@ -277,13 +277,25 @@ async def main():
     logging.getLogger('clawops').setLevel(logging.CRITICAL)
     journal=Journal(os.environ['COORDINATION_VOICE_STATE_PATH'])
     async with aiohttp.ClientSession(timeout=aiohttp.ClientTimeout(total=15),headers={'Authorization':'Bearer '+os.environ['AGENT_TOOL_SECRET']}) as client:
-        runtime=VoiceRuntime(HttpAPI(client,os.environ['AGENT_API_BASE_URL']),journal,routing)
-        agent_class=make_agent_class(ClawOpsAgent,GeminiRealtime,ToolRegistry)
+        demo_mode=os.environ.get('COORDINATION_DEMO_MODE')=='1'
+        if demo_mode:
+            from demo_voice import DemoVoiceRuntime,make_demo_agent_class
+            runtime=DemoVoiceRuntime(HttpAPI(client,os.environ['AGENT_API_BASE_URL']),journal,routing)
+            agent_class=make_demo_agent_class(ClawOpsAgent,GeminiRealtime,ToolRegistry)
+        else:
+            runtime=VoiceRuntime(HttpAPI(client,os.environ['AGENT_API_BASE_URL']),journal,routing)
+            agent_class=make_agent_class(ClawOpsAgent,GeminiRealtime,ToolRegistry)
         agent=agent_class(runtime,api_key=os.environ['CLAWOPS_API_KEY'],account_id=os.environ['CLAWOPS_ACCOUNT_ID'],from_=service)
         runtime.agent=agent
         agent.on('call_end')(runtime.ended)
         agent.on('call_failed')(runtime.ended)
-        await runtime.recover()
+        if demo_mode:
+            agent.on('call_start')(runtime.started)
+            agent.on('transcript')(runtime.transcript)
+            agent.on('dtmf')(runtime.dtmf)
+            runtime.wake.set()
+        else:
+            await runtime.recover()
         worker=asyncio.create_task(runtime.worker())
         try:
             await agent.connect()

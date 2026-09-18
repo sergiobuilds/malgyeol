@@ -1,0 +1,58 @@
+{
+  "localOnly": true,
+  "realTelephoneActions": 0,
+  "results": [
+    {
+      "experience": "standard",
+      "scenario": "success",
+      "passed": true,
+      "fakeEndToDialSeconds": 0.009557008743286133,
+      "pstnRingVerified": false,
+      "runtimeWorkerExercised": false,
+      "fakeCustomerCalls": 1,
+      "realCalls": 0,
+      "restartedCallbackStatus": "DELIVERED",
+      "reservation": null,
+      "seedHash": "25b7eb9345f32e433542dda57c4b311bbe06f57d8b525f9778018f8f8d575770"
+    },
+    {
+      "experience": "standard",
+      "scenario": "unavailable",
+      "passed": true,
+      "fakeEndToDialSeconds": 0.014223098754882812,
+      "pstnRingVerified": false,
+      "runtimeWorkerExercised": false,
+      "fakeCustomerCalls": 1,
+      "realCalls": 0,
+      "restartedCallbackStatus": "DELIVERED",
+      "reservation": "SCHEDULED",
+      "seedHash": "e0a3506773c3303b7d08eb17c6f834bccf85cb3e9053501dd32680e607a0c611"
+    },
+    {
+      "experience": "audience",
+      "scenario": "success",
+      "passed": true,
+      "fakeEndToDialSeconds": 0.010030269622802734,
+      "pstnRingVerified": false,
+      "runtimeWorkerExercised": true,
+      "fakeCustomerCalls": 1,
+      "realCalls": 0,
+      "restartedCallbackStatus": "DELIVERED",
+      "reservation": null,
+      "seedHash": "e17cd7c72f28b6ef427ee66cbd74491b4671d479d101e69db9e961e47069b18f"
+    },
+    {
+      "experience": "audience",
+      "scenario": "unavailable",
+      "passed": true,
+      "fakeEndToDialSeconds": 0.01858210563659668,
+      "pstnRingVerified": false,
+      "runtimeWorkerExercised": true,
+      "fakeCustomerCalls": 1,
+      "realCalls": 0,
+      "restartedCallbackStatus": "DELIVERED",
+      "reservation": null,
+      "seedHash": "2d46c6332f264cd71a0e6c8016c976ec381879ab5674a89a99288ffa5ecc7f34"
+    }
+  ]
+}

@@ -13,6 +13,7 @@ import { CoordinationStore } from './coordination/store.ts';
 import { CoordinationEngine } from './coordination/engine.ts';
 import { createCoordinationRoutes } from './coordination/routes.ts';
 import { OperatorSessions } from './coordination/operatorSession.ts';
+import { createDemoWorkflowRoutes } from './demo-workflow/routes.ts';
 
 export function createCareApp() {
   const operationalEnabled = process.env.NODE_ENV !== 'production' || Boolean(process.env.CARE_LEDGER_PATH);
@@ -28,6 +29,21 @@ export function createCareApp() {
   const dispatcher = automaticDispatchers.get(providerName) ?? new CareProviderDispatcher(repository, new SandboxCareProvider(providerName));
   const phone = new CarePhoneCoordinator(service);
   const agentSecret = process.env.AGENT_TOOL_SECRET;
+  // Explicitly opt in: this workflow uses simulated institutions and never
+  // changes the existing coordination phone mode by merely installing code.
+  const demoWorkflowEnabled = process.env.DEMO_WORKFLOW_ENABLED === 'true';
+  const demoLedger = process.env.DEMO_WORKFLOW_LEDGER_PATH;
+  const demoScenario = process.env.DEMO_WORKFLOW_SCENARIO ?? 'success';
+  if (demoWorkflowEnabled && (!demoLedger || !agentSecret || agentSecret.length < 32)) {
+    throw new Error('DEMO_WORKFLOW_LEDGER_AND_AGENT_SECRET_REQUIRED');
+  }
+  if (demoWorkflowEnabled && !['success', 'unavailable', 'no-answer'].includes(demoScenario)) {
+    throw new Error('INVALID_DEMO_WORKFLOW_SCENARIO');
+  }
+  const demoWorkflow = demoWorkflowEnabled ? createDemoWorkflowRoutes({
+    ledgerPath: demoLedger!, secret: agentSecret!,
+    scenario: demoScenario as 'success' | 'unavailable' | 'no-answer',
+  }) : undefined;
   const coordinationPath = process.env.COORDINATION_LEDGER_PATH ?? process.env.CARE_LEDGER_PATH;
   const coordinationEnabled = process.env.NODE_ENV !== 'production' || Boolean(coordinationPath);
   const coordinationStore = new CoordinationStore(coordinationPath ?? ':memory:');
@@ -50,6 +66,13 @@ export function createCareApp() {
   const server = createServer(async (request, response) => {
     try {
       const url = new URL(request.url ?? '/', `http://${request.headers.host ?? 'localhost'}`);
+      if (url.pathname.startsWith('/internal/demo-workflow/')) {
+        if (!demoWorkflow) return sendJson(response, 503, { error: 'DEMO_WORKFLOW_DISABLED' });
+        const result = await demoWorkflow(request.method ?? 'GET', url,
+          String(request.headers.authorization ?? ''),
+          ['POST', 'PATCH'].includes(request.method ?? '') ? await readJson(request) : {});
+        return sendJson(response, result?.status ?? 404, result?.body ?? { error: 'NOT_FOUND' });
+      }
       if (url.pathname.startsWith('/api/support/') || url.pathname.startsWith('/api/coordination/')) {
         if (url.pathname.startsWith('/api/coordination/') && !coordinationEnabled) {
           return sendJson(response, 503, {error:{code:'DURABLE_LEDGER_REQUIRED',message:'요청 저장 연결을 준비하고 있습니다.'}});
@@ -84,7 +107,8 @@ export function createCareApp() {
           product: 'care-plan-execution',
           payment: 'disabled',
           voice: !operationalEnabled ? 'demo-only' : agentSecret ? 'clawops-bridge-configured' : voice ? 'configured' : 'credential-gated',
-          evidenceClass: 'SYNTHETIC_DEMO'
+          evidenceClass: 'SYNTHETIC_DEMO',
+          demoWorkflow: { enabled: demoWorkflowEnabled, mode: 'SIMULATION', version: 1 }
         });
       }
       if (url.pathname.startsWith('/api/care/')) {
