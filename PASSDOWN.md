@@ -1,12 +1,14 @@
 ---
 handoff_schema: project-handoff/v1
 project_mode: observe-only
-verified_at: 2026-09-18T04:36:32.273051+00:00
+verified_at: 2026-09-18T04:42:53.826111+00:00
 canonical_ref: refs/heads/master
-verified_commit: 0d09a2d4bdb3c0f625b821bc82467a1fe8dd433b
+verified_commit: f512d83ccf1cae1259cbdd4d25d52ae9529022b0
 ---
 
 ## Next
+
+- 2026-09-18 제출 폼: GitHub 합의의 생활지원 부탁·기관 조율·시민 회신을 중심으로 소개/본문 수정 후 초안 저장. 파란 바탕의 흰 연결 말풍선 로고를 팀 아이콘에 업로드하고 초안 저장. 원본과 프롬프트는 artifacts/hackathon/malgyeol-logo-v1.png 및 .prompt.txt. Submit again 미클릭.
 
 - 2026-09-18 대표이미지: artifacts/hackathon/malgyeol-submission-cover-v1.png 및 .prompt.txt. 내장 image_gen 생성, 전화 이용 시민과 실제 담당자 대시보드 참조. Milgram 말결 제출 폼의 첫 번째 이미지 CDN 반영 확인. 본 세션은 Submit again 미클릭.
 
