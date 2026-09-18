@@ -1,17 +1,17 @@
 ---
 handoff_schema: project-handoff/v1
 project_mode: observe-only
-verified_at: 2026-09-18T04:18:28.268829+00:00
+verified_at: 2026-09-18T04:22:16.311869+00:00
 canonical_ref: refs/heads/master
-verified_commit: 998b66513e58ce44031f6d31cd24be9c919cf139
+verified_commit: b3facce844c3731a050867154f1c8fea5a0cdbda
 ---
 
 ## Next
 
 - 최신 필수 제약: 등록 대표 시연의 시민 접수→기관 문의→시민 회신 전체 50초(발표 1분). 반복 발화를 줄이고 통화마다 중복되던 2초 대기를 제거했다. SDK 재생완료 확인은 유지한다. 전체 50초는 실제 전화망에서 아직 측정하지 않았으며 완료로 주장하지 않는다.
 
-- 2026-09-18 전화 이중 경로 수정본: 기존 정미경 demoCallers 2개와 publicIntake, 통화별 회신 경로, native 객체 도구, 필드 동의·주소 추가·동일기관 재문의, 기관/회신 저장 멱등 복구. [검증 기록](dev/active/phone-dual-track-plan.md). 팀원의 로그인 제거 커밋 cac18af까지 통합. 통합본 Node205/Python79, typecheck, dependency audit 통과. 격리 Live 모델에서 접수·기관답변·시민회신 업무를 실행했으나 실제 전화망/사람 왕복 증거는 아직 없음.
-- 운영 전환 전 상태: API는 팀원의 웹 변경 반영본, voice는 기존 09:38 실행본. 새 전화 코드·비공개 draft routing은 아직 운영에 반영하지 않았다. 기존 서비스 재시작 승인과 준비된 A/B 실제 왕복 3경로가 남았다. health/자동검사/텍스트 모델 시험을 실전화 성공으로 집계하지 않는다.
+- 2026-09-18 전화 이중 경로 수정본: 기존 정미경 demoCallers 2개와 publicIntake, 통화별 회신 경로, native 객체 도구, 필드 동의·주소 추가·동일기관 재문의, 기관/회신 저장 멱등 복구. [검증 기록](dev/active/phone-dual-track-plan.md). 팀원의 로그인 제거 커밋 cac18af까지 통합. 통합본 Node206/Python79, typecheck, dependency audit 통과. 격리 Live 모델에서 접수·기관답변·시민회신 업무를 실행했으나 실제 전화망/사람 왕복 증거는 아직 없음.
+- 2026-09-18 13:20 KST경 사용자 명시 승인 후 b3facce 운영 반영: 기존 API·voice 재시작, 정미경 demoCallers 2개/publicIntake/23:00 시연 설정 적용. SQLite·routing 비공개 백업 및 무결성 검사 완료. API의 presentation-ledger/preview-origin/vercel-origin drop-in 보존, 기존 웹 Vercel 배포 변경도 8a9e52f까지 통합. API health/voice ready 및 provider active calls=0 확인 후 사용자에게 실제 전화 요청. 실제 왕복 및 전체50초는 아직 검증 전. API는 transient unit이라 stop 후 사라져 같은 launcher로 systemd-run 재생성했다. 이후에는 restart를 사용한다.
 
 - 2026-09-18 사용자 승인으로 Vercel 공개 배포: https://malgyeol-vert.vercel.app (요청 화면 /ops). 배포 dpl_7dRYY2rfRoDkmAMLhu35DjGWMMp8, 소스 f86b667. 프론트 Vercel / API·SQLite·전화 Campbell. 203개 테스트와 실제 공개 브라우저·API 검증 통과. 터널 주소 변경 시 vercel.json 목적지 갱신 필요. 웹 Origin은 API unit vercel-origin.conf에 등록. 재배포 절차 README 참조.
 
