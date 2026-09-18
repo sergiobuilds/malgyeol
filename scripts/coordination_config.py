@@ -35,7 +35,7 @@ def load_routing(path):
         except (ValueError, UnicodeError):
             raise ValueError('ROUTING_SCHEMA') from None
     required={'allowedNumbers','citizenNumbers','institutionNumbers'}
-    if not isinstance(value, dict) or not required<=set(value) or set(value)-required-{'demoCallers','publicIntake','demoTime'}:
+    if not isinstance(value, dict) or not required<=set(value) or set(value)-required-{'demoCallers','publicIntake','demoTime','demoAuthorization'}:
         raise ValueError('ROUTING_SCHEMA')
     if not isinstance(value['allowedNumbers'], list) or not value['allowedNumbers']:
         raise ValueError('ROUTING_SCHEMA')
@@ -70,4 +70,7 @@ def load_routing(path):
         if not isinstance(value['demoTime'],str) or not re.fullmatch(r'(?:[01][0-9]|2[0-3]):[0-5][0-9]',value['demoTime']):raise ValueError('ROUTING_SCHEMA')
         if not result.get('demoCallers'):raise ValueError('ROUTING_SCHEMA')
         result['demoTime']=value['demoTime']
+    if 'demoAuthorization' in value:
+        if type(value['demoAuthorization']) is not bool or (value['demoAuthorization'] and not result.get('demoCallers')):raise ValueError('ROUTING_SCHEMA')
+        result['demoAuthorization']=value['demoAuthorization']
     return result

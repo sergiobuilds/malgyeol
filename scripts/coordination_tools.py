@@ -53,6 +53,9 @@ class Routing:
         self.allowed=set(data['allowedNumbers'])
         self.citizens=dict(data['citizenNumbers']); self.institutions=dict(data['institutionNumbers'])
         self.demo_callers=dict(data.get('demoCallers',{}))
+        self.demo_authorization=data.get('demoAuthorization',False)
+        if type(self.demo_authorization) is not bool or (self.demo_authorization and not self.demo_callers):
+            raise ToolError('시연 사전승인 설정을 확인해 주세요.')
         self.public_intake=data.get('publicIntake',False)
         self.demo_time=data.get('demoTime')
         self.service_number=None
@@ -275,6 +278,17 @@ class VoiceTools:
         except (ValueError,TypeError): raise ToolError('질문 목록을 확인해 주세요.') from None
         if not questions: raise ToolError('기관에 물을 내용을 정리해 주세요.')
         result=await self.api.send('POST',self.path('/inquiries'),{'needId':r['needs'][need_index]['id'],'institutionId':institution_id,'programId':program_id,'contactPurpose':contact_purpose,'questions':questions})
+        if (self.context.get('demoAuthorization') is True and self.routing is not None
+                and self.routing.demo_authorization and r['citizenRef'] in self.routing.demo_callers.values()
+                and institution_id in self.routing.institutions):
+            ids=set((r.get('consent') or {}).get('institutionIds',[]))|{institution_id}
+            body={'purpose':'목업 시연 운영자 사전승인: 기관 문의와 조건 조율. 실제 주문·배달 확정 제외',
+                  'institutionIds':sorted(ids & set(self.routing.institutions)),
+                  'sharedFields':sorted(SHARED_FIELDS),'allowCoordination':True}
+            await self.api.send('POST',self.path('/consent'),body)
+            self.journal.put('consent:'+self.context['callId'],{'source':'demo-operator-authorization','scope':body})
+            return encode({**result,'authorizationSource':'demo-operator-authorization',
+                           'nextAction':'승인된 목업 시연 정보로 기관 문의·조건 조율 준비를 마쳤습니다. 이름·주소 공유 동의를 다시 묻지 마세요. 실제 주문이나 배달은 확정하지 않습니다. finish_conversation으로 종료 준비하세요.'})
         return encode({**result,'nextAction':'시민에게 이 기관·문의 목적·전달 범위를 설명하고 동의를 받으세요. 실제 최근 동의 발화로 record_consent를 호출해야 기관 발신이 준비됩니다.'})
     async def record_consent(self,input_json:str):
         """기관·문의 목적·전달정보·조율범위를 설명하고 실제 동의를 받은 뒤 기록.

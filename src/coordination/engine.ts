@@ -283,20 +283,21 @@ export class CoordinationEngine {
       if (
         r.attempts.some(
           (a) =>
-            a.status === "unknown" &&
+            a.status === "unknown" && a.source !== "synthetic" &&
             inquiry(r, a.inquiryId).needId === q.needId,
         )
       )
         fail("RESULT_UNKNOWN");
       if (
         Object.values(l.requests).some((x) =>
-          x.attempts.some((a) => a.status === "started"),
+          x.attempts.some((a) => a.status === "started" && a.source !== "synthetic"),
         )
       )
         fail("CALL_ACTIVE");
       if (!["prepared", "no-answer", "failed"].includes(q.status))
         fail("INQUIRY_FINAL");
       const a: CallAttempt = {
+        source: "live",
         id: randomUUID(),
         requestId: id,
         inquiryId,
@@ -323,8 +324,8 @@ export class CoordinationEngine {
       // A completed call can still be processing its answer. Do not race that work.
       const busy = Object.values(l.requests).some(
         (candidate) =>
-          candidate.attempts.some((attempt) => attempt.status === "started") ||
-          candidate.inquiries.some((item) => item.status === "calling"),
+          candidate.attempts.some((attempt) => attempt.status === "started" && attempt.source !== "synthetic") ||
+          candidate.inquiries.some((item) => item.status === "calling" && candidate.attempts.filter(a => a.inquiryId === item.id).at(-1)?.source !== "synthetic"),
       );
       if (busy) fail("CALL_ACTIVE");
       q.status = "prepared";

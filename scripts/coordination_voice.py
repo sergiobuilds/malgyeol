@@ -148,11 +148,22 @@ def build_prompt(context):
         if context.get('citizenProfile'):
             known='등록된 목업 시민 정보: '+encode({k:context[k] for k in ['citizenProfile','district','history','scenarioTime'] if k in context})+'\n'
             known+='첫 인사는 등록된 이름을 사용해 "'+context['citizenProfile']['name']+' 님, 말결입니다."로 합니다. 이미 아는 이름·거주지는 다시 묻지 않습니다. 과거 요청의 날짜·방문 수령 조건은 새 요청에 복사하지 않습니다. 현재 발화를 우선합니다.\n'
-            known+='등록 시연은 접수·기관문의·시민회신 세 통화 전체 50초 목표입니다. 이 접수 단계 발화는 약 15초로 짧게 합니다. 요청을 길게 되풀이하지 않습니다. 첫 인사, 필요한 도움 듣기, 기관·전달정보·조율 범위의 짧은 동의 질문, 실제 동의 저장, 한 문장 종료 안내 순서로 진행합니다. 이름·주소를 다시 묻거나 다른 문의사항을 추가로 묻지 않습니다. 시간을 줄이려고 동의나 기관 문의를 완료한 것처럼 꾸미지 않습니다.\n'
+            known+='등록 시연은 접수·기관문의·시민회신 세 통화 전체 50초 목표입니다. 이 접수 단계 발화는 약 15초로 짧게 합니다. 요청을 길게 되풀이하지 않습니다. 첫 인사, 필요한 도움 듣기, 필요한 절차, 한 문장 종료 안내 순서로 진행합니다. 이름·주소를 다시 묻거나 다른 문의사항을 추가로 묻지 않습니다. 시간을 줄이려고 동의나 기관 문의를 완료한 것처럼 꾸미지 않습니다.\n'
         else:
             known="첫 인사는 '말결입니다. 어떤 도움이 필요하신가요?'입니다. 필요한 도움부터 듣고 지역과 필요한 전달 장소 등 이번 업무에 필요한 정보만 질문합니다.\n"
         if context.get('callbackAvailable') is False:
             known+='현재 발신번호가 없어 회신 경로가 없습니다. 시민이 원하는 회신 번호를 물어 실제 발화로 set_callback_number를 저장한 뒤 동의를 구합니다. 경로 확보 전에는 회신을 약속하지 않습니다.\n'
+        if context.get('demoAuthorization'):
+            return common+known+'''
+등록된 정미경 목업 시연이며 운영자가 승인된 기관 역할 번호로 요청·이름·주소를 공유하고 조건을 문의·조율하도록 사전 승인했습니다. 실제 주문이나 배달 확정은 아직 아닙니다.
+이름·주소 공유 동의 질문을 하지 않습니다. 실제 시민 동의 발화를 만들어 기록하지 않습니다. prepare_inquiry가 사전승인 출처를 별도로 기록합니다.
+요청을 들으면 등록 주소를 짧게 한 번 읽습니다. 시·구는 생략해도 도로명·건물번호·상세주소는 실제 등록값을 사용합니다. '등록된 [주소]로 음식을 알아볼게요'라고 하고 주소를 새로 묻지 않습니다.
+현재 상태는 '지금 일어나거나 움직이기 힘드세요?'처럼 한 번 확인합니다. 이미 그 상태까지 말했다면 반복하지 않습니다. 응급 징후가 실제로 있으면 필요한 도움을 우선합니다.
+들은 식사 필요와 현재 움직임 제약으로 create_request를 실행합니다. 음식 확보와 집까지 전달은 한 need로 기록하며 과거 방문 수령 조건은 복사하지 않습니다.
+사업: foodbank-market=푸드뱅크·마켓(먹거리), mobile-market=찾아가는 마켓(이동 운영, 개별 즉시배달 아님), just-dream=그냥드림(먹거리 후보), care-sos=돌봄SOS(식사배달 후보, 야간보장 아님).
+지역과 필요에 맞는 사업으로 search_institutions를 실행해 실제 기관을 고르고 prepare_inquiry로 재고·종류·수량·오늘 전달·시간·비용·절차를 문의 준비합니다. 특정 사업이나 성공 결과를 고정하지 않습니다.
+준비 결과가 사전승인 적용을 확인하면 finish_conversation을 호출하고 '확인해서 다시 전화드릴게요' 한 문장으로 마칩니다. 같은 동의 질문이나 다른 문의사항을 덧붙이지 않습니다.
+'''
         return common+known+'''
 지금 역할은 요청을 받아 실제 기관 문의를 준비하는 접수 담당입니다. 대답만 하고 멈추지 말고 도구로 업무를 진행합니다.
 아직 접수를 만들지 않았고 시민이 안내만 원하거나 접수하지 않고 통화를 마치겠다고 명확히 말하면 실제 최근 발화로 end_without_request를 호출합니다. 이 경우 기관 문의나 회신을 약속하지 않습니다.
@@ -249,6 +260,7 @@ class VoiceRuntime:
                 ctx={'role':'citizen','citizenRef':citizen or 'caller-'+uuid.uuid4().hex,'callId':call.call_id,
                      'callbackAvailable':bool(number),'_serviceNumber':self.routing.service_number}
                 if number in self.routing.demo_callers:
+                    ctx['demoAuthorization']=self.routing.demo_authorization
                     result=await self.api.send('GET','/api/coordination/requests?'+urlencode({'citizenRef':citizen}))
                     history=sorted((r for r in result['requests'] if r['citizenRef']==citizen),key=lambda r:r.get('updatedAt',''),reverse=True)
                     profile=next((r for r in history if r.get('citizenProfile')),None)
@@ -357,8 +369,13 @@ class VoiceRuntime:
             previous=sum(a['inquiryId']==q['id'] for a in r.get('attempts',[]))
             job='dispatch:'+q['id']+':'+str(previous)
             if not self.journal.claim(job,{'state':'dispatching'}):continue
-            attempt=(await self.api.send('POST','/api/coordination/requests/'+r['id']+'/inquiries/'+q['id']+'/attempts',{'idempotencyKey':job}))['attempt']
-            ctx={'role':'institution','requestId':r['id'],'inquiryId':q['id'],'attemptId':attempt['id'],'demoBrief':r['citizenRef'] in self.routing.demo_callers.values(),'disclosure':institutional_context(r,q)}
+            try:
+                attempt=(await self.api.send('POST','/api/coordination/requests/'+r['id']+'/inquiries/'+q['id']+'/attempts',{'idempotencyKey':job}))['attempt']
+            except ToolError as error:
+                if error.code in {'HTTP_400','HTTP_401','HTTP_403','HTTP_404','HTTP_405','HTTP_409','HTTP_422'}:
+                    self.journal.delete(job)
+                raise
+            ctx={'role':'institution','requestId':r['id'],'inquiryId':q['id'],'attemptId':attempt['id'],'demoBrief':r['citizenRef'] in self.routing.demo_callers.values(),'demoAuthorization':self.routing.demo_authorization and r['citizenRef'] in self.routing.demo_callers.values(),'disclosure':institutional_context(r,q)}
             await self.dial(ctx,number)
             self.journal.put(job,{'state':'finished'})
             if self.active:return
@@ -373,7 +390,7 @@ class VoiceRuntime:
             number=destination['number']
         else:number=self.routing.destination('callback',r['citizenRef'])
         if not self.journal.claim(key,{'state':'dispatching'}):return
-        await self.dial({'role':'callback','requestId':r['id'],'citizenRef':r['citizenRef'],'demoBrief':r['citizenRef'] in self.routing.demo_callers.values()},number)
+        await self.dial({'role':'callback','requestId':r['id'],'citizenRef':r['citizenRef'],'demoBrief':r['citizenRef'] in self.routing.demo_callers.values(),'demoAuthorization':self.routing.demo_authorization and r['citizenRef'] in self.routing.demo_callers.values()},number)
         self.journal.put(key,{'state':'finished'})
     async def reconcile_orphan(self,marker):
         key='orphan-final:'+marker['attemptId']
@@ -389,6 +406,15 @@ class VoiceRuntime:
 
     async def recover(self):
         requests=(await self.api.send('GET','/api/coordination/requests'))['requests']
+        # startAttempt commits before agent.call is reachable. A claim with no
+        # persisted attempt therefore cannot have originated a phone call.
+        persisted_keys={a['idempotencyKey'] for r in requests for a in r['attempts']}
+        prepared_ids={q['id'] for r in requests for q in r.get('inquiries',[])
+                      if q['status']=='prepared' and q['revision']==r['revision']}
+        for key,marker in self.journal.entries('dispatch:'):
+            pieces=key.split(':')
+            if marker.get('state')=='dispatching' and len(pieces)==3 and pieces[1] in prepared_ids and key not in persisted_keys:
+                self.journal.delete(key)
         for _,ctx in self.journal.entries('call:'):
             if ctx['role']=='citizen':
                 intake_key='voice-'+hashlib.sha256(ctx['callId'].encode()).hexdigest()

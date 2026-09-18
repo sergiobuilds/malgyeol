@@ -67,6 +67,25 @@ class ToolsTests(unittest.IsolatedAsyncioTestCase):
         tools.context.pop('requestId');tools.context['role']='institution'
         with self.assertRaises(ToolError):await tools.end_without_request(tools.context['_heard'])
 
+    async def test_demo_operator_authorization_only_for_mapped_mock_and_institution(self):
+        self.tools.context['demoAuthorization']=True
+        self.tools.routing=Routing({'allowedNumbers':['+821000000001','+821000000002'],'citizenNumbers':{},'institutionNumbers':{'i':'+821000000002'},'demoCallers':{'+821000000001':'c'},'demoAuthorization':True})
+        await self.tools.search_institutions('care-sos','강남구','')
+        await self.tools.prepare_inquiry(0,'i','care-sos','신청','["재고 전달 조건"]')
+        scope=self.j.get('consent:call')
+        self.assertEqual(scope['source'],'demo-operator-authorization')
+        self.assertNotIn('utterance',scope)
+        self.assertIn('citizenProfile.address',scope['scope']['sharedFields'])
+        self.assertTrue(any(path.endswith('/consent') for _,path,_ in self.api.calls))
+        self.api.calls.clear();self.tools.context['demoAuthorization']=False
+        await self.tools.prepare_inquiry(0,'i','care-sos','신청','["재고 전달 조건"]')
+        self.assertFalse(any(path.endswith('/consent') for _,path,_ in self.api.calls))
+        self.tools.context['demoAuthorization']=True
+        self.tools.routing.demo_callers={'+821000000001':'other'}
+        self.api.calls.clear()
+        await self.tools.prepare_inquiry(0,'i','care-sos','신청','["재고 전달 조건"]')
+        self.assertFalse(any(path.endswith('/consent') for _,path,_ in self.api.calls))
+
     async def test_role_blocks_answer(self):
         with self.assertRaises(ToolError): await self.tools.record_answer('{"outcome":"available"}')
         self.assertEqual(self.api.calls,[])

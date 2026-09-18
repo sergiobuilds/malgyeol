@@ -121,6 +121,7 @@ export interface Inquiry extends InquiryInput {
   answer?: AnswerInput;
 }
 export interface CallAttempt {
+  source?: "live" | "synthetic";
   id: string;
   inquiryId: string;
   requestId: string;

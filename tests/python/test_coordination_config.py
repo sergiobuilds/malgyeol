@@ -17,6 +17,17 @@ class RoutingTests(unittest.TestCase):
         spec.loader.exec_module(module)
         return module
 
+    def test_demo_authorization_requires_explicit_boolean_and_mock_mapping(self):
+        module=self.load_module()
+        with tempfile.TemporaryDirectory() as directory:
+            file=Path(directory)/'routing.json'
+            base={'allowedNumbers':['+821000000001'],'citizenNumbers':{},'institutionNumbers':{}}
+            for extra,valid in [({'demoAuthorization':True},False),({'demoAuthorization':'true','demoCallers':{'+821000000001':'mock'}},False),({'demoAuthorization':True,'demoCallers':{'+821000000001':'mock'}},True)]:
+                file.write_text(json.dumps({**base,**extra}));os.chmod(file,0o600)
+                if valid:self.assertTrue(module.load_routing(file)['demoAuthorization'])
+                else:
+                    with self.assertRaises(ValueError):module.load_routing(file)
+
     def test_registered_roles_only_and_domestic_normalization(self):
         module = self.load_module()
         with tempfile.TemporaryDirectory() as directory:
