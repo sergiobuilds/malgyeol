@@ -28,6 +28,17 @@ class RoutingTests(unittest.TestCase):
                 else:
                     with self.assertRaises(ValueError):module.load_routing(file)
 
+    def test_callback_only_requires_demo_authorization(self):
+        module=self.load_module()
+        with tempfile.TemporaryDirectory() as directory:
+            file=Path(directory)/'routing.json'
+            base={'allowedNumbers':['+821000000001'],'citizenNumbers':{},'institutionNumbers':{},'demoCallers':{'+821000000001':'mock'}}
+            for extra,valid in [({'demoCallbackOnly':True},False),({'demoCallbackOnly':'true','demoAuthorization':True},False),({'demoCallbackOnly':True,'demoAuthorization':True},True)]:
+                file.write_text(json.dumps({**base,**extra}));os.chmod(file,0o600)
+                if valid:self.assertTrue(module.load_routing(file)['demoCallbackOnly'])
+                else:
+                    with self.assertRaises(ValueError):module.load_routing(file)
+
     def test_registered_roles_only_and_domestic_normalization(self):
         module = self.load_module()
         with tempfile.TemporaryDirectory() as directory:

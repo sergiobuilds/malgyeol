@@ -56,6 +56,9 @@ class Routing:
         self.demo_authorization=data.get('demoAuthorization',False)
         if type(self.demo_authorization) is not bool or (self.demo_authorization and not self.demo_callers):
             raise ToolError('시연 사전승인 설정을 확인해 주세요.')
+        self.demo_callback_only=data.get('demoCallbackOnly',False)
+        if type(self.demo_callback_only) is not bool or (self.demo_callback_only and not self.demo_authorization):
+            raise ToolError('시연 회신 전용 설정을 확인해 주세요.')
         self.public_intake=data.get('publicIntake',False)
         self.demo_time=data.get('demoTime')
         self.service_number=None
@@ -102,6 +105,10 @@ class VoiceTools:
     def __init__(self,api,journal,context):
         self.api=api;self.journal=journal;self.context=context;self.catalog={}
         self.routing=None
+    def demo_callback_only(self):
+        return (self.context.get('demoCallbackOnly') is True and self.context.get('demoAuthorization') is True
+                and self.routing is not None and self.routing.demo_callback_only and self.routing.demo_authorization
+                and self.context.get('citizenRef') in self.routing.demo_callers.values())
     def require_recipient(self):
         if self.context['role']!='callback': return
         confirmation=self.journal.get('recipient:'+self.context['callId']) or {}
@@ -167,6 +174,13 @@ class VoiceTools:
                 key=tuple(target.values())
                 if key in seen:continue
                 seen.add(key);self.catalog[institution['id']]=institution;targets.append(target)
+        if self.demo_callback_only():
+            marker=self.journal.get('demo-callback-only:'+r['id']) or {}
+            if marker.get('citizenRef')==r['citizenRef'] and marker.get('source')=='operator-demo-callback-only':
+                offer=marker.get('simulatedOffer')
+                if not isinstance(offer,dict) or offer.get('source')!='operator-demo-fixture':offer=None
+                return encode({'request':r,**({'simulatedOffer':offer} if offer else {}),
+                               'nextAction':'simulatedOffer가 있으면 운영자 승인 시연 기관응답의 음식·전달·시간·비용만 안내하고 finish_conversation으로 마치세요. 본인확인·동의 질문을 추가하지 마세요. 실제 기관 통화나 배달 완료 기록을 만들지 마세요. simulatedOffer가 없으면 접수 사실만 안내하세요.'})
         return encode({'request':r,'followupTargets':targets,'message':'수신자 역할 확인 후 결과 안내를 진행합니다.',
                        'nextAction':'기관 답변을 안내하고 시민 선택을 record_choice로 기록하세요. 같은 기관 재문의는 followupTargets의 인자를 prepare_inquiry에 그대로 사용하세요. 이미 검증된 기관이므로 다시 검색할 필요가 없습니다. 다른 기관은 시민이 대안을 원할 때 조회하고 별도 동의를 받으세요.'})
     async def end_without_disclosure(self):
@@ -233,6 +247,13 @@ class VoiceTools:
         destination=self.journal.get('return:'+self.context['callId'])
         if destination:
             self.journal.put('request-return:'+self.context['requestId'],{**destination,'citizenRef':self.context['citizenRef']})
+        if self.demo_callback_only():
+            marker={'citizenRef':self.context['citizenRef'],'source':'operator-demo-callback-only'}
+            meal=any(re.search(r'식사|음식|먹거리|도시락|meal|food',str(need.get('description',''))+' '+str(need.get('category','')),re.I)
+                     for need in result['request']['needs'] if need.get('status')!='stopped')
+            if meal:marker['simulatedOffer']={'source':'operator-demo-fixture','food':'도시락 1개','delivery':'등록 주소로 전달','etaMinutes':20,'cost':0}
+            self.journal.put('demo-callback-only:'+self.context['requestId'],marker)
+            return encode({**result,'nextAction':'요청 저장을 마쳤습니다. finish_conversation으로 마치면 승인된 시연 기관응답을 회신합니다. 실제 기관 발신 도구를 사용하지 마세요.'})
         return encode({**result,'nextAction':'search_institutions로 기관 조회 → prepare_inquiry로 질문 준비 → 기관과 전달 범위를 설명하고 record_consent로 실제 동의 저장 → finish_conversation 순서로 진행하세요.'})
     async def set_callback_number(self,number:str,utterance:str):
         """발신번호가 없거나 시민이 회신 번호 변경을 요청한 경우만 사용.
@@ -367,6 +388,29 @@ class VoiceTools:
     async def finish_conversation(self,summary:str=''):
         """대화 결과를 정리. 인사를 마친 뒤 통화를 종료할 준비 표시."""
         self.require_recipient()
+        if self.context['role'] in {'citizen','callback'} and self.demo_callback_only():
+            r=await self.current()
+            marker=self.journal.get('demo-callback-only:'+r['id']) or {}
+            if marker.get('citizenRef')!=r['citizenRef'] or marker.get('source')!='operator-demo-callback-only':
+                raise ToolError('이번 회신 전용 시연에서 저장한 요청인지 확인하세요.',code='DEMO_REQUEST_REQUIRED')
+            if self.context['role']=='citizen':
+                destination=self.journal.get('request-return:'+r['id']) or {}
+                if (destination.get('citizenRef')!=r['citizenRef'] or destination.get('source') not in {'inbound','spoken'}
+                        or self.routing.demo_callers.get(destination.get('number'))!=r['citizenRef']):
+                    raise ToolError('이 접수에 연결된 승인된 시연 회신 번호를 확인하세요.',code='CALLBACK_REQUIRED')
+                saved_summary='시연 요청 접수 완료: '+r['summary']
+                message='기관에 알아보고 다시 전화드릴게요.' if marker.get('simulatedOffer') else '요청을 받아두었습니다. 다시 전화드릴게요.'
+            else:
+                offer=marker.get('simulatedOffer')
+                if not isinstance(offer,dict) or offer.get('source')!='operator-demo-fixture':offer=None
+                if offer:
+                    saved_summary='시연 기관응답 안내 (operator-demo-fixture): '+encode(offer)
+                    message='승인된 시연 응답 '+encode(offer)+'의 값만 안내하고 마치세요. 본인확인·동의 질문을 추가하지 마세요. 실제 기관 통화나 배달 완료로 기록하지 마세요.'
+                else:
+                    saved_summary='시연 요청 접수 사실 안내 완료: '+r['summary']
+                    message='요청을 받아두었다는 실제 접수 사실만 짧게 안내하고 인사하세요. 기관 확인·재고 확보·배달 확정으로 설명하지 마세요.'
+            self.journal.put('finish:'+self.context['callId'],{'summary':saved_summary,'source':'operator-demo-callback-only'})
+            return encode({'message':message,'ending':True})
         if self.context['role']=='citizen':
             r=await self.current()
             active=[n for n in r['needs'] if n.get('status')!='stopped']
@@ -403,6 +447,10 @@ class VoiceTools:
                      '문의했다거나 확인했다고 말하지 마세요. "통화를 마친 뒤 기관에 연락하고 결과를 다시 알려드릴게요"라고 안내하고 인사하세요.')
         return encode({'message':message,'ending':True})
     def handlers(self):
+        if self.demo_callback_only() and self.context['role'] in {'citizen','callback'}:
+            names=(['create_request','finish_conversation','end_without_request','revise_request','set_callback_number']
+                   if self.context['role']=='citizen' else ['confirm_recipient','finish_conversation','end_without_disclosure'])
+            return [getattr(self,n) for n in names]
         names=['finish_conversation']
         if self.context['role']=='institution': names+=['record_answer']
         else:

@@ -110,6 +110,45 @@ class ToolsTests(unittest.IsolatedAsyncioTestCase):
                 self.api.request['citizenRef']='c'
         with self.assertRaises(ToolError):await tools.confirm_recipient('demo','네')
 
+    async def test_callback_only_demo_saves_request_and_bound_return_without_inquiry(self):
+        import json
+        ctx={'role':'citizen','citizenRef':'c','callId':'two-calls','demoAuthorization':True,'demoCallbackOnly':True}
+        tools=VoiceTools(self.api,self.j,ctx)
+        tools.routing=Routing({'allowedNumbers':['+821000000001'],'citizenNumbers':{},'institutionNumbers':{},'demoCallers':{'+821000000001':'c'},'demoAuthorization':True,'demoCallbackOnly':True})
+        self.assertEqual({fn.__name__ for fn in tools.handlers()},{'create_request','finish_conversation','end_without_request','revise_request','set_callback_number'})
+        self.j.put('return:two-calls',{'number':'+821000000001','source':'inbound'})
+        await tools.create_request(json.dumps({'summary':'식사 전달 요청','district':'강남구','needs':[{'description':'식사 전달','category':'식사'}]}))
+        self.assertEqual(self.j.get('demo-callback-only:r')['source'],'operator-demo-callback-only')
+        result=json.loads(await tools.finish_conversation())
+        self.assertEqual(result['message'],'기관에 알아보고 다시 전화드릴게요.')
+        self.assertFalse(any(path.endswith('/inquiries') or path.endswith('/consent') for _,path,_ in self.api.calls))
+        self.j.delete('request-return:r')
+        with self.assertRaises(ToolError) as caught:await tools.finish_conversation()
+        self.assertEqual(caught.exception.code,'CALLBACK_REQUIRED')
+        ctx['role']='callback';ctx['callId']='two-calls-cb'
+        self.assertEqual({fn.__name__ for fn in tools.handlers()},{'confirm_recipient','finish_conversation','end_without_disclosure'})
+        response=json.loads(await tools.confirm_recipient('demo',''))
+        self.assertEqual(response['simulatedOffer'],{'source':'operator-demo-fixture','food':'도시락 1개','delivery':'등록 주소로 전달','etaMinutes':20,'cost':0})
+        await tools.finish_conversation('기관 확인 완료')
+        self.assertIn('시연 기관응답 안내',self.j.get('finish:two-calls-cb')['summary'])
+        self.assertIn('도시락 1개',self.j.get('finish:two-calls-cb')['summary'])
+        self.assertFalse(any('/attempts' in path or '/answers' in path for _,path,_ in self.api.calls))
+        ctx['demoCallbackOnly']=False;ctx['role']='citizen'
+        with self.assertRaises(ToolError):await tools.finish_conversation()
+
+    async def test_non_food_mock_request_has_no_simulated_food_offer(self):
+        import json
+        self.api.request['needs']=[{'id':'n','description':'비누','category':'생필품','status':'open','constraints':[]}]
+        self.api.request['summary']='비누 요청'
+        ctx={'role':'citizen','citizenRef':'c','callId':'non-food','demoAuthorization':True,'demoCallbackOnly':True}
+        tools=VoiceTools(self.api,self.j,ctx)
+        tools.routing=Routing({'allowedNumbers':['+821000000001'],'citizenNumbers':{},'institutionNumbers':{},'demoCallers':{'+821000000001':'c'},'demoAuthorization':True,'demoCallbackOnly':True})
+        await tools.create_request(json.dumps({'summary':'비누 요청','district':'강남구','needs':[{'description':'비누','category':'생필품'}]}))
+        self.assertNotIn('simulatedOffer',self.j.get('demo-callback-only:r'))
+        ctx.update(role='callback',callId='non-food-cb')
+        response=json.loads(await tools.confirm_recipient('demo',''))
+        self.assertNotIn('simulatedOffer',response)
+
     async def test_role_blocks_answer(self):
         with self.assertRaises(ToolError): await self.tools.record_answer('{"outcome":"available"}')
         self.assertEqual(self.api.calls,[])

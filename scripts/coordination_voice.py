@@ -142,21 +142,31 @@ def build_prompt(context):
 기력이 없다는 말만으로 진단하지 않습니다. 의식 저하·호흡 곤란 등 응급 징후가 명확하면 식사 문의보다 119 등 긴급 도움을 우선 안내합니다.
 기관의 승인 권한을 대신하지 않습니다. 마지막 인사와 연락·회신 약속 전에 finish_conversation 도구 성공으로 업무 준비를 확인합니다. 도구가 부족한 단계를 알려주면 먼저 그 단계를 실행하고, 성공 후 짧게 인사합니다.
 '''
+    if context.get('demoAuthorization') and context.get('demoCallbackOnly'):
+        common='''말결의 한국어 전화 담당 AI입니다. 운영자가 승인한 정미경 목업 시연이며 시민 접수와 결과 회신 두 통화로 전체 50초, 시연 60초 이내를 목표로 합니다. 실제 기관 전화는 생략하고 도구가 제공하는 simulatedOffer를 기관 답변으로 연기합니다. 이것은 등록 시연에만 적용됩니다. 도구에 없는 결과를 만들지 않습니다. 본인확인·공유동의·다른 문의사항 질문을 하지 않습니다. 짧고 자연스러운 생활 언어로 말하고, 내부 용어와 도구 오류를 읽지 않습니다. 마지막 말 전에 finish_conversation을 실행하고 짧게 마칩니다.
+'''
     role=context['role']
-    if context.get('demoBrief'):
+    if context.get('demoBrief') and not context.get('demoCallbackOnly'):
         common+='등록 시연의 접수·기관문의·시민회신 전체 시간 목표가 50초이며 전체 시연은 60초 안에 끝냅니다. 기관은 약 18초, 회신은 약 12초 발화를 목표로 합니다. 실제 기관 답변을 꾸미지 않습니다. 운영자 사전승인된 목업 시연에서는 아래 역할 지침에 따라 본인확인과 공유동의 재질문을 생략합니다.\n'
     if role=='citizen':
         known=''
         if context.get('citizenProfile'):
-            known='등록된 목업 시민 정보: '+encode({k:context[k] for k in ['citizenProfile','district','history','scenarioTime'] if k in context})+'\n'
+            known='등록된 목업 시민 정보: '+encode({k:context[k] for k in (['citizenProfile','district','scenarioTime'] if context.get('demoCallbackOnly') else ['citizenProfile','district','history','scenarioTime']) if k in context})+'\n'
             known+='history는 과거 기록일 뿐 이번 전화의 요청이 아닙니다. 첫 인사에서는 이름만 사용하고 어떤 도움이 필요한지 물은 뒤 이번 발화를 기다립니다. 현재 요청을 듣기 전에 과거 필요를 꺼내거나 도움 내용을 이미 들었다고 말하지 않습니다. 과거의 미해결 요청을 이번 요청으로 임의 재개하지 않습니다.\n'
             known+='첫 인사는 등록된 이름을 사용해 "'+context['citizenProfile']['name']+' 님, 말결입니다."로 합니다. 이미 아는 이름·거주지는 다시 묻지 않습니다. 과거 요청의 날짜·방문 수령 조건은 새 요청에 복사하지 않습니다. 현재 발화를 우선합니다.\n'
-            known+='등록 시연은 접수·기관문의·시민회신 세 통화 전체 50초 목표입니다. 이 접수 단계 발화는 약 15초로 짧게 합니다. 요청을 길게 되풀이하지 않습니다. 첫 인사, 필요한 도움 듣기, 필요한 절차, 한 문장 종료 안내 순서로 진행합니다. 이름·주소를 다시 묻거나 다른 문의사항을 추가로 묻지 않습니다. 시간을 줄이려고 동의나 기관 문의를 완료한 것처럼 꾸미지 않습니다.\n'
+            known+='등록 시연은 전체 통화 50초 목표입니다. 이 접수 단계 발화는 약 15초로 짧게 합니다. 요청을 길게 되풀이하지 않습니다. 첫 인사, 필요한 도움 듣기, 필요한 절차, 한 문장 종료 안내 순서로 진행합니다. 이름·주소를 다시 묻거나 다른 문의사항을 추가로 묻지 않습니다. 이번 통화의 실제 요청을 들은 뒤 진행합니다.\n'
         else:
             known="첫 인사는 '말결입니다. 어떤 도움이 필요하신가요?'입니다. 필요한 도움부터 듣고 지역과 필요한 전달 장소 등 이번 업무에 필요한 정보만 질문합니다.\n"
         if context.get('callbackAvailable') is False:
             known+='현재 발신번호가 없어 회신 경로가 없습니다. 시민이 원하는 회신 번호를 물어 실제 발화로 set_callback_number를 저장한 뒤 동의를 구합니다. 경로 확보 전에는 회신을 약속하지 않습니다.\n'
         if context.get('demoAuthorization'):
+            if context.get('demoCallbackOnly'):
+                return common+known+'''
+이번 등록 시연은 시민 접수와 결과 회신 두 통화입니다. 기관 문의는 목업 응답으로 대체합니다. 기본 프로필만 알고 시작하며 이번 증상이나 요청은 아직 모릅니다. 첫 말은 '[이름] 님, 말결입니다. 어떤 도움이 필요하세요?'입니다.
+이름으로 인사하고 요청을 듣습니다. 등록 주소를 짧게 한 번 말하고 필요한 경우에만 현재 움직이기 힘든지 묻습니다. 이미 말한 상태는 다시 묻지 않습니다.
+들은 현재 요청으로 create_request를 호출하고 finish_conversation을 호출합니다. 기관 검색·문의 준비·동의 재질문을 하지 않습니다.
+마지막 시연 대사는 '기관에 알아보고 바로 다시 전화드릴게요.'입니다. 이 단계에서는 결과를 먼저 말하지 않습니다.
+'''
             return common+known+'''
 등록된 정미경 목업 시연이며 운영자가 승인된 기관 역할 번호로 요청·이름·주소를 공유하고 조건을 문의·조율하도록 사전 승인했습니다. 실제 주문이나 배달 확정은 아직 아닙니다.
 이름·주소 공유 동의 질문을 하지 않습니다. 실제 시민 동의 발화를 만들어 기록하지 않습니다. prepare_inquiry가 사전승인 출처를 별도로 기록합니다.
@@ -203,6 +213,14 @@ allowCoordination=true이면 시민이 허용한 조건 안에서 신청 의사 
 애매한 답변은 되묻고 record_answer로 답변·조건·다음 행동을 기록합니다.
 전달 허용 자료: '''+encode(context.get('disclosure',{}))
     if context.get('demoAuthorization'):
+        if context.get('demoCallbackOnly'):
+            return common+'''
+이번 등록 시연은 기관 문의를 목업 응답으로 대체한 뒤 결과를 회신합니다. 실제 기관 발신은 하지 않습니다.
+먼저 confirm_recipient(recipient_role='demo', utterance='')로 승인된 목업 요청을 불러옵니다. 본인확인이나 동의 질문을 하지 않습니다. 실패하면 반복하지 말고 end_without_disclosure로 마칩니다.
+반환된 이름으로 '[이름] 님, 말결입니다'라고 인사하고 simulatedOffer의 기관 답변을 안내합니다. 음식 응답의 시연 대사는 '알아봤어요. 도시락 한 개를 무료로 댁까지 가져다드릴 수 있대요. 20분 정도 걸려요.'처럼 실제 목업값으로 말합니다. 단순히 접수했다는 안내로 끝내지 않습니다.
+simulatedOffer가 없으면 해당 요청에 음식 결과를 끼워넣지 않습니다. 제공된 값 밖의 기관명·음식·시간·비용·배달 출발을 만들어내지 않습니다. 본인확인·동의·다른 문의사항을 묻지 않습니다.
+finish_conversation을 호출하고 '전화 주셔서 감사합니다'로 마칩니다. 기관 재문의나 추가 회신을 준비하지 않습니다. 회신은 10초 안팎으로 짧게 합니다.
+'''
         return common+'''등록된 목업 시연 회신입니다. confirm_recipient(recipient_role='demo', utterance='')를 먼저 호출해 운영자 승인된 목업 요청을 불러옵니다. 실제 본인 확인 발화를 만들지 않습니다. 도구가 거절하면 상세를 말하지 않습니다.
 도구 성공 뒤 첫 인사는 반환된 citizenProfile.name을 사용해 '[이름] 님, 말결입니다.'라고 하고 바로 결과를 쉽게 전합니다. '전화하신 본인이세요?', '본인 맞으세요?' 같은 질문을 하지 않습니다.
 본인확인 질문이나 '죄송합니다, 다시 연결하겠습니다'를 반복하지 않습니다. demo 자료 불러오기가 거절되면 같은 도구를 반복 호출하거나 본인확인 질문으로 전환하지 말고 end_without_disclosure로 짧게 종료합니다.
@@ -275,6 +293,7 @@ class VoiceRuntime:
                      'callbackAvailable':bool(number),'_serviceNumber':self.routing.service_number}
                 if number in self.routing.demo_callers:
                     ctx['demoAuthorization']=self.routing.demo_authorization
+                    ctx['demoCallbackOnly']=self.routing.demo_callback_only
                     result=await self.api.send('GET','/api/coordination/requests?'+urlencode({'citizenRef':citizen}))
                     history=sorted((r for r in result['requests'] if r['citizenRef']==citizen),key=lambda r:r.get('updatedAt',''),reverse=True)
                     profile=next((r for r in history if r.get('citizenProfile')),None)
@@ -367,6 +386,19 @@ class VoiceRuntime:
             raise ToolError('통화 결과를 대조해야 합니다. 자동 재발신하지 않습니다.') from None
         finally: OUTBOUND.reset(token)
     async def dispatch_request(self,r):
+        if self.routing.demo_callback_only and r['citizenRef'] in self.routing.demo_callers.values():
+            marker=self.journal.get('demo-callback-only:'+r['id'])
+            if not marker or marker.get('citizenRef')!=r['citizenRef'] or marker.get('source')!='operator-demo-callback-only':return
+            destination=self.journal.get('request-return:'+r['id'])
+            if not destination or destination.get('citizenRef')!=r['citizenRef']:return
+            number=destination['number']
+            if self.routing.demo_callers.get(number)!=r['citizenRef']:return
+            key='demo-simple-callback:'+r['id']
+            if not self.journal.claim(key,{'state':'dispatching'}):return
+            await self.dial({'role':'callback','requestId':r['id'],'citizenRef':r['citizenRef'],
+                             'demoBrief':True,'demoAuthorization':True,'demoCallbackOnly':True},number)
+            self.journal.put(key,{'state':'finished'})
+            return
         if not r.get('consent'): return
         for q in r['inquiries']:
             if q['status']!='prepared' or q['revision']!=r['revision']: continue
