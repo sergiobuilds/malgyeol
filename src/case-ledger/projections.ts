@@ -39,8 +39,8 @@ interface JudgeProjection {
   factClass: EvidenceClass;
   policySnapshotHash?: string;
   approvalRevision?: number;
-  x402ApprovalRevision?: number;
-  devnetApprovalRevision?: number;
+  paymentApprovalRevision?: number;
+  paymentRecordApprovalRevision?: number;
   timeline: Array<{ eventId: string; type: string; state: string; at: number; previousHash: string; eventHash: string }>;
 }
 
@@ -98,8 +98,8 @@ export function projectCanonicalCase(
         factClass: aggregate.evidenceClass,
         ...(aggregate.policySnapshotHash ? { policySnapshotHash: aggregate.policySnapshotHash } : {}),
         ...(aggregate.approvalRevision === undefined ? {} : { approvalRevision: aggregate.approvalRevision }),
-        ...(aggregate.x402ApprovalRevision === undefined ? {} : { x402ApprovalRevision: aggregate.x402ApprovalRevision }),
-        ...(aggregate.devnetApprovalRevision === undefined ? {} : { devnetApprovalRevision: aggregate.devnetApprovalRevision }),
+        ...(aggregate.paymentApprovalRevision === undefined ? {} : { paymentApprovalRevision: aggregate.paymentApprovalRevision }),
+        ...(aggregate.paymentRecordApprovalRevision === undefined ? {} : { paymentRecordApprovalRevision: aggregate.paymentRecordApprovalRevision }),
         timeline: events.map(event => ({
           eventId: event.eventId, type: event.type, state: event.state, at: event.at,
           previousHash: event.previousHash, eventHash: event.eventHash

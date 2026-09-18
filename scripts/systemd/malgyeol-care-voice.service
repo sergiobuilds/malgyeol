@@ -1,0 +1,14 @@
+[Unit]
+Description=Malgyeol citizen institution callback voice coordinator
+After=network-online.target malgyeol-care-api.service
+
+[Service]
+Type=simple
+WorkingDirectory=%h/projects/personal/products/malgyeol
+ExecStart=/usr/bin/python3 %h/projects/personal/products/malgyeol/scripts/run-care-runtime.py coordination
+Restart=on-failure
+RestartSec=5s
+UMask=0077
+
+[Install]
+WantedBy=default.target

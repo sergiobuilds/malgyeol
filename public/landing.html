@@ -1,391 +1,187 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ko">
 <head>
 <meta charset="utf-8">
-<title>말결 — 누구나, 말하는 대로.</title>
-<meta name="description" content="국고보조금 전문 회계사가 만든, 모두에게 평등한 디지털 거래의 세계. 말결은 사람의 말을 실행 가능한 거래로 바꾸고, AI의 권한과 결과를 검증하는 에이전트 결제 인프라입니다.">
-<meta property="og:title" content="말결 — 누구나, 말하는 대로.">
-<link rel="icon" href="data:,">
-
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/sun-typeface/SUIT@2/fonts/variable/woff2/SUIT-Variable.css">
-<link rel="stylesheet" href="https://static.wanted.co.kr/fonts/wantedsans/WantedSansVariable.min.css">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="말결 · 생활지원 연계 서비스 · 전화 접수 · 필요별 분해 · 기관 창구 문의 · 시민 회신">
+<title>말결 — 생활지원 연계 서비스</title>
 <style>
-  html { scroll-behavior: smooth; background: #FFFFFF; }
-  body { margin: 0; background: #FFFFFF; color: #171719; font-family: "Pretendard Variable", "SUIT Variable", "Noto Sans KR", -apple-system, "Apple SD Gothic Neo", sans-serif; -webkit-font-smoothing: antialiased; overflow-x: clip; }
-  * { box-sizing: border-box; }
-  img { display: block; max-width: 100%; }
-  a { color: inherit; text-decoration: none; }
-  a:hover { color: inherit; }
-  :focus-visible { outline: 3px solid #0066FF; outline-offset: 4px; border-radius: 6px; }
-  h1, h2, h3 { margin: 0; font-weight: 700; letter-spacing: -0.04em; word-break: keep-all; text-wrap: pretty; }
-  p, li { margin: 0; word-break: keep-all; text-wrap: pretty; }
-  ol, ul { margin: 0; padding: 0; list-style: none; }
-  @media (prefers-reduced-motion: reduce) {
-    html { scroll-behavior: auto; }
-    * { animation: none !important; transition: none !important; }
-    [data-film] { height: auto !important; }
-    [data-film] > div { position: static !important; height: auto !important; overflow: visible !important; }
-    [data-layer] { position: relative !important; opacity: 1 !important; transform: none !important; }
-    [data-layer] + [data-layer] { margin-top: 8px; }
-    [data-filmtext] { position: static !important; opacity: 1 !important; transform: none !important; }
-  }
+@font-face{font-family:'SCDream';font-weight:400;font-style:normal;src:url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_six@1.2/S-CoreDream-4Regular.woff') format('woff');font-display:swap}
+@font-face{font-family:'SCDream';font-weight:500;font-style:normal;src:url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_six@1.2/S-CoreDream-5Medium.woff') format('woff');font-display:swap}
+@font-face{font-family:'SCDream';font-weight:700;font-style:normal;src:url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_six@1.2/S-CoreDream-6Bold.woff') format('woff');font-display:swap}
+@font-face{font-family:'SCDream';font-weight:800;font-style:normal;src:url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_six@1.2/S-CoreDream-7ExtraBold.woff') format('woff');font-display:swap}
+html,body{margin:0;padding:0}
+body{background:#fff;-webkit-font-smoothing:antialiased}
+a{color:#333;text-decoration:none}
+a:hover{color:#e76211}
+h1,h2,h3,p,ul,li,ol,dl,dt,dd,figure,figcaption{margin:0;padding:0}
+li{list-style:none}
+img{display:block;max-width:100%}
 </style>
-<script src="landing.js" defer></script>
-
-<style>.q1:focus{left: 12px !important;top: 12px !important}.q2:hover{background: rgba(23,23,25,0.05) !important;color: #171719 !important}.q3:hover{background: #0054D1 !important}.q4:hover{background: #0054D1 !important}.q5:hover{background: rgba(255,255,255,0.14) !important}.q6:hover{background: #0054D1 !important}.q7:hover{background: #FFFFFF !important}.q8:hover{background: rgba(255,255,255,0.14) !important}</style>
 </head>
 <body>
+<a href="#main" style="position:absolute;left:-999px;top:0">본문 바로가기</a>
+<div style="font-family: SCDream, &quot;Malgun Gothic&quot;, sans-serif; font-weight: 400; color: rgb(86, 80, 75); background: rgb(255, 255, 255); font-size: 16px; line-height: 1.6; text-wrap: pretty;">
 
-
-<div style="width: 100%; overflow-x: clip;">
-  <a href="#intent" style="position: absolute; left: -9999px; top: 0; z-index: 100; padding: 12px 18px; background: #0066FF; color: #fff; font-size: 15px; font-weight: 600;" class="q1">본문으로 건너뛰기</a>
-
-  <header data-hdr style="position: fixed; left: 0; right: 0; top: 0; z-index: 80; display: flex; align-items: center; justify-content: space-between; gap: 12px; height: 60px; padding-inline: clamp(14px, 4vw, 40px); background: rgba(255,255,255,0.88); backdrop-filter: blur(32px); border-bottom: 1px solid rgba(23,23,25,0.09); opacity: 0; visibility: hidden; transition: opacity 240ms cubic-bezier(0.4,0,0.2,1);">
-    <a href="#top" style="display: flex; align-items: center; gap: 9px; font-size: 16px; font-weight: 700; letter-spacing: -0.03em;"><span aria-hidden="true" style="width: 9px; height: 9px; border-radius: 50%; background: #0066FF;"></span>말결</a>
-    <div style="display: flex; align-items: center; gap: 8px;">
-      <a href="/tech" style="display: inline-flex; align-items: center; min-height: 40px; padding: 9px 15px; border-radius: 12px; font-size: 14px; font-weight: 600; color: #46474C; white-space: nowrap;" class="q2">기술 구현 보기</a>
-      <a href="/?v=home" target="_blank" rel="noopener" style="display: inline-flex; align-items: center; min-height: 40px; padding: 9px 17px; border-radius: 12px; background: #0066FF; color: #fff; font-size: 14px; font-weight: 600; white-space: nowrap;" class="q3">말결 체험하기</a>
+  <header style="background: rgb(255, 255, 255); border-bottom: 1px solid rgb(217, 217, 217);">
+    <div style="max-width: 1280px; margin: 0px auto; padding: 0px 24px; min-height: 80px; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px 28px;">
+      <a href="/" style="font-size: 26px; font-weight: 800; color: rgb(231, 98, 17); letter-spacing: -0.03em;">말결</a>
+      <nav style="display: flex; flex-wrap: wrap; align-items: center; gap: 10px 28px; font-size: 16px; font-weight: 500;">
+        <a href="/tech" style="color: rgb(51, 51, 51);">작동 방식</a>
+        <a href="/app" style="color: rgb(51, 51, 51);">지원망</a>
+        <a href="/ops" style="color: rgb(51, 51, 51);">요청 진행</a>
+      </nav>
     </div>
   </header>
 
-  <nav data-index aria-label="장 인덱스" style="position: fixed; left: clamp(20px, 2.6vw, 44px); top: 50%; transform: translateY(-50%); z-index: 70; display: none; gap: 14px;">
-    <a href="#top" data-to="hero" style="display: grid; grid-template-columns: 26px auto; align-items: center; gap: 10px; font-size: 12px; font-weight: 700; letter-spacing: 0.1em;"><span data-bar aria-hidden="true" style="height: 2px; width: 10px; border-radius: 2px; transition: width 240ms cubic-bezier(0.4,0,0.2,1), background 240ms;"></span>EVERYONE</a>
-    <a href="#intent" data-to="intent" style="display: grid; grid-template-columns: 26px auto; align-items: center; gap: 10px; font-size: 12px; font-weight: 700; letter-spacing: 0.1em;"><span data-bar aria-hidden="true" style="height: 2px; width: 10px; border-radius: 2px; transition: width 240ms cubic-bezier(0.4,0,0.2,1), background 240ms;"></span>INTENT</a>
-    <a href="#execution" data-to="execution" style="display: grid; grid-template-columns: 26px auto; align-items: center; gap: 10px; font-size: 12px; font-weight: 700; letter-spacing: 0.1em;"><span data-bar aria-hidden="true" style="height: 2px; width: 10px; border-radius: 2px; transition: width 240ms cubic-bezier(0.4,0,0.2,1), background 240ms;"></span>EXECUTION</a>
-    <a href="#authority" data-to="authority" style="display: grid; grid-template-columns: 26px auto; align-items: center; gap: 10px; font-size: 12px; font-weight: 700; letter-spacing: 0.1em;"><span data-bar aria-hidden="true" style="height: 2px; width: 10px; border-radius: 2px; transition: width 240ms cubic-bezier(0.4,0,0.2,1), background 240ms;"></span>AUTHORITY</a>
-    <a href="#case" data-to="case" style="display: grid; grid-template-columns: 26px auto; align-items: center; gap: 10px; font-size: 12px; font-weight: 700; letter-spacing: 0.1em;"><span data-bar aria-hidden="true" style="height: 2px; width: 10px; border-radius: 2px; transition: width 240ms cubic-bezier(0.4,0,0.2,1), background 240ms;"></span>FIRST CASE</a>
-  </nav>
-
-  <section id="top" data-ch="hero" data-tone="dark" data-film data-screen-label="01 HERO" style="position: relative; height: 320vh; min-height: 2000px; background: #0B0C0E;">
-    <div style="position: sticky; top: 0; height: 100svh; min-height: 560px; overflow: hidden;">
-      <picture data-layer style="position: absolute; inset: 0; opacity: 1;"><source type="image/webp" srcset="/assets/story/universal-agent-hero-480.webp 480w, /assets/story/universal-agent-hero-960.webp 960w, /assets/story/universal-agent-hero-1536.webp 1536w" sizes="100vw"><img src="/assets/story/universal-agent-hero.png" alt="여러 세대의 사람들이 각자의 일상 속에서 오가는 밝은 공간" width="1536" height="1024" fetchpriority="high" style="width: 100%; height: 100%; object-fit: cover; object-position: 50% 42%;"></picture>
-      <picture data-layer style="position: absolute; inset: 0; opacity: 0;"><source type="image/webp" srcset="/assets/story/wheelchair-independent-shopper-480.webp 480w, /assets/story/wheelchair-independent-shopper-960.webp 960w, /assets/story/wheelchair-independent-shopper-1536.webp 1536w" sizes="100vw"><img src="/assets/story/wheelchair-independent-shopper.png" alt="상점가에서 진열된 물건을 살펴보며 직접 고르는 휠체어 이용자" width="1536" height="1024" loading="lazy" style="width: 100%; height: 100%; object-fit: cover; object-position: 62% 46%;"></picture>
-      <picture data-layer style="position: absolute; inset: 0; opacity: 0;"><source type="image/webp" srcset="/assets/story/everyday-commerce-street-480.webp 480w, /assets/story/everyday-commerce-street-960.webp 960w, /assets/story/everyday-commerce-street-1536.webp 1536w" sizes="100vw"><img src="/assets/story/everyday-commerce-street.png" alt="상점과 사람들로 활기찬 오후의 거리" width="1536" height="1024" loading="lazy" style="width: 100%; height: 100%; object-fit: cover; object-position: 50% 50%;"></picture>
-      <div aria-hidden="true" style="position: absolute; inset: 0; background: linear-gradient(180deg, rgba(11,12,14,0.62) 0%, rgba(11,12,14,0.28) 34%, rgba(11,12,14,0.42) 66%, rgba(11,12,14,0.86) 100%);"></div>
-
-      <div style="position: relative; display: grid; place-items: center; height: 100%; padding: clamp(84px, 12vh, 132px) clamp(20px, 5vw, 64px) clamp(72px, 10vh, 112px); text-align: center; color: #FFFFFF;">
-        <div style="display: grid; place-items: center; gap: clamp(18px, 2.6vw, 30px); max-width: 1000px;">
-          <p data-filmtext="0" style="position: absolute; font-size: clamp(2.25rem, 7vw, 5.75rem); line-height: 1.14; letter-spacing: -0.05em; font-weight: 700; opacity: 1;">누구나, 말하는 대로.</p>
-          <p data-filmtext="1" style="position: absolute; max-width: 26ch; font-size: clamp(1.375rem, 3.9vw, 3.125rem); line-height: 1.34; letter-spacing: -0.042em; font-weight: 700; opacity: 0;">보조금은 지급에서 끝나면 안 됩니다.<br>실제 주문과 정산까지 닿아야 합니다.</p>
-          <p data-filmtext="2" style="position: absolute; max-width: 22ch; font-size: clamp(1.5rem, 4.4vw, 3.5rem); line-height: 1.3; letter-spacing: -0.045em; font-weight: 700; opacity: 0;">AI가 사고 결제하고,<br>거래는 증명됩니다.</p>
-          <div data-filmtext="3" style="display: grid; place-items: center; gap: clamp(16px, 2.4vw, 26px); opacity: 0;">
-            <h1 style="max-width: 20ch; font-size: clamp(1.875rem, 5.4vw, 4.25rem); line-height: 1.2; letter-spacing: -0.048em;">말할 수 있는 모두를 위한<br>에이전트 결제</h1>
-            <p style="max-width: 42ch; font-size: clamp(1rem, 1.5vw, 1.25rem); line-height: 1.76; color: rgba(255,255,255,0.86);">사람은 뜻을 표현하고, AI는 구매와 결제를 실행할 수 있습니다. 권한은 미리 정한 한도 안에 있고, 결과는 증거로 남습니다. 구매할 권리가 앱 사용 능력에 좌우되지 않는 곳에서 시작합니다.</p>
-            <p style="display: grid; gap: 4px; padding: clamp(13px, 1.7vw, 18px) clamp(18px, 2.4vw, 26px); border-radius: 14px; background: rgba(255,255,255,0.15); box-shadow: inset 0 0 0 1px rgba(255,255,255,0.36); text-align: center;"><span style="font-size: 12px; font-weight: 700; letter-spacing: 0.1em; color: #9EC5FF;">국고보조금 전문 회계사가 만든</span><span style="font-size: clamp(1rem, 1.5vw, 1.3125rem); line-height: 1.45; font-weight: 700; color: #FFFFFF;">모두에게 평등한 디지털 거래의 세계</span></p>
-            <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 10px;">
-              <a href="/?v=home" target="_blank" rel="noopener" style="display: inline-flex; align-items: center; justify-content: center; min-height: 54px; padding: 15px 28px; border-radius: 12px; background: #0066FF; color: #fff; font-size: 16px; font-weight: 600;" class="q4">말결 체험하기</a>
-              <a href="/tech" style="display: inline-flex; align-items: center; justify-content: center; min-height: 54px; padding: 15px 26px; border-radius: 12px; color: #FFFFFF; font-size: 16px; font-weight: 600; box-shadow: inset 0 0 0 1px rgba(255,255,255,0.42);" class="q5">기술 구현 보기</a>
-            </div>
-          </div>
+  <section id="main" tabindex="-1" style="border-bottom: 1px solid rgb(217, 217, 217);">
+    <div style="max-width: 1280px; margin: 0px auto; padding: 0px 24px; display: flex; flex-wrap: wrap; gap: 0px;">
+      <div style="flex: 1 1 440px; min-width: 0px; padding: 64px 0px 56px; display: flex; flex-direction: column; align-items: flex-start; gap: 20px;">
+        <span style="border: 1px solid rgb(215, 215, 215); border-radius: 5px; padding: 5px 12px; font-size: 14px; color: rgb(86, 80, 75);">전화 한 통 접수</span>
+        <h1 style="font-size: clamp(36px, 5.2vw, 64px); font-weight: 800; color: rgb(51, 51, 51); letter-spacing: -0.045em; line-height: 1.18;">생활지원<br>연계 서비스</h1>
+        <p style="font-size: 18px; line-height: 1.7; color: rgb(86, 80, 75); max-width: 30em;">전화 접수 · 필요별 분해 · 기관 창구 조건 확인 · 시민 회신</p>
+        <div style="display: flex; flex-wrap: wrap; gap: 10px; padding-top: 4px;">
+          <a href="/app" class="scp0" style="padding: 15px 34px; border: 1px solid rgb(231, 98, 17); border-radius: 5px; background: rgb(231, 98, 17); color: rgb(255, 255, 255); font-size: 16px; font-weight: 500;">지원망 조회</a>
+          <a href="/tech" class="scp1" style="padding: 15px 34px; border: 1px solid rgb(86, 80, 75); border-radius: 5px; background: rgb(86, 80, 75); color: rgb(255, 255, 255); font-size: 16px; font-weight: 500;">작동 방식</a>
         </div>
-        <p aria-hidden="true" style="position: absolute; left: 0; right: 0; bottom: clamp(20px, 4vh, 34px); font-size: 12px; font-weight: 600; letter-spacing: 0.14em; color: rgba(255,255,255,0.6);">SCROLL</p>
       </div>
+      <figure style="flex: 1 1 520px; min-width: 0px; align-self: stretch; position: relative;">
+        <img src="/assets/story/elder-voice-hero-1536.webp" alt="전화로 요청을 접수하는 어르신" style="width: 100%; height: 100%; min-height: 340px; max-height: 560px; object-fit: cover; border-left: 1px solid rgb(217, 217, 217); border-right: 1px solid rgb(217, 217, 217);">
+      </figure>
+    </div>
+    <div style="max-width: 1280px; margin: 0px auto; padding: 0px 24px;">
+      <dl style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); border-top: 1px solid rgb(217, 217, 217);">
+        <div style="padding: 26px 24px 30px; border-right: 1px solid rgb(217, 217, 217); display: flex; flex-direction: column; gap: 8px;">
+          <dt style="font-size: 15px; color: rgb(86, 80, 75);">대상 지원사업</dt>
+          <dd id="fact-programs" style="font-size: 32px; font-weight: 800; color: rgb(231, 98, 17); letter-spacing: -0.03em;">4개</dd>
+        </div>
+        <div style="padding: 26px 24px 30px; border-right: 1px solid rgb(217, 217, 217); display: flex; flex-direction: column; gap: 8px;">
+          <dt style="font-size: 15px; color: rgb(86, 80, 75);">등록 기관</dt>
+          <dd id="fact-institutions" style="font-size: 32px; font-weight: 800; color: rgb(231, 98, 17); letter-spacing: -0.03em;">40개소</dd>
+        </div>
+        <div style="padding: 26px 24px 30px; display: flex; flex-direction: column; gap: 8px;">
+          <dt style="font-size: 15px; color: rgb(86, 80, 75);">접수 방식</dt>
+          <dd style="font-size: 32px; font-weight: 800; color: rgb(231, 98, 17); letter-spacing: -0.03em;">전화 접수</dd>
+        </div>
+      </dl>
     </div>
   </section>
 
-  <section id="intent" data-ch="intent" data-tone="light" data-screen-label="02 INTENT" style="background: #FFFFFF; color: #171719;">
-    <div style="max-width: 1360px; margin-inline: auto; padding: clamp(72px, 11vw, 168px) clamp(20px, 5vw, 64px) clamp(40px, 6vw, 80px);">
-      <p data-rise="0" style="font-size: 12px; font-weight: 700; letter-spacing: 0.14em; color: #6B6B70;">WHY NOW</p>
-      <h2 data-rise="1" style="margin-top: clamp(14px, 2vw, 22px); max-width: 20ch; font-size: clamp(1.875rem, 4.8vw, 4rem); line-height: 1.2;">짜장면 한 그릇<br>주문하기 힘든 시대입니다.</h2>
-      <p data-rise="2" style="margin-top: clamp(18px, 2.4vw, 30px); max-width: 46ch; font-size: clamp(1.0625rem, 1.5vw, 1.375rem); line-height: 1.72; color: #46474C;">배달앱이 발전할수록 디지털 약자에게는 식사 주문, 택시 잡기, 생필품 쇼핑처럼 가장 간단한 일조차 더 어려워졌습니다.</p>
-      <p data-rise="3" style="margin-top: clamp(12px, 1.6vw, 18px); max-width: 46ch; font-size: clamp(0.9375rem, 1.2vw, 1.0625rem); line-height: 1.8; color: #6B6B70;">생활의 입구가 앱으로 바뀌었을 뿐인데, 거래에서 밀려난 사람이 생겼습니다.</p>
-
-      <figure data-rise="4" style="position: relative; margin: clamp(30px, 4.5vw, 60px) 0 0; min-height: clamp(280px, 48vh, 560px); border-radius: 12px; overflow: hidden; background: #0B0C0E;">
-        <picture><source type="image/webp" srcset="/assets/story/subsidy-choice-burden-480.webp 480w, /assets/story/subsidy-choice-burden-960.webp 960w, /assets/story/subsidy-choice-burden-1536.webp 1536w" sizes="(min-width: 1400px) 1280px, 92vw"><img src="/assets/story/subsidy-choice-burden.png" alt="식탁에서 지원 품목 안내문과 카드를 놓고 무엇을 살 수 있는지 직접 확인하는 이용자" width="1536" height="1024" loading="lazy" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 54% 46%;"></picture>
-        <div aria-hidden="true" style="position: absolute; inset: 0; background: linear-gradient(180deg, rgba(11,12,14,0.06) 44%, rgba(11,12,14,0.84) 100%);"></div>
-        <figcaption style="position: absolute; left: 0; right: 0; bottom: 0; padding: clamp(20px, 2.8vw, 36px); color: #FFFFFF;"><span style="display: block; max-width: 30ch; font-size: clamp(1.125rem, 2vw, 1.625rem); line-height: 1.42; font-weight: 700;">안내문은 손에 있는데, 주문은 화면 안에 있습니다</span><span style="display: block; margin-top: 8px; max-width: 40ch; font-size: 14.5px; line-height: 1.7; color: rgba(255,255,255,0.84);">쓸 수 있는 돈과, 쓸 수 있는 방법 사이의 거리입니다.</span></figcaption>
-      </figure>
-
-      <div data-rise="5" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr)); gap: 1px; margin-top: clamp(24px, 3vw, 36px); border-radius: 12px; overflow: hidden; background: rgba(23,23,25,0.12);">
-        <div style="display: grid; align-content: start; gap: 10px; padding: clamp(22px, 2.8vw, 34px); background: #F7F7F8;">
-          <p style="font-size: 12px; font-weight: 700; letter-spacing: 0.1em; color: #6B6B70;">수령자 쪽에서</p>
-          <h3 style="font-size: clamp(1.125rem, 1.8vw, 1.4375rem); line-height: 1.42;">돈은 도착했지만, 거래는 끝나지 않습니다</h3>
-          <p style="font-size: 15px; line-height: 1.78; color: #46474C;">보조금을 지급해도 고령자·장애인·디지털 약자는 복잡한 온라인 결제와 바우처 체계 때문에 웹이나 앱 기반 거래를 끝내지 못했고, 계속 거래에서 소외되어 왔습니다.</p>
-          <p style="font-size: 13.5px; line-height: 1.75; color: #6B6B70;">개인의 능력 문제가 아니라, 거래 시스템의 접근성이 실패한 것입니다.</p>
+  <section style="max-width: 1280px; margin: 0px auto; padding: 80px 24px 0px;">
+    <div style="display: flex; flex-wrap: wrap; gap: 12px 28px; align-items: baseline; justify-content: space-between; padding-bottom: 18px; border-bottom: 2px solid rgb(86, 80, 75);">
+      <h2 style="font-size: 33px; font-weight: 700; color: rgb(51, 51, 51); letter-spacing: -0.035em;">시민이 겪는 확인 부담</h2>
+      <p style="font-size: 15px; color: rgb(86, 80, 75);">전화 접수 사유 · 3개 장면</p>
+    </div>
+    <ul style="margin-top: 32px; display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px;">
+      <li style="border: 1px solid rgb(215, 215, 215); border-radius: 8px; overflow: hidden; background: rgb(255, 255, 255); display: flex; flex-direction: column;">
+        <img src="/assets/story/app-only-barrier-1536.webp" alt="앱 전용 창구 앞의 시민" style="width: 100%; height: 230px; object-fit: cover;">
+        <div style="padding: 24px 22px 26px; display: flex; flex-direction: column; gap: 12px; flex: 1 1 auto;">
+          <h3 style="font-size: 20px; font-weight: 700; color: rgb(51, 51, 51); letter-spacing: -0.02em;">문의처 확인 부담</h3>
+          <p style="font-size: 15px; line-height: 1.8; color: rgb(86, 80, 75);">시설별 복수 사업 운영 · 사업별 상이한 창구·절차 · 주소지 관할과 기관 위치 불일치</p>
         </div>
-        <div style="display: grid; align-content: start; gap: 10px; padding: clamp(22px, 2.8vw, 34px); background: #F7F7F8;">
-          <p style="font-size: 12px; font-weight: 700; letter-spacing: 0.1em; color: #6B6B70;">정산 담당자 쪽에서</p>
-          <h3 style="font-size: clamp(1.125rem, 1.8vw, 1.4375rem); line-height: 1.42;">증빙할 수 없으면, 현금으로 줄 수 없습니다</h3>
-          <p style="font-size: 15px; line-height: 1.78; color: #46474C;">정산 담당자는 모든 집행 건마다 수령자에게 현금을 지급할 수 없습니다. 무엇을 어디서 샀는지 증빙할 수 없기 때문입니다. 바우처를 사용해도 공급자 선정, 정산, 물품 수급 관리가 어렵고 또 다른 행정비용이 발생합니다.</p>
-          <p style="font-size: 13.5px; line-height: 1.75; color: #6B6B70;">그래서 말결은 거래증명과 정산을 실행 레일 안에 넣었습니다.</p>
+      </li>
+      <li style="border: 1px solid rgb(215, 215, 215); border-radius: 8px; overflow: hidden; background: rgb(255, 255, 255); display: flex; flex-direction: column;">
+        <img src="/assets/story/subsidy-choice-burden-1536.webp" alt="여러 지원사업 중 선택을 고민하는 시민" style="width: 100%; height: 230px; object-fit: cover;">
+        <div style="padding: 24px 22px 26px; display: flex; flex-direction: column; gap: 12px; flex: 1 1 auto;">
+          <h3 style="font-size: 20px; font-weight: 700; color: rgb(51, 51, 51); letter-spacing: -0.02em;">동일 사정 반복 설명</h3>
+          <p style="font-size: 15px; line-height: 1.8; color: rgb(86, 80, 75);">기관 이용 불가 시 다음 기관 재설명 · 관할·절차·일정 중 사유 구분 불가</p>
         </div>
+      </li>
+      <li style="border: 1px solid rgb(215, 215, 215); border-radius: 8px; overflow: hidden; background: rgb(255, 255, 255); display: flex; flex-direction: column;">
+        <img src="/assets/story/wheelchair-independent-shopper-1536.webp" alt="휠체어를 이용해 장을 보는 시민" style="width: 100%; height: 230px; object-fit: cover;">
+        <div style="padding: 24px 22px 26px; display: flex; flex-direction: column; gap: 12px; flex: 1 1 auto;">
+          <h3 style="font-size: 20px; font-weight: 700; color: rgb(51, 51, 51); letter-spacing: -0.02em;">확인 이후 진행 중단</h3>
+          <p style="font-size: 15px; line-height: 1.8; color: rgb(86, 80, 75);">조건 변경 시 재확인 필요 · 직접 연락 곤란 시 진행 중단</p>
+        </div>
+      </li>
+    </ul>
+  </section>
+
+  <section style="margin-top: 80px; background: rgb(245, 245, 245); border-top: 1px solid rgb(217, 217, 217); border-bottom: 1px solid rgb(217, 217, 217);">
+    <div style="max-width: 1280px; margin: 0px auto; padding: 64px 24px 72px;">
+      <div style="display: flex; flex-wrap: wrap; gap: 12px 28px; align-items: baseline; justify-content: space-between;">
+        <h2 style="font-size: 33px; font-weight: 700; color: rgb(51, 51, 51); letter-spacing: -0.035em;">요청 처리 순서</h2>
+        <p style="font-size: 15px; color: rgb(86, 80, 75);">전화 접수 → 기관 문의 → 후속 처리 → 시민 회신</p>
       </div>
-
-      <div data-rise="6" style="margin-top: clamp(40px, 6vw, 88px); padding: clamp(24px, 3.4vw, 44px); border-radius: 12px; background: #171719; color: #F7F7F8;">
-        <p style="font-size: 12px; font-weight: 700; letter-spacing: 0.14em; color: #9EC5FF;">THREE SIDES</p>
-        <h3 style="margin-top: clamp(14px, 2vw, 22px); max-width: 22ch; font-size: clamp(1.75rem, 4vw, 3.5rem); line-height: 1.22;">지급은 끝났는데,<br>거래는 시작되지 않습니다.</h3>
-        <p style="margin-top: clamp(14px, 1.9vw, 22px); max-width: 44ch; font-size: clamp(0.9375rem, 1.25vw, 1.125rem); line-height: 1.8; color: #AEB0B6;">같은 돈이 세 자리에서 멈춰 있습니다.</p>
-
-        <dl style="display: grid; margin-top: clamp(28px, 4vw, 52px);">
-          <div style="display: grid; grid-template-columns: minmax(0, 1fr); gap: clamp(10px, 1.6vw, 18px); padding-block: clamp(22px, 3vw, 34px); border-top: 1px solid rgba(247,247,248,0.2);">
-            <dt style="display: flex; align-items: baseline; gap: clamp(12px, 1.8vw, 20px);"><span aria-hidden="true" style="font-size: clamp(1.75rem, 3.4vw, 3rem); line-height: 0.9; font-weight: 700; color: rgba(247,247,248,0.24);">01</span><span style="font-size: clamp(1.375rem, 2.6vw, 2.125rem); line-height: 1.15; font-weight: 700; letter-spacing: -0.04em;">이용자</span></dt>
-            <dd style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr)); gap: clamp(10px, 1.8vw, 32px);">
-              <p style="display: grid; gap: 7px;"><span style="font-size: 11.5px; font-weight: 700; letter-spacing: 0.1em; color: #6B6B70;">지금</span><span style="font-size: clamp(1rem, 1.4vw, 1.1875rem); line-height: 1.65; color: #AEB0B6;">돈은 들어왔지만 앱을 열지 못해 주문을 끝내지 못합니다.</span></p>
-              <p style="display: grid; gap: 7px;"><span style="font-size: 11.5px; font-weight: 700; letter-spacing: 0.1em; color: #9EC5FF;">말결</span><span style="font-size: clamp(1.0625rem, 1.6vw, 1.375rem); line-height: 1.55; font-weight: 700; color: #FFFFFF;">전화로 말하면 됩니다. 앱도 지갑도 영수증도 없습니다.</span></p>
-            </dd>
+      <ol style="margin-top: 36px; display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 0px; border-top: 2px solid rgb(231, 98, 17);">
+        <li style="background: rgb(255, 255, 255); border-right: 1px solid rgb(217, 217, 217); border-bottom: 1px solid rgb(217, 217, 217); padding: 26px 24px 30px; display: flex; flex-direction: column; gap: 14px;">
+          <div style="display: flex; align-items: center; gap: 12px;">
+            <span style="width: 34px; height: 34px; border-radius: 50%; background: rgb(231, 98, 17); color: rgb(255, 255, 255); font-size: 15px; font-weight: 700; display: flex; align-items: center; justify-content: center;">1</span>
+            <span style="font-size: 14px; color: rgb(86, 80, 75);">접수</span>
           </div>
-          <div style="display: grid; grid-template-columns: minmax(0, 1fr); gap: clamp(10px, 1.6vw, 18px); padding-block: clamp(22px, 3vw, 34px); border-top: 1px solid rgba(247,247,248,0.2);">
-            <dt style="display: flex; align-items: baseline; gap: clamp(12px, 1.8vw, 20px);"><span aria-hidden="true" style="font-size: clamp(1.75rem, 3.4vw, 3rem); line-height: 0.9; font-weight: 700; color: rgba(247,247,248,0.24);">02</span><span style="font-size: clamp(1.375rem, 2.6vw, 2.125rem); line-height: 1.15; font-weight: 700; letter-spacing: -0.04em;">공급자</span></dt>
-            <dd style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr)); gap: clamp(10px, 1.8vw, 32px);">
-              <p style="display: grid; gap: 7px;"><span style="font-size: 11.5px; font-weight: 700; letter-spacing: 0.1em; color: #6B6B70;">지금</span><span style="font-size: clamp(1rem, 1.4vw, 1.1875rem); line-height: 1.65; color: #AEB0B6;">전화 문의를 받아도 견적·주문·정산을 처리할 인력이 없습니다.</span></p>
-              <p style="display: grid; gap: 7px;"><span style="font-size: 11.5px; font-weight: 700; letter-spacing: 0.1em; color: #9EC5FF;">말결</span><span style="font-size: clamp(1.0625rem, 1.6vw, 1.375rem); line-height: 1.55; font-weight: 700; color: #FFFFFF;">실행 가능한 주문으로 정리되어 도착합니다.</span></p>
-            </dd>
+          <h3 style="font-size: 19px; font-weight: 700; color: rgb(51, 51, 51); letter-spacing: -0.02em;">요청 접수·항목 분해</h3>
+          <p style="font-size: 15px; line-height: 1.8; color: rgb(86, 80, 75);">사업명 미상 상태 접수 가능 · 식사·생필품·방문 제약 등 개별 항목 분해</p>
+        </li>
+        <li style="background: rgb(255, 255, 255); border-right: 1px solid rgb(217, 217, 217); border-bottom: 1px solid rgb(217, 217, 217); padding: 26px 24px 30px; display: flex; flex-direction: column; gap: 14px;">
+          <div style="display: flex; align-items: center; gap: 12px;">
+            <span style="width: 34px; height: 34px; border-radius: 50%; background: rgb(231, 98, 17); color: rgb(255, 255, 255); font-size: 15px; font-weight: 700; display: flex; align-items: center; justify-content: center;">2</span>
+            <span style="font-size: 14px; color: rgb(86, 80, 75);">문의</span>
           </div>
-          <div style="display: grid; grid-template-columns: minmax(0, 1fr); gap: clamp(10px, 1.6vw, 18px); padding-block: clamp(22px, 3vw, 34px); border-top: 1px solid rgba(247,247,248,0.2); border-bottom: 1px solid rgba(247,247,248,0.2);">
-            <dt style="display: flex; align-items: baseline; gap: clamp(12px, 1.8vw, 20px);"><span aria-hidden="true" style="font-size: clamp(1.75rem, 3.4vw, 3rem); line-height: 0.9; font-weight: 700; color: rgba(247,247,248,0.24);">03</span><span style="font-size: clamp(1.375rem, 2.6vw, 2.125rem); line-height: 1.15; font-weight: 700; letter-spacing: -0.04em;">정부부처</span></dt>
-            <dd style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr)); gap: clamp(10px, 1.8vw, 32px);">
-              <p style="display: grid; gap: 7px;"><span style="font-size: 11.5px; font-weight: 700; letter-spacing: 0.1em; color: #6B6B70;">지금</span><span style="font-size: clamp(1rem, 1.4vw, 1.1875rem); line-height: 1.65; color: #AEB0B6;">무엇을 어디서 샀는지 증빙할 수 없어 현금으로 줄 수 없습니다. 바우처를 써도 공급자 선정·정산·물품 수급 관리에 또 다른 행정비용이 붙습니다.</span></p>
-              <p style="display: grid; gap: 7px;"><span style="font-size: 11.5px; font-weight: 700; letter-spacing: 0.1em; color: #9EC5FF;">말결</span><span style="font-size: clamp(1.0625rem, 1.6vw, 1.375rem); line-height: 1.55; font-weight: 700; color: #FFFFFF;">집행 내역이 거래증명으로 남습니다. 확인이 아니라 열람으로 끝납니다.</span></p>
-            </dd>
+          <h3 style="font-size: 19px; font-weight: 700; color: rgb(51, 51, 51); letter-spacing: -0.02em;">기관 창구 문의</h3>
+          <p style="font-size: 15px; line-height: 1.8; color: rgb(86, 80, 75);">지원망 등록 목적별 연락처 문의 · 연락 사유 고지 · 이용 가능 여부·준비물·절차 확인</p>
+        </li>
+        <li style="background: rgb(255, 255, 255); border-right: 1px solid rgb(217, 217, 217); border-bottom: 1px solid rgb(217, 217, 217); padding: 26px 24px 30px; display: flex; flex-direction: column; gap: 14px;">
+          <div style="display: flex; align-items: center; gap: 12px;">
+            <span style="width: 34px; height: 34px; border-radius: 50%; background: rgb(231, 98, 17); color: rgb(255, 255, 255); font-size: 15px; font-weight: 700; display: flex; align-items: center; justify-content: center;">3</span>
+            <span style="font-size: 14px; color: rgb(86, 80, 75);">후속</span>
+          </div>
+          <h3 style="font-size: 19px; font-weight: 700; color: rgb(51, 51, 51); letter-spacing: -0.02em;">답변별 후속 처리</h3>
+          <p style="font-size: 15px; line-height: 1.8; color: rgb(86, 80, 75);">일부 기관 이용 불가 시에도 요청 전체 유지 · 확인 항목 유지 · 잔여 항목 대체 경로 확인</p>
+        </li>
+        <li style="background: rgb(255, 255, 255); border-bottom: 1px solid rgb(217, 217, 217); padding: 26px 24px 30px; display: flex; flex-direction: column; gap: 14px;">
+          <div style="display: flex; align-items: center; gap: 12px;">
+            <span style="width: 34px; height: 34px; border-radius: 50%; background: rgb(231, 98, 17); color: rgb(255, 255, 255); font-size: 15px; font-weight: 700; display: flex; align-items: center; justify-content: center;">4</span>
+            <span style="font-size: 14px; color: rgb(86, 80, 75);">회신</span>
+          </div>
+          <h3 style="font-size: 19px; font-weight: 700; color: rgb(51, 51, 51); letter-spacing: -0.02em;">시민 회신</h3>
+          <p style="font-size: 15px; line-height: 1.8; color: rgb(86, 80, 75);">확인 결과·이용 방법 전화 회신 · 조건 변경 시 시민 직접 선택</p>
+        </li>
+      </ol>
+      <ul style="margin-top: 24px; display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px;">
+        <li><img src="/assets/story/student-everyday-request-1536.webp" alt="일상 요청을 접수하는 학생" style="width: 100%; height: 170px; object-fit: cover; border: 1px solid rgb(215, 215, 215); border-radius: 8px;"></li>
+        <li><img src="/assets/story/parent-hands-full-1536.webp" alt="아이를 안은 부모" style="width: 100%; height: 170px; object-fit: cover; border: 1px solid rgb(215, 215, 215); border-radius: 8px;"></li>
+        <li><img src="/assets/story/household-order-arrival-1536.webp" alt="가정 배송 도착" style="width: 100%; height: 170px; object-fit: cover; border: 1px solid rgb(215, 215, 215); border-radius: 8px;"></li>
+        <li><img src="/assets/story/elder-support-arrival-1536.webp" alt="지원 물품을 받는 어르신" style="width: 100%; height: 170px; object-fit: cover; border: 1px solid rgb(215, 215, 215); border-radius: 8px;"></li>
+      </ul>
+    </div>
+  </section>
+
+  <section style="max-width: 1280px; margin: 0px auto; padding: 80px 24px 88px;">
+    <div style="display: flex; flex-wrap: wrap; gap: 44px;">
+      <div style="flex: 1 1 380px; min-width: 0px; display: flex; flex-direction: column; gap: 24px;">
+        <h2 style="font-size: 33px; font-weight: 700; color: rgb(51, 51, 51); letter-spacing: -0.035em;">대리 문의 범위·한계</h2>
+        <dl style="border-top: 1px solid rgb(217, 217, 217);">
+          <div style="display: flex; flex-wrap: wrap; border-bottom: 1px solid rgb(217, 217, 217);">
+            <dt style="flex: 0 0 200px; padding: 18px 16px 18px 0px; font-size: 15px; font-weight: 500; color: rgb(51, 51, 51);">자격·제공 여부 판단 주체 · 기관</dt>
+            <dd style="flex: 1 1 220px; padding: 18px 0px; font-size: 15px; line-height: 1.7; color: rgb(86, 80, 75);">말결 · 조건 확인·전달 한정 · 선정·제공 결정 없음</dd>
+          </div>
+          <div style="display: flex; flex-wrap: wrap; border-bottom: 1px solid rgb(217, 217, 217);">
+            <dt style="flex: 0 0 200px; padding: 18px 16px 18px 0px; font-size: 15px; font-weight: 500; color: rgb(51, 51, 51);">주요 선택 주체 · 시민</dt>
+            <dd style="flex: 1 1 220px; padding: 18px 0px; font-size: 15px; line-height: 1.7; color: rgb(86, 80, 75);">수령 방법·일정 등 조건 변경 사항 · 시민 재확인</dd>
+          </div>
+          <div style="display: flex; flex-wrap: wrap; border-bottom: 1px solid rgb(217, 217, 217);">
+            <dt style="flex: 0 0 200px; padding: 18px 16px 18px 0px; font-size: 15px; font-weight: 500; color: rgb(51, 51, 51);">전달 범위 사전 확인</dt>
+            <dd style="flex: 1 1 220px; padding: 18px 0px; font-size: 15px; line-height: 1.7; color: rgb(86, 80, 75);">확인된 범위 내 기관 문의 한정</dd>
+          </div>
+          <div style="display: flex; flex-wrap: wrap; border-bottom: 1px solid rgb(217, 217, 217);">
+            <dt style="flex: 0 0 200px; padding: 18px 16px 18px 0px; font-size: 15px; font-weight: 500; color: rgb(51, 51, 51);">이용 경로 연결과 지원 제공 구분</dt>
+            <dd style="flex: 1 1 220px; padding: 18px 0px; font-size: 15px; line-height: 1.7; color: rgb(86, 80, 75);">이용 방법 확인과 지원 수령 · 별도 기록</dd>
           </div>
         </dl>
-
-        <div style="display: grid; gap: clamp(18px, 2.4vw, 28px); margin-top: clamp(32px, 4.5vw, 60px); padding: clamp(24px, 3.4vw, 44px); border-radius: 12px; background: #0066FF;">
-          <p style="max-width: 26ch; font-size: clamp(1.375rem, 2.8vw, 2.375rem); line-height: 1.3; font-weight: 700; color: #FFFFFF;">전화 한 통을 규정 확인부터 정산까지 잇는 것이 목표입니다.</p>
-          <ol style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 168px), 1fr)); gap: clamp(14px, 2vw, 26px);">
-            <li style="display: grid; gap: 8px; padding-top: 14px; border-top: 2px solid #FFFFFF;"><span aria-hidden="true" style="font-size: 11.5px; font-weight: 700; letter-spacing: 0.1em; color: rgba(255,255,255,0.8);">01</span><span style="font-size: clamp(1.0625rem, 1.7vw, 1.4375rem); line-height: 1.35; font-weight: 700; letter-spacing: -0.032em; color: #FFFFFF;">전화로<br>말한다</span></li>
-            <li style="display: grid; gap: 8px; padding-top: 14px; border-top: 2px solid rgba(255,255,255,0.5);"><span aria-hidden="true" style="font-size: 11.5px; font-weight: 700; letter-spacing: 0.1em; color: rgba(255,255,255,0.8);">02</span><span style="font-size: clamp(1.0625rem, 1.7vw, 1.4375rem); line-height: 1.35; font-weight: 700; letter-spacing: -0.032em; color: #FFFFFF;">규정을<br>확인한다</span></li>
-            <li style="display: grid; gap: 8px; padding-top: 14px; border-top: 2px solid rgba(255,255,255,0.5);"><span aria-hidden="true" style="font-size: 11.5px; font-weight: 700; letter-spacing: 0.1em; color: rgba(255,255,255,0.8);">03</span><span style="font-size: clamp(1.0625rem, 1.7vw, 1.4375rem); line-height: 1.35; font-weight: 700; letter-spacing: -0.032em; color: #FFFFFF;">공급자에<br>주문한다</span></li>
-            <li style="display: grid; gap: 8px; padding-top: 14px; border-top: 2px solid rgba(255,255,255,0.5);"><span aria-hidden="true" style="font-size: 11.5px; font-weight: 700; letter-spacing: 0.1em; color: rgba(255,255,255,0.8);">04</span><span style="font-size: clamp(1.0625rem, 1.7vw, 1.4375rem); line-height: 1.35; font-weight: 700; letter-spacing: -0.032em; color: #FFFFFF;">한도 안에서<br>결제한다</span></li>
-            <li style="display: grid; gap: 8px; padding-top: 14px; border-top: 2px solid #171719;"><span aria-hidden="true" style="font-size: 11.5px; font-weight: 700; letter-spacing: 0.1em; color: rgba(255,255,255,0.8);">05</span><span style="font-size: clamp(1.0625rem, 1.7vw, 1.4375rem); line-height: 1.35; font-weight: 700; letter-spacing: -0.032em; color: #FFFFFF;">거래증명이<br>남는다</span></li>
-          </ol>
-        </div>
-
-        <p style="margin-top: clamp(34px, 5vw, 68px); max-width: 24ch; font-size: clamp(1.5rem, 3.2vw, 2.75rem); line-height: 1.26; font-weight: 700;">보조금은 규정이 가장 빡빡한 돈입니다.<br><span style="color: #9EC5FF;">여기서 통과하면, 나머지는 쉬운 문제입니다.</span></p>
-        <p style="margin-top: clamp(16px, 2.2vw, 24px); display: flex; flex-wrap: wrap; gap: 6px 14px; font-size: 13px; font-weight: 600; letter-spacing: 0.02em; color: #AEB0B6;"><span>목적</span><span aria-hidden="true">·</span><span>품목</span><span aria-hidden="true">·</span><span>예산</span><span aria-hidden="true">·</span><span>수혜자</span><span aria-hidden="true">·</span><span>증빙</span><span aria-hidden="true">·</span><span>정산</span><span style="color: #6B6B70;">전부 규정으로 정해져 있습니다</span></p>
-        <p style="margin-top: clamp(20px, 2.6vw, 30px); padding-top: clamp(16px, 2vw, 22px); border-top: 1px solid rgba(247,247,248,0.2); font-size: 13px; line-height: 1.75; color: #6B6B70;">현재는 실제 식품 공급자 주문, 070 실전화, Solana Devnet 제한 결제를 서로 다른 사건으로 검증했습니다. 정부 공식 바우처와 실가치 결제는 아직 연결하지 않았습니다.</p>
       </div>
-    </div>
-
-    <div style="max-width: 1360px; margin-inline: auto; padding: clamp(48px, 7vw, 112px) clamp(20px, 5vw, 64px) clamp(56px, 8vw, 120px); border-top: 1px solid rgba(23,23,25,0.1);">
-      <p data-rise="0" style="font-size: 12px; font-weight: 700; letter-spacing: 0.14em; color: #0066FF;">INTENT</p>
-      <h2 data-rise="1" style="margin-top: clamp(14px, 2vw, 22px); max-width: 22ch; font-size: clamp(2rem, 5.4vw, 4.5rem); line-height: 1.2;">사람은 검색어처럼<br>말하지 않습니다.</h2>
-      <div data-rise="2" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr)); gap: clamp(18px, 3vw, 56px); margin-top: clamp(28px, 4vw, 52px); max-width: 940px;">
-        <p style="font-size: clamp(1.0625rem, 1.4vw, 1.25rem); line-height: 1.78; color: #46474C;">사람은 말·글·사진·맥락으로 뜻을 표현하고, Gemini가 이를 실행 가능한 거래 의도로 바꿉니다.</p>
-        <p style="font-size: clamp(1.0625rem, 1.4vw, 1.25rem); line-height: 1.78; color: #46474C;">Gemini는 품목 허용·예산·결제 권한을 결정하지 않습니다. 그 판단은 정책과 제한권한이 맡습니다.</p>
-      </div>
-    </div>
-
-    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr)); gap: 1px; background: rgba(23,23,25,0.1);">
-      <figure data-rise="0" style="position: relative; margin: 0; min-height: clamp(300px, 46vh, 520px); background: #0B0C0E; overflow: hidden;">
-        <picture><source type="image/webp" srcset="/assets/story/parent-hands-full-480.webp 480w, /assets/story/parent-hands-full-960.webp 960w, /assets/story/parent-hands-full-1536.webp 1536w" sizes="(min-width: 1080px) 25vw, (min-width: 640px) 50vw, 100vw"><img src="/assets/story/parent-hands-full.png" alt="아기를 안은 채 부엌에서 말로 필요한 것을 이야기하는 보호자" width="1536" height="1024" loading="lazy" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 66% 42%;"></picture>
-        <div aria-hidden="true" style="position: absolute; inset: 0; background: linear-gradient(180deg, rgba(11,12,14,0.08) 40%, rgba(11,12,14,0.82) 100%);"></div>
-        <figcaption style="position: absolute; left: 0; right: 0; bottom: 0; padding: clamp(20px, 2.4vw, 30px); color: #FFFFFF;"><span style="display: block; font-size: clamp(1.0625rem, 1.5vw, 1.3125rem); line-height: 1.5; font-weight: 700;">두 손이 모두 차 있을 때</span><span style="display: block; margin-top: 6px; font-size: 14.5px; line-height: 1.65; color: rgba(255,255,255,0.82);">화면을 볼 수 없어도 말은 할 수 있습니다.</span></figcaption>
-      </figure>
-      <figure data-rise="1" style="position: relative; margin: 0; min-height: clamp(300px, 46vh, 520px); background: #0B0C0E; overflow: hidden;">
-        <picture><source type="image/webp" srcset="/assets/story/student-everyday-request-480.webp 480w, /assets/story/student-everyday-request-960.webp 960w, /assets/story/student-everyday-request-1536.webp 1536w" sizes="(min-width: 1080px) 25vw, (min-width: 640px) 50vw, 100vw"><img src="/assets/story/student-everyday-request.png" alt="집을 나서기 직전 책을 챙기며 필요한 것을 말하는 학생" width="1536" height="1024" loading="lazy" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 40% 40%;"></picture>
-        <div aria-hidden="true" style="position: absolute; inset: 0; background: linear-gradient(180deg, rgba(11,12,14,0.08) 40%, rgba(11,12,14,0.82) 100%);"></div>
-        <figcaption style="position: absolute; left: 0; right: 0; bottom: 0; padding: clamp(20px, 2.4vw, 30px); color: #FFFFFF;"><span style="display: block; font-size: clamp(1.0625rem, 1.5vw, 1.3125rem); line-height: 1.5; font-weight: 700;">나가기 3분 전일 때</span><span style="display: block; margin-top: 6px; font-size: 14.5px; line-height: 1.65; color: rgba(255,255,255,0.82);">검색하고 비교할 시간이 없습니다.</span></figcaption>
-      </figure>
-      <figure data-rise="2" style="position: relative; margin: 0; min-height: clamp(300px, 46vh, 520px); background: #0B0C0E; overflow: hidden;">
-        <picture><source type="image/webp" srcset="/assets/story/temporary-barrier-worker-480.webp 480w, /assets/story/temporary-barrier-worker-960.webp 960w, /assets/story/temporary-barrier-worker-1536.webp 1536w" sizes="(min-width: 1080px) 25vw, (min-width: 640px) 50vw, 100vw"><img src="/assets/story/temporary-barrier-worker.png" alt="한쪽 팔에 보호대를 하고 현관에서 말로 주문을 이야기하는 직장인" width="1536" height="1024" loading="lazy" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 26% 40%;"></picture>
-        <div aria-hidden="true" style="position: absolute; inset: 0; background: linear-gradient(180deg, rgba(11,12,14,0.08) 40%, rgba(11,12,14,0.82) 100%);"></div>
-        <figcaption style="position: absolute; left: 0; right: 0; bottom: 0; padding: clamp(20px, 2.4vw, 30px); color: #FFFFFF;"><span style="display: block; font-size: clamp(1.0625rem, 1.5vw, 1.3125rem); line-height: 1.5; font-weight: 700;">한 손을 다친 몇 주 동안</span><span style="display: block; margin-top: 6px; font-size: 14.5px; line-height: 1.65; color: rgba(255,255,255,0.82);">장벽은 잠시 왔다 가기도 합니다.</span></figcaption>
-      </figure>
-      <figure data-rise="3" style="position: relative; margin: 0; min-height: clamp(300px, 46vh, 520px); background: #0B0C0E; overflow: hidden;">
-        <picture><source type="image/webp" srcset="/assets/story/wheelchair-independent-shopper-480.webp 480w, /assets/story/wheelchair-independent-shopper-960.webp 960w, /assets/story/wheelchair-independent-shopper-1536.webp 1536w" sizes="(min-width: 1080px) 25vw, (min-width: 640px) 50vw, 100vw"><img src="/assets/story/wheelchair-independent-shopper.png" alt="상점가에서 직접 물건을 고르며 이야기하는 휠체어 이용자" width="1536" height="1024" loading="lazy" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 64% 44%;"></picture>
-        <div aria-hidden="true" style="position: absolute; inset: 0; background: linear-gradient(180deg, rgba(11,12,14,0.08) 40%, rgba(11,12,14,0.82) 100%);"></div>
-        <figcaption style="position: absolute; left: 0; right: 0; bottom: 0; padding: clamp(20px, 2.4vw, 30px); color: #FFFFFF;"><span style="display: block; font-size: clamp(1.0625rem, 1.5vw, 1.3125rem); line-height: 1.5; font-weight: 700;">고르는 건 내가 할 때</span><span style="display: block; margin-top: 6px; font-size: 14.5px; line-height: 1.65; color: rgba(255,255,255,0.82);">대신 결정하는 것이 아니라, 대신 실행합니다.</span></figcaption>
-      </figure>
-    </div>
-
-    <div style="max-width: 1360px; margin-inline: auto; padding: clamp(48px, 7vw, 104px) clamp(20px, 5vw, 64px) clamp(72px, 11vw, 152px);">
-      <div data-rise="0" style="display: grid; gap: 1px; max-width: 900px; border-radius: 12px; overflow: hidden; background: rgba(23,23,25,0.12);">
-        <p style="padding: clamp(20px, 2.6vw, 30px); background: #F7F7F8; font-size: clamp(1.0625rem, 1.7vw, 1.375rem); line-height: 1.55; font-weight: 600; color: #46474C;">“납작보리쌀 한 봉지 보내줘. 너무 비싸지 않은 걸로.”</p>
-        <p style="padding: clamp(20px, 2.6vw, 30px); background: #171719; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 13.5px; line-height: 2; color: #F7F7F8;">intent&nbsp;&nbsp;&nbsp;purchase.food_support<br>items&nbsp;&nbsp;&nbsp;&nbsp;납작보리 · 보리쌀 · 압맥<br>budget&nbsp;&nbsp;&nbsp;low_price_preferred<br>ask&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;700g 또는 1kg</p>
-      </div>
-    </div>
-  </section>
-
-  <section id="execution" data-ch="execution" data-tone="dark" data-screen-label="03 EXECUTION" style="background: #0B0C0E; color: #F7F7F8;">
-    <div style="max-width: 1360px; margin-inline: auto; padding: clamp(72px, 11vw, 168px) clamp(20px, 5vw, 64px) clamp(40px, 6vw, 80px);">
-      <p data-rise="0" style="font-size: 12px; font-weight: 700; letter-spacing: 0.14em; color: #9EC5FF;">EXECUTION</p>
-      <h2 data-rise="1" style="margin-top: clamp(14px, 2vw, 22px); max-width: 20ch; font-size: clamp(2rem, 5.4vw, 4.5rem); line-height: 1.2;">말이 끝나면,<br>주문이 끝나 있어야 합니다.</h2>
-    </div>
-
-    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 380px), 1fr)); align-items: center; gap: clamp(28px, 5vw, 80px); max-width: 1360px; margin-inline: auto; padding: 0 clamp(20px, 5vw, 64px) clamp(56px, 8vw, 112px);">
-      <ol data-rise="0" style="display: grid; min-width: 0;">
-        <li style="display: grid; grid-template-columns: 44px 1fr; align-items: baseline; gap: 4px; padding-block: clamp(15px, 1.9vw, 21px); border-top: 1px solid rgba(247,247,248,0.22); font-size: clamp(1.0625rem, 1.5vw, 1.3125rem); line-height: 1.55;"><span style="font-size: 13px; font-weight: 700; letter-spacing: 0.06em; color: #9EC5FF;">01</span>실제 판매 중인 상품을 찾습니다</li>
-        <li style="display: grid; grid-template-columns: 44px 1fr; align-items: baseline; gap: 4px; padding-block: clamp(15px, 1.9vw, 21px); border-top: 1px solid rgba(247,247,248,0.22); font-size: clamp(1.0625rem, 1.5vw, 1.3125rem); line-height: 1.55;"><span style="font-size: 13px; font-weight: 700; letter-spacing: 0.06em; color: #9EC5FF;">02</span>지원 조건에 맞는지 확인합니다</li>
-        <li style="display: grid; grid-template-columns: 44px 1fr; align-items: baseline; gap: 4px; padding-block: clamp(15px, 1.9vw, 21px); border-top: 1px solid rgba(247,247,248,0.22); font-size: clamp(1.0625rem, 1.5vw, 1.3125rem); line-height: 1.55;"><span style="font-size: 13px; font-weight: 700; letter-spacing: 0.06em; color: #9EC5FF;">03</span>상품명과 배송비 포함 총액을 읽어 줍니다</li>
-        <li style="display: grid; grid-template-columns: 44px 1fr; align-items: baseline; gap: 4px; padding-block: clamp(15px, 1.9vw, 21px); border-top: 1px solid rgba(247,247,248,0.22); font-size: clamp(1.0625rem, 1.5vw, 1.3125rem); line-height: 1.55;"><span style="font-size: 13px; font-weight: 700; letter-spacing: 0.06em; color: #9EC5FF;">04</span>이용자가 직접 확인합니다</li>
-        <li style="display: grid; grid-template-columns: 44px 1fr; align-items: baseline; gap: 4px; padding-block: clamp(15px, 1.9vw, 21px); border-top: 1px solid rgba(247,247,248,0.22); border-bottom: 1px solid rgba(247,247,248,0.22); font-size: clamp(1.0625rem, 1.5vw, 1.3125rem); line-height: 1.55; font-weight: 700;"><span style="font-size: 13px; font-weight: 700; letter-spacing: 0.06em; color: #9EC5FF;">05</span>그 자리에서 주문됩니다</li>
-      </ol>
-      <div data-rise="1" style="display: grid; gap: clamp(14px, 2vw, 20px); min-width: 0;">
-        <figure style="position: relative; margin: 0; min-height: clamp(260px, 40vh, 420px); border-radius: 12px; overflow: hidden; background: #17181A;">
-          <picture><source type="image/webp" srcset="/assets/story/cafe-owner-replenishment-480.webp 480w, /assets/story/cafe-owner-replenishment-960.webp 960w, /assets/story/cafe-owner-replenishment-1536.webp 1536w" sizes="(min-width: 1080px) 46vw, 100vw"><img src="/assets/story/cafe-owner-replenishment.png" alt="카페 카운터에서 재고 목록을 보며 필요한 물품을 말하는 사장" width="1536" height="1024" loading="lazy" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 38% 40%;"></picture>
-          <div aria-hidden="true" style="position: absolute; inset: 0; background: linear-gradient(180deg, rgba(11,12,14,0) 46%, rgba(11,12,14,0.8) 100%);"></div>
-          <figcaption style="position: absolute; left: 0; right: 0; bottom: 0; padding: clamp(18px, 2.2vw, 26px); font-size: clamp(1rem, 1.4vw, 1.1875rem); line-height: 1.5; font-weight: 700; color: #FFFFFF;">“컵 뚜껑 다 떨어졌어요. 지난번 거랑 같은 걸로.”</figcaption>
-        </figure>
-        <p style="max-width: 44ch; font-size: clamp(0.9375rem, 1.15vw, 1.0625rem); line-height: 1.82; color: #DBDCDF;">정상 요청에서 이용자에게 담당자 승인이나 예산 예약 같은 말을 하지 않습니다. 절차는 뒤에서 끝냅니다.</p>
-        <div style="display: grid; gap: 1px; border-radius: 12px; overflow: hidden; background: rgba(247,247,248,0.16);">
-          <p style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 132px), 1fr)); gap: 3px 18px; padding: clamp(13px, 1.7vw, 17px) clamp(15px, 1.9vw, 20px); background: #17181A; font-size: 14.5px; line-height: 1.65;"><strong style="font-weight: 700; color: #9EC5FF;">자격 · 지원조건</strong><span style="color: #DBDCDF;">이용자와 예산을 뒤에서 확인합니다</span></p>
-          <p style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 132px), 1fr)); gap: 3px 18px; padding: clamp(13px, 1.7vw, 17px) clamp(15px, 1.9vw, 20px); background: #17181A; font-size: 14.5px; line-height: 1.65;"><strong style="font-weight: 700; color: #9EC5FF;">지역 공급자</strong><span style="color: #DBDCDF;">실행 가능한 주문으로 판매처에 전달합니다</span></p>
-          <p style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 132px), 1fr)); gap: 3px 18px; padding: clamp(13px, 1.7vw, 17px) clamp(15px, 1.9vw, 20px); background: #17181A; font-size: 14.5px; line-height: 1.65;"><strong style="font-weight: 700; color: #9EC5FF;">정산 · 증명</strong><span style="color: #DBDCDF;">거래증명을 남기고 정상 거래를 자동 대사하도록 설계합니다</span></p>
-        </div>
-      </div>
-    </div>
-
-    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 340px), 1fr)); gap: 1px; background: rgba(247,247,248,0.14);">
-      <figure data-rise="0" style="position: relative; margin: 0; min-height: clamp(300px, 48vh, 560px); overflow: hidden; background: #0B0C0E;">
-        <picture><source type="image/webp" srcset="/assets/story/team-procurement-480.webp 480w, /assets/story/team-procurement-960.webp 960w, /assets/story/team-procurement-1536.webp 1536w" sizes="(min-width: 720px) 50vw, 100vw"><img src="/assets/story/team-procurement.png" alt="작업실에서 필요한 자재를 함께 정리하며 이야기하는 팀" width="1536" height="1024" loading="lazy" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 54% 44%;"></picture>
-        <div aria-hidden="true" style="position: absolute; inset: 0; background: linear-gradient(180deg, rgba(11,12,14,0.14) 38%, rgba(11,12,14,0.88) 100%);"></div>
-        <figcaption style="position: absolute; left: 0; right: 0; bottom: 0; padding: clamp(20px, 2.6vw, 32px); color: #FFFFFF;"><span style="display: block; font-size: clamp(1.125rem, 1.8vw, 1.5rem); line-height: 1.45; font-weight: 700;">팀이 쓰는 예산으로</span><span style="display: block; margin-top: 8px; max-width: 34ch; font-size: 15px; line-height: 1.7; color: rgba(255,255,255,0.84);">각자 필요한 것을 말하면, 정해진 한도 안에서만 주문됩니다.</span></figcaption>
-      </figure>
-      <figure data-rise="1" style="position: relative; margin: 0; min-height: clamp(300px, 48vh, 560px); overflow: hidden; background: #0B0C0E;">
-        <picture><source type="image/webp" srcset="/assets/story/household-order-arrival-480.webp 480w, /assets/story/household-order-arrival-960.webp 960w, /assets/story/household-order-arrival-1536.webp 1536w" sizes="(min-width: 720px) 50vw, 100vw"><img src="/assets/story/household-order-arrival.png" alt="집에 도착한 상자를 열어 주문한 물건을 함께 확인하는 두 사람" width="1536" height="1024" loading="lazy" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 58% 44%;"></picture>
-        <div aria-hidden="true" style="position: absolute; inset: 0; background: linear-gradient(180deg, rgba(11,12,14,0.14) 38%, rgba(11,12,14,0.88) 100%);"></div>
-        <figcaption style="position: absolute; left: 0; right: 0; bottom: 0; padding: clamp(20px, 2.6vw, 32px); color: #FFFFFF;"><span style="display: block; font-size: clamp(1.125rem, 1.8vw, 1.5rem); line-height: 1.45; font-weight: 700;">말한 그대로 도착합니다</span><span style="display: block; margin-top: 8px; max-width: 34ch; font-size: 15px; line-height: 1.7; color: rgba(255,255,255,0.84);">앱을 열지도, 지갑을 만들지도, 영수증을 모으지도 않았습니다.</span></figcaption>
+      <figure style="flex: 1 1 400px; min-width: 0px; display: flex; flex-direction: column; gap: 12px;">
+        <img src="/assets/story/universal-agent-hero-1536.webp" alt="공공 공간을 걷는 다양한 시민" style="width: 100%; height: 100%; min-height: 300px; object-fit: cover; border: 1px solid rgb(215, 215, 215); border-radius: 8px;">
+        <figcaption style="font-size: 14px; color: rgb(86, 80, 75);">대상 · 서울시 거주 시민</figcaption>
       </figure>
     </div>
   </section>
 
-  <section id="authority" data-ch="authority" data-tone="light" data-screen-label="04 AUTHORITY" style="background: #FFFFFF; color: #171719;">
-    <div style="max-width: 1360px; margin-inline: auto; padding: clamp(72px, 11vw, 168px) clamp(20px, 5vw, 64px) clamp(40px, 6vw, 72px);">
-      <p data-rise="0" style="font-size: 12px; font-weight: 700; letter-spacing: 0.14em; color: #0066FF;">AUTHORITY &amp; SETTLEMENT</p>
-      <h2 data-rise="1" style="margin-top: clamp(14px, 2vw, 22px); max-width: 24ch; font-size: clamp(2rem, 5.4vw, 4.5rem); line-height: 1.2;">AI에게 돈을 맡기는 것이 아니라,<br><span style="color: #0066FF;">한도</span>를 맡깁니다.</h2>
-      <div data-rise="2" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr)); gap: 1px; margin-top: clamp(30px, 4.5vw, 60px); border-radius: 12px; overflow: hidden; background: rgba(23,23,25,0.12);">
-        <div style="display: grid; align-content: start; gap: 12px; padding: clamp(24px, 3.2vw, 40px); background: #F7F7F8;">
-          <p style="font-size: 12px; font-weight: 700; letter-spacing: 0.12em; color: #6B6B70;">WITHOUT</p>
-          <p style="font-size: clamp(1.125rem, 1.9vw, 1.5rem); line-height: 1.48; font-weight: 700; color: #46474C;">서버 로그와 영수증을 기관마다 믿어 달라고 해야 합니다.</p>
-          <p style="font-size: 15px; line-height: 1.75; color: #6B6B70;">그리고 사람이 다시 맞춥니다.</p>
-        </div>
-        <div style="display: grid; align-content: start; gap: 12px; padding: clamp(24px, 3.2vw, 40px); background: #0066FF; color: #FFFFFF;">
-          <p style="font-size: 12px; font-weight: 700; letter-spacing: 0.12em; color: rgba(255,255,255,0.8);">WITH SOLANA</p>
-          <p style="font-size: clamp(1.125rem, 1.9vw, 1.5rem); line-height: 1.48; font-weight: 700;">이 자산·이 판매자·이 금액까지만 쓰게 하고, 실행 결과를 여러 당사자가 함께 검증합니다.</p>
-        </div>
-      </div>
-      <p data-rise="3" style="margin-top: clamp(20px, 2.6vw, 30px); max-width: 56ch; font-size: 15px; line-height: 1.85; color: #6B6B70;">현행 실증은 자산·목적지·누적 금액 제한과 Devnet 영수증입니다. 사용자·목적·품목·판매자·시간·횟수는 결정론적 정책·동의·역할 토큰·사건 원장이 함께 제한하며, 전부 온체인이라고 말하지 않습니다.</p>
+  <footer style="background: rgb(245, 245, 245); border-top: 1px solid rgb(217, 217, 217);">
+    <div style="max-width: 1280px; margin: 0px auto; padding: 32px 24px 44px; display: flex; flex-wrap: wrap; gap: 10px 30px; align-items: baseline; justify-content: space-between;">
+      <div style="font-size: 16px; color: rgb(51, 51, 51);"><span style="font-weight: 700; color: rgb(231, 98, 17);">말결</span> <span style="color: rgb(215, 215, 215);">|</span> 생활지원 연계 서비스</div>
+      <div style="font-size: 14px; color: rgb(86, 80, 75);">푸드뱅크·푸드마켓 · 찾아가는 푸드마켓 · 그냥드림 · 돌봄SOS</div>
     </div>
-
-    <div style="position: relative; min-height: clamp(420px, 78vh, 780px); display: grid; align-items: end; overflow: hidden; background: #0B0C0E;">
-      <picture><source type="image/webp" srcset="/assets/story/supplier-fulfillment-480.webp 480w, /assets/story/supplier-fulfillment-960.webp 960w, /assets/story/supplier-fulfillment-1536.webp 1536w" sizes="100vw"><img src="/assets/story/supplier-fulfillment.png" alt="창고에서 주문 내역을 확인하며 상품을 포장하는 공급 담당자들" width="1536" height="1024" loading="lazy" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 60% 46%;"></picture>
-      <div aria-hidden="true" style="position: absolute; inset: 0; background: linear-gradient(180deg, rgba(11,12,14,0.24) 24%, rgba(11,12,14,0.92) 100%);"></div>
-      <div style="position: relative; display: grid; gap: clamp(18px, 2.6vw, 30px); max-width: 1360px; margin-inline: auto; width: 100%; padding: clamp(56px, 9vw, 120px) clamp(20px, 5vw, 64px) clamp(40px, 6vw, 80px); color: #FFFFFF;">
-        <h3 data-rise="0" style="max-width: 20ch; font-size: clamp(1.75rem, 4.2vw, 3.5rem); line-height: 1.26;">주문이 끝나면,<br>증빙도 함께 끝나야 합니다.</h3>
-        <div data-rise="1" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 230px), 1fr)); gap: clamp(16px, 2.6vw, 40px); max-width: 1080px;">
-          <p style="padding-top: 16px; border-top: 2px solid rgba(255,255,255,0.9); font-size: clamp(1rem, 1.35vw, 1.1875rem); line-height: 1.7;">정상 거래의 자동 대사와 정산은 목표 흐름입니다.</p>
-          <p style="padding-top: 16px; border-top: 2px solid rgba(255,255,255,0.9); font-size: clamp(1rem, 1.35vw, 1.1875rem); line-height: 1.7;">이용자가 영수증을 모으는 증빙 노동이 사라집니다.</p>
-          <p style="padding-top: 16px; border-top: 2px solid rgba(255,255,255,0.9); font-size: clamp(1rem, 1.35vw, 1.1875rem); line-height: 1.7;">사람과 회계 전문가는 예외·분쟁·통제에 집중합니다.</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <section id="case" data-ch="case" data-tone="light" data-screen-label="05 FIRST CASE" style="background: #FFFFFF; color: #171719;">
-    <div style="max-width: 1360px; margin-inline: auto; padding: clamp(72px, 11vw, 168px) clamp(20px, 5vw, 64px) clamp(40px, 6vw, 72px);">
-      <p data-rise="0" style="font-size: 12px; font-weight: 700; letter-spacing: 0.14em; color: #0066FF;">FIRST CASE</p>
-      <h2 data-rise="1" style="margin-top: clamp(14px, 2vw, 22px); max-width: 20ch; font-size: clamp(2rem, 5.4vw, 4.5rem); line-height: 1.2;">가장 까다로운 곳에서,<br>먼저 증명합니다.</h2>
-      <p data-rise="2" style="margin-top: clamp(20px, 2.6vw, 32px); max-width: 50ch; font-size: clamp(1.0625rem, 1.4vw, 1.25rem); line-height: 1.78; color: #46474C;">지원금은 제품 본체가 아니라, 목적·품목·예산·수혜자·증빙·정산 제약이 모두 있는 가장 엄격한 테스트베드입니다. 실제 식품 공급자 주문, 070 실전화, Solana Devnet 제한 결제를 각각 검증했고, 현재는 이를 하나의 사건으로 잇고 있습니다.</p>
-    </div>
-
-    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 360px), 1fr)); align-items: stretch; gap: 1px; background: rgba(23,23,25,0.1);">
-      <figure style="position: relative; margin: 0; min-height: clamp(320px, 52vh, 620px); overflow: hidden; background: #0B0C0E;">
-        <picture><source type="image/webp" srcset="/assets/story/elder-voice-hero-480.webp 480w, /assets/story/elder-voice-hero-960.webp 960w, /assets/story/elder-voice-hero-1536.webp 1536w" sizes="(min-width: 760px) 50vw, 100vw"><img src="/assets/story/elder-voice-hero.png" alt="집에서 전화기로 필요한 것을 직접 이야기하는 어르신" width="1536" height="1024" loading="lazy" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 62% 38%;"></picture>
-        <div aria-hidden="true" style="position: absolute; inset: 0; background: linear-gradient(180deg, rgba(11,12,14,0.1) 42%, rgba(11,12,14,0.86) 100%);"></div>
-        <figcaption style="position: absolute; left: 0; right: 0; bottom: 0; padding: clamp(20px, 2.6vw, 32px); color: #FFFFFF;"><span style="display: block; font-size: clamp(1.125rem, 1.8vw, 1.5rem); line-height: 1.45; font-weight: 700;">첫 이용자는 전화로 시작했습니다</span><span style="display: block; margin-top: 8px; max-width: 32ch; font-size: 15px; line-height: 1.7; color: rgba(255,255,255,0.84);">전화는 여러 인터페이스 중 첫 발현 형태입니다.</span></figcaption>
-      </figure>
-      <ol style="display: grid; align-content: center; gap: 0; padding: clamp(28px, 4vw, 56px) clamp(20px, 4vw, 56px); background: #F7F7F8;">
-        <li data-rise="0" style="display: grid; grid-template-columns: 84px 1fr; align-items: baseline; gap: 10px; padding-block: clamp(12px, 1.6vw, 17px); border-bottom: 1px solid rgba(23,23,25,0.12); font-size: clamp(1rem, 1.35vw, 1.125rem); line-height: 1.6;"><span style="font-size: 12.5px; font-weight: 700; letter-spacing: 0.04em; color: #0066FF;">전화</span><span style="font-weight: 700;">070-5275-3884</span></li>
-        <li data-rise="1" style="display: grid; grid-template-columns: 84px 1fr; align-items: baseline; gap: 10px; padding-block: clamp(12px, 1.6vw, 17px); border-bottom: 1px solid rgba(23,23,25,0.12); font-size: clamp(1rem, 1.35vw, 1.125rem); line-height: 1.6;"><span style="font-size: 12.5px; font-weight: 700; letter-spacing: 0.04em; color: #6B6B70;">요청</span>“내가 살 수 있는 게 뭐야?”</li>
-        <li data-rise="2" style="display: grid; grid-template-columns: 84px 1fr; align-items: baseline; gap: 10px; padding-block: clamp(12px, 1.6vw, 17px); border-bottom: 1px solid rgba(23,23,25,0.12); font-size: clamp(1rem, 1.35vw, 1.125rem); line-height: 1.6;"><span style="font-size: 12.5px; font-weight: 700; letter-spacing: 0.04em; color: #6B6B70;">안내</span>실제 상품과 배송비 포함 총액을 그대로 읽어 줍니다</li>
-        <li data-rise="3" style="display: grid; grid-template-columns: 84px 1fr; align-items: baseline; gap: 10px; padding-block: clamp(12px, 1.6vw, 17px); border-bottom: 1px solid rgba(23,23,25,0.12); font-size: clamp(1rem, 1.35vw, 1.125rem); line-height: 1.6;"><span style="font-size: 12.5px; font-weight: 700; letter-spacing: 0.04em; color: #6B6B70;">확인</span>전화기에서 1번을 누릅니다</li>
-        <li data-rise="4" style="display: grid; grid-template-columns: 84px 1fr; align-items: baseline; gap: 10px; padding-block: clamp(12px, 1.6vw, 17px); font-size: clamp(1rem, 1.35vw, 1.125rem); line-height: 1.6; font-weight: 700;"><span style="font-size: 12.5px; font-weight: 700; letter-spacing: 0.04em; color: #0066FF;">실증</span>현행 전화는 확인까지, 실제 공급자 주문은 별도 사건으로 검증했습니다</li>
-      </ol>
-    </div>
-
-    <div style="max-width: 1360px; margin-inline: auto; padding: clamp(56px, 8vw, 120px) clamp(20px, 5vw, 64px) clamp(28px, 4vw, 48px);">
-      <h3 data-rise="0" style="max-width: 24ch; font-size: clamp(1.5rem, 3.4vw, 2.75rem); line-height: 1.28;">보조금에서 시작해,<br>일상의 거래로 확장됩니다.</h3>
-      <p data-rise="1" style="margin-top: clamp(16px, 2.2vw, 26px); max-width: 54ch; font-size: clamp(1rem, 1.35vw, 1.1875rem); line-height: 1.8; color: #46474C;">보조금과 생활지원금은 지급되어도 앱을 쓰기 어려운 사람은 실제 주문을 끝내기 어렵습니다. 행정에는 사용처 확인·증빙·정산 인력이 들고, 공급자에게는 전화 주문에 대응할 인력이 없습니다. 말결은 이 세 자리를 하나의 레일로 잇습니다.</p>
-    </div>
-
-    <div style="display: grid; gap: clamp(20px, 3vw, 40px); max-width: 1360px; margin-inline: auto; padding: 0 clamp(20px, 5vw, 64px) clamp(40px, 6vw, 72px);">
-      <article data-rise="0" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr)); gap: 1px; border-radius: 12px; overflow: hidden; background: rgba(23,23,25,0.12);">
-        <figure style="position: relative; margin: 0; min-height: clamp(240px, 34vh, 400px); overflow: hidden; background: #0B0C0E;">
-          <picture><source type="image/webp" srcset="/assets/story/agent-commerce-collective-480.webp 480w, /assets/story/agent-commerce-collective-960.webp 960w, /assets/story/agent-commerce-collective-1536.webp 1536w" sizes="(min-width: 800px) 46vw, 100vw"><img src="/assets/story/agent-commerce-collective.png" alt="직접 고른 물건과 안내장을 들고 확인하는 어르신과 가족" width="1536" height="1024" loading="lazy" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 52% 42%;"></picture>
-          <p style="position: absolute; left: clamp(14px, 1.8vw, 20px); top: clamp(14px, 1.8vw, 20px); padding: 7px 13px; border-radius: 999px; background: rgba(11,12,14,0.72); font-size: 12px; font-weight: 700; letter-spacing: 0.08em; color: #FFFFFF;">CASE 01 · 보조금 수령자</p>
-        </figure>
-        <div style="display: grid; align-content: center; gap: 0; padding: clamp(22px, 3vw, 36px) clamp(20px, 3vw, 36px); background: #FFFFFF;">
-          <h4 style="font-size: clamp(1.1875rem, 2vw, 1.5rem); line-height: 1.4;">받았는데, 살 수가 없습니다</h4>
-          <dl style="display: grid; margin-top: clamp(14px, 1.9vw, 20px);">
-            <div style="display: grid; grid-template-columns: 78px 1fr; gap: 12px; padding-block: clamp(10px, 1.4vw, 14px); border-top: 1px solid rgba(23,23,25,0.12);"><dt style="font-size: 12.5px; font-weight: 700; letter-spacing: 0.04em; color: #6B6B70;">문제</dt><dd style="font-size: 15px; line-height: 1.7; color: #46474C;">바우처를 받아도 앱에서 검색·주문·결제를 끝내기 어렵습니다.</dd></div>
-            <div style="display: grid; grid-template-columns: 78px 1fr; gap: 12px; padding-block: clamp(10px, 1.4vw, 14px); border-top: 1px solid rgba(23,23,25,0.12);"><dt style="font-size: 12.5px; font-weight: 700; letter-spacing: 0.04em; color: #0066FF;">전화 요청</dt><dd style="font-size: 15px; line-height: 1.7; color: #46474C;">“쌀이랑 두부 좀 보내줘. 너무 비싸지 않은 걸로.”</dd></div>
-            <div style="display: grid; grid-template-columns: 78px 1fr; gap: 12px; padding-block: clamp(10px, 1.4vw, 14px); border-top: 1px solid rgba(23,23,25,0.12);"><dt style="font-size: 12.5px; font-weight: 700; letter-spacing: 0.04em; color: #6B6B70;">공급자 실행</dt><dd style="font-size: 15px; line-height: 1.7; color: #46474C;">자격과 지원 조건은 뒤에서 확인하고, 상품과 배송비 포함 총액을 들려준 뒤 본인이 최종 승인합니다.</dd></div>
-            <div style="display: grid; grid-template-columns: 78px 1fr; gap: 12px; padding-block: clamp(10px, 1.4vw, 14px); border-top: 1px solid rgba(23,23,25,0.12); border-bottom: 1px solid rgba(23,23,25,0.12);"><dt style="font-size: 12.5px; font-weight: 700; letter-spacing: 0.04em; color: #6B6B70;">결과</dt><dd style="font-size: 15px; line-height: 1.7; font-weight: 700;">본인이 고른 물건이 도착하고, 행정에는 정산 가능한 거래증명이 남습니다.</dd></div>
-          </dl>
-        </div>
-      </article>
-
-      <article data-rise="1" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr)); gap: 1px; border-radius: 12px; overflow: hidden; background: rgba(23,23,25,0.12);">
-        <figure style="position: relative; margin: 0; min-height: clamp(240px, 34vh, 400px); overflow: hidden; background: #0B0C0E;">
-          <picture><source type="image/webp" srcset="/assets/story/supplier-fulfillment-480.webp 480w, /assets/story/supplier-fulfillment-960.webp 960w, /assets/story/supplier-fulfillment-1536.webp 1536w" sizes="(min-width: 800px) 46vw, 100vw"><img src="/assets/story/supplier-fulfillment.png" alt="주문서를 확인하며 물품을 준비하는 지역 공급자" width="1536" height="1024" loading="lazy" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 72% 44%;"></picture>
-          <p style="position: absolute; left: clamp(14px, 1.8vw, 20px); top: clamp(14px, 1.8vw, 20px); padding: 7px 13px; border-radius: 999px; background: rgba(11,12,14,0.72); font-size: 12px; font-weight: 700; letter-spacing: 0.08em; color: #FFFFFF;">CASE 02 · 지역 소상공인</p>
-        </figure>
-        <div style="display: grid; align-content: center; gap: 0; padding: clamp(22px, 3vw, 36px) clamp(20px, 3vw, 36px); background: #FFFFFF;">
-          <h4 style="font-size: clamp(1.1875rem, 2vw, 1.5rem); line-height: 1.4;">전화는 오는데, 받아 처리할 사람이 없습니다</h4>
-          <dl style="display: grid; margin-top: clamp(14px, 1.9vw, 20px);">
-            <div style="display: grid; grid-template-columns: 78px 1fr; gap: 12px; padding-block: clamp(10px, 1.4vw, 14px); border-top: 1px solid rgba(23,23,25,0.12);"><dt style="font-size: 12.5px; font-weight: 700; letter-spacing: 0.04em; color: #6B6B70;">문제</dt><dd style="font-size: 15px; line-height: 1.7; color: #46474C;">철물점·조명점·배관은 문의를 받아도 견적·재고·일정·결제·정산을 처리할 시스템과 인력이 없습니다.</dd></div>
-            <div style="display: grid; grid-template-columns: 78px 1fr; gap: 12px; padding-block: clamp(10px, 1.4vw, 14px); border-top: 1px solid rgba(23,23,25,0.12);"><dt style="font-size: 12.5px; font-weight: 700; letter-spacing: 0.04em; color: #0066FF;">전화 요청</dt><dd style="font-size: 15px; line-height: 1.7; color: #46474C;">“화장실 형광등이 나갔는데, 같은 걸로 두 개요.”</dd></div>
-            <div style="display: grid; grid-template-columns: 78px 1fr; gap: 12px; padding-block: clamp(10px, 1.4vw, 14px); border-top: 1px solid rgba(23,23,25,0.12);"><dt style="font-size: 12.5px; font-weight: 700; letter-spacing: 0.04em; color: #6B6B70;">공급자 실행</dt><dd style="font-size: 15px; line-height: 1.7; color: #46474C;">말결이 요청을 품목·수량·조건으로 구조화해 실행 가능한 주문으로 전달합니다.</dd></div>
-            <div style="display: grid; grid-template-columns: 78px 1fr; gap: 12px; padding-block: clamp(10px, 1.4vw, 14px); border-top: 1px solid rgba(23,23,25,0.12); border-bottom: 1px solid rgba(23,23,25,0.12);"><dt style="font-size: 12.5px; font-weight: 700; letter-spacing: 0.04em; color: #6B6B70;">결과</dt><dd style="font-size: 15px; line-height: 1.7; font-weight: 700;">별도 앱 운영 인력 없이 주문 접수부터 증빙·정산까지 이어집니다.</dd></div>
-          </dl>
-        </div>
-      </article>
-
-      <article data-rise="2" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr)); gap: 1px; border-radius: 12px; overflow: hidden; background: rgba(23,23,25,0.12);">
-        <figure style="position: relative; margin: 0; min-height: clamp(240px, 34vh, 400px); overflow: hidden; background: #0B0C0E;">
-          <picture><source type="image/webp" srcset="/assets/story/app-only-barrier-480.webp 480w, /assets/story/app-only-barrier-960.webp 960w, /assets/story/app-only-barrier-1536.webp 1536w" sizes="(min-width: 800px) 46vw, 100vw"><img src="/assets/story/app-only-barrier.png" alt="키오스크만 놓인 음식점 앞에 서 있는 손님과 가게 안 전화기" width="1536" height="1024" loading="lazy" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 62% 42%;"></picture>
-          <p style="position: absolute; left: clamp(14px, 1.8vw, 20px); top: clamp(14px, 1.8vw, 20px); padding: 7px 13px; border-radius: 999px; background: rgba(11,12,14,0.72); font-size: 12px; font-weight: 700; letter-spacing: 0.08em; color: #FFFFFF;">CASE 03 · 음식점</p>
-        </figure>
-        <div style="display: grid; align-content: center; gap: 0; padding: clamp(22px, 3vw, 36px) clamp(20px, 3vw, 36px); background: #FFFFFF;">
-          <h4 style="font-size: clamp(1.1875rem, 2vw, 1.5rem); line-height: 1.4;">서로를 찾지 못한 손님과 가게</h4>
-          <dl style="display: grid; margin-top: clamp(14px, 1.9vw, 20px);">
-            <div style="display: grid; grid-template-columns: 78px 1fr; gap: 12px; padding-block: clamp(10px, 1.4vw, 14px); border-top: 1px solid rgba(23,23,25,0.12);"><dt style="font-size: 12.5px; font-weight: 700; letter-spacing: 0.04em; color: #6B6B70;">문제</dt><dd style="font-size: 15px; line-height: 1.7; color: #46474C;">배달앱을 쓰기 어려운 손님과, 입점·운영이 어려운 음식점은 서로 연결되지 않습니다.</dd></div>
-            <div style="display: grid; grid-template-columns: 78px 1fr; gap: 12px; padding-block: clamp(10px, 1.4vw, 14px); border-top: 1px solid rgba(23,23,25,0.12);"><dt style="font-size: 12.5px; font-weight: 700; letter-spacing: 0.04em; color: #0066FF;">전화 요청</dt><dd style="font-size: 15px; line-height: 1.7; color: #46474C;">“근처에서 뜨끈한 국밥 하나 시켜줘.”</dd></div>
-            <div style="display: grid; grid-template-columns: 78px 1fr; gap: 12px; padding-block: clamp(10px, 1.4vw, 14px); border-top: 1px solid rgba(23,23,25,0.12);"><dt style="font-size: 12.5px; font-weight: 700; letter-spacing: 0.04em; color: #6B6B70;">공급자 실행</dt><dd style="font-size: 15px; line-height: 1.7; color: #46474C;">메뉴·가격·배달비를 읽어 확인받고, 음식점에는 주문 내용만 전달됩니다.</dd></div>
-            <div style="display: grid; grid-template-columns: 78px 1fr; gap: 12px; padding-block: clamp(10px, 1.4vw, 14px); border-top: 1px solid rgba(23,23,25,0.12); border-bottom: 1px solid rgba(23,23,25,0.12);"><dt style="font-size: 12.5px; font-weight: 700; letter-spacing: 0.04em; color: #6B6B70;">결과</dt><dd style="font-size: 15px; line-height: 1.7; font-weight: 700;">결제·정산·거래증명이 함께 남습니다. 전화비서가 아니라 상거래 인프라입니다.</dd></div>
-          </dl>
-        </div>
-      </article>
-
-      <div data-rise="3" style="display: grid; gap: clamp(12px, 1.6vw, 16px); padding: clamp(20px, 2.8vw, 32px); border-radius: 12px; background: #F7F7F8;">
-        <p style="font-size: 12px; font-weight: 700; letter-spacing: 0.12em; color: #6B6B70;">세 사례가 지나는 같은 레일</p>
-        <ol style="display: flex; flex-wrap: wrap; align-items: center; gap: 8px 10px;">
-          <li style="padding: 9px 15px; border-radius: 999px; background: #0066FF; color: #FFFFFF; font-size: 14.5px; font-weight: 600;">전화 요청</li>
-          <li aria-hidden="true" style="font-size: 14px; color: #6B6B70;">→</li>
-          <li style="padding: 9px 15px; border-radius: 999px; background: #FFFFFF; font-size: 14.5px; font-weight: 600; box-shadow: inset 0 0 0 1px rgba(23,23,25,0.16);">자격·예산 확인</li>
-          <li aria-hidden="true" style="font-size: 14px; color: #6B6B70;">→</li>
-          <li style="padding: 9px 15px; border-radius: 999px; background: #FFFFFF; font-size: 14.5px; font-weight: 600; box-shadow: inset 0 0 0 1px rgba(23,23,25,0.16);">공급자 연결</li>
-          <li aria-hidden="true" style="font-size: 14px; color: #6B6B70;">→</li>
-          <li style="padding: 9px 15px; border-radius: 999px; background: #FFFFFF; font-size: 14.5px; font-weight: 600; box-shadow: inset 0 0 0 1px rgba(23,23,25,0.16);">이용자 최종 승인</li>
-          <li aria-hidden="true" style="font-size: 14px; color: #6B6B70;">→</li>
-          <li style="padding: 9px 15px; border-radius: 999px; background: #FFFFFF; font-size: 14.5px; font-weight: 600; box-shadow: inset 0 0 0 1px rgba(23,23,25,0.16);">제한된 결제</li>
-          <li aria-hidden="true" style="font-size: 14px; color: #6B6B70;">→</li>
-          <li style="padding: 9px 15px; border-radius: 999px; background: #FFFFFF; font-size: 14.5px; font-weight: 600; box-shadow: inset 0 0 0 1px rgba(23,23,25,0.16);">자동 정산</li>
-          <li aria-hidden="true" style="font-size: 14px; color: #6B6B70;">→</li>
-          <li style="padding: 9px 15px; border-radius: 999px; background: #171719; color: #F7F7F8; font-size: 14.5px; font-weight: 600;">거래증명</li>
-        </ol>
-        <p style="font-size: 13.5px; line-height: 1.75; color: #6B6B70;">식품 공급자 주문은 실제 주문으로, 전화와 제한 결제는 별도 기술 사건으로 확인했습니다. 소상공인·음식점 적용과 단일 사건 통합은 다음 확장 범위입니다.</p>
-      </div>
-    </div>
-
-    <div style="position: relative; min-height: clamp(480px, 88vh, 860px); display: grid; align-items: end; overflow: hidden; background: #0B0C0E;">
-      <picture><source type="image/webp" srcset="/assets/story/everyday-commerce-street-480.webp 480w, /assets/story/everyday-commerce-street-960.webp 960w, /assets/story/everyday-commerce-street-1536.webp 1536w" sizes="100vw"><img src="/assets/story/everyday-commerce-street.png" alt="상점과 사람들이 오가는 거리에서 각자의 일상을 이어가는 사람들" width="1536" height="1024" loading="lazy" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 50% 52%;"></picture>
-      <div aria-hidden="true" style="position: absolute; inset: 0; background: linear-gradient(180deg, rgba(11,12,14,0.22) 20%, rgba(11,12,14,0.94) 100%);"></div>
-      <div style="position: relative; display: grid; gap: clamp(22px, 3.4vw, 40px); max-width: 1360px; margin-inline: auto; width: 100%; padding: clamp(64px, 10vw, 140px) clamp(20px, 5vw, 64px) clamp(44px, 6vw, 80px); color: #FFFFFF;">
-        <h3 data-rise="0" style="max-width: 28ch; font-size: clamp(1.5rem, 3.6vw, 3rem); line-height: 1.3;">말결은 전화 주문 서비스가 아닙니다. 앱 밖에 있던 소비자와 공급자를 보조금·결제·정산 인프라로 연결하는 새로운 상거래입니다.</h3>
-        <div data-rise="1" style="display: flex; flex-wrap: wrap; gap: 10px;">
-          <a href="tel:07052753884" style="display: inline-flex; align-items: center; gap: 8px; min-height: 54px; padding: 15px 26px; border-radius: 12px; background: #0066FF; color: #fff; font-size: 16px; font-weight: 600;" class="q6">070-5275-3884로 전화하기</a>
-          <a href="/?v=home" target="_blank" rel="noopener" style="display: inline-flex; align-items: center; gap: 8px; min-height: 54px; padding: 15px 24px; border-radius: 12px; background: rgba(255,255,255,0.96); color: #171719; font-size: 16px; font-weight: 600;" class="q7">웹으로 체험하기</a>
-          <a href="/tech" style="display: inline-flex; align-items: center; gap: 8px; min-height: 54px; padding: 15px 24px; border-radius: 12px; color: #FFFFFF; font-size: 16px; font-weight: 600; box-shadow: inset 0 0 0 1px rgba(255,255,255,0.44);" class="q8">기술 구현과 실제 증거 보기</a>
-        </div>
-        <p style="max-width: 62ch; font-size: 13px; line-height: 1.85; color: rgba(255,255,255,0.62);">말결은 사람의 의사를 구매와 결제로 실행하고, Solana가 AI의 권한과 정산을 통제·증명하도록 설계한 에이전트 결제 인프라입니다. 현재 증거는 실제 식품 주문, 실제 전화, Devnet 제한 결제로 분리되어 있습니다. 이 페이지의 인물 사진은 제작된 스토리 이미지입니다.</p>
-      </div>
-    </div>
-  </section>
-</div>
-
+  </footer></div>
+<script src="/landing.js" defer></script>
 </body>
 </html>

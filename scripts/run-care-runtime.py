@@ -1,0 +1,72 @@
+"""Load approved credentials without echoing values, then exec one runtime component."""
+import os
+from pathlib import Path
+import sys
+import sqlite3
+from datetime import datetime, timezone
+
+root = Path(__file__).resolve().parent.parent
+if sys.argv[1:] == ['backup']:
+    source = root / '.private/care-ledger.sqlite'
+    if not source.is_file():
+        raise SystemExit('Care ledger does not exist; no empty backup created')
+    directory = root / '.private/backups'
+    directory.mkdir(mode=0o700, parents=True, exist_ok=True)
+    destination = directory / ('care-' + datetime.now(timezone.utc).strftime('%Y%m%dT%H%M%S%fZ') + '.sqlite')
+    with destination.open('xb'):
+        os.chmod(destination, 0o600)
+    with sqlite3.connect(source.as_uri() + '?mode=ro', uri=True) as src, sqlite3.connect(destination) as dst:
+        src.backup(dst)
+        if dst.execute('PRAGMA integrity_check').fetchone()[0] != 'ok':
+            raise SystemExit('Backup integrity failed')
+    print('Care ledger backup integrity PASS; private local snapshot created')
+    raise SystemExit(0)
+secrets = Path(os.environ.get('CARE_SECRET_DIR', str(root.parent / 'benefit-settlement-rail/.secrets')))
+env = dict(os.environ)
+for name in ('clawops', 'bridge'):
+    for line in (secrets / (name + '.env')).read_text().splitlines():
+        if '=' in line and not line.lstrip().startswith('#'):
+            key, value = line.removeprefix('export ').split('=', 1)
+            env.setdefault(key.strip(), value.strip().strip('\"\''))
+care_secrets = root / '.secrets/care.env'
+if care_secrets.exists():
+    for line in care_secrets.read_text().splitlines():
+        if '=' in line and not line.startswith('#'):
+            key, value = line.split('=', 1)
+            env.setdefault(key, value)
+env['CLAWOPS_PHONE_NUMBER'] = os.environ.get('CARE_PHONE_NUMBER', '07052767277')
+env['AGENT_API_BASE_URL'] = os.environ.get('CARE_API_BASE_URL', 'http://127.0.0.1:18081')
+env['PORT'] = os.environ.get('CARE_PORT', '18081')
+env['HOST'] = '127.0.0.1'
+env['CARE_LEDGER_PATH'] = str(root / '.private/care-ledger.sqlite')
+env.setdefault('COORDINATION_ROUTING_PATH', str(root / '.private/coordination-routing.json'))
+env.setdefault('COORDINATION_VOICE_STATE_PATH', str(root / '.private/coordination-voice.sqlite'))
+env.setdefault('COORDINATION_HEALTH_PORT', '18083')
+env['CLAWOPS_READY_FILE'] = str(root / '.private/clawops-ready')
+(root / '.private').mkdir(mode=0o700, exist_ok=True)
+os.chdir(root)
+if sys.argv[1:] == ['api']:
+    command = ['node', '--import', 'tsx', 'src/server.ts']
+elif sys.argv[1:] == ['voice']:
+    command = [str(Path.home() / '.local/bin/uv'), 'run', '--with', 'clawops[agent,gemini]==0.56.0', 'python', 'scripts/clawops-care-agent.py']
+elif sys.argv[1:] in (['coordination'], ['coordination-check']):
+    from coordination_config import load_routing, normalize_number
+    try:
+        routing = load_routing(env['COORDINATION_ROUTING_PATH'])
+        if (not routing['citizenNumbers'] and not routing.get('demoCallers') and not routing.get('publicIntake')) or not routing['institutionNumbers']:
+            raise ValueError('ROUTING_ROLES_REQUIRED')
+        citizens = set(routing['citizenNumbers'].values())
+        institutions = set(routing['institutionNumbers'].values())
+        if (citizens & institutions)-set(routing.get('demoCallers',{})):
+            raise ValueError('ROUTING_ROLES_MUST_BE_DISTINCT')
+        if normalize_number(env['CLAWOPS_PHONE_NUMBER']) in routing['allowedNumbers']:
+            raise ValueError('ROUTING_SELF_CALL_FORBIDDEN')
+    except ValueError as error:
+        raise SystemExit(str(error)) from None
+    if sys.argv[1:] == ['coordination-check']:
+        print('Coordination routing preflight PASS; roles=2; no network call performed')
+        raise SystemExit(0)
+    command = [str(Path.home() / '.local/bin/uv'), 'run', '--with', 'clawops[agent,gemini]==0.56.0', 'python', 'scripts/coordination_voice.py']
+else:
+    raise SystemExit('Usage: run-care-runtime.py api|voice|coordination|coordination-check|backup')
+os.execvpe(command[0], command, env)

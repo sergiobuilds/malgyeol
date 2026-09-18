@@ -5,18 +5,6 @@ updates:
     schedule:
       interval: weekly
     open-pull-requests-limit: 5
-    groups:
-      solana-runtime:
-        patterns:
-          - "@solana/*"
-          - "@solana-program/*"
-          - "@swig-wallet/*"
-          - "@x402/*"
-  - package-ecosystem: cargo
-    directory: /
-    schedule:
-      interval: weekly
-    open-pull-requests-limit: 5
   - package-ecosystem: github-actions
     directory: /
     schedule:

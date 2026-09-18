@@ -1,0 +1,58 @@
+{
+  "capturedAt": "2026-09-17T12:10:00Z",
+  "projectMode": "observe-only",
+  "verifiedSourceCommit": "d9946509a874a0e4eddbee95ce3cf5cd34c079b8",
+  "deployment": {
+    "revision": "benefit-settlement-rail-00063-x6z",
+    "imageDigest": "sha256:2efaa7ced78cd8eabd115ae0e337da2c5f22a1cf8e137d9e4f0b5d417b31db19",
+    "observedAt": "2026-09-17T12:29:57Z",
+    "healthStatus": 200,
+    "latestTrafficPercent": 100,
+    "mode": "PUBLIC_SYNTHETIC_DEMO; durable phone ledger remains on Campbell"
+  },
+  "phone": {
+    "number": "07052767277",
+    "allocation": "GET empty -> POST 201 -> GET one number",
+    "allocationAt": "2026-09-17T11:50:19.978Z",
+    "controlConnection": "SDK control WebSocket connected; local SDK healthz HTTP 200. Does not verify PSTN or model audio.",
+    "controlObservedAt": "2026-09-17T12:10:00Z",
+    "allocationNumberMatch": "POST response and subsequent GET both returned 07052767277",
+    "actualInboundCall": "NOT_OBSERVED",
+    "actualAudioConversation": "NOT_VERIFIED"
+  },
+  "careProvider": {
+    "evidenceClass": "SANDBOX",
+    "actualApprovedInstitution": "NOT_CONNECTED",
+    "actualProvision": "NOT_OBSERVED"
+  },
+  "historicalSupplierReadback": {
+    "sourceEndpoint": "https://benefit-settlement-rail-164282963747.us-central1.run.app/api/demo/food-order-proof",
+    "source": "SPECIAL_OFFER_LIVE",
+    "sourceMeaning": "Classification returned by the existing deployment, not an independent delivery attestation",
+    "goodsName": "모듬잡곡 700g",
+    "quantity": 1,
+    "deliveryState": "PREPARING",
+    "hasTracking": false,
+    "claimBoundary": "Existing deployment readback only. Does not prove requested flat-barley order, public care provision, delivery or receipt. Order IDs and personal data omitted."
+  },
+  "conversationFollowup": {
+    "observedAt": "2026-09-17T12:32:02Z",
+    "command": "npm run verify",
+    "passedTests": 171,
+    "exitCode": 0,
+    "phoneSourceSha256": "999bc3db713669f53f4e138d615fdef1c58c893feb8530571ebf1a986c063b0e",
+    "testSourceSha256": "25fe0a5de33134903a8a2eb9c23dbb032ee6cbe3031bbdca15721c4922bb85cf",
+    "scope": "Campbell phone coordinator; public demo remains revision 00063-x6z",
+    "realWorldOutcome": false
+  },
+  "localVerification": {
+    "class": "SYNTHETIC_TEST",
+    "tests": ["carePhone", "careApp", "careProvider", "carePersistence", "careAuthorization"],
+    "command": "npm run verify",
+    "executedAt": "2026-09-17T12:26:00Z",
+    "exitCode": 0,
+    "passedTests": 170,
+    "revision": "d9946509a874a0e4eddbee95ce3cf5cd34c079b8",
+    "realWorldOutcome": false
+  }
+}

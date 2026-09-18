@@ -19,7 +19,7 @@ export interface OrderResult {
   commitmentVersion?: 'benefit-consent-v1';
 }
 
-export interface GeminiInterpreter {
+export interface IntentInterpreter {
   analyzeAudio(audioBytes: Uint8Array, mimeType: string): Promise<IntentAnalysis>;
 }
 

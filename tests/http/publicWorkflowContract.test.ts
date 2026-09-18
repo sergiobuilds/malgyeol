@@ -1,41 +1,33 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { readFile } from 'node:fs/promises';
+import { once } from 'node:events';
+import { createCareApp } from '../../src/careApp.ts';
 
-test('public workflow preserves institution invite and 30-day order access handoffs', async () => {
-  const source = await readFile(new URL('../../public/app.js', import.meta.url), 'utf8');
-  assert.match(source, /institution-invite-form/);
-  assert.match(source, /기관이 보낸 초대 링크/);
-  assert.match(source, /issue-order-access/);
-  assert.match(source, /copy-order-access/);
-  assert.match(source, /30일/);
-  assert.match(source, /TRACK_ORDER/);
-  assert.match(source, /CANCEL_ORDER/);
+test('public entrypoints serve their actual local styles and scripts', async t => {
+  const server=createCareApp();server.listen(0,'127.0.0.1');await once(server,'listening');t.after(()=>server.close());
+  const address=server.address();assert.ok(address&&typeof address!=='string');
+  const base=`http://127.0.0.1:${address.port}`;
+  for(const route of ['/','/app','/ops','/tech']) {
+    const response=await fetch(base+route);assert.equal(response.status,200);
+    assert.match(response.headers.get('content-security-policy') ?? '',/script-src 'self'/);
+    const html=await response.text();
+    const assets=[...html.matchAll(/<(?:script|link)\b[^>]*(?:src|href)=["']([^"']+)["'][^>]*>/g)]
+      .map(m=>m[1]!).filter(path=>/\.(?:js|css)(?:\?|$)/.test(path));
+    assert.ok(assets.length>0,route);
+    for(const path of assets) {
+      const url=new URL(path,base+route);assert.equal(url.origin,base,'product assets must be self-hosted');
+      const asset=await fetch(url);assert.equal(asset.status,200,`${route}: ${path}`);
+      assert.ok((await asset.text()).length>0);
+    }
+  }
 });
 
-test('public phone demo requires only user confirmation before direct ordering', async () => {
-  const source = await readFile(new URL('../../public/app.js', import.meta.url), 'utf8');
-  const start = source.indexOf('var DEMO_SCENES = {');
-  const phoneStart = source.indexOf('phone: {', start);
-  const phoneEnd = source.indexOf('risk: {', phoneStart);
-  assert.notEqual(start, -1);
-  assert.notEqual(phoneStart, -1);
-  assert.notEqual(phoneEnd, -1);
-
-  const phoneDemo = source.slice(phoneStart, phoneEnd);
-  assert.match(phoneDemo, /이용자.*최종 확인/);
-  assert.match(phoneDemo, /판매처.*바로 주문/);
-  assert.doesNotMatch(phoneDemo, /기관 승인|담당자 승인|담당자 확인|승인함/);
-});
-
-test('ClawOps agent binds tool calls to call_id and feeds confirmed DTMF result to the voice session', async () => {
-  const source = await readFile(new URL('../../scripts/clawops-vertex-agent.py', import.meta.url), 'utf8');
-  assert.doesNotMatch(source, /len\(active_cases\) != 1/);
-  assert.match(source, /call_id: str/);
-  assert.match(source, /active_cases\.get\(call_id\)/);
-  assert.match(source, /server_result/);
-  assert.match(source, /feed_dtmf/);
-  assert.match(source, /except Exception:/);
-  assert.match(source, /아직 주문하지 않았습니다/);
-  assert.doesNotMatch(source, /담당자 확인으로 넘/);
+test('public entrypoints protect runtime files while requests are login-free', async t=>{
+  const server=createCareApp();server.listen(0,'127.0.0.1');await once(server,'listening');t.after(()=>server.close());
+  const address=server.address();assert.ok(address&&typeof address!=='string');
+  const base=`http://127.0.0.1:${address.port}`;
+  for(const path of ['/.env','/.private/care-ledger.sqlite','/.private/coordination-routing.json','/src/careApp.ts','/assets/../../.secrets/care.env']) {
+    assert.equal((await fetch(base+path)).status,404,path);
+  }
+  assert.equal((await fetch(base+'/api/coordination/requests')).status,200);
 });

@@ -3,7 +3,7 @@ import assert from 'node:assert';
 import { createHash } from 'node:crypto';
 import { OrderService } from '../../src/g2/orderService.ts';
 import { ALLOWED_DEMO_SKU } from '../../src/g2/validator.ts';
-import type { GeminiInterpreter, IntentAnalysis } from '../../src/g2/types.ts';
+import type { IntentInterpreter, IntentAnalysis } from '../../src/g2/types.ts';
 
 const AUDIO = new Uint8Array([82, 73, 70, 70]);
 
@@ -17,7 +17,7 @@ class MockNonceGen {
   generate() { return this.nextNonce; }
 }
 
-class MockInterpreter implements GeminiInterpreter {
+class MockInterpreter implements IntentInterpreter {
   public nextIntent!: Partial<IntentAnalysis>;
   async analyzeAudio(_bytes: Uint8Array, _mime: string) {
     return this.nextIntent as IntentAnalysis;
@@ -168,7 +168,7 @@ test('OrderService - Sensitive field absence in commitment payload generation', 
   assert.strictEqual(confirmResult.commitmentHash, expectedHash);
 });
 
-test('OrderService - empty audio fails closed before Gemini is called', async () => {
+test('OrderService - empty audio fails closed before the interpreter is called', async () => {
   const clock = new MockClock();
   const nonceGen = new MockNonceGen();
   const interpreter = new MockInterpreter();
@@ -179,15 +179,15 @@ test('OrderService - empty audio fails closed before Gemini is called', async ()
   assert.deepStrictEqual(result.reasons, ['Audio is empty']);
 });
 
-test('OrderService - Gemini failure fails closed', async () => {
+test('OrderService - interpreter failure fails closed', async () => {
   const clock = new MockClock();
   const nonceGen = new MockNonceGen();
-  const interpreter: GeminiInterpreter = {
+  const interpreter: IntentInterpreter = {
     async analyzeAudio() { throw new Error('provider unavailable'); }
   };
   const service = new OrderService(interpreter, clock, nonceGen);
 
   const result = await service.processAudio(AUDIO, 'audio/wav');
   assert.strictEqual(result.status, 'NEEDS_CLARIFICATION');
-  assert.deepStrictEqual(result.reasons, ['Gemini interpretation failed']);
+  assert.deepStrictEqual(result.reasons, ['Intent interpretation failed']);
 });

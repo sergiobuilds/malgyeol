@@ -11,7 +11,7 @@ const record = {
     substitutionsAllowed: false, confidence: 0.97, ambiguityReasons: [], readbackSentence: '기립 보조기 1개'
   },
   policySnapshotHash: 'a'.repeat(64), confirmationCommitment: 'b'.repeat(64),
-  paymentIntentId: 'pay_1', settlementTransaction: 'devnet_signature_1', settlementProofBaseUnits: 1_000_000,
+  paymentAuthorizationId: 'auth_1', paymentReference: 'synthetic_reference_1', authorizedAmountKrw: 380_000,
   providerOrderId: 'DEMO-ORDER-1', createdAt: 1000, updatedAt: 2000
 };
 
@@ -23,15 +23,15 @@ test('public case projection excludes Twilio and beneficiary references from def
   const serialized = JSON.stringify(projected);
   assert.equal(serialized.includes('secret-hash'), false);
   assert.equal(serialized.includes('P-2026-0031'), false);
-  assert.equal(serialized.includes('devnet_signature_1'), false);
+  assert.equal(serialized.includes('synthetic_reference_1'), false);
   assert.equal(projected.programAmountKrw, 380_000);
   assert.equal(projected.state, 'ORDERED');
 });
 
-test('technical proof remains opt-in and labels Devnet amount separately', () => {
+test('technical proof remains opt-in and labels the simulated authorization separately', () => {
   const projected = projectPublicCase(record, true);
-  assert.equal(projected.technicalProof?.settlementTransaction, 'devnet_signature_1');
-  assert.equal(projected.technicalProof?.settlementProofBaseUnits, 1_000_000);
+  assert.equal(projected.technicalProof?.paymentReference, 'synthetic_reference_1');
+  assert.equal(projected.technicalProof?.authorizedAmountKrw, 380_000);
   assert.match(projected.technicalProof?.disclaimer ?? '', /실제 정부자금.*아님/);
 });
 

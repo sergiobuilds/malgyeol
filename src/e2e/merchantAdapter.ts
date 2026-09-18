@@ -12,7 +12,7 @@ export interface MerchantAdapter {
     quantity: number;
     merchantId: string;
     programAmountKrw: number;
-    paymentIntentId: string;
+    paymentAuthorizationId: string;
   }): Promise<MerchantOrderResult>;
   track?(providerOrderId: string): Promise<MerchantTrackingResult>;
 }

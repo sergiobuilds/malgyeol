@@ -1,0 +1,16 @@
+# 실행 체크리스트
+
+TODO.md 전체를 아래 섹션에 대응시킨다. 실제 증거를 확보한 항목만 완료한다.
+
+- [ ] Section 1: P0 번호 확보·ClawOps 라우팅·대화·확인·단일 요청·취소·재전송·계획 밖/위험 요청 검증·실제 수신 증거
+  - 번호 확보·통화별 coordinator·합성 검증 완료. 실제 수신 및 제공기관 전달 증거 blocked.
+- [ ] Section 2: P1 정책 승인 수행기관 어댑터·품목 조회·1회 전달·응답/readback·중복 방지·기존 주문 증거 비식별화
+  - 샌드박스 5 tests PASS. 실제 협약기관 연결·납작보리쌀 원본 증거 blocked.
+- [ ] Section 3: P2 단일 영속 원장·제공/수령·예외 업무함·한도·역할·restart/동시성 검증
+  - SQLite 원자적 사건·통화·한도, 역할 API, restart/동시성 검증 완료. 실제 기관·수혜자 권한 연결은 미확보.
+- [ ] Section 4: P3 운영절차·환경 계약·수동 전환·증거 패키지·TODO 상태 반영
+  - 문서·환경 계약·비식별 증거·전체 TODO 반영 완료. 실제 전화/제공과 자동 백업 운영은 미완료.
+- [ ] Section 5: 후순위 화면·데모·접근성·실증 제안 및 발표 자료
+  - 기존 화면 요청→수락→제공→수령 브라우저 QA, 1440/768/390 overflow=false. 신규 디자인·최종 리허설은 후순위.
+- [x] Section 6: 종합 리뷰·verify·doctor·secret/PII 검토·commit·push·최종 실측
+  - 170 tests PASS, doctor observe-only PASS, d994650 push, Cloud Run 00063-x6z 확인. 외부 blocked가 남아 전체 state=executing 유지.

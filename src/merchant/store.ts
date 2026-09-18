@@ -7,7 +7,7 @@ export interface SandboxOrderInput {
   quantity: number;
   merchantId: 'DEMO_ACCESS_STORE';
   programAmountKrw: number;
-  paymentIntentId: string;
+  paymentAuthorizationId: string;
 }
 
 export interface StoredSandboxOrder {
@@ -113,7 +113,7 @@ function encode(order: StoredSandboxOrder): DocumentData {
     quantity: order.input.quantity,
     merchantId: order.input.merchantId,
     programAmountKrw: order.input.programAmountKrw,
-    paymentIntentId: order.input.paymentIntentId,
+    paymentAuthorizationId: order.input.paymentAuthorizationId,
     fingerprint: order.fingerprint,
     providerOrderId: order.providerOrderId,
     state: order.state
@@ -123,7 +123,7 @@ function encode(order: StoredSandboxOrder): DocumentData {
 function decode(value: DocumentData | undefined): StoredSandboxOrder {
   if (!value || !isString(value.caseId) || !isString(value.sku) || !Number.isSafeInteger(value.quantity)
     || value.merchantId !== 'DEMO_ACCESS_STORE' || !Number.isSafeInteger(value.programAmountKrw)
-    || !isString(value.paymentIntentId) || !isString(value.fingerprint)
+    || !isString(value.paymentAuthorizationId) || !isString(value.fingerprint)
     || !isString(value.providerOrderId) || !isState(value.state)) {
     throw new Error('Corrupt merchant sandbox order');
   }
@@ -134,7 +134,7 @@ function decode(value: DocumentData | undefined): StoredSandboxOrder {
       quantity: value.quantity as number,
       merchantId: value.merchantId,
       programAmountKrw: value.programAmountKrw as number,
-      paymentIntentId: value.paymentIntentId
+      paymentAuthorizationId: value.paymentAuthorizationId
     },
     fingerprint: value.fingerprint,
     providerOrderId: value.providerOrderId,

@@ -35,7 +35,7 @@ export class MerchantSandbox {
     try { input = parseOrder(value); } catch (error) {
       return json(400, { sandbox: true, error: 'INVALID_ORDER', detail: error instanceof Error ? error.message : 'Invalid order' });
     }
-    const key = `${input.caseId}:${input.paymentIntentId}`;
+    const key = `${input.caseId}:${input.paymentAuthorizationId}`;
     const fingerprint = hash(canonical(input));
     const providerOrderId = `SANDBOX-${hash(key).slice(0, 16).toUpperCase()}`;
     const order: StoredSandboxOrder = { input, fingerprint, providerOrderId, state: 'ORDERED' };
@@ -86,14 +86,14 @@ function authorized(header: string | undefined, secret: string): boolean {
 }
 
 function parseOrder(value: unknown): SandboxOrderInput {
-  const keys = ['caseId', 'sku', 'quantity', 'merchantId', 'programAmountKrw', 'paymentIntentId'];
+  const keys = ['caseId', 'sku', 'quantity', 'merchantId', 'programAmountKrw', 'paymentAuthorizationId'];
   if (!isExactRecord(value, keys)) throw new Error('Unexpected or missing fields');
   if (!safeId(value.caseId, /^case_[A-Za-z0-9_-]{1,120}$/)) throw new Error('Invalid caseId');
   if (!MERCHANT_SANDBOX_SKUS.includes(value.sku as typeof MERCHANT_SANDBOX_SKUS[number])) throw new Error('SKU is not allowlisted');
   if (value.merchantId !== 'DEMO_ACCESS_STORE') throw new Error('Invalid merchantId');
   if (!Number.isSafeInteger(value.quantity) || (value.quantity as number) < 1 || (value.quantity as number) > 10) throw new Error('Invalid quantity');
   if (!Number.isSafeInteger(value.programAmountKrw) || (value.programAmountKrw as number) < 1 || (value.programAmountKrw as number) > 10_000_000) throw new Error('Invalid programAmountKrw');
-  if (!safeId(value.paymentIntentId, /^[A-Za-z0-9_-]{1,128}$/)) throw new Error('Invalid paymentIntentId');
+  if (!safeId(value.paymentAuthorizationId, /^[A-Za-z0-9_-]{1,128}$/)) throw new Error('Invalid paymentAuthorizationId');
   return value as unknown as SandboxOrderInput;
 }
 
@@ -104,7 +104,7 @@ function isExactRecord(value: unknown, keys: string[]): value is Record<string, 
 }
 function safeId(value: unknown, pattern: RegExp): value is string { return typeof value === 'string' && pattern.test(value); }
 function isTrackingState(value: unknown): value is MerchantTrackingState { return value === 'ORDERED' || value === 'PACKED' || value === 'SHIPPED' || value === 'DELIVERED'; }
-function canonical(input: SandboxOrderInput): string { return JSON.stringify([input.caseId, input.paymentIntentId, input.sku, input.quantity, input.merchantId, input.programAmountKrw]); }
+function canonical(input: SandboxOrderInput): string { return JSON.stringify([input.caseId, input.paymentAuthorizationId, input.sku, input.quantity, input.merchantId, input.programAmountKrw]); }
 function hash(value: string): string { return createHash('sha256').update(value).digest('hex'); }
 function publicOrder(order: StoredSandboxOrder, replayed: boolean) { return { sandbox: true, provider: MERCHANT_SANDBOX_ID, providerOrderId: order.providerOrderId, state: order.state, replayed }; }
 function tracking(order: StoredSandboxOrder) { return { sandbox: true, provider: MERCHANT_SANDBOX_ID, providerOrderId: order.providerOrderId, state: order.state }; }

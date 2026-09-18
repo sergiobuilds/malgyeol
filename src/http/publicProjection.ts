@@ -16,26 +16,9 @@ export interface PublicCaseProjection {
   technicalProof?: {
     policySnapshotHash?: string;
     confirmationCommitment?: string;
-    paymentIntentId?: string;
-    settlementTransaction?: string;
-    settlementProofBaseUnits?: number;
-    explorerUrl?: string;
-    orderCommitment?: string;
-    orderPda?: string;
-    vaultAta?: string;
-    escrowProgramId?: string;
-    mint?: string;
-    initializeTransaction?: string;
-    escrowExpiresAt?: number;
-    x402ChallengeSha256?: string;
-    paymentResponseSha256?: string;
-    x402Network?: string;
-    x402Asset?: string;
-    x402Amount?: string;
-    x402PayTo?: string;
-    swigAccount?: string;
-    limitedAuthority?: string;
-    rpcSlot?: number;
+    paymentAuthorizationId?: string;
+    paymentReference?: string;
+    authorizedAmountKrw?: number;
     disclaimer: string;
   };
 }
@@ -71,31 +54,10 @@ export function projectPublicCase(value: BenefitCase, includeTechnicalProof: boo
     projected.technicalProof = {
       ...(value.policySnapshotHash ? { policySnapshotHash: value.policySnapshotHash } : {}),
       ...(value.confirmationCommitment ? { confirmationCommitment: value.confirmationCommitment } : {}),
-      ...(value.paymentIntentId ? { paymentIntentId: value.paymentIntentId } : {}),
-      ...(value.settlementTransaction ? {
-        settlementTransaction: value.settlementTransaction,
-        ...(value.settlementTransaction.startsWith('SIMULATED_') ? {} : {
-          explorerUrl: `https://explorer.solana.com/tx/${encodeURIComponent(value.settlementTransaction)}?cluster=devnet`
-        })
-      } : {}),
-      ...(value.settlementProofBaseUnits === undefined ? {} : { settlementProofBaseUnits: value.settlementProofBaseUnits }),
-      ...(value.orderCommitment ? { orderCommitment: value.orderCommitment } : {}),
-      ...(value.orderPda ? { orderPda: value.orderPda } : {}),
-      ...(value.vaultAta ? { vaultAta: value.vaultAta } : {}),
-      ...(value.escrowProgramId ? { escrowProgramId: value.escrowProgramId } : {}),
-      ...(value.mint ? { mint: value.mint } : {}),
-      ...(value.initializeTransaction ? { initializeTransaction: value.initializeTransaction } : {}),
-      ...(value.escrowExpiresAt === undefined ? {} : { escrowExpiresAt: value.escrowExpiresAt }),
-      ...(value.x402ChallengeSha256 ? { x402ChallengeSha256: value.x402ChallengeSha256 } : {}),
-      ...(value.paymentResponseSha256 ? { paymentResponseSha256: value.paymentResponseSha256 } : {}),
-      ...(value.x402Network ? { x402Network: value.x402Network } : {}),
-      ...(value.x402Asset ? { x402Asset: value.x402Asset } : {}),
-      ...(value.x402Amount ? { x402Amount: value.x402Amount } : {}),
-      ...(value.x402PayTo ? { x402PayTo: value.x402PayTo } : {}),
-      ...(value.swigAccount ? { swigAccount: value.swigAccount } : {}),
-      ...(value.limitedAuthority ? { limitedAuthority: value.limitedAuthority } : {}),
-      ...(value.rpcSlot === undefined ? {} : { rpcSlot: value.rpcSlot }),
-      disclaimer: '해커톤 샌드박스의 정산 기술증명이며 실제 정부자금 또는 환율 연동 결제가 아님'
+      ...(value.paymentAuthorizationId ? { paymentAuthorizationId: value.paymentAuthorizationId } : {}),
+      ...(value.paymentReference ? { paymentReference: value.paymentReference } : {}),
+      ...(value.authorizedAmountKrw === undefined ? {} : { authorizedAmountKrw: value.authorizedAmountKrw }),
+      disclaimer: '합성 데이터로 실행한 샌드박스 기록이며 실제 정부자금 결제가 아님'
     };
   }
   return projected;

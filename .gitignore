@@ -10,7 +10,15 @@ node_modules/
 *.pfx
 .secrets/
 .private/
+__pycache__/
+.ouroboros/
+.ralph/
+dev/**/.looprun-permissions.json
 /target/
 *.log
 .gstack/
 audits/blind-league-*/
+
+artifacts/hackathon/.build/
+
+.vercel/

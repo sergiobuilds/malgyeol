@@ -12,33 +12,17 @@ export interface AudioPurchaseInterpreter {
   analyzeAudio(bytes: Uint8Array, mimeType: string): Promise<InterpretedPurchase>;
 }
 
-export interface ProofPaymentAdapter {
-  pay(input: {
+export interface PaymentExecutor {
+  authorize(input: {
     caseId: string;
     sku: string;
     merchantId: string;
-    settlementProofBaseUnits: number;
+    amountKrw: number;
     confirmationCommitment: string;
   }): Promise<{
-    paymentIntentId: string;
-    settlementTransaction: string;
-    settlementProofBaseUnits: number;
-    orderCommitment?: string;
-    orderPda?: string;
-    vaultAta?: string;
-    escrowProgramId?: string;
-    mint?: string;
-    initializeTransaction?: string;
-    escrowExpiresAt?: number;
-    x402ChallengeSha256?: string;
-    paymentResponseSha256?: string;
-    x402Network?: string;
-    x402Asset?: string;
-    x402Amount?: string;
-    x402PayTo?: string;
-    swigAccount?: string;
-    limitedAuthority?: string;
-    rpcSlot?: number;
+    paymentAuthorizationId: string;
+    paymentReference: string;
+    authorizedAmountKrw: number;
   }>;
 }
 
@@ -46,7 +30,7 @@ export class CaseCoordinator {
   constructor(
     private readonly repo: CaseRepository,
     private readonly interpreter: AudioPurchaseInterpreter,
-    private readonly payment: ProofPaymentAdapter,
+    private readonly payment: PaymentExecutor,
     private readonly merchant: MerchantAdapter,
     private readonly now: () => number = Date.now,
     private readonly hmacSecret = 'synthetic-demo-only'
@@ -115,7 +99,6 @@ export class CaseCoordinator {
       merchantId: 'DEMO_ACCESS_STORE',
       productName: '승인되지 않은 요청 항목',
       unitPriceKrw: 0,
-      settlementProofBaseUnits: 1_000_000,
       deliveryAvailable: true
     };
     const candidate: PurchaseCandidate = {
@@ -186,11 +169,11 @@ export class CaseCoordinator {
     await this.repo.transition(caseId, 'PAYMENT_AUTHORIZING', 'PAYMENT_REQUIRED', {}, this.now());
     let payment;
     try {
-      payment = await this.payment.pay({
+      payment = await this.payment.authorize({
         caseId,
         sku: candidate.sku,
         merchantId: candidate.merchantId,
-        settlementProofBaseUnits: DEMO_ASSISTIVE_CATALOG[0]!.settlementProofBaseUnits,
+        amountKrw: candidate.programAmountKrw,
         confirmationCommitment: commitment
       });
     } catch {
@@ -198,19 +181,19 @@ export class CaseCoordinator {
     }
     await this.repo.transition(caseId, 'PAYMENT_REQUIRED', 'PAID', payment, this.now());
     await this.repo.transition(caseId, 'PAID', 'ORDER_SUBMITTING', {}, this.now());
-    return this.submitOrder(caseId, candidate, payment.paymentIntentId);
+    return this.submitOrder(caseId, candidate, payment.paymentAuthorizationId);
   }
 
   async recoverOrder(caseId: string): Promise<BenefitCase> {
     const current = await this.requireCase(caseId);
     if (current.state === 'ORDERED') return current;
     if (current.state !== 'ORDER_REVIEW_REQUIRED') return current;
-    if (!current.candidate || !current.paymentIntentId) throw new Error('Paid case has no recoverable order context');
+    if (!current.candidate || !current.paymentAuthorizationId) throw new Error('Paid case has no recoverable order context');
     await this.repo.transition(caseId, 'ORDER_REVIEW_REQUIRED', 'ORDER_SUBMITTING', {}, this.now());
-    return this.submitOrder(caseId, current.candidate, current.paymentIntentId);
+    return this.submitOrder(caseId, current.candidate, current.paymentAuthorizationId);
   }
 
-  private async submitOrder(caseId: string, candidate: PurchaseCandidate, paymentIntentId: string): Promise<BenefitCase> {
+  private async submitOrder(caseId: string, candidate: PurchaseCandidate, paymentAuthorizationId: string): Promise<BenefitCase> {
     try {
       const order = await this.merchant.submit({
         caseId,
@@ -218,7 +201,7 @@ export class CaseCoordinator {
         quantity: candidate.quantity,
         merchantId: candidate.merchantId,
         programAmountKrw: candidate.programAmountKrw,
-        paymentIntentId
+        paymentAuthorizationId
       });
       return this.repo.transition(caseId, 'ORDER_SUBMITTING', 'ORDERED', order, this.now());
     } catch {

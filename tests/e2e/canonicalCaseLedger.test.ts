@@ -21,8 +21,8 @@ test('canonical ledger completes twelve ordered states on one immutable hash cha
   await advance(ledger, caseId, 'POLICY_EVALUATED', policyData());
   await advance(ledger, caseId, 'USER_CONFIRMED', confirmationData());
   await advance(ledger, caseId, 'INSTITUTION_APPROVED', approvalData(1, conditionHash, 100_000));
-  await advance(ledger, caseId, 'X402_REQUIRED', x402Data(1, conditionHash));
-  await advance(ledger, caseId, 'DEVNET_PROOF_FINALIZED', devnetData(1, conditionHash));
+  await advance(ledger, caseId, 'PAYMENT_AUTHORIZED', authorizationData(1, conditionHash));
+  await advance(ledger, caseId, 'PAYMENT_RECORDED', paymentRecordData(1, conditionHash));
   await advance(ledger, caseId, 'SUPPLIER_ORDER_SUBMITTED', {
     approvalRevision: 1, conditionHash, supplierRequestHash: sha256('supplier-request')
   });
@@ -38,7 +38,7 @@ test('canonical ledger completes twelve ordered states on one immutable hash cha
   assert.equal(events.every(event => event.caseId === caseId), true);
   assert.deepEqual(events.map(event => event.state), [
     'PHONE_CONNECTED', 'INTENT_INTERPRETED', 'POLICY_EVALUATED', 'USER_CONFIRMED',
-    'INSTITUTION_APPROVED', 'X402_REQUIRED', 'DEVNET_PROOF_FINALIZED', 'SUPPLIER_ORDER_SUBMITTED',
+    'INSTITUTION_APPROVED', 'PAYMENT_AUTHORIZED', 'PAYMENT_RECORDED', 'SUPPLIER_ORDER_SUBMITTED',
     'SUPPLIER_CONFIRMED', 'SHIPPED', 'DELIVERED', 'RECIPIENT_CONFIRMED'
   ]);
   assert.equal(events.slice(1).every((event, index) => event.previousHash === events[index]?.eventHash), true);
@@ -155,23 +155,23 @@ test('secret-shaped values are rejected under allowlisted fields before hashing'
   }
 });
 
-test('x402, Devnet and delivery events cannot advance with empty evidence', async () => {
+test('payment authorization, payment provider and delivery events cannot advance with empty evidence', async () => {
   const { ledger } = setup();
   await open(ledger, caseId);
   await advance(ledger, caseId, 'INTENT_INTERPRETED', intentData());
   await advance(ledger, caseId, 'POLICY_EVALUATED', policyData());
   await advance(ledger, caseId, 'USER_CONFIRMED', confirmationData());
   await advance(ledger, caseId, 'INSTITUTION_APPROVED', approvalData(1, conditionHash, 100_000));
-  const x402 = await advance(ledger, caseId, 'X402_REQUIRED', {});
-  assert.equal(x402.reasonCode, 'INVALID_EVENT_SCHEMA');
-  assert.equal(x402.aggregate?.currentState, 'INSTITUTION_APPROVED');
+  const paymentAuthorization = await advance(ledger, caseId, 'PAYMENT_AUTHORIZED', {});
+  assert.equal(paymentAuthorization.reasonCode, 'INVALID_EVENT_SCHEMA');
+  assert.equal(paymentAuthorization.aggregate?.currentState, 'INSTITUTION_APPROVED');
 
-  await advance(ledger, caseId, 'X402_REQUIRED', x402Data(1, conditionHash));
-  const devnet = await advance(ledger, caseId, 'DEVNET_PROOF_FINALIZED', {});
-  assert.equal(devnet.reasonCode, 'INVALID_EVENT_SCHEMA');
-  assert.equal(devnet.aggregate?.currentState, 'X402_REQUIRED');
+  await advance(ledger, caseId, 'PAYMENT_AUTHORIZED', authorizationData(1, conditionHash));
+  const paymentRecord = await advance(ledger, caseId, 'PAYMENT_RECORDED', {});
+  assert.equal(paymentRecord.reasonCode, 'INVALID_EVENT_SCHEMA');
+  assert.equal(paymentRecord.aggregate?.currentState, 'PAYMENT_AUTHORIZED');
 
-  await advance(ledger, caseId, 'DEVNET_PROOF_FINALIZED', devnetData(1, conditionHash));
+  await advance(ledger, caseId, 'PAYMENT_RECORDED', paymentRecordData(1, conditionHash));
   await advance(ledger, caseId, 'SUPPLIER_ORDER_SUBMITTED', {
     approvalRevision: 1, conditionHash, supplierRequestHash: sha256('supplier-request')
   });
@@ -184,33 +184,43 @@ test('x402, Devnet and delivery events cannot advance with empty evidence', asyn
   assert.equal(delivered.aggregate?.currentState, 'SHIPPED');
 });
 
-test('failed or structurally invalid Devnet evidence cannot finalize a proof state', async () => {
+test('failed or structurally invalid payment provider evidence cannot finalize a proof state', async () => {
   const { ledger } = setup();
   await open(ledger, caseId);
   await advance(ledger, caseId, 'INTENT_INTERPRETED', intentData());
   await advance(ledger, caseId, 'POLICY_EVALUATED', policyData());
   await advance(ledger, caseId, 'USER_CONFIRMED', confirmationData());
   await advance(ledger, caseId, 'INSTITUTION_APPROVED', approvalData(1, conditionHash, 100_000));
-  await advance(ledger, caseId, 'X402_REQUIRED', x402Data(1, conditionHash));
-  const failed = await advance(ledger, caseId, 'DEVNET_PROOF_FINALIZED', {
-    ...devnetData(1, conditionHash), transactionSignature: 'abcDEF123', rpcErr: 'ProgramError'
+  await advance(ledger, caseId, 'PAYMENT_AUTHORIZED', authorizationData(1, conditionHash));
+  const wrongAmount = await advance(ledger, caseId, 'PAYMENT_RECORDED', {
+    ...paymentRecordData(1, conditionHash), amountKrw: 12_301
+  });
+  assert.equal(wrongAmount.reasonCode, 'APPROVAL_BINDING_MISMATCH');
+  assert.equal(wrongAmount.aggregate?.currentState, 'PAYMENT_AUTHORIZED');
+  const wrongAuthorization = await advance(ledger, caseId, 'PAYMENT_RECORDED', {
+    ...paymentRecordData(1, conditionHash), authorizationHash: sha256('different-authorization')
+  });
+  assert.equal(wrongAuthorization.reasonCode, 'APPROVAL_BINDING_MISMATCH');
+  assert.equal(wrongAuthorization.aggregate?.currentState, 'PAYMENT_AUTHORIZED');
+  const failed = await advance(ledger, caseId, 'PAYMENT_RECORDED', {
+    ...paymentRecordData(1, conditionHash), providerReference: 'abcDEF123', providerError: 'ProgramError'
   });
   assert.equal(failed.reasonCode, 'INVALID_EVENT_SCHEMA');
-  assert.equal(failed.aggregate?.currentState, 'X402_REQUIRED');
+  assert.equal(failed.aggregate?.currentState, 'PAYMENT_AUTHORIZED');
 });
 
-test('x402 requires the exact Circle Solana Devnet USDC mint and a 32-byte destination', async () => {
+test('payment authorization requires KRW and a positive expiry', async () => {
   const { ledger } = setup();
   await open(ledger, caseId);
   await advance(ledger, caseId, 'INTENT_INTERPRETED', intentData());
   await advance(ledger, caseId, 'POLICY_EVALUATED', policyData());
   await advance(ledger, caseId, 'USER_CONFIRMED', confirmationData());
   await advance(ledger, caseId, 'INSTITUTION_APPROVED', approvalData(1, conditionHash, 100_000));
-  const wrongMint = await advance(ledger, caseId, 'X402_REQUIRED', {
-    ...x402Data(1, conditionHash), asset: '11111111111111111111111111111111'
+  const wrongCurrency = await advance(ledger, caseId, 'PAYMENT_AUTHORIZED', {
+    ...authorizationData(1, conditionHash), currency: 'USD'
   });
-  assert.equal(wrongMint.reasonCode, 'INVALID_EVENT_SCHEMA');
-  assert.equal(wrongMint.aggregate?.currentState, 'INSTITUTION_APPROVED');
+  assert.equal(wrongCurrency.reasonCode, 'INVALID_EVENT_SCHEMA');
+  assert.equal(wrongCurrency.aggregate?.currentState, 'INSTITUTION_APPROVED');
 });
 
 test('PII mutation of an accepted idempotency key records a separate safe failure once', async () => {
@@ -230,9 +240,9 @@ test('PII mutation of an accepted idempotency key records a separate safe failur
   assert.equal(JSON.stringify(await ledger.events(caseId)).includes(privateValue), false);
 });
 
-test('post-Devnet condition change requires reapproval, x402 rebound and refinalized proof', async () => {
+test('post-payment provider condition change requires reapproval, payment authorization rebound and refinalized proof', async () => {
   const { ledger } = setup();
-  await progressToDevnet(ledger, caseId);
+  await progressToPayment(ledger, caseId);
   await auxiliary(ledger, caseId, 'APPROVAL_INVALIDATED', {
     reasonCode: 'PRICE_CHANGED', targetState: 'SUPPLIER_ORDER_SUBMITTED', component: 'POLICY_APPROVAL', retryable: true, attempt: 1
   });
@@ -245,28 +255,28 @@ test('post-Devnet condition change requires reapproval, x402 rebound and refinal
   await auxiliary(ledger, caseId, 'POLICY_REEVALUATED', policyData(conditionV2));
   await auxiliary(ledger, caseId, 'USER_RECONFIRMED', confirmationData('voice-v2'));
   await auxiliary(ledger, caseId, 'INSTITUTION_REAPPROVED', approvalData(2, conditionV2, 200_000));
-  await auxiliary(ledger, caseId, 'X402_REBOUND', x402Data(2, conditionV2));
+  await auxiliary(ledger, caseId, 'PAYMENT_REAUTHORIZED', authorizationData(2, conditionV2));
   const beforeProof = await advance(ledger, caseId, 'SUPPLIER_ORDER_SUBMITTED', {
     approvalRevision: 2, conditionHash: conditionV2, supplierRequestHash: sha256('early-order')
   });
   assert.equal(beforeProof.reasonCode, 'APPROVAL_BINDING_MISMATCH');
-  await auxiliary(ledger, caseId, 'DEVNET_PROOF_REFINALIZED', devnetData(2, conditionV2));
+  await auxiliary(ledger, caseId, 'PAYMENT_RERECORDED', paymentRecordData(2, conditionV2));
   const submitted = await advance(ledger, caseId, 'SUPPLIER_ORDER_SUBMITTED', {
     approvalRevision: 2, conditionHash: conditionV2, supplierRequestHash: sha256('current-order')
   });
   assert.equal(submitted.status, 'ACCEPTED');
   assert.equal(submitted.aggregate?.approvalRevision, 2);
-  assert.equal(submitted.aggregate?.devnetApprovalRevision, 2);
+  assert.equal(submitted.aggregate?.paymentRecordApprovalRevision, 2);
 });
 
-async function progressToDevnet(ledger: CanonicalCaseLedger, id: string): Promise<void> {
+async function progressToPayment(ledger: CanonicalCaseLedger, id: string): Promise<void> {
   await open(ledger, id);
   await advance(ledger, id, 'INTENT_INTERPRETED', intentData());
   await advance(ledger, id, 'POLICY_EVALUATED', policyData());
   await advance(ledger, id, 'USER_CONFIRMED', confirmationData());
   await advance(ledger, id, 'INSTITUTION_APPROVED', approvalData(1, conditionHash, 100_000));
-  await advance(ledger, id, 'X402_REQUIRED', x402Data(1, conditionHash));
-  await advance(ledger, id, 'DEVNET_PROOF_FINALIZED', devnetData(1, conditionHash));
+  await advance(ledger, id, 'PAYMENT_AUTHORIZED', authorizationData(1, conditionHash));
+  await advance(ledger, id, 'PAYMENT_RECORDED', paymentRecordData(1, conditionHash));
 }
 
 async function open(ledger: CanonicalCaseLedger, id: string) {
@@ -310,8 +320,8 @@ function commandFor(
 
 function intentData(): SafeEventData {
   return {
-    intentHash: sha256('잡곡 보내줘'), intent: 'PURCHASE', model: 'gemini-2.5-flash',
-    responseIdHash: sha256('vertex-response-id')
+    intentHash: sha256('잡곡 보내줘'), intent: 'PURCHASE', model: 'model-test',
+    responseIdHash: sha256('provider-response-id')
   };
 }
 function policyData(condition = conditionHash): SafeEventData {
@@ -326,39 +336,39 @@ function confirmationData(seed = 'dtmf'): SafeEventData {
 function approvalData(revision: number, condition: string, validUntil: number): SafeEventData {
   return { approvalRevision: revision, approvalValidUntil: validUntil, conditionHash: condition };
 }
-function x402Data(revision: number, condition: string): SafeEventData {
-  return {
-    approvalRevision: revision, conditionHash: condition, x402RequirementHash: sha256(`x402-${revision}`),
-    asset: '4zMMC9srt5Ri5X14GAgXhaHii3GnPAEERYPJgZJDncDU',
-    destination: '3spuSFQeVyHMh6BUxcvb1nbLmV5MdgwLNfTaS9RgEJzG', amountBaseUnits: 1_000_000,
-    nonceHash: sha256(`nonce-${revision}`)
-  };
-}
-function devnetData(revision: number, condition: string): SafeEventData {
+function authorizationData(revision: number, condition: string): SafeEventData {
   return {
     approvalRevision: revision, conditionHash: condition,
-    transactionSignature: '52ythTGiyTLbsQVQRmHJmHtVVDzVW9UrPxvjcF1Mq3Sb9bGZD7gZyHsawr5RaY7PMfL5URdsSF2T6mBTejqUCXBX',
-    rpcSlot: 480332621, rpcBlockTime: 1_785_000_000, rpcFee: 5000, rpcErr: null
+    authorizationHash: sha256(`payment-authorization-${revision}`),
+    amountKrw: 12_300, currency: 'KRW', expiresAt: 100_000
+  };
+}
+function paymentRecordData(revision: number, condition: string): SafeEventData {
+  return {
+    approvalRevision: revision, conditionHash: condition,
+    authorizationHash: sha256(`payment-authorization-${revision}`),
+    providerReference: 'payment-provider-reference-001', amountKrw: 12_300,
+    recordedAt: 1_785_000_000, providerError: null
   };
 }
 
 function actorFor(type: CanonicalCaseState): CanonicalLedgerCommand['actor'] {
-  if (type === 'INTENT_INTERPRETED') return 'GEMINI';
+  if (type === 'INTENT_INTERPRETED') return 'AI_INTERPRETER';
   if (type === 'POLICY_EVALUATED') return 'POLICY_ENGINE';
   if (type === 'USER_CONFIRMED' || type === 'RECIPIENT_CONFIRMED') return 'RECIPIENT';
   if (type === 'INSTITUTION_APPROVED') return 'INSTITUTION';
-  if (type === 'X402_REQUIRED') return 'X402_FACILITATOR';
-  if (type === 'DEVNET_PROOF_FINALIZED') return 'SOLANA_RPC';
+  if (type === 'PAYMENT_AUTHORIZED') return 'PAYMENT_AUTHORIZER';
+  if (type === 'PAYMENT_RECORDED') return 'PAYMENT_EXECUTOR';
   if (type.includes('SUPPLIER')) return 'SUPPLIER';
   return 'CARRIER';
 }
 function sourceFor(type: CanonicalCaseState): CanonicalLedgerCommand['source'] {
-  if (type === 'INTENT_INTERPRETED') return 'VERTEX_GEMINI';
+  if (type === 'INTENT_INTERPRETED') return 'AI_PROVIDER';
   if (type === 'POLICY_EVALUATED') return 'DETERMINISTIC_POLICY';
   if (type === 'USER_CONFIRMED') return 'DTMF';
   if (type === 'INSTITUTION_APPROVED') return 'INSTITUTION_WORKFLOW';
-  if (type === 'X402_REQUIRED') return 'X402';
-  if (type === 'DEVNET_PROOF_FINALIZED') return 'SOLANA_DEVNET';
+  if (type === 'PAYMENT_AUTHORIZED') return 'PAYMENT_POLICY';
+  if (type === 'PAYMENT_RECORDED') return 'PAYMENT_PROVIDER';
   if (type.includes('SUPPLIER')) return 'SPECIAL_OFFER';
   if (type === 'RECIPIENT_CONFIRMED') return 'RECIPIENT_PORTAL';
   return 'CARRIER_READBACK';
@@ -368,8 +378,8 @@ function auxiliaryAuthority(type: Parameters<CanonicalCaseLedger['appendAuxiliar
   if (type === 'POLICY_REEVALUATED') return { actor: 'POLICY_ENGINE', source: 'DETERMINISTIC_POLICY' };
   if (type === 'USER_RECONFIRMED') return { actor: 'RECIPIENT', source: 'DTMF' };
   if (type === 'INSTITUTION_REAPPROVED') return { actor: 'INSTITUTION', source: 'INSTITUTION_WORKFLOW' };
-  if (type === 'X402_REBOUND') return { actor: 'X402_FACILITATOR', source: 'X402' };
-  if (type === 'DEVNET_PROOF_REFINALIZED') return { actor: 'SOLANA_RPC', source: 'SOLANA_DEVNET' };
+  if (type === 'PAYMENT_REAUTHORIZED') return { actor: 'PAYMENT_AUTHORIZER', source: 'PAYMENT_POLICY' };
+  if (type === 'PAYMENT_RERECORDED') return { actor: 'PAYMENT_EXECUTOR', source: 'PAYMENT_PROVIDER' };
   return { actor: 'SYSTEM', source: 'SYSTEM' };
 }
 

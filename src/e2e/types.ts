@@ -39,7 +39,6 @@ export interface CatalogItem {
   merchantId: string;
   productName: string;
   unitPriceKrw: number;
-  settlementProofBaseUnits: number;
   deliveryAvailable: boolean;
 }
 
@@ -78,25 +77,9 @@ export interface BenefitCase {
   policySnapshotHash?: string;
   confirmationExpiresAt?: number;
   confirmationCommitment?: string;
-  paymentIntentId?: string;
-  settlementTransaction?: string;
-  settlementProofBaseUnits?: number;
-  orderCommitment?: string;
-  orderPda?: string;
-  vaultAta?: string;
-  escrowProgramId?: string;
-  mint?: string;
-  initializeTransaction?: string;
-  escrowExpiresAt?: number;
-  x402ChallengeSha256?: string;
-  paymentResponseSha256?: string;
-  x402Network?: string;
-  x402Asset?: string;
-  x402Amount?: string;
-  x402PayTo?: string;
-  swigAccount?: string;
-  limitedAuthority?: string;
-  rpcSlot?: number;
+  paymentAuthorizationId?: string;
+  paymentReference?: string;
+  authorizedAmountKrw?: number;
   providerOrderId?: string;
   createdAt: number;
   updatedAt: number;

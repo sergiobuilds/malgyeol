@@ -10,7 +10,7 @@ function dependencies(category = 'ASSISTIVE_EQUIPMENT', sku = 'ASSISTIVE_STAND_A
   return {
     calls,
     interpreter: { async analyzeAudio() { return { requestedCategory: category, requestedSku: sku, quantity: 1, substitutionsAllowed: false, referencesApprovedPlan: true, confidence: 0.97, ambiguityReasons: [], safeUserSummary: '합성 요청' }; } },
-    payment: { async pay() { calls.payments += 1; return { paymentIntentId: 'pay_1', settlementTransaction: 'devnet_signature_1', settlementProofBaseUnits: 1_000_000 }; } },
+    payment: { async authorize() { calls.payments += 1; return { paymentAuthorizationId: 'auth_1', paymentReference: 'synthetic_reference_1', authorizedAmountKrw: 380_000 }; } },
     merchant: { async submit() { calls.orders += 1; return { providerOrderId: 'DEMO-ORDER-1' }; } }
   };
 }
@@ -27,7 +27,7 @@ test('phone fixture reaches ORDERED once with one caseId, payment and merchant o
   assert.equal(replay.state, 'ORDERED');
   assert.equal(ordered.providerOrderId, 'DEMO-ORDER-1');
   assert.equal(ordered.candidate?.programAmountKrw, 380_000);
-  assert.equal(ordered.settlementProofBaseUnits, 1_000_000);
+  assert.equal(ordered.authorizedAmountKrw, 380_000);
   assert.deepEqual(deps.calls, { payments: 1, orders: 1 });
   assert.equal(DEMO_ASSISTIVE_CATALOG.length, 1);
 });

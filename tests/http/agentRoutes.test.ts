@@ -29,7 +29,7 @@ function harness() {
   const coordinator = new CaseCoordinator(
     repo,
     { async analyzeAudio() { return interpretation(); } },
-    { async pay() { calls.payments += 1; return { paymentIntentId: 'pay_internal_1', settlementTransaction: 'devnet_internal_1', settlementProofBaseUnits: 1_000_000 }; } },
+    { async authorize() { calls.payments += 1; return { paymentAuthorizationId: 'auth_internal_1', paymentReference: 'synthetic_internal_1', authorizedAmountKrw: 380_000 }; } },
     { async submit() { calls.orders += 1; return { providerOrderId: 'SANDBOX-INTERNAL-1' }; } },
     () => 1_785_456_000_000,
     'phone-hmac-test-secret'

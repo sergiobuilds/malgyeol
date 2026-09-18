@@ -1,83 +1,60 @@
 <!doctype html>
-<html lang="ko" data-type-scale="0" data-contrast="normal" data-easy="off">
+<html lang="ko">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>말결 — 먹거리 지원 주문</title>
-<meta name="description" content="말로 먹거리를 묻고, 남은 지원금과 총액을 확인한 뒤 판매처에 주문하는 먹거리 지원 서비스 말결.">
-<!-- caseId가 붙은 주소가 외부로 새지 않도록 referrer를 같은 출처로 제한한다 -->
-<meta name="referrer" content="same-origin">
-<link rel="icon" href="data:,">
-<link rel="stylesheet" href="tokens.css">
-<link rel="stylesheet" href="styles.css">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="말결 담당자 화면 · 지원사업별 기관·이용절차 조회 · 시민 요청·기관 문의 현황">
+<meta name="robots" content="noindex">
+<title>말결 담당자 화면</title>
+<link rel="preload" as="font" type="font/woff2" href="/assets/fonts/PretendardGOV-Regular.subset.woff2" crossorigin>
+<link rel="preload" as="font" type="font/woff2" href="/assets/fonts/PretendardGOV-Bold.subset.woff2" crossorigin>
+<link rel="stylesheet" href="/tokens.css">
+<link rel="stylesheet" href="/styles.css">
 </head>
 <body>
-  <a class="skip-link" href="#main">본문으로 건너뛰기</a>
+<a class="mg-skip" href="#main">본문 바로가기</a>
 
-  <!-- data-surface가 세 표면의 골격을 가른다.
-       ben  : 이용자 모바일 (390px 기준, 상단바 + 하단 4탭)
-       ops  : 기관 담당자 PC (1440px 기준, 좌측 업무함 레일)
-       demo : 심사 데모 (1440px 기준, 한 줄 사건 서사) -->
-  <div class="app" id="app" data-surface="ben">
-
-    <header class="bhead" id="bhead">
-      <button type="button" class="iconbtn" id="btn-back" aria-label="이전 화면으로" hidden>
-        <svg class="ico" aria-hidden="true"><use href="#i-chevron-left"></use></svg>
-      </button>
-      <a class="wordmark" href="?v=hub" aria-label="말결 데모 입구로">
-        <span class="wordmark__mark" aria-hidden="true"></span>
-        <span class="wordmark__text">말결</span>
-      </a>
-      <button type="button" class="iconbtn" id="btn-a11y" aria-label="글자 크기와 화면 설정" aria-expanded="false">
-        <svg class="ico" aria-hidden="true"><use href="#i-tune"></use></svg>
-      </button>
-    </header>
-
-    <nav class="opsrail" id="opsrail" aria-label="업무함" hidden>
-      <div class="opsrail__inner">
-        <p class="opsrail__title">업무함</p>
-        <div class="railnav" id="ops-nav"></div>
-        <div class="opsrail__foot" id="ops-scope"></div>
-      </div>
+<header class="mg-header">
+  <div class="mg-header__in">
+    <a class="mg-brand" href="/app">
+      <span class="mg-brand__name">말결</span>
+    </a>
+    <nav class="mg-tabline" aria-label="담당자 화면 이동">
+      <a href="/app" data-route="/app">지원망</a>
+      <a href="/ops" data-route="/ops">요청 진행</a>
     </nav>
-
-    <main id="main" class="view" tabindex="-1"></main>
-
-    <nav class="bnav" id="bnav" aria-label="주요 메뉴">
-      <a class="bnav__item" href="?v=home" data-nav="home">
-        <svg class="ico" aria-hidden="true"><use href="#i-home"></use></svg><span>홈</span>
-      </a>
-      <a class="bnav__item" href="?v=search" data-nav="search">
-        <svg class="ico" aria-hidden="true"><use href="#i-search"></use></svg><span>상품 찾기</span>
-      </a>
-      <a class="bnav__item" href="?v=orders" data-nav="orders">
-        <svg class="ico" aria-hidden="true"><use href="#i-list"></use></svg><span>주문 내역</span>
-      </a>
-      <a class="bnav__item" href="?v=help" data-nav="help">
-        <svg class="ico" aria-hidden="true"><use href="#i-circle-question"></use></svg><span>도움</span>
-      </a>
-    </nav>
+    <div id="session-slot"></div>
   </div>
+</header>
 
-  <!-- 화면 설정 시트 -->
-  <div class="sheet-root" id="a11y-sheet" hidden>
-    <div class="dimmer" data-close="a11y"></div>
-    <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="a11y-title">
-      <div class="sheet__grab" aria-hidden="true"></div>
-      <div class="sheet__head">
-        <h2 id="a11y-title" class="t-heading2 w-bold">글자와 화면 설정</h2>
-        <button type="button" class="iconbtn" data-close="a11y" aria-label="설정 닫기">
-          <svg class="ico" aria-hidden="true"><use href="#i-close"></use></svg>
-        </button>
-      </div>
-      <div class="sheet__body" id="a11y-body"></div>
+<main class="mg-main" id="main" tabindex="-1">
+  <div id="view"></div>
+</main>
+
+<p class="mg-only-reader" id="live-region" role="status" aria-live="polite"></p>
+
+<footer class="mg-foot">
+  <div class="mg-foot__in">
+    <p><strong>말결</strong> | 생활지원 연계 서비스</p>
+    <p>푸드뱅크·푸드마켓 · 찾아가는 푸드마켓 · 그냥드림 · 돌봄SOS</p>
+  </div>
+</footer>
+
+<div class="mg-dialog" id="dialog" role="dialog" aria-modal="true" aria-labelledby="dialog-title" data-open="false">
+  <div class="mg-dialog__back" data-close-dialog></div>
+  <div class="mg-dialog__panel">
+    <div class="mg-dialog__head">
+      <h2 id="dialog-title"></h2>
+      <button type="button" class="krds-btn medium icon" data-close-dialog>
+        <span class="sr-only">대화 상자 닫기</span>
+        <i class="svg-icon ico-popup-close" aria-hidden="true"></i>
+      </button>
     </div>
+    <div class="mg-dialog__body" id="dialog-body"></div>
+    <div class="mg-dialog__foot" id="dialog-foot"></div>
   </div>
+</div>
 
-  <div class="sr-only" role="status" aria-live="polite" id="live-status"></div>
-  <div class="sr-only" role="status" aria-live="assertive" id="live-alert"></div>
-
-  <script src="icons.js"></script>
-  <script src="app.js"></script>
+<script src="/app.js" defer></script>
 </body>
 </html>

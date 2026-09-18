@@ -24,14 +24,8 @@ test('HTTP app serves health, synthetic normal demo and privacy-safe public case
     assert.equal(response.status, 200, `static app route ${path}`);
     assert.equal(response.headers.get('x-content-type-options'), 'nosniff');
   }
-  const landing = await fetch(`${base}/`).then(response => response.text());
-  assert.match(landing, /누구나, 말하는 대로\./);
-  assert.match(landing, /국고보조금 전문 회계사가 만든/);
-  assert.equal((landing.match(/<section\b/g) ?? []).length, 5);
-  const productApp = await fetch(`${base}/?v=home`).then(response => response.text());
-  assert.match(productApp, /id="app"/);
-  const technicalPage = await fetch(`${base}/tech`).then(response => response.text());
-  assert.match(technicalPage, /사람은 말하고,[\s\S]*시스템은 끝까지 증명합니다\./);
+  // Product copy and layout now belong to the four-program coordination UI.
+  // This legacy server test retains its HTTP and legacy API guarantees only.
   const storyPng = await fetch(`${base}/assets/story/elder-voice-hero.png`);
   assert.equal(storyPng.status, 200);
   assert.equal(storyPng.headers.get('content-type'), 'image/png');

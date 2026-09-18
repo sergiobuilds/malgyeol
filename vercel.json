@@ -1,0 +1,63 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "framework": null,
+  "buildCommand": "",
+  "installCommand": "",
+  "outputDirectory": "public",
+  "git": {
+    "deploymentEnabled": false
+  },
+  "routes": [
+    {
+      "src": "/(.*)",
+      "headers": {
+        "X-Content-Type-Options": "nosniff",
+        "X-Frame-Options": "DENY",
+        "Referrer-Policy": "no-referrer",
+        "Permissions-Policy": "camera=(), microphone=(), geolocation=()",
+        "Content-Security-Policy": "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline' https://static.wanted.co.kr https://cdn.jsdelivr.net; font-src 'self' https://static.wanted.co.kr https://cdn.jsdelivr.net; img-src 'self' data:; connect-src 'self'; frame-ancestors 'none'; base-uri 'none'; form-action 'self'"
+      },
+      "continue": true
+    },
+    {
+      "src": "/api/(.*)",
+      "headers": {
+        "Cache-Control": "no-store"
+      },
+      "continue": true
+    },
+    {
+      "src": "/api/(support|coordination)/(.*)",
+      "dest": "https://qualifying-grande-bags-characterized.trycloudflare.com/api/$1/$2"
+    },
+    {
+      "src": "/health",
+      "dest": "https://qualifying-grande-bags-characterized.trycloudflare.com/health"
+    },
+    {
+      "src": "/",
+      "has": [
+        {
+          "type": "query",
+          "key": "v"
+        }
+      ],
+      "dest": "/index.html"
+    },
+    {
+      "src": "/",
+      "dest": "/landing.html"
+    },
+    {
+      "src": "/(app|ops|verify)",
+      "dest": "/index.html"
+    },
+    {
+      "src": "/tech",
+      "dest": "/tech.html"
+    },
+    {
+      "handle": "filesystem"
+    }
+  ]
+}

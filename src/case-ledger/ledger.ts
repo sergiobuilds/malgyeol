@@ -205,8 +205,8 @@ function transitionRejection(aggregate: CanonicalCaseAggregate | undefined, comm
     if (NORMAL_INDEX.get(command.type as CanonicalCaseState) !== expected) return 'INVALID_TRANSITION';
     if (command.type === 'USER_CONFIRMED' && !aggregate.policySnapshotHash) return 'APPROVAL_BINDING_MISMATCH';
     if (command.type === 'INSTITUTION_APPROVED' && !approvalDataMatches(aggregate, command.data, command.at, true)) return 'APPROVAL_BINDING_MISMATCH';
-    if (command.type === 'X402_REQUIRED') return activeApprovalRejection(aggregate, command.data, command.at);
-    if (command.type === 'DEVNET_PROOF_FINALIZED' && !x402Matches(aggregate, command.data)) return 'APPROVAL_BINDING_MISMATCH';
+    if (command.type === 'PAYMENT_AUTHORIZED') return activeApprovalRejection(aggregate, command.data, command.at);
+    if (command.type === 'PAYMENT_RECORDED' && !paymentRecordMatches(aggregate, command.data, command.at)) return 'APPROVAL_BINDING_MISMATCH';
     if (command.type === 'SUPPLIER_ORDER_SUBMITTED') return supplierBindingRejection(aggregate, command.data, command.at);
     return undefined;
   }
@@ -229,11 +229,11 @@ function auxiliaryRejection(
     if (aggregate.revalidationStage !== 'USER') return 'INVALID_TRANSITION';
     return approvalDataMatches(aggregate, data, at, false) ? undefined : 'APPROVAL_BINDING_MISMATCH';
   }
-  if (type === 'X402_REBOUND') {
+  if (type === 'PAYMENT_REAUTHORIZED') {
     return aggregate.revalidationStage === 'INSTITUTION' && approvalReferenceMatches(aggregate, data) ? undefined : 'APPROVAL_BINDING_MISMATCH';
   }
-  if (type === 'DEVNET_PROOF_REFINALIZED') {
-    return aggregate.revalidationStage === 'X402' && x402Matches(aggregate, data) ? undefined : 'APPROVAL_BINDING_MISMATCH';
+  if (type === 'PAYMENT_RERECORDED') {
+    return aggregate.revalidationStage === 'PAYMENT' && paymentRecordMatches(aggregate, data, at) ? undefined : 'APPROVAL_BINDING_MISMATCH';
   }
   if (type === 'RETRY_SCHEDULED') return undefined;
   return 'INVALID_TRANSITION';
@@ -281,15 +281,18 @@ function applyAcceptedEvent(aggregate: CanonicalCaseAggregate | undefined, event
     updated.approvalInvalidated = true;
     updated.revalidationStage = 'INVALIDATED';
   }
-  if (event.type === 'X402_REQUIRED' || event.type === 'X402_REBOUND') {
-    updated.x402ApprovalRevision = numberField(data, 'approvalRevision');
-    updated.x402ConditionHash = stringField(data, 'conditionHash');
-    if (event.type === 'X402_REBOUND') updated.revalidationStage = 'X402';
+  if (event.type === 'PAYMENT_AUTHORIZED' || event.type === 'PAYMENT_REAUTHORIZED') {
+    updated.paymentApprovalRevision = numberField(data, 'approvalRevision');
+    updated.paymentConditionHash = stringField(data, 'conditionHash');
+    updated.paymentAuthorizationHash = stringField(data, 'authorizationHash');
+    updated.paymentAuthorizedAmountKrw = numberField(data, 'amountKrw');
+    updated.paymentAuthorizationExpiresAt = numberField(data, 'expiresAt');
+    if (event.type === 'PAYMENT_REAUTHORIZED') updated.revalidationStage = 'PAYMENT';
   }
-  if (event.type === 'DEVNET_PROOF_FINALIZED' || event.type === 'DEVNET_PROOF_REFINALIZED') {
-    updated.devnetApprovalRevision = numberField(data, 'approvalRevision');
-    updated.devnetConditionHash = stringField(data, 'conditionHash');
-    if (event.type === 'DEVNET_PROOF_REFINALIZED') updated.revalidationStage = 'NONE';
+  if (event.type === 'PAYMENT_RECORDED' || event.type === 'PAYMENT_RERECORDED') {
+    updated.paymentRecordApprovalRevision = numberField(data, 'approvalRevision');
+    updated.paymentRecordConditionHash = stringField(data, 'conditionHash');
+    if (event.type === 'PAYMENT_RERECORDED') updated.revalidationStage = 'NONE';
   }
   if (event.type === 'SUPPLIER_CONFIRMED') updated.supplierOrderId = stringField(data, 'externalOrderId');
   return updated;
@@ -313,21 +316,26 @@ function approvalReferenceMatches(aggregate: CanonicalCaseAggregate, data: SafeE
   return data.approvalRevision === aggregate.approvalRevision && data.conditionHash === aggregate.conditionHash;
 }
 
-function x402Matches(aggregate: CanonicalCaseAggregate, data: SafeEventData): boolean {
-  return data.approvalRevision === aggregate.x402ApprovalRevision && data.conditionHash === aggregate.x402ConditionHash;
+function paymentRecordMatches(aggregate: CanonicalCaseAggregate, data: SafeEventData, at: number): boolean {
+  return data.approvalRevision === aggregate.paymentApprovalRevision
+    && data.conditionHash === aggregate.paymentConditionHash
+    && data.authorizationHash === aggregate.paymentAuthorizationHash
+    && data.amountKrw === aggregate.paymentAuthorizedAmountKrw
+    && aggregate.paymentAuthorizationExpiresAt !== undefined
+    && at <= aggregate.paymentAuthorizationExpiresAt;
 }
 
 function supplierBindingRejection(aggregate: CanonicalCaseAggregate, data: SafeEventData, at: number): LedgerFailureReason | undefined {
   const approval = activeApprovalRejection(aggregate, data, at);
   if (approval) return approval;
-  return aggregate.devnetApprovalRevision === aggregate.approvalRevision
-    && aggregate.devnetConditionHash === aggregate.conditionHash ? undefined : 'APPROVAL_BINDING_MISMATCH';
+  return aggregate.paymentRecordApprovalRevision === aggregate.approvalRevision
+    && aggregate.paymentRecordConditionHash === aggregate.conditionHash ? undefined : 'APPROVAL_BINDING_MISMATCH';
 }
 
 function componentFor(type: CanonicalLedgerCommand['type']): string {
   if (['PHONE_CONNECTED', 'INTENT_INTERPRETED', 'USER_CONFIRMED'].includes(type)) return 'PHONE_FLOW';
   if (type.includes('POLICY') || type.includes('APPROV')) return 'POLICY_APPROVAL';
-  if (type.includes('X402') || type.includes('DEVNET')) return 'DEVNET_PROOF';
+  if (type.includes('PAYMENT')) return 'PAYMENT_RECORD';
   if (type.includes('SUPPLIER')) return 'SUPPLIER';
   return 'CASE_LEDGER';
 }
