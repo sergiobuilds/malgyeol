@@ -35,6 +35,7 @@ export function createCareApp() {
   });
   const publicBaseUrl = process.env.PUBLIC_BASE_URL;
   const configuredOrigin = publicBaseUrl ? new URL(publicBaseUrl).origin : undefined;
+  const webOrigins = new Set((process.env.PUBLIC_WEB_ORIGINS ?? '').split(',').map(value => value.trim()).filter(Boolean).map(value => new URL(value).origin));
   const twilioAuthToken = process.env.TWILIO_AUTH_TOKEN;
   const dispatchConfirmed = async (caseId: string) => {
     const confirmed = await service.get(caseId);
@@ -58,8 +59,9 @@ export function createCareApp() {
         const method = request.method ?? 'GET';
         if (browserAccess && url.pathname.startsWith('/api/coordination/')) {
           const origin = request.headers.origin;
-          if ((origin && origin !== expectedOrigin) ||
-              (!['GET', 'HEAD', 'OPTIONS'].includes(method) && origin !== expectedOrigin)) {
+          const allowedOrigin = origin !== undefined && (origin === expectedOrigin || webOrigins.has(origin));
+          if ((origin && !allowedOrigin) ||
+              (!['GET', 'HEAD', 'OPTIONS'].includes(method) && !allowedOrigin)) {
             return sendJson(response,403,{error:{code:'FORBIDDEN',message:'같은 웹앱에서 요청해 주세요.'}});
           }
         }

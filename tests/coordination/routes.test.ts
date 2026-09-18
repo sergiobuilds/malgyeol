@@ -97,3 +97,21 @@ test('browser requests need no login and reject cross-origin changes', async t=>
   const script=await fetch(base+'/app.js').then(r=>r.text());
   assert.doesNotMatch(script,/담당자 인증|access-code|coordination\/session/);
 });
+
+
+test('configured Vercel web origin can change requests without changing the phone base URL',async t=>{
+  const saved=process.env.PUBLIC_WEB_ORIGINS;
+  const savedBase=process.env.PUBLIC_BASE_URL;
+  process.env.PUBLIC_BASE_URL='https://phone.example';
+  process.env.PUBLIC_WEB_ORIGINS='https://web.example,https://preview.example';
+  const server=createCareApp();
+  if(saved===undefined)delete process.env.PUBLIC_WEB_ORIGINS;else process.env.PUBLIC_WEB_ORIGINS=saved;
+  if(savedBase===undefined)delete process.env.PUBLIC_BASE_URL;else process.env.PUBLIC_BASE_URL=savedBase;
+  server.listen(0,'127.0.0.1');await once(server,'listening');t.after(()=>server.close());
+  const address=server.address();assert.ok(address&&typeof address!=='string');
+  const base=`http://127.0.0.1:${address.port}`;
+  for(const [origin,expected] of [['https://web.example',400],['https://preview.example',400],['https://phone.example',400],['https://other.example',403],['https://web.example.evil.test',403]] as const){
+    const response=await fetch(base+'/api/coordination/requests',{method:'POST',headers:{origin,'content-type':'application/json'},body:'{}'});
+    assert.equal(response.status,expected,origin);
+  }
+});
