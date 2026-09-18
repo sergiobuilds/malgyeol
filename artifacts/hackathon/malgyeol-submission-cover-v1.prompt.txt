@@ -1,0 +1,19 @@
+Mode: built-in image_gen; model version not selectable.
+Reference: actual Malgyeol operator dashboard screenshot.
+
+Create one polished landscape 16:9 hero cover image for the Korean AI for Good hackathon submission of "말결" (Malgyeol), a telephone-based public welfare coordination service. Aim for 2048x1152 or comparable high resolution, full-bleed rectangular image, no exterior frame.
+
+Use case: ads-marketing / product experience cover.
+The supplied image is a supporting reference of the REAL current operator dashboard. Use this interface faithfully on the laptop screen in the composition; do not treat the entire reference as the output canvas.
+
+Art direction: refined Korean technology brand editorial photography, warm natural daylight, exceptionally clean confident typography, tasteful human-centered composition. Warm off-white, deep charcoal, restrained cobalt blue. Professionally art directed, credible and welcoming, accessible rather than futuristic. Strong legibility as a small submission thumbnail.
+
+Layout: large uncluttered typography in the upper-left quarter, a spacious real-world photographic scene occupies lower and right portions. An older Korean woman at home speaks comfortably into an ordinary mobile phone held to her ear, not looking at an app. To the right, a Korean community welfare staff member at a desk uses a laptop showing the supplied operator dashboard. Seamlessly compose these two environments with soft daylight and negative space, not boxed panels. The woman's expression is engaged and self-assured, never helpless or pitiable. The staff member listens attentively. A single understated cobalt blue curved line visually connects the telephone to the laptop, suggesting an actual conversation and follow-up, not an abstract AI neural network. Make the real web dashboard recognizable with white layout, blue selected request row and Korean interface; keep it secondary to the headline and people. No fabricated charts, numbers, case outcomes or success badges.
+
+Render ONLY these three text elements accurately in Korean, with outstanding large clean modern Korean sans serif typography:
+1. "말결" as the prominent bold wordmark, upper-left.
+2. "전화 한 통,\n필요한 지원까지." as the main headline below the wordmark; large, two lines, confident dark charcoal.
+3. "시민의 요청 · 기관 연결 · 결과 회신" as one small supporting line under the headline.
+Do not add any other marketing text, English slogan, logo, seals or governmental emblems. Text inside the referenced laptop screenshot can remain as in the reference.
+
+Avoid: humanoid robots, holograms, neon gradients, glowing brains, blockchain or payment imagery, smartphone app mockup as the main interaction, generic infographic cards, arrows with labels, excessive icons, tiny paragraphs, distress or medical imagery, stock-photo handshake, plastic 3D cartoons, watermarks. Accurate human hands and phones. Make this feel like a memorable, premium real product cover rather than a government report or a presentation slide.
