@@ -1,0 +1,24 @@
+{
+  "localOnly": true,
+  "realTelephoneActions": 0,
+  "results": [
+    {
+      "scenario": "success",
+      "passed": true,
+      "fakeCustomerCalls": 1,
+      "realCalls": 0,
+      "restartedCallbackStatus": "DELIVERED",
+      "reservation": null,
+      "seedHash": "17aaaa21e0c8bbfcb80173c11a768555e6b2fb40f7fb5225b32efb85f0b96713"
+    },
+    {
+      "scenario": "unavailable",
+      "passed": true,
+      "fakeCustomerCalls": 1,
+      "realCalls": 0,
+      "restartedCallbackStatus": "DELIVERED",
+      "reservation": "SCHEDULED",
+      "seedHash": "9f24d0301c6ca33c4bef54b9e80a5d95645ca7b4a8fc0c5f5006ca501c18cae8"
+    }
+  ]
+}
