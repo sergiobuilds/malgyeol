@@ -1,7 +1,7 @@
 import { randomUUID } from 'node:crypto';
 import { DemoWorkflowStore } from './store.ts';
-import { evaluate, hash, missing, patchValid, readback, spokenTime, text, validNext, validOutcome } from './contracts.ts';
-import type { DemoCase, DemoProvider, InquiryOutcome, InquiryTask, Plan, Requirements, Seed } from './types.ts';
+import { evaluate, hash, missing, patchValid, readback, spokenTime, text, validNext, validOutcome, shortReadback } from './contracts.ts';
+import type { DemoCase, DemoProvider, InquiryOutcome, InquiryTask, Plan, Requirements, Seed, ExperienceMode } from './types.ts';
 export class DemoError extends Error { constructor(message: string, readonly status = 409) { super(message); } }
 function requireThat(value: unknown, message: string): asserts value { if (!value) throw new DemoError(message); }
 export class DemoWorkflowService {
@@ -10,14 +10,15 @@ export class DemoWorkflowService {
   }
   private event(c: DemoCase, stage: string, data: unknown) { c.events.push({ id: randomUUID(), at: this.now(), stage, data: structuredClone(data) }); }
   private mutate<T>(callId: string, action: (c: DemoCase) => T): T { return this.store.update(callId, c => { requireThat(c, 'CALL_NOT_FOUND'); const result = action(c); return { next: c, result }; }); }
-  view(c: DemoCase) { return { callId: c.callId, caseId: c.id, phase: c.phase, approved: Boolean(c.seed?.approvalRef), missingFields: missing(c.requirements), requirements: c.requirements, serverNow: new Date(this.now()).toISOString(), timezone: 'Asia/Seoul', mode: 'SIMULATION', seedHash: c.seed?.hash, callbackStatus: c.callback?.status }; }
+  view(c: DemoCase) { return { callId: c.callId, caseId: c.id, phase: c.phase, approved: Boolean(c.seed?.approvalRef), experienceMode: c.experienceMode ?? 'standard', consentPending: !c.requirements.consent, missingFields: missing(c.requirements).filter(k => k !== 'consent' || !c.experienceMode || c.experienceMode === 'standard'), requirements: c.requirements, serverNow: new Date(this.now()).toISOString(), timezone: 'Asia/Seoul', mode: 'SIMULATION', seedHash: c.seed?.hash, callbackStatus: c.callback?.status }; }
   status(callId: string) { const c = this.store.read(callId); requireThat(c, 'CALL_NOT_FOUND'); return this.view(c); }
-  begin(callId: string, citizenRef: string) {
+  begin(callId: string, citizenRef: string, experienceMode: ExperienceMode = 'standard') {
+    requireThat(['standard', 'audience'].includes(experienceMode), 'INVALID_EXPERIENCE');
     requireThat(text(callId) && callId.length <= 160 && text(citizenRef) && citizenRef.length <= 160, 'INVALID_ID');
     return this.store.update(callId, existing => {
-      if (existing) { requireThat(existing.citizenRef === citizenRef, 'CALL_IDENTITY_MISMATCH'); return { result: this.view(existing) }; }
-      const c: DemoCase = { id: `demo-${randomUUID()}`, callId, citizenRef, revision: 0, requirements: {}, phase: 'INTERVIEW', inquiries: {}, events: [] };
-      this.event(c, 'Interview.begin', { callId, citizenRef }); return { next: c, result: this.view(c) };
+      if (existing) { requireThat(existing.citizenRef === citizenRef && (existing.experienceMode ?? 'standard') === experienceMode, 'CALL_IDENTITY_MISMATCH'); return { result: this.view(existing) }; }
+      const c: DemoCase = { id: `demo-${randomUUID()}`, callId, citizenRef, revision: 0, experienceMode, requirements: {}, phase: 'INTERVIEW', inquiries: {}, events: [] };
+      this.event(c, 'Interview.begin', { callId, citizenRef, experienceMode }); return { next: c, result: this.view(c) };
     });
   }
   update(callId: string, patch: unknown, evidenceQuote: string) {
@@ -31,11 +32,13 @@ export class DemoWorkflowService {
   prepareSeed(callId: string) {
     return this.mutate(callId, c => {
       requireThat(['INTERVIEW', 'SEED_READY'].includes(c.phase), 'SEED_LOCKED');
-      requireThat(missing(c.requirements).length === 0 && patchValid(c.requirements), 'INTERVIEW_INCOMPLETE');
-      const r = c.requirements as Requirements;
+      const audience = c.experienceMode === 'audience';
+      requireThat(missing(c.requirements).filter(k => !audience || k !== 'consent').length === 0 && patchValid(c.requirements), 'INTERVIEW_INCOMPLETE');
+      const r = { ...c.requirements, ...(audience && !c.requirements.consent ? { consent: { contact: true, submit: true, callback: true } } : {}) } as Requirements;
+      requireThat(!audience || (r.consent.contact && r.consent.submit && r.consent.callback), 'CONSENT_DECLINED');
       requireThat(new Set([r.item, ...r.alternatives]).size === r.alternatives.length + 1, 'DUPLICATE_ALTERNATIVE');
       const body = { version: c.revision, requirements: structuredClone(r) };
-      c.seed = { ...body, hash: hash(body) }; c.challenge = { nonce: randomUUID(), hash: c.seed.hash, expiresAt: this.now() + 300_000, readback: readback(r) }; c.phase = 'SEED_READY';
+      c.seed = { ...body, hash: hash(body) }; c.challenge = { nonce: randomUUID(), hash: c.seed.hash, expiresAt: this.now() + 300_000, readback: audience ? shortReadback(r) : readback(r) }; c.phase = 'SEED_READY';
       this.event(c, 'Seed.prepared', { seed: c.seed, challenge: c.challenge });
       return { ...this.view(c), seedHash: c.seed.hash, ...c.challenge };
     });
@@ -47,7 +50,7 @@ export class DemoWorkflowService {
       requireThat(c.phase === 'SEED_READY' && a.expiresAt > this.now(), 'APPROVAL_EXPIRED_OR_USED');
       requireThat(digit === '1' || digit === '2', 'INVALID_DIGIT');
       if (digit === '2') { c.phase = 'INTERVIEW'; delete c.challenge; delete c.seed; this.event(c, 'Seed.rejected', { seedHash }); return this.view(c); }
-      c.seed.approvedAt = this.now(); c.seed.approvalRef = `call:${callId}:nonce:${nonce}:digit:1`; c.phase = 'APPROVED';
+      c.requirements.consent = structuredClone(c.seed.requirements.consent); c.seed.approvedAt = this.now(); c.seed.approvalRef = `call:${callId}:nonce:${nonce}:digit:1`; c.phase = 'APPROVED';
       this.event(c, 'Seed.approved', { seedHash, callId, nonce, digit }); return this.view(c);
     });
   }
@@ -118,7 +121,7 @@ export class DemoWorkflowService {
         const other = [...new Set([...inquiry.outcomes.values()].flatMap(o => o.kind === 'available' ? [o.terms.item] : []))];
         const confirmedOtherOnly = !inquiry.timedOut && inquiry.tasks.length > 0 && inquiry.tasks.every(t => { const o = inquiry.outcomes.get(t.id); return o && o.kind !== 'no-answer'; });
         const message = allUnavailable || confirmedOtherOnly
-          ? `[시연 결과] 확인한 기관에서는 요청과 허용 대안에 맞는 지원을 받기 어렵습니다.${other.length ? ` 다른 조건으로 가능한 후보는 ${other.join(', ')}입니다. 신청하지 않았습니다.` : ''}${next ? ` 다음 접수는 ${spokenTime(next.at)}입니다. ${next.instructions}` : ' 다음 접수 일정은 아직 확인되지 않았습니다.'}${seed.requirements.noMatchPreference === 'offer_callback' ? next ? ' 안내한 다음 시점에 다시 확인하는 시연 연락을 예약할까요?' : ' 다음 접수 시각이 확인되면 연락받고 싶으신가요? 아직 예약 시각은 정하지 않았습니다.' : ''}`
+          ? `[시연 결과] 확인한 기관에서는 요청과 허용 대안에 맞는 지원을 받기 어렵습니다.${other.length ? ` 다른 조건으로 가능한 후보는 ${other.join(', ')}입니다. 신청하지 않았습니다.` : ''}${next ? ` 다음 접수는 ${spokenTime(next.at)}입니다. ${next.instructions}` : ' 다음 접수 일정은 아직 확인되지 않았습니다.'}${seed.requirements.noMatchPreference === 'offer_callback' && (!claimed.state.experienceMode || claimed.state.experienceMode === 'standard') ? next ? ' 안내한 다음 시점에 다시 확인하는 시연 연락을 예약할까요?' : ' 다음 접수 시각이 확인되면 연락받고 싶으신가요? 아직 예약 시각은 정하지 않았습니다.' : ''}`
           : '[시연 결과] 아직 답변을 확인하지 못한 기관이 있어 지원 불가로 판단하지 않았습니다. 추가 확인이 필요합니다.';
         return this.mutate(callId, c => {
           requireThat(c.phase === 'RUNNING', 'RUN_INTERRUPTED');
@@ -126,7 +129,7 @@ export class DemoWorkflowService {
           this.event(c, 'Run2.plan', { selected: null, reasons: c.ev1.reasons }); this.event(c, 'EV1', c.ev1); this.event(c, 'Run3.skipped', { reason: c.ev1.reasons });
           this.event(c, 'Run4.recorded', { runId: c.runId, outcomeCount: inquiry.outcomes.size });
           c.ev2 = { pass: true, reasons: [allUnavailable ? 'SCOPED_UNAVAILABLE' : confirmedOtherOnly ? 'INFORMATION_ONLY' : 'PENDING_ONLY'], seedHash: seed.hash }; this.event(c, 'EV2', c.ev2);
-          c.callback = { id: `callback:${c.runId}`, status: 'PENDING', message, ...(next && seed.requirements.noMatchPreference === 'offer_callback' ? { next } : {}) }; c.phase = 'READY'; return this.view(c);
+          c.callback = { id: `callback:${c.runId}`, status: 'PENDING', message, ...(next && seed.requirements.noMatchPreference === 'offer_callback' && (!c.experienceMode || c.experienceMode === 'standard') ? { next } : {}) }; c.phase = 'READY'; return this.view(c);
         });
       }
       const plan = inquiry.selected; const ev1 = evaluate(seed, plan);
@@ -138,7 +141,7 @@ export class DemoWorkflowService {
         this.event(c, 'Run4.recorded', { runId: c.runId, planHash: plan.hash, receiptId: receipt.id });
         c.ev2 = evaluate(seed, plan, receipt); this.event(c, 'EV2', c.ev2);
         if (!c.ev2.pass) { c.phase = 'UNKNOWN'; return this.view(c); }
-        c.callback = { id: `callback:${c.runId}`, status: 'PENDING', message: `[시연 결과] ${plan.task.institutionName}에서 ${plan.terms.item} ${plan.terms.quantity}개 모의 지원 신청이 접수됐습니다. ${plan.terms.receivingMethod === 'delivery' ? `${seed.requirements.region}으로 ${spokenTime(plan.terms.promisedBy)} 배달 예정인 모의 계획입니다.` : `${plan.task.institutionName}에서 ${spokenTime(plan.terms.promisedBy)} 방문 수령 예정인 모의 계획입니다.`} 실제 음식 배송은 없는 시연입니다.` };
+        c.callback = { id: `callback:${c.runId}`, status: 'PENDING', message: c.experienceMode === 'audience' ? `[시연 결과] ${plan.task.institutionName}에서 ${plan.terms.item} ${plan.terms.quantity === 1 ? '한' : plan.terms.quantity} 인분 모의 신청이 접수됐습니다. ${spokenTime(plan.terms.promisedBy)} ${plan.terms.receivingMethod === 'delivery' ? '배달' : '방문 수령'} 예정인 모의 결과이며 실제 배송은 없습니다.` : `[시연 결과] ${plan.task.institutionName}에서 ${plan.terms.item} ${plan.terms.quantity}개 모의 지원 신청이 접수됐습니다. ${plan.terms.receivingMethod === 'delivery' ? `${seed.requirements.region}으로 ${spokenTime(plan.terms.promisedBy)} 배달 예정인 모의 계획입니다.` : `${plan.task.institutionName}에서 ${spokenTime(plan.terms.promisedBy)} 방문 수령 예정인 모의 계획입니다.`} 실제 음식 배송은 없는 시연입니다.` };
         c.phase = 'READY'; return this.view(c);
       });
     } catch (e) {
@@ -149,7 +152,7 @@ export class DemoWorkflowService {
     requireThat(c.phase === 'READY' && c.ev2?.pass && c.seed?.requirements.consent.callback, 'CALLBACK_NOT_READY');
     const job = c.callback; if (!job || job.status !== 'PENDING') return { job: null };
     job.status = 'CLAIMED'; job.claimAt = this.now(); this.event(c, 'Callback.claimed', { jobId: job.id });
-    return { job: { id: job.id, callId, citizenRef: c.citizenRef, message: job.message, mode: 'SIMULATION', ...(job.next ? { nextOpportunity: job.next } : {}) } };
+    return { job: { id: job.id, callId, citizenRef: c.citizenRef, message: job.message, mode: 'SIMULATION', experienceMode: c.experienceMode ?? 'standard', ...(job.next ? { nextOpportunity: job.next } : {}) } };
   }); }
   answerCallback(callId: string, jobId: string, digit: string) { return this.mutate(callId, c => {
     const job = c.callback; requireThat(job && job.id === jobId && job.status === 'CLAIMED', 'CALLBACK_IDENTITY_MISMATCH'); requireThat(digit === '1' || digit === '2', 'INVALID_DIGIT');

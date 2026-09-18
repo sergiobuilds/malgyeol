@@ -13,9 +13,10 @@ ROOT = Path(__file__).resolve().parents[1]
 TOKEN = 'independent-demo-proof-local-token-' + 'x' * 32
 
 class LocalServer:
-    def __init__(self, ledger: Path, scenario="success"):
+    def __init__(self, ledger: Path, scenario="success", extra_env=None):
         self.ledger = ledger
         self.scenario = scenario
+        self.extra_env = dict(extra_env or {})
         self.process = None
     def start(self):
         env = {
@@ -26,6 +27,7 @@ class LocalServer:
             'DEMO_WORKFLOW_SCENARIO': self.scenario,
             'COORDINATION_LEDGER_PATH': str(self.ledger.with_name('coordination.sqlite')),
         }
+        env.update(self.extra_env)
         self.process = subprocess.Popen(
             ['node', '--import', 'tsx', 'tests/demoAcceptanceServer.ts'], cwd=ROOT,
             env=env, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
@@ -63,23 +65,27 @@ class LocalServer:
             self.process.stdout.close()
             self.process.stderr.close()
 
-async def proof_scenario(directory: Path, scenario: str):
+async def proof_scenario(directory: Path, scenario: str, experience="standard"):
+    from unittest.mock import patch as patch_env
     import asyncio
     from datetime import datetime, timedelta, timezone
     import aiohttp
     from coordination_tools import Journal, Routing
     from coordination_voice import HttpAPI
     from demo_voice import DemoVoiceRuntime
-    ledger = directory / (scenario + '.sqlite')
+    identity = experience + '-' + scenario
+    ledger = directory / (identity + '.sqlite')
     server = LocalServer(ledger, scenario).start()
-    journal = Journal(directory / (scenario + '-voice.sqlite'))
+    journal = Journal(directory / (identity + '-voice.sqlite'))
     calls = []
     try:
         server.call('begin', {'callId': 'unauthorized', 'citizenRef': 'test-citizen'}, expected=403, authorized=False)
         async with aiohttp.ClientSession(headers={'Authorization': 'Bearer ' + TOKEN}) as session:
-            runtime = DemoVoiceRuntime(HttpAPI(session, server.base), journal, Routing({
-                'allowedNumbers': ['+820000000001'], 'citizenNumbers': {'test-citizen': '+820000000001'},
-                'institutionNumbers': {}}))
+            with patch_env.dict(os.environ, {'COORDINATION_DEMO_EXPERIENCE': experience, 'COORDINATION_DEMO_ALLOW_AUDIENCE': '1'}):
+                runtime = DemoVoiceRuntime(HttpAPI(session, server.base), journal, Routing({
+                    'allowedNumbers': [] if experience == 'audience' else ['+820000000001'],
+                    'citizenNumbers': {} if experience == 'audience' else {'test-citizen': '+820000000001'},
+                    'institutionNumbers': {}}))
             class FakeCall:
                 def __init__(self, call_id, direction):
                     self.call_id, self.direction = call_id, direction
@@ -89,7 +95,16 @@ async def proof_scenario(directory: Path, scenario: str):
                     self._passive_dtmf_task = None
                 async def wait(self):
                     await runtime.transcript(self, 'assistant', 'local fake callback result delivered')
+                    from coordination_tools import ToolError
+                    callback_ctx = journal.get('demo:call:' + self.call_id)
+                    finish = runtime.tools(callback_ctx)[0]
+                    try:
+                        await finish()
+                        raise AssertionError('callback must not finish before actual digit ack')
+                    except ToolError:
+                        pass
                     await runtime.dtmf(self, '1')
+                    await finish()
                 async def hangup(self):
                     pass
             class FakeAgent:
@@ -106,20 +121,48 @@ async def proof_scenario(directory: Path, scenario: str):
             ctx = await runtime.bind(citizen)
             server.call('run', {'callId': citizen.call_id}, expected=409)
             assert not calls
-            ctx['_heard'] = '식사 두 개가 필요해요. 배달로 부탁드리고 말씀드린 범위의 문의와 신청, 결과 회신에 동의합니다.'
-            patch = {'item': '식사', 'quantity': 2, 'region': '서초구',
+            ctx['_heard'] = '식사 한 개가 필요해요. 배달로 부탁드리고 말씀드린 범위의 문의와 신청, 결과 회신에 동의합니다.'
+            patch = {'item': '한 끼 식사', 'quantity': 1, 'region': '서초구',
                      'neededBy': (datetime.now(timezone.utc) + timedelta(hours=4)).isoformat(),
                      'maxCostKrw': 0, 'dietaryRestrictions': [], 'alternatives': ['빵'],
                      'receivingMethod': 'delivery', 'noMatchPreference': 'offer_callback',
                      'consent': {'contact': True, 'submit': True, 'callback': True}}
+            initial = server.call('status?callId=' + citizen.call_id)
+            assert initial['requirements'] == {} and initial['approved'] is False
+            if experience == 'audience':
+                patch.pop('consent')
             tools = {tool.__name__: tool for tool in runtime.tools(ctx)}
             await tools['update_demo_request'](json.dumps(patch), ctx['_heard'])
             prepared = json.loads(await tools['prepare_demo_approval']())
             assert 'readback' in prepared and prepared['seedHash']
+            await runtime.transcript(citizen, 'user', '네')
+            assert server.call('status?callId=' + citizen.call_id)['approved'] is False
+            if experience == 'audience':
+                old_hash = prepared['seedHash']
+                await runtime.dtmf(citizen, '2')
+                assert server.call('status?callId=' + citizen.call_id)['approved'] is False
+                ctx['_heard'] = '기한을 다섯 시간 뒤까지로 고쳐 주세요'
+                await tools['update_demo_request'](json.dumps({'neededBy': (datetime.now(timezone.utc) + timedelta(hours=5)).isoformat()}), ctx['_heard'])
+                prepared = json.loads(await tools['prepare_demo_approval']())
+                assert prepared['seedHash'] != old_hash
             await runtime.dtmf(citizen, '1')
             assert server.call('status?callId=' + citizen.call_id)['approved'] is True
-            await runtime.ended(citizen)
-            await runtime.dispatch(citizen.call_id)
+            if experience == 'audience':
+                worker = asyncio.create_task(runtime.worker())
+                try:
+                    await runtime.ended(citizen)
+                    deadline = asyncio.get_running_loop().time() + 3
+                    while asyncio.get_running_loop().time() < deadline:
+                        status = server.call('status?callId=' + citizen.call_id)
+                        if status.get('callbackStatus') == 'DELIVERED':
+                            break
+                        await asyncio.sleep(0.01)
+                finally:
+                    worker.cancel()
+                    await asyncio.gather(worker, return_exceptions=True)
+            else:
+                await runtime.ended(citizen)
+                await runtime.dispatch(citizen.call_id)
             status = server.call('status?callId=' + citizen.call_id)
             assert status['callbackStatus'] == 'DELIVERED', status
             assert calls == ['+820000000001'], calls
@@ -137,12 +180,18 @@ async def proof_scenario(directory: Path, scenario: str):
         with sqlite3.connect(ledger) as connection:
             saved = json.loads(connection.execute('SELECT body FROM phone_demo_workflows WHERE call_id=?', (citizen.call_id,)).fetchone()[0])
         if scenario == 'unavailable':
-            assert saved['reservation']['status'] == 'SCHEDULED'
+            if experience == 'standard':
+                assert saved['reservation']['status'] == 'SCHEDULED'
+            else:
+                assert saved.get('reservation') is None
             assert saved['ev1']['reasons'] == ['NO_MATCH']
         else:
             assert saved['receipt']['proof']['mode'] == 'SIMULATION'
             assert saved['ev1']['pass'] and saved['ev2']['pass']
-        return {'scenario': scenario, 'passed': True, 'fakeCustomerCalls': len(calls),
+        latency = journal.get('demo:callback-latency:' + citizen.call_id)
+        assert latency and latency['seconds'] < 3, latency
+        return {'experience': experience, 'scenario': scenario, 'passed': True,
+                'fakeEndToDialSeconds': latency['seconds'], 'pstnRingVerified': False, 'runtimeWorkerExercised': experience == 'audience', 'fakeCustomerCalls': len(calls),
                 'realCalls': 0, 'restartedCallbackStatus': restored['callbackStatus'],
                 'reservation': saved.get('reservation', {}).get('status'), 'seedHash': prepared['seedHash']}
     finally:
@@ -153,8 +202,9 @@ async def main():
     import asyncio
     with tempfile.TemporaryDirectory(prefix='malgyeol-independent-http-') as directory:
         results = []
-        for scenario in ['success', 'unavailable']:
-            results.append(await proof_scenario(Path(directory), scenario))
+        for experience in ['standard', 'audience']:
+            for scenario in ['success', 'unavailable']:
+                results.append(await proof_scenario(Path(directory), scenario, experience))
         print(json.dumps({'localOnly': True, 'realTelephoneActions': 0, 'results': results}, ensure_ascii=False, indent=2))
 
 if __name__ == '__main__':

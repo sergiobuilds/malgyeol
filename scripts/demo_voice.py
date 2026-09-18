@@ -1,6 +1,6 @@
 """Opt-in demo voice: real citizen channel, exclusively simulated institutions.
 
-Imports do not connect. The existing explicit citizen routing remains mandatory.
+Imports do not connect. Registered routing is the default; open audience intake is explicit opt-in.
 Role-bound tools contain no institution dialing or generic execution authority.
 """
 import asyncio
@@ -10,6 +10,8 @@ import functools
 import hashlib
 import json
 import os
+import time
+from coordination_config import normalize_number
 from coordination_tools import ToolError, encode
 
 OUTBOUND_DEMO = contextvars.ContextVar('demo_outbound', default=None)
@@ -37,7 +39,20 @@ INTERVIEW_PROMPT = '''당신은 말결의 한국어 생활지원 전화 도우�
 '''
 
 
+
+def experience_prompt(ctx):
+    intro = '청중이 자발적으로 건 체험 전화입니다. 다른 사람의 이름이나 사전 설정을 사용하지 마세요. 지역과 필요한 도움부터 자연스럽게 듣고 빠진 조건만 확인하세요. '
+    return (INTERVIEW_PROMPT + intro +
+            '\n사전 설정 없이 고객이 실제 말한 조건만 채웁니다. 모의 문의/모의 신청/현재 발신번호로 회신 동의는 서버의 최종 readback에서 확인합니다. '
+            'readback을 그대로 읽고 1번 승인 또는 2번 수정을 안내하세요. 승인 저장이 확인되면 결과를 곧 전화드린다고 짧게 인사하고 finish_demo_conversation을 호출하세요.\n사전 입력 없음: ' + '{}')
+
+
 def callback_prompt(job):
+    if job.get('experienceMode') in {'audience'}:
+        return ('말결 시연 결과 전화입니다. 다음 서버 결과를 빠짐없이 안내하세요. 실제 배송이나 기관 연락이 아닌 모의 시연임을 유지하세요. '
+                '결과를 안내한 뒤 "더 말씀하실 내용이 있으세요? 통화를 마치려면 1번을 눌러 주세요"라고 물으세요. '
+                '추가 질문에는 확인된 서버 결과 범위에서만 답하고 새 신청이나 주문을 실행하지 않습니다. 모르는 내용은 확인되지 않았다고 말하세요. '
+                '실제 1번 답변을 서버가 저장했다고 확인한 뒤 짧게 인사하고 finish_demo_conversation을 호출하세요.\n' + job['message'])
     question = ('안내한 다음 기회에 맞춰 다시 연락받으려면 1번, 원하지 않으면 2번을 누르도록 물으세요. '
                 '실제 숫자키 뒤 서버가 예약 기록을 확인한 경우에만 기록됐다고 말하세요.'
                 if job.get('nextOpportunity') else '안내를 들으셨으면 1번을 누르도록 안내하세요.')
@@ -56,6 +71,26 @@ class DemoVoiceRuntime:
         self.active = None
         self.dispatching = False
         self.wake = asyncio.Event()
+        self.experience = os.environ.get('COORDINATION_DEMO_EXPERIENCE', 'standard')
+        if self.experience not in {'standard', 'audience'}: raise ToolError('시연 모드를 확인해 주세요.')
+        self.allow_audience = os.environ.get('COORDINATION_DEMO_ALLOW_AUDIENCE') == '1'
+
+    def caller_identity(self, number):
+        try: normalized = normalize_number(number)
+        except ValueError: raise ToolError('발신번호를 확인할 수 없습니다.') from None
+        service = os.environ.get('CLAWOPS_PHONE_NUMBER')
+        if service and normalized == normalize_number(service): raise ToolError('서비스 번호로 회신할 수 없습니다.')
+        registered = self.routing.citizen(normalized)
+        if self.experience == 'standard':
+            if not registered: raise ToolError('등록된 회신 경로가 필요합니다.')
+            return registered, 'standard', normalized
+        mode = 'audience'
+        if not registered and not self.allow_audience: raise ToolError('청중 전화 수신이 설정되지 않았습니다.')
+        return registered or 'audience-' + hashlib.sha256(normalized.encode()).hexdigest()[:24], mode, normalized
+
+    def accepts(self, number):
+        try: self.caller_identity(number); return True
+        except (ToolError, ValueError): return False
 
     async def send(self, operation, fields):
         return await self.api.send('POST', PREFIX + '/' + operation, fields)
@@ -69,11 +104,11 @@ class DemoVoiceRuntime:
                 raise ToolError('시연 고객 회신 맥락이 없습니다.')
             ctx = {**outbound, 'callId': call.call_id}
         else:
-            citizen = self.routing.citizen(call.from_number)
-            if not citizen:
-                raise ToolError('등록된 회신 경로가 필요합니다.')
-            result = await self.send('begin', {'callId': call.call_id, 'citizenRef': citizen})
+            citizen, experience, source = self.caller_identity(call.from_number)
+            result = await self.send('begin', {'callId': call.call_id, 'citizenRef': citizen, 'experienceMode': experience})
+            if result.get('experienceMode', 'standard') != experience: raise ToolError('서버 시연 모드가 일치하지 않습니다.')
             ctx = {'role': 'demo_citizen', 'callId': call.call_id, 'citizenRef': citizen,
+                   'experienceMode': experience, 'sourceNumber': source,
                    'serverNow': result.get('serverNow'), 'timezone': result.get('timezone', 'Asia/Seoul')}
         self.active = call.call_id
         self.journal.put('demo:call:' + call.call_id, ctx)
@@ -135,13 +170,14 @@ class DemoVoiceRuntime:
                 accepted = digit == '1' and result.get('approved') is True
                 self.journal.put('demo:decision:' + call.call_id, {'digit': digit, 'approved': True} if accepted else {})
                 self.journal.put('demo:approved:' + call.call_id, {'citizenRef': ctx['citizenRef']} if accepted else {})
-                self.journal.put('demo:finish:' + call.call_id, {})
+                self.journal.put('demo:finish:' + call.call_id, {'ready': True} if accepted and ctx.get('experienceMode') in {'audience'} else {})
                 if digit == '2':
                     message = '수정할 부분을 말씀해 주세요. 수정 후 다시 읽어드리겠습니다.'
                 else:
                     message = result.get('message', '승인 결과를 기록했습니다.' if accepted else '승인이 확인되지 않았습니다. 내용을 다시 확인해 주세요.')
             else:
                 job = ctx['job']
+                if job.get('experienceMode') in {'audience'} and digit != '1': return
                 result = await self.send('callback/answer', {'callId': job['callId'], 'jobId': job['id'], 'digit': digit})
                 self.journal.put('demo:ack:' + call.call_id, {'digit': digit, 'at': datetime.now(timezone.utc).isoformat()})
                 message = result.get('message', '답변을 기록했습니다.')
@@ -158,7 +194,7 @@ class DemoVoiceRuntime:
             if ctx['role'] == 'demo_citizen':
                 approved = self.journal.get('demo:approved:' + call.call_id)
                 if approved:
-                    self.journal.put('demo:pending:' + call.call_id, {'citizenRef': approved['citizenRef'], 'status': 'pending'})
+                    self.journal.put('demo:pending:' + call.call_id, {'citizenRef': approved['citizenRef'], 'status': 'pending', 'endedAt': time.time()})
             else:
                 job = ctx['job']
                 transcript = self.journal.get('demo:transcript:' + call.call_id) or {'events': []}
@@ -202,12 +238,25 @@ class DemoVoiceRuntime:
         original = self.journal.get('demo:approved:' + source_call_id) or {}
         if citizen != original.get('citizenRef'): raise ToolError('회신 대상이 일치하지 않습니다.')
         # The only dial target is the existing private citizen mapping. Never institutions.
-        number = self.routing.destination('callback', citizen)
+        source = self.journal.get('demo:call:' + source_call_id) or {}
+        if source.get('experienceMode') in {'audience'}:
+            number = normalize_number(source['sourceNumber'])
+            job['experienceMode'] = source['experienceMode']
+        else:
+            number = self.routing.destination('callback', citizen)
+        pending = self.journal.get('demo:pending:' + source_call_id) or {}
+        if pending.get('endedAt'):
+            self.journal.put('demo:callback-latency:' + source_call_id, {'seconds': time.time() - pending['endedAt'], 'targetSeconds': 3, 'measures': 'call_end_to_sdk_dial_invocation'})
         context = {'role': 'demo_callback', 'job': job, 'citizenRef': citizen}
         token = OUTBOUND_DEMO.set(context)
         call = None
         try:
             call = await self.agent.call(number, timeout=25, machine_detection='Hangup')
+            metric = self.journal.get('demo:callback-latency:' + source_call_id)
+            if metric and pending.get('endedAt'):
+                metric['sdkCallReturnedSeconds'] = time.time() - pending['endedAt']
+                metric['pstnRingVerified'] = False
+                self.journal.put('demo:callback-latency:' + source_call_id, metric)
             await asyncio.wait_for(call.wait(), 180)
             await self.ended(call)
         except Exception:
@@ -265,7 +314,7 @@ def make_demo_agent_class(base, gemini, registry_type):
             super().__init__(session_factory=lambda: None, builtin_tools=[], recording=False, **kwargs)
 
         async def _handle_incoming(self, data):
-            if self.runtime.active or self.runtime.dispatching or not self.runtime.routing.citizen(data.get('from', '')):
+            if self.runtime.active or self.runtime.dispatching or not self.runtime.accepts(data.get('from', '')):
                 if self._control_ws:
                     await self._control_ws.send({'event': 'call.session_failed', 'callId': data['callId'], 'reason': 'RoutingUnavailable', 'message': '등록된 통화 경로 또는 통화 순서 확인 필요'})
                 return
@@ -282,7 +331,7 @@ def make_demo_agent_class(base, gemini, registry_type):
                     except ToolError as error: return encode({'error': str(error)})
                     except Exception: return encode({'error': '현재 처리 상태를 확인하지 못했습니다. 완료로 안내하지 마세요.'})
                 registry.register(guarded)
-            prompt = callback_prompt(ctx['job']) if ctx['role'] == 'demo_callback' else INTERVIEW_PROMPT + '\n서버 시각: ' + encode({'serverNow': ctx.get('serverNow'), 'timezone': ctx.get('timezone')})
+            prompt = callback_prompt(ctx['job']) if ctx['role'] == 'demo_callback' else (experience_prompt(ctx) if ctx.get('experienceMode') in {'audience'} else INTERVIEW_PROMPT) + '\n서버 시각: ' + encode({'serverNow': ctx.get('serverNow'), 'timezone': ctx.get('timezone')})
             session = BoundGemini(system_prompt=prompt, model=os.environ['GEMINI_LIVE_MODEL'], language='ko', greeting=True)
             session.bound_registry = registry; session.context = ctx; session.runtime = self.runtime
             self._call_sessions[call_id] = session

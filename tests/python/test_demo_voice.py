@@ -1,6 +1,7 @@
 import asyncio
 import json
 import os
+import subprocess
 from pathlib import Path
 import sys
 import tempfile
@@ -9,14 +10,14 @@ import unittest
 from unittest.mock import AsyncMock, patch
 sys.path.insert(0, str(Path(__file__).resolve().parents[2] / 'scripts'))
 from coordination_tools import Journal, Routing, ToolError
-from demo_voice import DemoVoiceRuntime, make_demo_agent_class, OUTBOUND_DEMO
+from demo_voice import DemoVoiceRuntime, make_demo_agent_class, OUTBOUND_DEMO, experience_prompt, callback_prompt
 
 
 class API:
     def __init__(self): self.calls = []
     async def send(self, method, path, body=None):
         self.calls.append((method, path, body))
-        if path.endswith('/begin'): return {'serverNow': '2026-09-18T01:00:00Z', 'timezone': 'Asia/Seoul'}
+        if path.endswith('/begin'): return {'serverNow': '2026-09-18T01:00:00Z', 'timezone': 'Asia/Seoul', 'experienceMode': body.get('experienceMode','standard')}
         if path.endswith('/seed'): return {'seedHash': 'hash', 'nonce': 'nonce', 'expiresAt': 9999999999, 'readback': '쌀 한 개. 승인1 수정2'}
         if path.endswith('/approve'): return {'approved': body['digit'] == '1', 'message': '승인 기록'}
         if path.endswith('/callback/claim'): return {'job': {'id': 'job', 'callId': body['callId'], 'citizenRef': 'citizen-A', 'message': '[시연] 식사 지원이 확정되었습니다.', 'mode': 'SIMULATION'}}
@@ -152,3 +153,85 @@ class DemoTests(unittest.IsolatedAsyncioTestCase):
                 c.hangup.assert_awaited_once()
                 self.assertTrue(any(args.args == (2,) for args in delay.await_args_list))
             # No connect, start, serve or call transport method was invoked.
+
+
+class ExperienceTests(unittest.IsolatedAsyncioTestCase):
+    asyncSetUp = DemoTests.asyncSetUp
+    asyncTearDown = DemoTests.asyncTearDown
+    async def test_unregistered_audience_is_empty_and_requires_opt_in(self):
+        with patch.dict(os.environ, {'COORDINATION_DEMO_EXPERIENCE':'audience', 'COORDINATION_DEMO_ALLOW_AUDIENCE':'1'}):
+            runtime = DemoVoiceRuntime(self.api,self.journal,self.routing)
+            audience = await runtime.bind(call(id='audience',number='01000000099'))
+            self.assertEqual(audience['experienceMode'],'audience')
+            self.assertNotIn('정미경', experience_prompt(audience))
+            self.assertEqual(audience['sourceNumber'],'+821000000099')
+            self.assertFalse(runtime.accepts('sip:01000000099@evil.example'))
+            self.assertFalse(runtime.accepts('anonymous'))
+        with patch.dict(os.environ, {'COORDINATION_DEMO_EXPERIENCE':'audience', 'COORDINATION_DEMO_ALLOW_AUDIENCE':'0'}):
+            runtime = DemoVoiceRuntime(self.api,self.journal,self.routing)
+            self.assertFalse(runtime.accepts('01000000099'))
+
+    async def test_audience_callback_only_incoming_identity_and_one_to_finish(self):
+        with patch.dict(os.environ, {'COORDINATION_DEMO_EXPERIENCE':'audience', 'COORDINATION_DEMO_ALLOW_AUDIENCE':'1'}):
+            runtime = DemoVoiceRuntime(self.api,self.journal,self.routing)
+        runtime.agent = types.SimpleNamespace(_call_sessions={})
+        c=call(id='source',number='01000000099'); ctx=await runtime.bind(c)
+        await runtime.tools(ctx)[1]()
+        # Spoken yes, denied consent, or unrelated model text cannot approve: no speech approval tool.
+        ctx['_heard']='네 맞아요 아니요 바꿔 주세요'
+        self.assertFalse(any(p.endswith('/approve') for _,p,_ in self.api.calls))
+        await runtime.dtmf(c,'1'); await runtime.ended(c)
+        original_send=self.api.send
+        async def send(method,path,body=None):
+            result=await original_send(method,path,body)
+            if path.endswith('/callback/claim'): result['job']['citizenRef']=ctx['citizenRef']
+            return result
+        self.api.send=send
+        with patch.dict(os.environ, {'COORDINATION_DEMO_EXPERIENCE':'audience', 'COORDINATION_DEMO_ALLOW_AUDIENCE':'1'}):
+            runtime = DemoVoiceRuntime(self.api,self.journal,self.routing)  # Restart: caller identity comes from durable journal.
+        destinations=[]
+        class Agent:
+            _call_sessions={}
+            async def call(self,number,**options):
+                destinations.append(number)
+                out=call(id='audience-out',direction='outbound')
+                callback=await runtime.bind(out)
+                self_prompt=callback_prompt(callback['job'])
+                assert '더 말씀하실' in self_prompt
+                finish=runtime.tools(callback)[0]
+                await runtime.started(out)
+                try: await finish()
+                except ToolError: pass
+                else: raise AssertionError('finish accepted without actual key')
+                await runtime.dtmf(out,'2')
+                assert not runtime.journal.get('demo:ack:audience-out')
+                await runtime.dtmf(out,'1'); await finish()
+                async def wait(): await runtime.ended(out)
+                out.wait=wait
+                return out
+        runtime.agent=Agent()
+        await runtime.dispatch('source')
+        self.assertEqual(destinations,['+821000000099'])
+        metric=self.journal.get('demo:callback-latency:source')
+        self.assertLess(metric['seconds'],3)
+        self.assertEqual(metric['measures'],'call_end_to_sdk_dial_invocation')
+
+    async def test_invalid_mode_or_service_number_fails_closed(self):
+        with patch.dict(os.environ, {'COORDINATION_DEMO_EXPERIENCE':'invalid'}):
+            with self.assertRaises(ToolError): DemoVoiceRuntime(self.api,self.journal,self.routing)
+        with patch.dict(os.environ, {'COORDINATION_DEMO_EXPERIENCE':'audience','COORDINATION_DEMO_ALLOW_AUDIENCE':'1','CLAWOPS_PHONE_NUMBER':'07052767277'}):
+            runtime=DemoVoiceRuntime(self.api,self.journal,self.routing)
+            self.assertFalse(runtime.accepts('07052767277'))
+
+    async def test_demo_preflight_does_not_require_institution_b(self):
+        root=Path(self.tmp.name)
+        for name in ('clawops.env','bridge.env'): (root/name).write_text('')
+        routing=root/'routing.json'
+        routing.write_text(json.dumps({'allowedNumbers':['01000000001'],'citizenNumbers':{'citizen-A':'01000000001'},'institutionNumbers':{}})); routing.chmod(0o600)
+        script=Path(__file__).resolve().parents[2]/'scripts/run-care-runtime.py'
+        env={**os.environ,'CARE_SECRET_DIR':str(root),'COORDINATION_ROUTING_PATH':str(routing),'COORDINATION_DEMO_MODE':'1','COORDINATION_DEMO_EXPERIENCE':'audience','COORDINATION_DEMO_ALLOW_AUDIENCE':'1'}
+        result=subprocess.run([sys.executable,str(script),'coordination-check'],env=env,capture_output=True,text=True)
+        self.assertEqual(result.returncode,0,result.stderr); self.assertIn('institution dialing disabled',result.stdout)
+        env['COORDINATION_DEMO_MODE']='0'
+        result=subprocess.run([sys.executable,str(script),'coordination-check'],env=env,capture_output=True,text=True)
+        self.assertNotEqual(result.returncode,0)

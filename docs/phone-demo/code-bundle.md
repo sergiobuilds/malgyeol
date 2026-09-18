@@ -1,353 +1,353 @@
-# 말결 전화 데모: 실행 코드 전체 묶음
+# 현재 전화 체험 코드 묶음
 
-## 먼저 확인할 실행 범위
+이 문서는 PR #17의 청중 체험 후속 구현 원문입니다. 실제 참가자 발화로 시작하며 사전 페르소나·60초 전용 모드는 제외했습니다. Seed는 숫자키 1 승인/2 수정, 콜백은 추가 질문 안내 뒤 숫자키 1로 마칩니다.
 
-확정 흐름은 **고객 전화 Interview → 요청 전체 Seed 재낭독·정정·숫자키 승인 → 통화 종료 → 빠른 모의 기관 Run → 즉시 실제 고객 번호로 콜백**입니다. 기관 전화는 하지 않고 기존 상품 주문 경로도 실행하지 않습니다. 기관 응답·지원 접수·배송은 시뮬레이션입니다. 고객에게 실제 음식이 발송된 것처럼 말하지 않습니다.
+코드 실행에는 전체 checkout과 Node 22/npm dependencies, ClawOps 0.56.0 Python 환경이 필요합니다. 이 MD 파일 자체는 실행파일이 아닙니다. 인증값과 운영 DB는 포함하지 않습니다.
 
-이 Markdown은 **실행 코드를 읽는 자료**입니다. 문서를 만들거나 열어도 코드가 실행되거나 배포되지 않습니다. 아래 소스는 지정한 로컬 worktree의 생성 시점 파일을 그대로 포함했습니다. 원격 서버 배포·전화번호 연결·실제 인바운드/콜백의 작동 완료를 뜻하지 않습니다. **전화 runtime 연결은 아직 최종 확인되지 않았습니다.** 현재 번호로 전화했을 때 발생한 연결 실패도 로컬 코드 테스트 PASS로 해결됐다고 간주하지 않습니다.
-
-## 입력부터 결과까지, 함수 단위 흐름
-
-1. ClawOps가 inbound 통화를 수신하면 `DemoAgent._open_session`이 `DemoVoiceRuntime.bind`를 호출합니다. 전화번호는 private `Routing.citizen`으로 고객 식별자에 연결하고 `/internal/demo-workflow/begin`을 호출합니다. 모델이 번호를 정하거나 기관으로 발신하는 도구는 없습니다.
-2. Gemini가 질문하고 `update_demo_request(patch_json, evidence_quote)`로 답을 저장합니다. 실제 들은 원문에 인용문이 있는지 Python이 검사합니다. TypeScript `update`는 허용 필드와 자료형을 검증하고 `Interview.patch`를 저장합니다. 입력이 수정되면 이전 Seed·승인은 지웁니다.
-3. 필수 답변이 모두 모이면 `prepare_demo_approval` → `prepareSeed`가 Seed 해시와 5분 nonce, 정확한 readback을 만듭니다. Python은 모델에게 readback 전체를 읽도록 지시합니다. 고객의 실제 숫자키 1 이벤트만 `approve`로 전달됩니다. 2는 수정으로 돌아갑니다. 프롬프트의 재낭독 지시는 실제 음성 전체 재생 완료를 하드웨어적으로 입증하는 장치는 아닙니다.
-4. 승인 이후 안내를 마치고 통화를 종료합니다. `ended`가 승인 통화를 pending으로 넣고 worker가 `dispatch`를 실행합니다. 통화 중 기관 실행을 시작하지 않습니다.
-5. `dispatch`가 HTTP `run`을 호출합니다. `DemoWorkflowService.run`은 승인·Seed 무결성·문의/신청/콜백 동의·기한을 확인하고 SQLite에서 실행을 한 번만 claim합니다.
-6. `inquire`는 기관×요청/허용 대안 task를 만들고 기본 동시성 2로 모의 adapter를 호출합니다. 최우선 조건에 맞는 결과가 선택되면 신규 task 시작을 멈추고 abort 신호를 보냅니다. 이미 진행 중인 늦은 응답은 기록하되 추가 신청에 쓰지 않습니다. 상위 대안 미확인 상태를 무시하고 빠른 하위 대안을 자동 선택하지 않습니다.
-7. 선택 계획을 Seed와 EV1로 대조합니다. 품목·수량·비용·수령 방식·식이 제한·기한이 승인 범위를 만족해야 합니다. `Run3.intent` 기록 후 mock provider에 한 번 신청하고 접수증을 받습니다.
-8. `Run4.recorded`로 결과를 기록하고 EV2에서 접수증의 기관·계획·조건·증빙 형식을 다시 대조합니다. 접수증 불일치는 UNKNOWN으로 두고 성공 콜백을 차단합니다. 증빙은 시뮬레이션 adapter 계약에 의존하며 해시가 외부 기관의 진위를 인증하지는 않습니다.
-9. `callback/claim`이 한 번만 고객 회신 job을 내줍니다. Python은 원래 승인 고객과 job 고객이 같은지 확인하고 **private customer routing에만** ClawOps outbound를 실행합니다. 실제 고객 번호 설정과 활성 runtime이 있어야 실전화가 됩니다.
-10. 콜백은 서버가 만든 결과를 읽습니다. 다음 기회가 확인됐으면 1/2 숫자키로 재연락 의사를 기록합니다. 콜백 통화의 응답·숫자키 확인·정상 종료·대화기록 참조를 받아야 DELIVERED가 됩니다. 부재나 불명확 결과를 전달 완료로 바꾸지 않습니다.
-
-## ISRE와 실제 코드의 대응
-
-Ouroboros engine/MCP를 호출하지 않습니다. Interview/Seed/Run/Evaluate 순서를 로컬 서비스로 구현했습니다.
-
-| 단계 | 실행 함수 / 데이터 | 통과 경계 |
-|---|---|---|
-| Interview | `DemoVoiceRuntime.tools`, `service.update`, `Requirements` | 실제 답변 인용 + 허용 필드; missingFields가 0이어야 Seed 준비 |
-| Seed | `prepareSeed`, `approve`, `Seed`, `challenge` | 버전/해시/nonce/만료/실제 digit1; 정정하면 재승인 |
-| Run1 | `service.inquire`, `DemoProvider.inquire` | 제한된 병렬, 응답·실패·늦은 응답 기록 |
-| Run2 | candidate evaluation, `Plan` | 최초 요청 → 명시한 대안 순위, 승인 범위 적합성 |
-| EV1 | `contracts.evaluate(seed,plan)` | 해시·승인·조건 대조 후에만 신청 |
-| Run3 | `provider.submit(plan,key)` | 저장된 단일 intent, 모의 신청 |
-| Run4 | `Run3.receipt`, `Run4.recorded` events | 접수증 및 계획 연결 기록 |
-| EV2 | `evaluate(seed,plan,receipt)` | 동일 기관/계획/조건/증빙 형식; 실패면 callback 불가 |
-| 회신 | `claimCallback`, `DemoVoiceRuntime.dispatch`, `completeCallback` | 단일 claim, 원고객 번호, 실제 답변/ack/종료 근거 |
-
-성공 시 말하는 것은 **모의 지원 신청 접수 및 예정 시각**입니다. 실제 출발/배송 증빙은 이 데모에 없으므로 “실제 음식이 오고 있다”고 말하지 않습니다. 전면 불가도 확인한 기관과 허용 대안 범위로 한정합니다. no-answer는 불가와 구분합니다.
-
-## 기존 코드와 달라진 부분
-
-| 영역 | 기존 PR14 | 새 데모 경로 |
-|---|---|---|
-| 시작 계약 | 요청 저장 + 기관별 공개·조율 동의 | 필수 인터뷰 전체 + Seed 해시/nonce + 실제 숫자키 승인 |
-| 실행 시점 | 고객 통화 뒤 기관 문의 | 승인된 고객 통화 종료 뒤 모의 Run |
-| 기관 문의 | Python에서 실제 기관 번호로 직렬 발신 | TypeScript 모의 adapter 병렬 실행, 기관 전화0 |
-| 계획 선택 | 문의 배열 순서, available이면 connected | 최초 요청/허용 대안 순위, EV1 조건검증 |
-| 신청 결과 | 통화 완료 + 답변 available | 단일 submit intent + 모의 receipt + EV2 |
-| 고객 회신 | 일부 terminal 문의가 있으면 회신 | EV2에 맞는 결과 원고 + 동일 고객번호 + ack/종료 receipt |
-| 오류·재시작 | 기존 unknown·idempotency 방어 | 승인 stale 차단, 실행claim, SQLite 지속, interrupted UNKNOWN |
-| 수정 범위 | 기존 coordination 유지 | 새 src/demo-workflow와 demo_voice 추가, careApp/coordination_voice에 opt-in 연결 |
-
-최종 작업 범위는 기존 3파일 수정·신규 12파일 추가, +1147/-4줄입니다(root 최종 diff 집계). 아래 보조 의존파일은 실행 이해를 위해 추가로 원문을 포함했으므로 bundle 파일 수와 변경파일 수는 다릅니다.
-
-코드 작성과 로컬 검증은 완료됐지만 **실제 전화 작동 완료는 아닙니다**. runtime 배포 연결과 고객 통화의 최종 확인이 남았습니다. 신규 파일은 아래 원문 전체를, 기존 진입점은 변경 diff와 전체 원문을 함께 읽으면 됩니다.
-
-## API 입력·출력
-
-모든 경로는 `/internal/demo-workflow/` 아래에 있고 `Authorization: Bearer <AGENT_TOOL_SECRET>`이 필요합니다. 32바이트 이상 비밀을 양쪽에 동일하게 설정합니다. 아래 예시는 자료형 설명이며 실행 요청이 아닙니다.
-
-| 메서드·경로 | 입력 | 주요 출력 |
-|---|---|---|
-| POST begin | callId, citizenRef | caseId, phase, missingFields, serverNow, timezone |
-| POST interview | callId, patch, evidenceQuote | 현재 requirements, missingFields |
-| POST seed | callId | seedHash, nonce, expiresAt, readback |
-| POST approve | callId, seedHash, nonce, digit("1"/"2") | approved, phase |
-| POST run | callId | phase; 비승인은 거부, 재호출은 중복 실행하지 않음 |
-| POST callback/claim | callId | job 또는 null; job에는 citizenRef/message/mode/선택적 nextOpportunity |
-| POST callback/answer | callId, jobId, digit | message, 선택적 reservation |
-| POST callback/receipt | callId, jobId, answered, acknowledged, completed, receiptRef | delivered, status |
-| GET status?callId=… | query callId | phase, approved, requirements, seedHash, callbackStatus |
-
-`Requirements` 필수값은 `item, quantity, region, neededBy, maxCostKrw, dietaryRestrictions, alternatives, receivingMethod, noMatchPreference, consent`입니다. `neededBy`는 timezone이 있는 ISO8601입니다. `alternatives` 배열의 순서가 우선순위입니다. `consent`는 `contact/submit/callback` boolean 3개입니다. 상세 주소·전화번호를 모델이 받는 필드는 없습니다.
-
-## 실행 설정과 배포 경계
-
-### Node HTTP 서비스
-
-| 설정 | 의미 |
+| 파일 | 역할 |
 |---|---|
-| DEMO_WORKFLOW_ENABLED=true | 데모 API를 명시적으로 활성화 |
-| DEMO_WORKFLOW_LEDGER_PATH | 지속 SQLite 파일 경로, 필수 |
-| DEMO_WORKFLOW_SCENARIO | success / unavailable / no-answer, 기본 success |
-| AGENT_TOOL_SECRET | Python과 공유하는 HTTP 인증 비밀, 값은 이 문서에 없음 |
-| NODE_ENV / PORT 등 | 기존 서버 실행 설정; src/server.ts 원문 참조 |
+| scripts/demo_voice.py | 통화별 도구, 실발신번호에 고정된 회신, 승인·수정·종료·콜백 |
+| src/careApp.ts / routes.ts | 내부 HTTP·인증·함수 호출 |
+| service.ts / contracts.ts | 누적 인터뷰, Seed 생성·승인, 실행·판정 |
+| mockProvider.ts | Seed와 독립된 고정 모의 기관 자료 대조 |
+| store.ts | SQLite 상태·증거 저장 |
+| run-care-runtime.py | 기존 운영 인증을 읽는 실행기 및 데모 역할 검사 |
 
-Node22가 프로젝트 목표 버전입니다. 설치 및 `npm start`는 Node HTTP만 시작합니다. Python 전화 bridge도 별도 프로세스로 실행해야 전화가 연결됩니다.
+현재 원문 SHA256은 source-sha256.json에 기록합니다. 기존 master/PR14 기반 조사 내용은 별도 인계 자료입니다. 실기관 연동·미래 예약 자동발신은 별도 미통합 작업으로 보존하고 이 흐름에 포함하지 않습니다.
 
-### Python 전화 bridge
+## .env.example
 
-| 설정 | 의미 |
-|---|---|
-| COORDINATION_DEMO_MODE=1 | 기존 기관 전화 runtime 대신 새 데모 runtime 선택; 반드시 확인 |
-| CLAWOPS_API_KEY / CLAWOPS_ACCOUNT_ID / CLAWOPS_PHONE_NUMBER | 실제 계정·서비스 번호 연결, 비밀/번호 원문 미포함 |
-| GEMINI_LIVE_MODEL | 운영에서 실제 사용할 Live 모델 식별자 |
-| AGENT_API_BASE_URL | 위 Node API 주소; public 접근 가능 또는 같은 host 연결 필요 |
-| AGENT_TOOL_SECRET | Node와 동일한 비밀 |
-| COORDINATION_ROUTING_PATH | private JSON 파일. allowedNumbers와 citizenNumbers를 실제 고객 번호에 매핑. institutionNumbers는 데모에서는 빈 객체로 설정 |
-| COORDINATION_VOICE_STATE_PATH | Python Journal SQLite 지속 경로 |
-| COORDINATION_HEALTH_PORT | bridge 상태 포트, 기본 18083 |
+SHA256: `75b8d9c7b40ff3d40ca9f89d4c5d202ba99079ec6672817aafd1c51582015989`
 
-Python bridge 진입점은 `python scripts/coordination_voice.py`입니다. 이 명령은 실행하면 전화 서비스 연결을 시도하므로 아래 로컬 proof 명령과 다릅니다. 현재 확인한 설치 환경은 Python3.13, clawops0.56.0, google-genai2.24.0입니다. SDK private 메서드 subclass 연결을 사용하므로 다른 버전으로 바꾸면 재검증이 필요합니다. 비밀키·실제 번호·private routing·운영 서버 로그인은 소스 저장소만으로 제공되지 않습니다.
+```dotenv
+# Payment-free integrated-care runtime
+PORT=8080
+NODE_ENV=development
+HOST=127.0.0.1
+PUBLIC_BASE_URL=https://service.example
+CARE_LEDGER_PATH=.private/care-ledger.sqlite
+# Optional separate coordination ledger; defaults to CARE_LEDGER_PATH.
+COORDINATION_LEDGER_PATH=
+# Private role routing; never commit actual destination numbers.
+COORDINATION_ROUTING_PATH=.private/coordination-routing.json
+COORDINATION_VOICE_STATE_PATH=.private/coordination-voice.sqlite
+COORDINATION_HEALTH_PORT=18083
+# Explicit demo workflow: citizen phone remains real; institutions are simulated.
+# Enable on API and voice together. Existing mode remains unchanged by default.
+DEMO_WORKFLOW_ENABLED=false
+DEMO_WORKFLOW_LEDGER_PATH=.private/phone-demo-workflow.sqlite
+DEMO_WORKFLOW_SCENARIO=success
+# Voice process only: 1 selects the new Seed-to-simulated-result callback path.
+COORDINATION_DEMO_MODE=0
+# standard: original registered demo; audience: open intake without prefilled data.
+COORDINATION_DEMO_EXPERIENCE=standard
+# Explicit opt-in: accept unregistered callers and call back only their SDK number.
+COORDINATION_DEMO_ALLOW_AUDIENCE=0
+AGENT_TOOL_SECRET=replace-with-at-least-32-random-characters
+CARE_PROVIDER_TOKEN=replace-with-distinct-provider-token
+CARE_RECIPIENT_TOKEN=replace-with-distinct-recipient-token
+CARE_OPERATOR_TOKEN=replace-with-distinct-operator-token
+CARE_PROVIDER_NAME=찾아가는 푸드마켓
 
-## 검증과 남은 일
-
-독립 로컬 검증은 Node22에서 서비스 acceptance 9/9, 실제 HTTP↔Python↔SQLite 성공/불가 2시나리오 PASS였습니다. HTTP proof의 전화 전송은 FakeAgent이며 실제 전화는 0회입니다. 기존 PR14 coordination TS31/31, Python32/32도 별도 확인했습니다. 이후 소스가 수정되면 아래 실행으로 다시 확인해야 합니다. 최종 root 전체 검증은 219 tests PASS, Python38 PASS, dependency audit 0 vulnerabilities로 보고됐습니다. 독립 검증과 전체 회귀 결과는 구분해서 기록합니다. 원문 로그는 `<session-artifacts>/malgyeol-pr-review/`에 있습니다.
-
-```sh
-# Node22 환경에서 로컬 검사. 실제 전화 없음.
-npm run typecheck
-node --import tsx --test tests/demoWorkflow.test.ts tests/demoAcceptance.test.ts
-python -m unittest discover -s tests/python -p 'test_demo_voice.py'
-python scripts/prove-demo-flow-local.py
+# Twilio is optional locally. Keep credentials in Secret Manager in deployment.
+TWILIO_AUTH_TOKEN=from-secret-manager
 ```
 
-독립 검사에는 미승인 실행0, 이전 Seed 승인 거부, 병렬문의>1, 선택 뒤 신규문의0, 늦은 응답 추가신청0, 느린 우선대안 선택, 조건위반 차단, 접수증 불일치 EV2차단, SQLite 재시작 단일 접수, no-answer와 불가 구분, 재연락 동의, 과거 다음기회 차단이 포함됩니다. 만료된 nextOpportunity 오류는 실제로 발견하여 수정 전 실패 로그와 수정 후 PASS를 보존했습니다.
+## src/careApp.ts
 
-**아직 완료라고 할 수 없는 것:** 실제 운영 서버로 이 코드를 배포하고 해당 번호의 runtime에 연결하기, 고객 실전화로 인터뷰·숫자키·종료·콜백을 확인하기, 실제 음질/말투/지연을 평가하기. 다음 날짜 재연락은 예약 기록까지이며 그 시각에 다시 확인·발신하는 scheduler는 미구현입니다. 모의기관의 실제 재고·지원 자격·배송 수행도 검증 대상이 아닙니다.
+SHA256: `a54415a4d977747a6ea450d4d816b7f8a484146b056bdbcce3a56635598d0ca3`
 
-## 소스 보존 범위
+```typescript
+import { createServer, type IncomingMessage, type ServerResponse } from 'node:http';
+import { readFile } from 'node:fs/promises';
+import { extname, join, resolve, sep } from 'node:path';
+import { InMemoryCareRequestRepository } from './care-support/repository.ts';
+import { CareRequestError, CareRequestService } from './care-support/service.ts';
+import { createCareRequestHandlers } from './http/careRequestRoutes.ts';
+import { createCareVoiceHandlers } from './voice/careVoiceRoutes.ts';
+import { CarePhoneCoordinator } from './care-support/phone.ts';
+import { timingSafeEqual } from 'node:crypto';
+import { SqliteCareRequestRepository } from './care-support/sqliteRepository.ts';
+import { CareProviderDispatcher, SandboxCareProvider } from './care-support/provider.ts';
+import { CoordinationStore } from './coordination/store.ts';
+import { CoordinationEngine } from './coordination/engine.ts';
+import { createCoordinationRoutes } from './coordination/routes.ts';
+import { OperatorSessions } from './coordination/operatorSession.ts';
+import { createDemoWorkflowRoutes } from './demo-workflow/routes.ts';
 
-아래는 새 데모 핵심 소스, Python bridge와 직접 보조 코드, 기존 Node/Python 진입점, 테스트, 패키지 설정의 정확한 원문입니다. 기존 `careApp.ts` 전체도 포함되므로 주문 등 다른 기존 경로가 보이지만 이 데모가 그 경로를 실행한다는 뜻은 아닙니다. 일반 HTTP/상품/카탈로그 등 기존 레포 전체의 모든 의존 파일, node_modules, ClawOps/Google SDK 소스, package-lock 전체는 이 한 문서에 복제하지 않았습니다. 완전 checkout은 worktree에 있으며 전체 dependencies는 package-lock을 따라 설치해야 합니다. 이 문서 한 파일만으로 독립 설치되는 프로젝트라고 주장하지 않습니다.
-
-기존 진입점 변경점은 별도 diff도 포함합니다. 파일 해시는 원래 파일 bytes의 SHA256입니다. fenced code가 읽기 자료이며 manifest가 생성 시점 기준을 고정합니다. generator를 다시 실행하면 수정된 코드 기준으로 묶음이 갱신됩니다.
-
-생성 시각(UTC): 2026-09-18T02:48:40.688030+00:00
-
-기준 HEAD: `000a08c2ab5bb5d3f6affd7dc717fb0a11622756`. 미커밋 수정 파일을 포함한 현재 worktree snapshot입니다.
-
-## SHA256 manifest
-
-```json
-{
-  "generatedAt": "2026-09-18T02:48:40.688030+00:00",
-  "workspace": "<checkout>",
-  "baseHead": "000a08c2ab5bb5d3f6affd7dc717fb0a11622756",
-  "files": [
-    {
-      "path": "src/demo-workflow/contracts.ts",
-      "sha256": "ba6d90d8cb6a32e3008385c12514f3b5718436bdb4658538de1bffa1bf306f24",
-      "bytes": 5811
-    },
-    {
-      "path": "src/demo-workflow/mockProvider.ts",
-      "sha256": "bd299b751a538ce5d17e633fba5ecce1bd45bfc1c104a49fabfdf3d4200e0bb9",
-      "bytes": 2094
-    },
-    {
-      "path": "src/demo-workflow/routes.ts",
-      "sha256": "562067c5b00e4768ecd4b0f13a02a15a6971df417a9d9257822d34408a54f2e0",
-      "bytes": 3499
-    },
-    {
-      "path": "src/demo-workflow/service.ts",
-      "sha256": "63bd1abe895682f573081b15dddfb46f58e4791b6b78c9f0af5643cde9ed0047",
-      "bytes": 16387
-    },
-    {
-      "path": "src/demo-workflow/store.ts",
-      "sha256": "95632af88524acbade18086ad0327488388bc3dbc26ed27fde320139193a8697",
-      "bytes": 1666
-    },
-    {
-      "path": "src/demo-workflow/types.ts",
-      "sha256": "c65ca40a5801e51e9cc9245f95e99aec29f26a37de463b911b2778a370afdc06",
-      "bytes": 2656
-    },
-    {
-      "path": "scripts/demo_voice.py",
-      "sha256": "ebfcdc195ad5796592ba696b469ca42a0b54c72e68c36d1df745d6a44688cb83",
-      "bytes": 19310
-    },
-    {
-      "path": "scripts/coordination_voice.py",
-      "sha256": "7cb9fff6e8de10a1f792ee5d86452e48e488bc9a7e83584400b5e72d3a4881d1",
-      "bytes": 19975
-    },
-    {
-      "path": "scripts/coordination_tools.py",
-      "sha256": "abd455f6a55fe33f1a686b4b8392e025be54cb82c4849d42ac0bca28de9869e6",
-      "bytes": 15605
-    },
-    {
-      "path": "scripts/coordination_config.py",
-      "sha256": "ccf29eb57b634892f9292bf4e5bd7b00317e2a49bcfdad043da665ba1f660e4e",
-      "bytes": 2267
-    },
-    {
-      "path": "src/careApp.ts",
-      "sha256": "a54415a4d977747a6ea450d4d816b7f8a484146b056bdbcce3a56635598d0ca3",
-      "bytes": 17840
-    },
-    {
-      "path": "src/server.ts",
-      "sha256": "9addb9ecbff58dafc21edbb5da8608d456690982ce2cc4f3ffae1b2bb5c6d6b6",
-      "bytes": 248
-    },
-    {
-      "path": "tests/demoWorkflow.test.ts",
-      "sha256": "50472c0009c3f91528a176f3cf37234fc4539307eed5424e527916424ac0e725",
-      "bytes": 11252
-    },
-    {
-      "path": "tests/demoAcceptance.test.ts",
-      "sha256": "a196c472ec0a310f66dd00a6dad07e6ae7ff8617a694d5ec277f8930526c42ed",
-      "bytes": 8043
-    },
-    {
-      "path": "tests/demoAcceptanceServer.ts",
-      "sha256": "1c058e178c0c687a57bccf92108e5507fb8e3420d2d3b9ab22fad3305367e4d2",
-      "bytes": 435
-    },
-    {
-      "path": "tests/python/test_demo_voice.py",
-      "sha256": "fc8b3e7034c8ee98e4cc73535e97fb2eaa7bef0c8bac5f600dfd0406e4dca3d5",
-      "bytes": 9027
-    },
-    {
-      "path": "scripts/prove-demo-flow-local.py",
-      "sha256": "3ef2304970a7a48a3916d6e2235eee23f3806d7c1b73b9f57f9b2c11d393a02a",
-      "bytes": 8120
-    },
-    {
-      "path": "package.json",
-      "sha256": "b7c941de9e52d6fa3e57521b6a2a5c8b9857cf54a8f66444577901373615fa23",
-      "bytes": 912
-    },
-    {
-      "path": "tsconfig.json",
-      "sha256": "134217b730772b26671e5456362f8b81d1db8ae2c840f6c692522c26eea7d2d9",
-      "bytes": 427
-    },
-    {
-      "path": ".env.example",
-      "sha256": "f685a6996ea15c4263f243fba55e3d8d5caa893f37fd242e8c42926a4fea9f16",
-      "bytes": 1275
-    }
-  ],
-  "externalLockfile": {
-    "path": "package-lock.json",
-    "sha256": "29f88a3a2c6b551ce2405d2d774ee9e747a39b9d4cefd7db936a0979573e789d",
-    "inlined": false
+export function createCareApp() {
+  const operationalEnabled = process.env.NODE_ENV !== 'production' || Boolean(process.env.CARE_LEDGER_PATH);
+  const repository = process.env.CARE_LEDGER_PATH ? new SqliteCareRequestRepository(process.env.CARE_LEDGER_PATH) : new InMemoryCareRequestRepository();
+  const service = new CareRequestService(repository);
+  // Anonymous browser demos can never consume the operational phone quota or cases.
+  const careHandlers = createCareRequestHandlers(new CareRequestService(new InMemoryCareRequestRepository()));
+  const roleTokens = { PROVIDER: process.env.CARE_PROVIDER_TOKEN, RECIPIENT: process.env.CARE_RECIPIENT_TOKEN, OPERATOR: process.env.CARE_OPERATOR_TOKEN };
+  const configuredTokens = Object.values(roleTokens).filter((v): v is string => Boolean(v));
+  if (new Set(configuredTokens).size !== configuredTokens.length) throw new Error('CARE_ROLE_TOKENS_MUST_BE_DISTINCT');
+  const providerName = process.env.CARE_PROVIDER_NAME ?? '찾아가는 푸드마켓';
+  const automaticDispatchers = new Map(service.catalog().items.map(item => [item.providerName, new CareProviderDispatcher(repository, new SandboxCareProvider(item.providerName, repository))]));
+  const dispatcher = automaticDispatchers.get(providerName) ?? new CareProviderDispatcher(repository, new SandboxCareProvider(providerName));
+  const phone = new CarePhoneCoordinator(service);
+  const agentSecret = process.env.AGENT_TOOL_SECRET;
+  // Explicitly opt in: this workflow uses simulated institutions and never
+  // changes the existing coordination phone mode by merely installing code.
+  const demoWorkflowEnabled = process.env.DEMO_WORKFLOW_ENABLED === 'true';
+  const demoLedger = process.env.DEMO_WORKFLOW_LEDGER_PATH;
+  const demoScenario = process.env.DEMO_WORKFLOW_SCENARIO ?? 'success';
+  if (demoWorkflowEnabled && (!demoLedger || !agentSecret || agentSecret.length < 32)) {
+    throw new Error('DEMO_WORKFLOW_LEDGER_AND_AGENT_SECRET_REQUIRED');
   }
+  if (demoWorkflowEnabled && !['success', 'unavailable', 'no-answer'].includes(demoScenario)) {
+    throw new Error('INVALID_DEMO_WORKFLOW_SCENARIO');
+  }
+  const demoWorkflow = demoWorkflowEnabled ? createDemoWorkflowRoutes({
+    ledgerPath: demoLedger!, secret: agentSecret!,
+    scenario: demoScenario as 'success' | 'unavailable' | 'no-answer',
+  }) : undefined;
+  const coordinationPath = process.env.COORDINATION_LEDGER_PATH ?? process.env.CARE_LEDGER_PATH;
+  const coordinationEnabled = process.env.NODE_ENV !== 'production' || Boolean(coordinationPath);
+  const coordinationStore = new CoordinationStore(coordinationPath ?? ':memory:');
+  const coordination = createCoordinationRoutes(new CoordinationEngine(coordinationStore), {
+    ...(roleTokens.OPERATOR ? {operator:roleTokens.OPERATOR}:{}), ...(agentSecret?{agent:agentSecret}:{})
+  });
+  const publicBaseUrl = process.env.PUBLIC_BASE_URL;
+  const operatorSessions = new OperatorSessions(roleTokens.OPERATOR);
+  const configuredOrigin = publicBaseUrl ? new URL(publicBaseUrl).origin : undefined;
+  const twilioAuthToken = process.env.TWILIO_AUTH_TOKEN;
+  const dispatchConfirmed = async (caseId: string) => {
+    const confirmed = await service.get(caseId);
+    if (confirmed) return automaticDispatchers.get(confirmed.providerName)?.submit(caseId);
+    return undefined;
+  };
+  const voice = operationalEnabled && publicBaseUrl && twilioAuthToken
+    ? createCareVoiceHandlers({ authToken: twilioAuthToken, baseUrl: publicBaseUrl, service, onConfirmed: dispatchConfirmed })
+    : undefined;
+
+  const server = createServer(async (request, response) => {
+    try {
+      const url = new URL(request.url ?? '/', `http://${request.headers.host ?? 'localhost'}`);
+      if (url.pathname.startsWith('/internal/demo-workflow/')) {
+        if (!demoWorkflow) return sendJson(response, 503, { error: 'DEMO_WORKFLOW_DISABLED' });
+        const result = await demoWorkflow(request.method ?? 'GET', url,
+          String(request.headers.authorization ?? ''),
+          ['POST', 'PATCH'].includes(request.method ?? '') ? await readJson(request) : {});
+        return sendJson(response, result?.status ?? 404, result?.body ?? { error: 'NOT_FOUND' });
+      }
+      if (url.pathname.startsWith('/api/support/') || url.pathname.startsWith('/api/coordination/')) {
+        if (url.pathname.startsWith('/api/coordination/') && !coordinationEnabled) {
+          return sendJson(response, 503, {error:{code:'DURABLE_LEDGER_REQUIRED',message:'요청 저장 연결을 준비하고 있습니다.'}});
+        }
+        const expectedOrigin = configuredOrigin ?? url.origin;
+        const cookieOptions = {secure: expectedOrigin.startsWith('https:')};
+        if (url.pathname === '/api/coordination/session') {
+          if (request.method === 'GET') return sendJson(response,200,{authenticated:operatorSessions.isValid(request.headers.cookie)});
+          if (request.headers.origin !== expectedOrigin) return sendJson(response,403,{error:{code:'FORBIDDEN',message:'담당자 연결이 필요합니다.'}});
+          if (request.method === 'POST') {
+            const body=await readJson(request);
+            const session=operatorSessions.login(body.accessCode,cookieOptions);
+            if (!session) return sendJson(response,403,{error:{code:'FORBIDDEN',message:'접속 정보를 확인해 주세요.'}});
+            response.setHeader('set-cookie',session.cookie);
+            return sendJson(response,200,{authenticated:true});
+          }
+          if (request.method === 'DELETE') {
+            response.setHeader('set-cookie',operatorSessions.logout(request.headers.cookie,cookieOptions));
+            return sendJson(response,200,{authenticated:false});
+          }
+          return sendJson(response,405,{error:{code:'METHOD_NOT_ALLOWED',message:'요청 방식이 올바르지 않습니다.'}});
+        }
+        const cookieAuthorized=operatorSessions.authenticate(request.headers.cookie,request.headers.origin,expectedOrigin,request.method ?? 'GET');
+        const authorization=String(request.headers.authorization ?? (cookieAuthorized ? `Bearer ${roleTokens.OPERATOR}` : ''));
+        const result = coordination(request.method ?? 'GET',url,authorization,
+          ['POST','PATCH'].includes(request.method ?? '') ? await readJson(request) : {});
+        if(result) return sendJson(response,result.status,result.body);
+      }
+      if (request.method === 'GET' && ['/health', '/healthz', '/api/health'].includes(url.pathname)) {
+        return sendJson(response, 200, {
+          ok: true,
+          product: 'care-plan-execution',
+          payment: 'disabled',
+          voice: !operationalEnabled ? 'demo-only' : agentSecret ? 'clawops-bridge-configured' : voice ? 'configured' : 'credential-gated',
+          evidenceClass: 'SYNTHETIC_DEMO',
+          demoWorkflow: { enabled: demoWorkflowEnabled, mode: 'SIMULATION', version: 1 }
+        });
+      }
+      if (url.pathname.startsWith('/api/care/')) {
+        if (!operationalEnabled) return sendJson(response, 503, { error: 'DURABLE_LEDGER_REQUIRED' });
+        const authorization = String(request.headers.authorization ?? '');
+        const role = (Object.keys(roleTokens) as Array<keyof typeof roleTokens>).find(key => safeBearer(authorization, roleTokens[key]));
+        if (!role) return sendJson(response, 403, { error: 'FORBIDDEN' });
+        const scoped = (r: { providerName: string; beneficiaryRef: string }) => role === 'OPERATOR' || (role === 'PROVIDER' ? r.providerName === providerName : r.beneficiaryRef === 'demo-senior-01');
+        if (request.method === 'GET' && url.pathname === '/api/care/inbox') {
+          const requests = (await service.list()).filter(scoped).filter(r => role !== 'OPERATOR' || r.status === 'EXCEPTION' || r.status === 'REQUESTED' || r.dispatch === 'SENDING' || r.dispatch === 'UNKNOWN');
+          const exceptions = role === 'OPERATOR' ? repository.transaction(ledger => Object.values(ledger.calls).filter(c => c.state === 'EXCEPTION').map(c => ({ caseId: c.caseId, reason: c.reason, state: c.state }))) : [];
+          return sendJson(response, 200, { requests, exceptions, synthetic: true });
+        }
+        const match = url.pathname.match(/^\/api\/care\/requests\/(CARE-[a-zA-Z0-9-]+)\/(events|actions|submit|readback)$/);
+        if (!match) return sendJson(response, 404, { error: 'NOT_FOUND' });
+        const caseId = match[1]!;
+        const value = await service.get(caseId);
+        if (!value || !scoped(value)) return sendJson(response, 404, { error: 'NOT_FOUND' });
+        if (request.method === 'GET' && match[2] === 'events') return sendJson(response, 200, { request: value, events: await service.events(caseId), synthetic: true });
+        if (request.method !== 'POST') return sendJson(response, 405, { error: 'METHOD_NOT_ALLOWED' });
+        if (match[2] === 'submit' || match[2] === 'readback') {
+          if (role !== 'PROVIDER') return sendJson(response, 403, { error: 'ROLE_FORBIDDEN' });
+          const result = match[2] === 'submit' ? await dispatcher.submit(caseId) : await dispatcher.readback(caseId);
+          return sendJson(response, 200, { request: result, synthetic: true });
+        }
+        const body = await readJson(request);
+        const result = await service.act(caseId, String(body.action) as Parameters<typeof service.act>[1], typeof body.reason === 'string' ? body.reason : undefined, role);
+        return sendJson(response, 200, { request: result, synthetic: true });
+      }
+      if (url.pathname.startsWith('/internal/care-agent/')) {
+        if (!operationalEnabled) return sendJson(response, 503, { error: 'DURABLE_LEDGER_REQUIRED' });
+        const supplied = String(request.headers.authorization ?? '');
+        if (!safeBearer(supplied, agentSecret)) return sendJson(response, 403, { error: 'FORBIDDEN' });
+        if (request.method !== 'POST') return sendJson(response, 405, { error: 'METHOD_NOT_ALLOWED' });
+        const body = await readJson(request);
+        const callId = typeof body.callId === 'string' ? body.callId : '';
+        if (!/^[A-Za-z0-9_-]{1,160}$/.test(callId)) return sendJson(response, 400, { error: 'INVALID_CALL_ID' });
+        const operation = url.pathname.slice('/internal/care-agent/'.length);
+        const result = operation === 'begin' ? phone.begin(callId)
+          : operation === 'select' ? phone.select(callId, typeof body.text === 'string' ? body.text : '')
+          : operation === 'confirm' ? await phone.confirm(callId, String(body.token ?? ''), String(body.digit ?? ''))
+          : operation === 'end' ? phone.end(callId)
+          : operation === 'status' ? phone.status(callId) : undefined;
+        if (operation === 'confirm' && result?.state === 'CONFIRMED' && result.caseId) {
+          await dispatchConfirmed(result.caseId);
+        }
+        return sendJson(response, result ? 200 : 404, result ?? { error: 'NOT_FOUND' });
+      }
+      if (url.pathname.startsWith('/api/demo/care/')) {
+        const result = await careHandlers({
+          method: request.method ?? 'GET',
+          pathname: url.pathname,
+          ...(request.method === 'POST' ? { body: await readJson(request) } : {})
+        });
+        return sendJson(response, result.status, result.body);
+      }
+      if (request.method === 'POST' && ['/voice/incoming', '/voice/request', '/voice/confirm'].includes(url.pathname)) {
+        if (!voice || !publicBaseUrl) return sendJson(response, 503, { error: 'VOICE_CREDENTIALS_NOT_CONFIGURED' });
+        const verificationParams = await readForm(request);
+        const params = { ...verificationParams };
+        for (const [name, value] of url.searchParams) params[name] = value;
+        const voiceRequest = {
+          signature: String(request.headers['x-twilio-signature'] ?? ''),
+          params,
+          verificationParams,
+          url: `${publicBaseUrl}${url.pathname}${url.search}`
+        };
+        const result = url.pathname === '/voice/incoming'
+          ? voice.incoming(voiceRequest)
+          : url.pathname === '/voice/request'
+            ? await voice.request(voiceRequest)
+            : await voice.confirm(voiceRequest);
+        response.writeHead(result.status, { ...result.headers, ...securityHeaders() });
+        return response.end(result.body);
+      }
+      if (request.method === 'GET' || request.method === 'HEAD') return serveStatic(url, response, request.method === 'HEAD');
+      return sendJson(response, 404, { error: 'NOT_FOUND' });
+    } catch (error) {
+      if (error instanceof CareRequestError) return sendJson(response, error.code === 'ROLE_FORBIDDEN' ? 403 : 409, { error: error.code });
+      if (error instanceof RequestBodyError) return sendJson(response, error.status, { error: error.code });
+      return sendJson(response, 500, { error: 'INTERNAL_SERVER_ERROR' });
+    }
+  });
+  server.on('close', () => { coordinationStore.close(); if (repository instanceof SqliteCareRequestRepository) repository.close(); });
+  return server;
+}
+
+function safeBearer(supplied: string, token: string | undefined): boolean {
+  if (!token || token.length < 32) return false;
+  const expected = Buffer.from(`Bearer ${token}`);
+  const actual = Buffer.from(supplied);
+  return actual.length === expected.length && timingSafeEqual(actual, expected);
+}
+
+async function readJson(request: IncomingMessage): Promise<Record<string, unknown>> {
+  const body = Buffer.concat(await readBoundedBody(request)).toString('utf8');
+  if (!body) return {};
+  try {
+    const value: unknown = JSON.parse(body);
+    if (!value || typeof value !== 'object' || Array.isArray(value)) throw new Error();
+    return value as Record<string, unknown>;
+  } catch {
+    throw new RequestBodyError(400, 'INVALID_JSON');
+  }
+}
+
+async function readForm(request: IncomingMessage): Promise<Record<string, string>> {
+  return Object.fromEntries(new URLSearchParams(Buffer.concat(await readBoundedBody(request)).toString('utf8')).entries());
+}
+
+async function readBoundedBody(request: IncomingMessage, maximumBytes = 1_048_576): Promise<Buffer[]> {
+  const chunks: Buffer[] = [];
+  let total = 0;
+  for await (const chunk of request) {
+    const bytes = Buffer.isBuffer(chunk) ? chunk : Buffer.from(chunk);
+    total += bytes.length;
+    if (total > maximumBytes) throw new RequestBodyError(413, 'REQUEST_BODY_TOO_LARGE');
+    chunks.push(bytes);
+  }
+  return chunks;
+}
+
+class RequestBodyError extends Error {
+  constructor(readonly status: number, readonly code: string) { super(code); }
+}
+
+async function serveStatic(url: URL, response: ServerResponse, headOnly: boolean): Promise<void> {
+  const appRoutes = new Set(['/app', '/ops', '/verify']);
+  const file = url.pathname === '/'
+    ? url.searchParams.has('v') ? 'index.html' : 'landing.html'
+    : appRoutes.has(url.pathname) ? 'index.html'
+      : ['/tech', '/tech.html'].includes(url.pathname) ? 'tech.html'
+        : url.pathname.slice(1);
+  const root = resolve(process.cwd(), 'public');
+  const path = resolve(root, file);
+  const asset = file.startsWith('assets/') && path.startsWith(root + sep) && ['.png', '.webp', '.jpg', '.svg', '.woff2'].includes(extname(file));
+  if (!asset && !['index.html', 'landing.html', 'tech.html', 'app.js', 'landing.js', 'tech.js', 'styles.css', 'tokens.css', 'icons.js'].includes(file)) return sendJson(response, 404, { error: 'NOT_FOUND' });
+  let bytes: Buffer;
+  try { bytes = await readFile(path); } catch { return sendJson(response, 404, { error: 'NOT_FOUND' }); }
+  const contentType = ({ '.png': 'image/png', '.webp': 'image/webp', '.jpg': 'image/jpeg', '.svg': 'image/svg+xml', '.woff2': 'font/woff2' } as Record<string, string>)[extname(file)] ?? (extname(file) === '.css' ? 'text/css; charset=utf-8' : extname(file) === '.js' ? 'text/javascript; charset=utf-8' : 'text/html; charset=utf-8');
+  response.writeHead(200, { 'content-type': contentType, ...securityHeaders() });
+  response.end(headOnly ? undefined : bytes);
+}
+
+function sendJson(response: ServerResponse, status: number, value: unknown): void {
+  response.writeHead(status, { 'content-type': 'application/json; charset=utf-8', 'cache-control': 'no-store', ...securityHeaders() });
+  response.end(JSON.stringify(value));
+}
+
+function securityHeaders(): Record<string, string> {
+  return {
+    'content-security-policy': "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline' https://static.wanted.co.kr https://cdn.jsdelivr.net; font-src 'self' https://static.wanted.co.kr https://cdn.jsdelivr.net; img-src 'self' data:; connect-src 'self'; frame-ancestors 'none'; base-uri 'none'; form-action 'self'",
+    'permissions-policy': 'camera=(), microphone=(), geolocation=()',
+    'referrer-policy': 'no-referrer',
+    'x-content-type-options': 'nosniff',
+    'x-frame-options': 'DENY'
+  };
 }
 ```
 
-## 기존 진입점 변경: scripts/coordination_voice.py
+## src/server.ts
 
-```diff
-diff --git a/scripts/coordination_voice.py b/scripts/coordination_voice.py
-index 9069bc7..8cafd20 100644
---- a/scripts/coordination_voice.py
-+++ b/scripts/coordination_voice.py
-@@ -277,13 +277,25 @@ async def main():
-     logging.getLogger('clawops').setLevel(logging.CRITICAL)
-     journal=Journal(os.environ['COORDINATION_VOICE_STATE_PATH'])
-     async with aiohttp.ClientSession(timeout=aiohttp.ClientTimeout(total=15),headers={'Authorization':'Bearer '+os.environ['AGENT_TOOL_SECRET']}) as client:
--        runtime=VoiceRuntime(HttpAPI(client,os.environ['AGENT_API_BASE_URL']),journal,routing)
--        agent_class=make_agent_class(ClawOpsAgent,GeminiRealtime,ToolRegistry)
-+        demo_mode=os.environ.get('COORDINATION_DEMO_MODE')=='1'
-+        if demo_mode:
-+            from demo_voice import DemoVoiceRuntime,make_demo_agent_class
-+            runtime=DemoVoiceRuntime(HttpAPI(client,os.environ['AGENT_API_BASE_URL']),journal,routing)
-+            agent_class=make_demo_agent_class(ClawOpsAgent,GeminiRealtime,ToolRegistry)
-+        else:
-+            runtime=VoiceRuntime(HttpAPI(client,os.environ['AGENT_API_BASE_URL']),journal,routing)
-+            agent_class=make_agent_class(ClawOpsAgent,GeminiRealtime,ToolRegistry)
-         agent=agent_class(runtime,api_key=os.environ['CLAWOPS_API_KEY'],account_id=os.environ['CLAWOPS_ACCOUNT_ID'],from_=service)
-         runtime.agent=agent
-         agent.on('call_end')(runtime.ended)
-         agent.on('call_failed')(runtime.ended)
--        await runtime.recover()
-+        if demo_mode:
-+            agent.on('call_start')(runtime.started)
-+            agent.on('transcript')(runtime.transcript)
-+            agent.on('dtmf')(runtime.dtmf)
-+            runtime.wake.set()
-+        else:
-+            await runtime.recover()
-         worker=asyncio.create_task(runtime.worker())
-         try:
-             await agent.connect()
+SHA256: `9addb9ecbff58dafc21edbb5da8608d456690982ce2cc4f3ffae1b2bb5c6d6b6`
+
+```typescript
+import { createCareApp } from './careApp.ts';
+
+const port = Number(process.env.PORT ?? 8080);
+const server = createCareApp();
+server.listen(port, process.env.HOST ?? '0.0.0.0', () => {
+  process.stdout.write(`malgyeol listening on ${port}\n`);
+});
 ```
 
-## 기존 진입점 변경: src/careApp.ts
+## src/demo-workflow/contracts.ts
 
-```diff
-diff --git a/src/careApp.ts b/src/careApp.ts
-index e753ae0..25968b3 100644
---- a/src/careApp.ts
-+++ b/src/careApp.ts
-@@ -13,6 +13,7 @@ import { CoordinationStore } from './coordination/store.ts';
- import { CoordinationEngine } from './coordination/engine.ts';
- import { createCoordinationRoutes } from './coordination/routes.ts';
- import { OperatorSessions } from './coordination/operatorSession.ts';
-+import { createDemoWorkflowRoutes } from './demo-workflow/routes.ts';
- 
- export function createCareApp() {
-   const operationalEnabled = process.env.NODE_ENV !== 'production' || Boolean(process.env.CARE_LEDGER_PATH);
-@@ -28,6 +29,21 @@ export function createCareApp() {
-   const dispatcher = automaticDispatchers.get(providerName) ?? new CareProviderDispatcher(repository, new SandboxCareProvider(providerName));
-   const phone = new CarePhoneCoordinator(service);
-   const agentSecret = process.env.AGENT_TOOL_SECRET;
-+  // Explicitly opt in: this workflow uses simulated institutions and never
-+  // changes the existing coordination phone mode by merely installing code.
-+  const demoWorkflowEnabled = process.env.DEMO_WORKFLOW_ENABLED === 'true';
-+  const demoLedger = process.env.DEMO_WORKFLOW_LEDGER_PATH;
-+  const demoScenario = process.env.DEMO_WORKFLOW_SCENARIO ?? 'success';
-+  if (demoWorkflowEnabled && (!demoLedger || !agentSecret || agentSecret.length < 32)) {
-+    throw new Error('DEMO_WORKFLOW_LEDGER_AND_AGENT_SECRET_REQUIRED');
-+  }
-+  if (demoWorkflowEnabled && !['success', 'unavailable', 'no-answer'].includes(demoScenario)) {
-+    throw new Error('INVALID_DEMO_WORKFLOW_SCENARIO');
-+  }
-+  const demoWorkflow = demoWorkflowEnabled ? createDemoWorkflowRoutes({
-+    ledgerPath: demoLedger!, secret: agentSecret!,
-+    scenario: demoScenario as 'success' | 'unavailable' | 'no-answer',
-+  }) : undefined;
-   const coordinationPath = process.env.COORDINATION_LEDGER_PATH ?? process.env.CARE_LEDGER_PATH;
-   const coordinationEnabled = process.env.NODE_ENV !== 'production' || Boolean(coordinationPath);
-   const coordinationStore = new CoordinationStore(coordinationPath ?? ':memory:');
-@@ -50,6 +66,13 @@ export function createCareApp() {
-   const server = createServer(async (request, response) => {
-     try {
-       const url = new URL(request.url ?? '/', `http://${request.headers.host ?? 'localhost'}`);
-+      if (url.pathname.startsWith('/internal/demo-workflow/')) {
-+        if (!demoWorkflow) return sendJson(response, 503, { error: 'DEMO_WORKFLOW_DISABLED' });
-+        const result = await demoWorkflow(request.method ?? 'GET', url,
-+          String(request.headers.authorization ?? ''),
-+          ['POST', 'PATCH'].includes(request.method ?? '') ? await readJson(request) : {});
-+        return sendJson(response, result?.status ?? 404, result?.body ?? { error: 'NOT_FOUND' });
-+      }
-       if (url.pathname.startsWith('/api/support/') || url.pathname.startsWith('/api/coordination/')) {
-         if (url.pathname.startsWith('/api/coordination/') && !coordinationEnabled) {
-           return sendJson(response, 503, {error:{code:'DURABLE_LEDGER_REQUIRED',message:'요청 저장 연결을 준비하고 있습니다.'}});
-@@ -84,7 +107,8 @@ export function createCareApp() {
-           product: 'care-plan-execution',
-           payment: 'disabled',
-           voice: !operationalEnabled ? 'demo-only' : agentSecret ? 'clawops-bridge-configured' : voice ? 'configured' : 'credential-gated',
--          evidenceClass: 'SYNTHETIC_DEMO'
-+          evidenceClass: 'SYNTHETIC_DEMO',
-+          demoWorkflow: { enabled: demoWorkflowEnabled, mode: 'SIMULATION', version: 1 }
-         });
-       }
-       if (url.pathname.startsWith('/api/care/')) {
-```
+SHA256: `207e1ce0cad26e28e5831f5cc0bc8553b5cb0a98d1782bd9ed3f739c01a0f41a`
 
-## 전체 소스: src/demo-workflow/contracts.ts
-
-````typescript
+```typescript
 import { createHash } from 'node:crypto';
 import type { Requirements, Proof, Terms, Seed, Plan, Receipt, Verdict, InquiryOutcome, NextOpportunity } from './types.ts';
 function sorted(v: unknown): unknown { if (Array.isArray(v)) return v.map(sorted); if (v && typeof v === 'object') return Object.fromEntries(Object.entries(v).sort(([a], [b]) => a.localeCompare(b)).map(([k, x]) => [k, sorted(x)])); return v; }
@@ -391,43 +391,70 @@ export function evaluate(seed: Seed, plan: Plan, receipt?: Receipt): Verdict {
   if (seed.hash !== hash({ version: seed.version, requirements: r }) || plan.seedHash !== seed.hash) reasons.push('SEED_MISMATCH');
   if (plan.hash !== hash({ seedHash: plan.seedHash, task: plan.task, terms: plan.terms, proof: plan.proof })) reasons.push('PLAN_MISMATCH');
   if (!seed.approvalRef || seed.approvedAt === undefined) reasons.push('NOT_APPROVED');
-  if (![r.item, ...r.alternatives].includes(t.item) || t.item !== plan.task.item || t.quantity !== r.quantity || t.costKrw > r.maxCostKrw || t.receivingMethod !== r.receivingMethod || r.dietaryRestrictions.some(x => !t.dietaryRestrictions.includes(x)) || Date.parse(t.promisedBy) > Date.parse(r.neededBy)) reasons.push('TERMS_OUTSIDE_SEED');
+  if (![r.item, ...r.alternatives].map(normalizeMeal).includes(normalizeMeal(t.item)) || normalizeMeal(t.item) !== normalizeMeal(plan.task.item) || t.quantity !== r.quantity || t.costKrw > r.maxCostKrw || t.receivingMethod !== r.receivingMethod || r.dietaryRestrictions.some(x => !t.dietaryRestrictions.includes(x)) || Date.parse(t.promisedBy) > Date.parse(r.neededBy)) reasons.push('TERMS_OUTSIDE_SEED');
   if (!validProof(plan.proof)) reasons.push('INVALID_PROOF');
   if (receipt && (!text(receipt.id) || receipt.planHash !== plan.hash || receipt.institutionId !== plan.task.institutionId || hash(receipt.terms) !== hash(plan.terms) || !validProof(receipt.proof))) reasons.push('RECEIPT_MISMATCH');
   return { pass: reasons.length === 0, reasons, seedHash: seed.hash, planHash: plan.hash };
 }
 export function spokenTime(at: string): string { return new Intl.DateTimeFormat('ko-KR', { timeZone: 'Asia/Seoul', month: 'long', day: 'numeric', hour: 'numeric', minute: '2-digit', hour12: true }).format(new Date(at)); }
 export function readback(r: Requirements): string { return `시연 요청을 확인하겠습니다. ${r.region}, ${r.item} ${r.quantity}개, ${spokenTime(r.neededBy)}까지, ${r.maxCostKrw === 0 ? '무료' : `최대 ${r.maxCostKrw}원`}, ${r.receivingMethod === 'delivery' ? '배달' : '방문 수령'}입니다. 식이 제한은 ${r.dietaryRestrictions.join(', ') || '없음'}입니다. 없으면 ${r.alternatives.length ? r.alternatives.join(', ') + ' 순서로' : '다른 물품으로 바꾸지 않고'} 확인합니다. 그마저 없으면 ${r.noMatchPreference === 'offer_callback' ? '다음 지원 시점의 연락을 제안합니다' : '결과만 알려드립니다'}. 모의 기관 문의 ${r.consent.contact ? '동의' : '비동의'}, 모의 신청 ${r.consent.submit ? '동의' : '비동의'}, 고객 결과 전화 ${r.consent.callback ? '동의' : '비동의'}입니다. 맞으면 1번, 수정하려면 2번을 눌러 주세요.`; }
-````
 
-## 전체 소스: src/demo-workflow/mockProvider.ts
-
-````typescript
-import type { DemoProvider, Proof, Requirements } from './types.ts';
-import { hash } from './contracts.ts';
-export function demoRequirements(now = Date.now()): Requirements { return { item: '한 끼 식사', quantity: 1, region: '서울 서초구', neededBy: new Date(now + 7200_000).toISOString(), maxCostKrw: 0, dietaryRestrictions: [], alternatives: [], receivingMethod: 'delivery', noMatchPreference: 'offer_callback', consent: { contact: true, submit: true, callback: true } }; }
-export function createMockProvider(scenario: 'success' | 'unavailable' | 'no-answer' = 'success', now = Date.now): DemoProvider {
-  const proof = (ref: string): Proof => ({ mode: 'SIMULATION', ref: `fictional-demo://${ref}`, observedAt: new Date(now()).toISOString() });
-  return { mode: 'SIMULATION', institutions: ['A', 'B', 'C'].map(id => ({ id, name: `시연 기관 ${id} (허구)` })),
-    async inquire(task, seed, signal) {
-      if (signal.aborted) throw new Error('ABORTED');
-      await Promise.resolve();
-      if (scenario === 'no-answer') return { kind: 'no-answer', retryAt: new Date(now() + 60_000).toISOString() };
-      if (scenario === 'success' && task.institutionId === 'B') return { kind: 'available', proof: proof(`B/${hash(task)}`), terms: { item: task.item, quantity: seed.requirements.quantity, costKrw: 0, receivingMethod: seed.requirements.receivingMethod, dietaryRestrictions: [...seed.requirements.dietaryRestrictions], promisedBy: seed.requirements.neededBy } };
-      return { kind: 'unavailable', reason: '시연에서 오늘 물량이 소진된 것으로 설정했습니다', proof: proof(`${task.institutionId}/unavailable`), next: { at: new Date(now() + 86400_000).toISOString(), timezone: 'Asia/Seoul', instructions: '시연 준비물은 없습니다. 실제 기관 지원 일정이 아닙니다.', proof: proof(`${task.institutionId}/next`) } };
-    },
-    async submit(plan, key) { return { id: `mock-receipt:${hash(key)}`, planHash: plan.hash, institutionId: plan.task.institutionId, terms: structuredClone(plan.terms), proof: proof(`receipt/${hash(key)}`) }; },
-  };
+export function shortReadback(r: Requirements): string {
+ const count = r.quantity === 1 ? '한' : r.quantity === 2 ? '두' : String(r.quantity);
+ return `시연 조건을 확인할게요. ${r.region}, ${r.item} ${count} ${normalizeMeal(r.item) === '한끼식사' ? '인분' : '개'}, ${r.maxCostKrw === 0 ? '무료' : `최대 ${r.maxCostKrw}원`}, ${r.receivingMethod === 'delivery' ? '배달' : '방문 수령'}, ${spokenTime(r.neededBy)}까지입니다. 식이 제한 ${r.dietaryRestrictions.join(', ') || '없음'}, 대안 ${r.alternatives.join(', ') || '없음'}입니다. 없으면 ${r.noMatchPreference === 'offer_callback' ? '다음 가능한 방법을 안내합니다' : '결과만 안내합니다'}. 이번 체험에서 추가 예약은 하지 않습니다. 이 조건으로 모의 기관 문의와 모의 신청을 하고, 이 전화번호로 결과를 알려드릴게요. 동의하면 일 번, 수정하려면 이 번을 눌러 주세요.`;
 }
-````
 
-## 전체 소스: src/demo-workflow/routes.ts
+export function normalizeMeal(item: string): string { const compact = item.normalize('NFKC').replace(/\s+/g, '').toLowerCase(); return ['한끼식사','한끼','식사','음식','도시락','밥','무료식사','식사한끼'].includes(compact) ? '한끼식사' : compact; }
+```
 
-````typescript
+## src/demo-workflow/mockProvider.ts
+
+SHA256: `9a234c730dff3b1c1791e6266b33e8db2d471dabc86688b2ad4dfe92f5b3189d`
+
+```typescript
+import type { DemoProvider, Proof, Requirements, Terms } from './types.ts';
+import { hash, normalizeMeal } from './contracts.ts';
+export function demoRequirements(now = Date.now()): Requirements { return { item: '한 끼 식사', quantity: 1, region: '서울 서초구', neededBy: new Date(now + 7200_000).toISOString(), maxCostKrw: 0, dietaryRestrictions: [], alternatives: [], receivingMethod: 'delivery', noMatchPreference: 'offer_callback', consent: { contact: true, submit: true, callback: true } }; }
+export interface MockCatalogOffer { institutionId: string; regions: string[]; terms: Terms; }
+export function fixedMockCatalog(now = Date.now()): MockCatalogOffer[] {
+ const common = { item: '한 끼 식사', quantity: 1, costKrw: 0, dietaryRestrictions: [] };
+ const regions = ['서울 서초구', '서초구', '서울 서초구 AI 허브', '서초 AI 허브', '서초 AIhub', '서울 AI 허브', '서울 AIhub', 'AI 허브', 'AIhub'];
+ return Array.from({ length: 24 }, (_, slot) => new Date(now + (slot + 1) * 1800_000).toISOString()).flatMap(promisedBy => (['delivery', 'pickup'] as const).map(receivingMethod => ({ institutionId: 'B', regions: [...regions], terms: { ...common, promisedBy, receivingMethod } })));
+}
+const normalizedRegion = (region: string) => region.normalize('NFKC').replace(/\s+/g, '').toLowerCase();
+export function createMockProvider(scenario: 'success' | 'unavailable' | 'no-answer' = 'success', now = Date.now, catalogInput?: MockCatalogOffer[]): DemoProvider {
+ // Snapshot fixtures once. No offer condition is manufactured from a caller's Seed.
+ const catalog = structuredClone(catalogInput ?? fixedMockCatalog(now()));
+ const approvedOffers = new Map<string, { institutionId: string; terms: Terms }>();
+ const proof = (ref: string): Proof => ({ mode: 'SIMULATION', ref: `fictional-demo://${ref}`, observedAt: new Date(now()).toISOString() });
+ return { mode: 'SIMULATION', institutions: ['A', 'B', 'C'].map(id => ({ id, name: `시연 기관 ${id} (허구)` })),
+  async inquire(task, seed, signal) {
+   if (signal.aborted) throw new Error('ABORTED'); await Promise.resolve();
+   if (scenario === 'no-answer') return { kind: 'no-answer', retryAt: new Date(now() + 60_000).toISOString() };
+   const r = seed.requirements;
+   const offer = scenario === 'success' && catalog.find(o => o.institutionId === task.institutionId && o.regions.map(normalizedRegion).includes(normalizedRegion(r.region)) && normalizeMeal(o.terms.item) === normalizeMeal(task.item) && o.terms.quantity === r.quantity && o.terms.costKrw <= r.maxCostKrw && o.terms.receivingMethod === r.receivingMethod && r.dietaryRestrictions.every(d => o.terms.dietaryRestrictions.includes(d)) && Date.parse(o.terms.promisedBy) <= Date.parse(r.neededBy) && Date.parse(o.terms.promisedBy) > now());
+   if (offer) { const evidence = proof(`${offer.institutionId}/catalog/${hash(offer)}`); approvedOffers.set(`${seed.hash}:${evidence.ref}`, { institutionId: task.institutionId, terms: structuredClone(offer.terms) }); return { kind: 'available', proof: evidence, terms: structuredClone(offer.terms) }; }
+   return { kind: 'unavailable', reason: '고정 시연 목록에 지역·물품·수량·식이·비용·수령·기한을 모두 충족하는 지원이 없습니다.', proof: proof(`${task.institutionId}/unavailable`), ...(scenario === 'unavailable' ? { next: { at: new Date(now() + 86400_000).toISOString(), timezone: 'Asia/Seoul', instructions: '시연 준비물은 없습니다. 실제 기관 지원 일정이 아닙니다.', proof: proof(`${task.institutionId}/next`) } } : {}) };
+  },
+  async submit(plan, key) {
+   const offer = approvedOffers.get(`${plan.seedHash}:${plan.proof.ref}`);
+   if (!offer || offer.institutionId !== plan.task.institutionId || hash(offer.terms) !== hash(plan.terms)) throw new Error('MOCK_CATALOG_PLAN_MISMATCH');
+   return { id: `mock-receipt:${hash(key)}`, planHash: plan.hash, institutionId: plan.task.institutionId, terms: structuredClone(offer.terms), proof: proof(`receipt/${hash(key)}`) };
+  },
+ };
+}
+```
+
+## src/demo-workflow/routes.ts
+
+SHA256: `c8b10ba2e64817bc21602264eac7ee4069929bd0680a76882ca8b6f7fb0458bb`
+
+```typescript
 import { timingSafeEqual } from 'node:crypto';
 import { DemoWorkflowStore } from './store.ts';
 import { DemoError, DemoWorkflowService } from './service.ts';
 import { createMockProvider } from './mockProvider.ts';
+import type { ExperienceMode } from './types.ts';
 import { text } from './contracts.ts';
 export interface DemoHttpResult { status: number; body: unknown; }
 export function createDemoWorkflowRoutes(options: { ledgerPath: string; secret: string; scenario?: string }) {
@@ -450,7 +477,7 @@ export function demoRoutesForService(service: DemoWorkflowService, secret: strin
       if (method !== 'POST') return { status: 405, body: { error: 'METHOD_NOT_ALLOWED' } };
       const callId = field('callId'); let result: unknown;
       switch (action) {
-        case 'begin': result = service.begin(callId, field('citizenRef')); break;
+        case 'begin': result = service.begin(callId, field('citizenRef'), (body.experienceMode ?? 'standard') as ExperienceMode); break;
         case 'interview': result = service.update(callId, body.patch, field('evidenceQuote')); break;
         case 'seed': result = service.prepareSeed(callId); break;
         case 'approve': result = service.approve(callId, field('seedHash'), field('nonce'), field('digit')); break;
@@ -466,15 +493,17 @@ export function demoRoutesForService(service: DemoWorkflowService, secret: strin
     } catch (e) { return { status: e instanceof DemoError ? e.status : 500, body: { error: e instanceof DemoError ? e.message : 'DEMO_STATE_REVIEW_REQUIRED' } }; }
   };
 }
-````
+```
 
-## 전체 소스: src/demo-workflow/service.ts
+## src/demo-workflow/service.ts
 
-````typescript
+SHA256: `7c706e39f9ee308b9c6ea26f4fab489233fee36691a07a0ea3fdd1c6d0a733c5`
+
+```typescript
 import { randomUUID } from 'node:crypto';
 import { DemoWorkflowStore } from './store.ts';
-import { evaluate, hash, missing, patchValid, readback, spokenTime, text, validNext, validOutcome } from './contracts.ts';
-import type { DemoCase, DemoProvider, InquiryOutcome, InquiryTask, Plan, Requirements, Seed } from './types.ts';
+import { evaluate, hash, missing, patchValid, readback, spokenTime, text, validNext, validOutcome, shortReadback } from './contracts.ts';
+import type { DemoCase, DemoProvider, InquiryOutcome, InquiryTask, Plan, Requirements, Seed, ExperienceMode } from './types.ts';
 export class DemoError extends Error { constructor(message: string, readonly status = 409) { super(message); } }
 function requireThat(value: unknown, message: string): asserts value { if (!value) throw new DemoError(message); }
 export class DemoWorkflowService {
@@ -483,14 +512,15 @@ export class DemoWorkflowService {
   }
   private event(c: DemoCase, stage: string, data: unknown) { c.events.push({ id: randomUUID(), at: this.now(), stage, data: structuredClone(data) }); }
   private mutate<T>(callId: string, action: (c: DemoCase) => T): T { return this.store.update(callId, c => { requireThat(c, 'CALL_NOT_FOUND'); const result = action(c); return { next: c, result }; }); }
-  view(c: DemoCase) { return { callId: c.callId, caseId: c.id, phase: c.phase, approved: Boolean(c.seed?.approvalRef), missingFields: missing(c.requirements), requirements: c.requirements, serverNow: new Date(this.now()).toISOString(), timezone: 'Asia/Seoul', mode: 'SIMULATION', seedHash: c.seed?.hash, callbackStatus: c.callback?.status }; }
+  view(c: DemoCase) { return { callId: c.callId, caseId: c.id, phase: c.phase, approved: Boolean(c.seed?.approvalRef), experienceMode: c.experienceMode ?? 'standard', consentPending: !c.requirements.consent, missingFields: missing(c.requirements).filter(k => k !== 'consent' || !c.experienceMode || c.experienceMode === 'standard'), requirements: c.requirements, serverNow: new Date(this.now()).toISOString(), timezone: 'Asia/Seoul', mode: 'SIMULATION', seedHash: c.seed?.hash, callbackStatus: c.callback?.status }; }
   status(callId: string) { const c = this.store.read(callId); requireThat(c, 'CALL_NOT_FOUND'); return this.view(c); }
-  begin(callId: string, citizenRef: string) {
+  begin(callId: string, citizenRef: string, experienceMode: ExperienceMode = 'standard') {
+    requireThat(['standard', 'audience'].includes(experienceMode), 'INVALID_EXPERIENCE');
     requireThat(text(callId) && callId.length <= 160 && text(citizenRef) && citizenRef.length <= 160, 'INVALID_ID');
     return this.store.update(callId, existing => {
-      if (existing) { requireThat(existing.citizenRef === citizenRef, 'CALL_IDENTITY_MISMATCH'); return { result: this.view(existing) }; }
-      const c: DemoCase = { id: `demo-${randomUUID()}`, callId, citizenRef, revision: 0, requirements: {}, phase: 'INTERVIEW', inquiries: {}, events: [] };
-      this.event(c, 'Interview.begin', { callId, citizenRef }); return { next: c, result: this.view(c) };
+      if (existing) { requireThat(existing.citizenRef === citizenRef && (existing.experienceMode ?? 'standard') === experienceMode, 'CALL_IDENTITY_MISMATCH'); return { result: this.view(existing) }; }
+      const c: DemoCase = { id: `demo-${randomUUID()}`, callId, citizenRef, revision: 0, experienceMode, requirements: {}, phase: 'INTERVIEW', inquiries: {}, events: [] };
+      this.event(c, 'Interview.begin', { callId, citizenRef, experienceMode }); return { next: c, result: this.view(c) };
     });
   }
   update(callId: string, patch: unknown, evidenceQuote: string) {
@@ -504,11 +534,13 @@ export class DemoWorkflowService {
   prepareSeed(callId: string) {
     return this.mutate(callId, c => {
       requireThat(['INTERVIEW', 'SEED_READY'].includes(c.phase), 'SEED_LOCKED');
-      requireThat(missing(c.requirements).length === 0 && patchValid(c.requirements), 'INTERVIEW_INCOMPLETE');
-      const r = c.requirements as Requirements;
+      const audience = c.experienceMode === 'audience';
+      requireThat(missing(c.requirements).filter(k => !audience || k !== 'consent').length === 0 && patchValid(c.requirements), 'INTERVIEW_INCOMPLETE');
+      const r = { ...c.requirements, ...(audience && !c.requirements.consent ? { consent: { contact: true, submit: true, callback: true } } : {}) } as Requirements;
+      requireThat(!audience || (r.consent.contact && r.consent.submit && r.consent.callback), 'CONSENT_DECLINED');
       requireThat(new Set([r.item, ...r.alternatives]).size === r.alternatives.length + 1, 'DUPLICATE_ALTERNATIVE');
       const body = { version: c.revision, requirements: structuredClone(r) };
-      c.seed = { ...body, hash: hash(body) }; c.challenge = { nonce: randomUUID(), hash: c.seed.hash, expiresAt: this.now() + 300_000, readback: readback(r) }; c.phase = 'SEED_READY';
+      c.seed = { ...body, hash: hash(body) }; c.challenge = { nonce: randomUUID(), hash: c.seed.hash, expiresAt: this.now() + 300_000, readback: audience ? shortReadback(r) : readback(r) }; c.phase = 'SEED_READY';
       this.event(c, 'Seed.prepared', { seed: c.seed, challenge: c.challenge });
       return { ...this.view(c), seedHash: c.seed.hash, ...c.challenge };
     });
@@ -520,7 +552,7 @@ export class DemoWorkflowService {
       requireThat(c.phase === 'SEED_READY' && a.expiresAt > this.now(), 'APPROVAL_EXPIRED_OR_USED');
       requireThat(digit === '1' || digit === '2', 'INVALID_DIGIT');
       if (digit === '2') { c.phase = 'INTERVIEW'; delete c.challenge; delete c.seed; this.event(c, 'Seed.rejected', { seedHash }); return this.view(c); }
-      c.seed.approvedAt = this.now(); c.seed.approvalRef = `call:${callId}:nonce:${nonce}:digit:1`; c.phase = 'APPROVED';
+      c.requirements.consent = structuredClone(c.seed.requirements.consent); c.seed.approvedAt = this.now(); c.seed.approvalRef = `call:${callId}:nonce:${nonce}:digit:1`; c.phase = 'APPROVED';
       this.event(c, 'Seed.approved', { seedHash, callId, nonce, digit }); return this.view(c);
     });
   }
@@ -591,7 +623,7 @@ export class DemoWorkflowService {
         const other = [...new Set([...inquiry.outcomes.values()].flatMap(o => o.kind === 'available' ? [o.terms.item] : []))];
         const confirmedOtherOnly = !inquiry.timedOut && inquiry.tasks.length > 0 && inquiry.tasks.every(t => { const o = inquiry.outcomes.get(t.id); return o && o.kind !== 'no-answer'; });
         const message = allUnavailable || confirmedOtherOnly
-          ? `[시연 결과] 확인한 기관에서는 요청과 허용 대안에 맞는 지원을 받기 어렵습니다.${other.length ? ` 다른 조건으로 가능한 후보는 ${other.join(', ')}입니다. 신청하지 않았습니다.` : ''}${next ? ` 다음 접수는 ${spokenTime(next.at)}입니다. ${next.instructions}` : ' 다음 접수 일정은 아직 확인되지 않았습니다.'}${seed.requirements.noMatchPreference === 'offer_callback' ? next ? ' 안내한 다음 시점에 다시 확인하는 시연 연락을 예약할까요?' : ' 다음 접수 시각이 확인되면 연락받고 싶으신가요? 아직 예약 시각은 정하지 않았습니다.' : ''}`
+          ? `[시연 결과] 확인한 기관에서는 요청과 허용 대안에 맞는 지원을 받기 어렵습니다.${other.length ? ` 다른 조건으로 가능한 후보는 ${other.join(', ')}입니다. 신청하지 않았습니다.` : ''}${next ? ` 다음 접수는 ${spokenTime(next.at)}입니다. ${next.instructions}` : ' 다음 접수 일정은 아직 확인되지 않았습니다.'}${seed.requirements.noMatchPreference === 'offer_callback' && (!claimed.state.experienceMode || claimed.state.experienceMode === 'standard') ? next ? ' 안내한 다음 시점에 다시 확인하는 시연 연락을 예약할까요?' : ' 다음 접수 시각이 확인되면 연락받고 싶으신가요? 아직 예약 시각은 정하지 않았습니다.' : ''}`
           : '[시연 결과] 아직 답변을 확인하지 못한 기관이 있어 지원 불가로 판단하지 않았습니다. 추가 확인이 필요합니다.';
         return this.mutate(callId, c => {
           requireThat(c.phase === 'RUNNING', 'RUN_INTERRUPTED');
@@ -599,7 +631,7 @@ export class DemoWorkflowService {
           this.event(c, 'Run2.plan', { selected: null, reasons: c.ev1.reasons }); this.event(c, 'EV1', c.ev1); this.event(c, 'Run3.skipped', { reason: c.ev1.reasons });
           this.event(c, 'Run4.recorded', { runId: c.runId, outcomeCount: inquiry.outcomes.size });
           c.ev2 = { pass: true, reasons: [allUnavailable ? 'SCOPED_UNAVAILABLE' : confirmedOtherOnly ? 'INFORMATION_ONLY' : 'PENDING_ONLY'], seedHash: seed.hash }; this.event(c, 'EV2', c.ev2);
-          c.callback = { id: `callback:${c.runId}`, status: 'PENDING', message, ...(next && seed.requirements.noMatchPreference === 'offer_callback' ? { next } : {}) }; c.phase = 'READY'; return this.view(c);
+          c.callback = { id: `callback:${c.runId}`, status: 'PENDING', message, ...(next && seed.requirements.noMatchPreference === 'offer_callback' && (!c.experienceMode || c.experienceMode === 'standard') ? { next } : {}) }; c.phase = 'READY'; return this.view(c);
         });
       }
       const plan = inquiry.selected; const ev1 = evaluate(seed, plan);
@@ -611,7 +643,7 @@ export class DemoWorkflowService {
         this.event(c, 'Run4.recorded', { runId: c.runId, planHash: plan.hash, receiptId: receipt.id });
         c.ev2 = evaluate(seed, plan, receipt); this.event(c, 'EV2', c.ev2);
         if (!c.ev2.pass) { c.phase = 'UNKNOWN'; return this.view(c); }
-        c.callback = { id: `callback:${c.runId}`, status: 'PENDING', message: `[시연 결과] ${plan.task.institutionName}에서 ${plan.terms.item} ${plan.terms.quantity}개 모의 지원 신청이 접수됐습니다. ${plan.terms.receivingMethod === 'delivery' ? `${seed.requirements.region}으로 ${spokenTime(plan.terms.promisedBy)} 배달 예정인 모의 계획입니다.` : `${plan.task.institutionName}에서 ${spokenTime(plan.terms.promisedBy)} 방문 수령 예정인 모의 계획입니다.`} 실제 음식 배송은 없는 시연입니다.` };
+        c.callback = { id: `callback:${c.runId}`, status: 'PENDING', message: c.experienceMode === 'audience' ? `[시연 결과] ${plan.task.institutionName}에서 ${plan.terms.item} ${plan.terms.quantity === 1 ? '한' : plan.terms.quantity} 인분 모의 신청이 접수됐습니다. ${spokenTime(plan.terms.promisedBy)} ${plan.terms.receivingMethod === 'delivery' ? '배달' : '방문 수령'} 예정인 모의 결과이며 실제 배송은 없습니다.` : `[시연 결과] ${plan.task.institutionName}에서 ${plan.terms.item} ${plan.terms.quantity}개 모의 지원 신청이 접수됐습니다. ${plan.terms.receivingMethod === 'delivery' ? `${seed.requirements.region}으로 ${spokenTime(plan.terms.promisedBy)} 배달 예정인 모의 계획입니다.` : `${plan.task.institutionName}에서 ${spokenTime(plan.terms.promisedBy)} 방문 수령 예정인 모의 계획입니다.`} 실제 음식 배송은 없는 시연입니다.` };
         c.phase = 'READY'; return this.view(c);
       });
     } catch (e) {
@@ -622,7 +654,7 @@ export class DemoWorkflowService {
     requireThat(c.phase === 'READY' && c.ev2?.pass && c.seed?.requirements.consent.callback, 'CALLBACK_NOT_READY');
     const job = c.callback; if (!job || job.status !== 'PENDING') return { job: null };
     job.status = 'CLAIMED'; job.claimAt = this.now(); this.event(c, 'Callback.claimed', { jobId: job.id });
-    return { job: { id: job.id, callId, citizenRef: c.citizenRef, message: job.message, mode: 'SIMULATION', ...(job.next ? { nextOpportunity: job.next } : {}) } };
+    return { job: { id: job.id, callId, citizenRef: c.citizenRef, message: job.message, mode: 'SIMULATION', experienceMode: c.experienceMode ?? 'standard', ...(job.next ? { nextOpportunity: job.next } : {}) } };
   }); }
   answerCallback(callId: string, jobId: string, digit: string) { return this.mutate(callId, c => {
     const job = c.callback; requireThat(job && job.id === jobId && job.status === 'CLAIMED', 'CALLBACK_IDENTITY_MISMATCH'); requireThat(digit === '1' || digit === '2', 'INVALID_DIGIT');
@@ -636,11 +668,13 @@ export class DemoWorkflowService {
     job.status = body.answered && body.acknowledged && body.completed && Boolean(job.answer) ? 'DELIVERED' : 'UNKNOWN'; job.receiptRef = body.receiptRef; this.event(c, 'Callback.receipt', { ...body, status: job.status }); return { delivered: job.status === 'DELIVERED', status: job.status };
   }); }
 }
-````
+```
 
-## 전체 소스: src/demo-workflow/store.ts
+## src/demo-workflow/store.ts
 
-````typescript
+SHA256: `95632af88524acbade18086ad0327488388bc3dbc26ed27fde320139193a8697`
+
+```typescript
 import { DatabaseSync } from 'node:sqlite';
 import { chmodSync, mkdirSync } from 'node:fs';
 import { dirname } from 'node:path';
@@ -666,11 +700,14 @@ export class DemoWorkflowStore {
   list(): DemoCase[] { return this.db.prepare('SELECT body FROM phone_demo_workflows').all().map(row => JSON.parse(String(row.body)) as DemoCase); }
   close(): void { this.db.close(); }
 }
-````
+```
 
-## 전체 소스: src/demo-workflow/types.ts
+## src/demo-workflow/types.ts
 
-````typescript
+SHA256: `f8fc378f6a20992ef38bf40a494714e090618fc08ff8f5d6f1bdf0d96ce52207`
+
+```typescript
+export type ExperienceMode = 'standard' | 'audience';
 export interface Requirements {
   item: string; quantity: number; region: string; neededBy: string; maxCostKrw: number;
   dietaryRestrictions: string[]; alternatives: string[]; receivingMethod: 'delivery' | 'pickup';
@@ -691,7 +728,7 @@ export interface CallbackJob {
   claimAt?: number; answer?: '1' | '2'; receiptRef?: string; next?: NextOpportunity;
 }
 export interface DemoCase {
-  id: string; callId: string; citizenRef: string; revision: number; requirements: Partial<Requirements>;
+  id: string; callId: string; citizenRef: string; revision: number; experienceMode?: ExperienceMode; requirements: Partial<Requirements>;
   phase: 'INTERVIEW' | 'SEED_READY' | 'APPROVED' | 'RUNNING' | 'READY' | 'UNKNOWN';
   challenge?: { nonce: string; hash: string; expiresAt: number; readback: string };
   seed?: Seed; runId?: string; inquiries: Record<string, InquiryOutcome>; plan?: Plan;
@@ -704,14 +741,16 @@ export interface DemoProvider {
   inquire(task: InquiryTask, seed: Seed, signal: AbortSignal): Promise<InquiryOutcome>;
   submit(plan: Plan, key: string): Promise<Receipt | { kind: 'unknown'; ref: string }>;
 }
-````
+```
 
-## 전체 소스: scripts/demo_voice.py
+## scripts/demo_voice.py
 
-````python
+SHA256: `8b0a157891f86109fc508268ebd5deacb966fc90ecf4e4d21416034e17e5135b`
+
+```python
 """Opt-in demo voice: real citizen channel, exclusively simulated institutions.
 
-Imports do not connect. The existing explicit citizen routing remains mandatory.
+Imports do not connect. Registered routing is the default; open audience intake is explicit opt-in.
 Role-bound tools contain no institution dialing or generic execution authority.
 """
 import asyncio
@@ -721,6 +760,8 @@ import functools
 import hashlib
 import json
 import os
+import time
+from coordination_config import normalize_number
 from coordination_tools import ToolError, encode
 
 OUTBOUND_DEMO = contextvars.ContextVar('demo_outbound', default=None)
@@ -748,7 +789,20 @@ INTERVIEW_PROMPT = '''당신은 말결의 한국어 생활지원 전화 도우�
 '''
 
 
+
+def experience_prompt(ctx):
+    intro = '청중이 자발적으로 건 체험 전화입니다. 다른 사람의 이름이나 사전 설정을 사용하지 마세요. 지역과 필요한 도움부터 자연스럽게 듣고 빠진 조건만 확인하세요. '
+    return (INTERVIEW_PROMPT + intro +
+            '\n사전 설정 없이 고객이 실제 말한 조건만 채웁니다. 모의 문의/모의 신청/현재 발신번호로 회신 동의는 서버의 최종 readback에서 확인합니다. '
+            'readback을 그대로 읽고 1번 승인 또는 2번 수정을 안내하세요. 승인 저장이 확인되면 결과를 곧 전화드린다고 짧게 인사하고 finish_demo_conversation을 호출하세요.\n사전 입력 없음: ' + '{}')
+
+
 def callback_prompt(job):
+    if job.get('experienceMode') in {'audience'}:
+        return ('말결 시연 결과 전화입니다. 다음 서버 결과를 빠짐없이 안내하세요. 실제 배송이나 기관 연락이 아닌 모의 시연임을 유지하세요. '
+                '결과를 안내한 뒤 "더 말씀하실 내용이 있으세요? 통화를 마치려면 1번을 눌러 주세요"라고 물으세요. '
+                '추가 질문에는 확인된 서버 결과 범위에서만 답하고 새 신청이나 주문을 실행하지 않습니다. 모르는 내용은 확인되지 않았다고 말하세요. '
+                '실제 1번 답변을 서버가 저장했다고 확인한 뒤 짧게 인사하고 finish_demo_conversation을 호출하세요.\n' + job['message'])
     question = ('안내한 다음 기회에 맞춰 다시 연락받으려면 1번, 원하지 않으면 2번을 누르도록 물으세요. '
                 '실제 숫자키 뒤 서버가 예약 기록을 확인한 경우에만 기록됐다고 말하세요.'
                 if job.get('nextOpportunity') else '안내를 들으셨으면 1번을 누르도록 안내하세요.')
@@ -767,6 +821,26 @@ class DemoVoiceRuntime:
         self.active = None
         self.dispatching = False
         self.wake = asyncio.Event()
+        self.experience = os.environ.get('COORDINATION_DEMO_EXPERIENCE', 'standard')
+        if self.experience not in {'standard', 'audience'}: raise ToolError('시연 모드를 확인해 주세요.')
+        self.allow_audience = os.environ.get('COORDINATION_DEMO_ALLOW_AUDIENCE') == '1'
+
+    def caller_identity(self, number):
+        try: normalized = normalize_number(number)
+        except ValueError: raise ToolError('발신번호를 확인할 수 없습니다.') from None
+        service = os.environ.get('CLAWOPS_PHONE_NUMBER')
+        if service and normalized == normalize_number(service): raise ToolError('서비스 번호로 회신할 수 없습니다.')
+        registered = self.routing.citizen(normalized)
+        if self.experience == 'standard':
+            if not registered: raise ToolError('등록된 회신 경로가 필요합니다.')
+            return registered, 'standard', normalized
+        mode = 'audience'
+        if not registered and not self.allow_audience: raise ToolError('청중 전화 수신이 설정되지 않았습니다.')
+        return registered or 'audience-' + hashlib.sha256(normalized.encode()).hexdigest()[:24], mode, normalized
+
+    def accepts(self, number):
+        try: self.caller_identity(number); return True
+        except (ToolError, ValueError): return False
 
     async def send(self, operation, fields):
         return await self.api.send('POST', PREFIX + '/' + operation, fields)
@@ -780,11 +854,11 @@ class DemoVoiceRuntime:
                 raise ToolError('시연 고객 회신 맥락이 없습니다.')
             ctx = {**outbound, 'callId': call.call_id}
         else:
-            citizen = self.routing.citizen(call.from_number)
-            if not citizen:
-                raise ToolError('등록된 회신 경로가 필요합니다.')
-            result = await self.send('begin', {'callId': call.call_id, 'citizenRef': citizen})
+            citizen, experience, source = self.caller_identity(call.from_number)
+            result = await self.send('begin', {'callId': call.call_id, 'citizenRef': citizen, 'experienceMode': experience})
+            if result.get('experienceMode', 'standard') != experience: raise ToolError('서버 시연 모드가 일치하지 않습니다.')
             ctx = {'role': 'demo_citizen', 'callId': call.call_id, 'citizenRef': citizen,
+                   'experienceMode': experience, 'sourceNumber': source,
                    'serverNow': result.get('serverNow'), 'timezone': result.get('timezone', 'Asia/Seoul')}
         self.active = call.call_id
         self.journal.put('demo:call:' + call.call_id, ctx)
@@ -846,13 +920,14 @@ class DemoVoiceRuntime:
                 accepted = digit == '1' and result.get('approved') is True
                 self.journal.put('demo:decision:' + call.call_id, {'digit': digit, 'approved': True} if accepted else {})
                 self.journal.put('demo:approved:' + call.call_id, {'citizenRef': ctx['citizenRef']} if accepted else {})
-                self.journal.put('demo:finish:' + call.call_id, {})
+                self.journal.put('demo:finish:' + call.call_id, {'ready': True} if accepted and ctx.get('experienceMode') in {'audience'} else {})
                 if digit == '2':
                     message = '수정할 부분을 말씀해 주세요. 수정 후 다시 읽어드리겠습니다.'
                 else:
                     message = result.get('message', '승인 결과를 기록했습니다.' if accepted else '승인이 확인되지 않았습니다. 내용을 다시 확인해 주세요.')
             else:
                 job = ctx['job']
+                if job.get('experienceMode') in {'audience'} and digit != '1': return
                 result = await self.send('callback/answer', {'callId': job['callId'], 'jobId': job['id'], 'digit': digit})
                 self.journal.put('demo:ack:' + call.call_id, {'digit': digit, 'at': datetime.now(timezone.utc).isoformat()})
                 message = result.get('message', '답변을 기록했습니다.')
@@ -869,7 +944,7 @@ class DemoVoiceRuntime:
             if ctx['role'] == 'demo_citizen':
                 approved = self.journal.get('demo:approved:' + call.call_id)
                 if approved:
-                    self.journal.put('demo:pending:' + call.call_id, {'citizenRef': approved['citizenRef'], 'status': 'pending'})
+                    self.journal.put('demo:pending:' + call.call_id, {'citizenRef': approved['citizenRef'], 'status': 'pending', 'endedAt': time.time()})
             else:
                 job = ctx['job']
                 transcript = self.journal.get('demo:transcript:' + call.call_id) or {'events': []}
@@ -913,12 +988,25 @@ class DemoVoiceRuntime:
         original = self.journal.get('demo:approved:' + source_call_id) or {}
         if citizen != original.get('citizenRef'): raise ToolError('회신 대상이 일치하지 않습니다.')
         # The only dial target is the existing private citizen mapping. Never institutions.
-        number = self.routing.destination('callback', citizen)
+        source = self.journal.get('demo:call:' + source_call_id) or {}
+        if source.get('experienceMode') in {'audience'}:
+            number = normalize_number(source['sourceNumber'])
+            job['experienceMode'] = source['experienceMode']
+        else:
+            number = self.routing.destination('callback', citizen)
+        pending = self.journal.get('demo:pending:' + source_call_id) or {}
+        if pending.get('endedAt'):
+            self.journal.put('demo:callback-latency:' + source_call_id, {'seconds': time.time() - pending['endedAt'], 'targetSeconds': 3, 'measures': 'call_end_to_sdk_dial_invocation'})
         context = {'role': 'demo_callback', 'job': job, 'citizenRef': citizen}
         token = OUTBOUND_DEMO.set(context)
         call = None
         try:
             call = await self.agent.call(number, timeout=25, machine_detection='Hangup')
+            metric = self.journal.get('demo:callback-latency:' + source_call_id)
+            if metric and pending.get('endedAt'):
+                metric['sdkCallReturnedSeconds'] = time.time() - pending['endedAt']
+                metric['pstnRingVerified'] = False
+                self.journal.put('demo:callback-latency:' + source_call_id, metric)
             await asyncio.wait_for(call.wait(), 180)
             await self.ended(call)
         except Exception:
@@ -976,7 +1064,7 @@ def make_demo_agent_class(base, gemini, registry_type):
             super().__init__(session_factory=lambda: None, builtin_tools=[], recording=False, **kwargs)
 
         async def _handle_incoming(self, data):
-            if self.runtime.active or self.runtime.dispatching or not self.runtime.routing.citizen(data.get('from', '')):
+            if self.runtime.active or self.runtime.dispatching or not self.runtime.accepts(data.get('from', '')):
                 if self._control_ws:
                     await self._control_ws.send({'event': 'call.session_failed', 'callId': data['callId'], 'reason': 'RoutingUnavailable', 'message': '등록된 통화 경로 또는 통화 순서 확인 필요'})
                 return
@@ -993,7 +1081,7 @@ def make_demo_agent_class(base, gemini, registry_type):
                     except ToolError as error: return encode({'error': str(error)})
                     except Exception: return encode({'error': '현재 처리 상태를 확인하지 못했습니다. 완료로 안내하지 마세요.'})
                 registry.register(guarded)
-            prompt = callback_prompt(ctx['job']) if ctx['role'] == 'demo_callback' else INTERVIEW_PROMPT + '\n서버 시각: ' + encode({'serverNow': ctx.get('serverNow'), 'timezone': ctx.get('timezone')})
+            prompt = callback_prompt(ctx['job']) if ctx['role'] == 'demo_callback' else (experience_prompt(ctx) if ctx.get('experienceMode') in {'audience'} else INTERVIEW_PROMPT) + '\n서버 시각: ' + encode({'serverNow': ctx.get('serverNow'), 'timezone': ctx.get('timezone')})
             session = BoundGemini(system_prompt=prompt, model=os.environ['GEMINI_LIVE_MODEL'], language='ko', greeting=True)
             session.bound_registry = registry; session.context = ctx; session.runtime = self.runtime
             self._call_sessions[call_id] = session
@@ -1002,11 +1090,13 @@ def make_demo_agent_class(base, gemini, registry_type):
         def _inject_session_deps(self, session, tools, *, recorder=None):
             return super()._inject_session_deps(session, session.bound_registry, recorder=recorder)
     return DemoAgent
-````
+```
 
-## 전체 소스: scripts/coordination_voice.py
+## scripts/coordination_voice.py
 
-````python
+SHA256: `7cb9fff6e8de10a1f792ee5d86452e48e488bc9a7e83584400b5e72d3a4881d1`
+
+```python
 """ClawOps 0.56.0 role-bound coordinator. Importing this module never connects."""
 import asyncio
 import contextvars
@@ -1316,11 +1406,13 @@ if __name__=='__main__':
     try:asyncio.run(main())
     except KeyboardInterrupt:pass
     except Exception:raise SystemExit('음성 실행 중단: 설정 또는 연결 상태 확인 필요') from None
-````
+```
 
-## 전체 소스: scripts/coordination_tools.py
+## scripts/coordination_tools.py
 
-````python
+SHA256: `abd455f6a55fe33f1a686b4b8392e025be54cb82c4849d42ac0bca28de9869e6`
+
+```python
 """Role-bound voice tools; phone destinations never enter model-visible data."""
 import json
 import re
@@ -1540,11 +1632,13 @@ class VoiceTools:
             if self.context['role']=='citizen': names+=['create_request']
             if self.context['role']=='callback': names+=['confirm_recipient','end_without_disclosure']
         return [getattr(self,n) for n in names]
-````
+```
 
-## 전체 소스: scripts/coordination_config.py
+## scripts/coordination_config.py
 
-````python
+SHA256: `ccf29eb57b634892f9292bf4e5bd7b00317e2a49bcfdad043da665ba1f660e4e`
+
+```python
 """Private, explicit role routing. Public institution contacts remain untouched."""
 import json
 import os
@@ -1600,297 +1694,313 @@ def load_routing(path):
             targets[key] = normalized
         result[role] = targets
     return result
-````
+```
 
-## 전체 소스: src/careApp.ts
+## scripts/run-care-runtime.py
 
-````typescript
-import { createServer, type IncomingMessage, type ServerResponse } from 'node:http';
-import { readFile } from 'node:fs/promises';
-import { extname, join, resolve, sep } from 'node:path';
-import { InMemoryCareRequestRepository } from './care-support/repository.ts';
-import { CareRequestError, CareRequestService } from './care-support/service.ts';
-import { createCareRequestHandlers } from './http/careRequestRoutes.ts';
-import { createCareVoiceHandlers } from './voice/careVoiceRoutes.ts';
-import { CarePhoneCoordinator } from './care-support/phone.ts';
-import { timingSafeEqual } from 'node:crypto';
-import { SqliteCareRequestRepository } from './care-support/sqliteRepository.ts';
-import { CareProviderDispatcher, SandboxCareProvider } from './care-support/provider.ts';
-import { CoordinationStore } from './coordination/store.ts';
-import { CoordinationEngine } from './coordination/engine.ts';
-import { createCoordinationRoutes } from './coordination/routes.ts';
-import { OperatorSessions } from './coordination/operatorSession.ts';
-import { createDemoWorkflowRoutes } from './demo-workflow/routes.ts';
+SHA256: `235ee51d98c6aa405b3b277582d86a486fefeedf7175a8bfcce50d5ef8513e1b`
 
-export function createCareApp() {
-  const operationalEnabled = process.env.NODE_ENV !== 'production' || Boolean(process.env.CARE_LEDGER_PATH);
-  const repository = process.env.CARE_LEDGER_PATH ? new SqliteCareRequestRepository(process.env.CARE_LEDGER_PATH) : new InMemoryCareRequestRepository();
-  const service = new CareRequestService(repository);
-  // Anonymous browser demos can never consume the operational phone quota or cases.
-  const careHandlers = createCareRequestHandlers(new CareRequestService(new InMemoryCareRequestRepository()));
-  const roleTokens = { PROVIDER: process.env.CARE_PROVIDER_TOKEN, RECIPIENT: process.env.CARE_RECIPIENT_TOKEN, OPERATOR: process.env.CARE_OPERATOR_TOKEN };
-  const configuredTokens = Object.values(roleTokens).filter((v): v is string => Boolean(v));
-  if (new Set(configuredTokens).size !== configuredTokens.length) throw new Error('CARE_ROLE_TOKENS_MUST_BE_DISTINCT');
-  const providerName = process.env.CARE_PROVIDER_NAME ?? '찾아가는 푸드마켓';
-  const automaticDispatchers = new Map(service.catalog().items.map(item => [item.providerName, new CareProviderDispatcher(repository, new SandboxCareProvider(item.providerName, repository))]));
-  const dispatcher = automaticDispatchers.get(providerName) ?? new CareProviderDispatcher(repository, new SandboxCareProvider(providerName));
-  const phone = new CarePhoneCoordinator(service);
-  const agentSecret = process.env.AGENT_TOOL_SECRET;
-  // Explicitly opt in: this workflow uses simulated institutions and never
-  // changes the existing coordination phone mode by merely installing code.
-  const demoWorkflowEnabled = process.env.DEMO_WORKFLOW_ENABLED === 'true';
-  const demoLedger = process.env.DEMO_WORKFLOW_LEDGER_PATH;
-  const demoScenario = process.env.DEMO_WORKFLOW_SCENARIO ?? 'success';
-  if (demoWorkflowEnabled && (!demoLedger || !agentSecret || agentSecret.length < 32)) {
-    throw new Error('DEMO_WORKFLOW_LEDGER_AND_AGENT_SECRET_REQUIRED');
-  }
-  if (demoWorkflowEnabled && !['success', 'unavailable', 'no-answer'].includes(demoScenario)) {
-    throw new Error('INVALID_DEMO_WORKFLOW_SCENARIO');
-  }
-  const demoWorkflow = demoWorkflowEnabled ? createDemoWorkflowRoutes({
-    ledgerPath: demoLedger!, secret: agentSecret!,
-    scenario: demoScenario as 'success' | 'unavailable' | 'no-answer',
-  }) : undefined;
-  const coordinationPath = process.env.COORDINATION_LEDGER_PATH ?? process.env.CARE_LEDGER_PATH;
-  const coordinationEnabled = process.env.NODE_ENV !== 'production' || Boolean(coordinationPath);
-  const coordinationStore = new CoordinationStore(coordinationPath ?? ':memory:');
-  const coordination = createCoordinationRoutes(new CoordinationEngine(coordinationStore), {
-    ...(roleTokens.OPERATOR ? {operator:roleTokens.OPERATOR}:{}), ...(agentSecret?{agent:agentSecret}:{})
-  });
-  const publicBaseUrl = process.env.PUBLIC_BASE_URL;
-  const operatorSessions = new OperatorSessions(roleTokens.OPERATOR);
-  const configuredOrigin = publicBaseUrl ? new URL(publicBaseUrl).origin : undefined;
-  const twilioAuthToken = process.env.TWILIO_AUTH_TOKEN;
-  const dispatchConfirmed = async (caseId: string) => {
-    const confirmed = await service.get(caseId);
-    if (confirmed) return automaticDispatchers.get(confirmed.providerName)?.submit(caseId);
-    return undefined;
-  };
-  const voice = operationalEnabled && publicBaseUrl && twilioAuthToken
-    ? createCareVoiceHandlers({ authToken: twilioAuthToken, baseUrl: publicBaseUrl, service, onConfirmed: dispatchConfirmed })
-    : undefined;
+```python
+"""Load approved credentials without echoing values, then exec one runtime component."""
+import os
+from pathlib import Path
+import sys
+import sqlite3
+from datetime import datetime, timezone
 
-  const server = createServer(async (request, response) => {
-    try {
-      const url = new URL(request.url ?? '/', `http://${request.headers.host ?? 'localhost'}`);
-      if (url.pathname.startsWith('/internal/demo-workflow/')) {
-        if (!demoWorkflow) return sendJson(response, 503, { error: 'DEMO_WORKFLOW_DISABLED' });
-        const result = await demoWorkflow(request.method ?? 'GET', url,
-          String(request.headers.authorization ?? ''),
-          ['POST', 'PATCH'].includes(request.method ?? '') ? await readJson(request) : {});
-        return sendJson(response, result?.status ?? 404, result?.body ?? { error: 'NOT_FOUND' });
-      }
-      if (url.pathname.startsWith('/api/support/') || url.pathname.startsWith('/api/coordination/')) {
-        if (url.pathname.startsWith('/api/coordination/') && !coordinationEnabled) {
-          return sendJson(response, 503, {error:{code:'DURABLE_LEDGER_REQUIRED',message:'요청 저장 연결을 준비하고 있습니다.'}});
+root = Path(__file__).resolve().parent.parent
+if sys.argv[1:] == ['backup']:
+    source = root / '.private/care-ledger.sqlite'
+    if not source.is_file():
+        raise SystemExit('Care ledger does not exist; no empty backup created')
+    directory = root / '.private/backups'
+    directory.mkdir(mode=0o700, parents=True, exist_ok=True)
+    destination = directory / ('care-' + datetime.now(timezone.utc).strftime('%Y%m%dT%H%M%S%fZ') + '.sqlite')
+    with destination.open('xb'):
+        os.chmod(destination, 0o600)
+    with sqlite3.connect(source.as_uri() + '?mode=ro', uri=True) as src, sqlite3.connect(destination) as dst:
+        src.backup(dst)
+        if dst.execute('PRAGMA integrity_check').fetchone()[0] != 'ok':
+            raise SystemExit('Backup integrity failed')
+    print('Care ledger backup integrity PASS; private local snapshot created')
+    raise SystemExit(0)
+secrets = Path(os.environ.get('CARE_SECRET_DIR', str(root.parent / 'benefit-settlement-rail/.secrets')))
+env = dict(os.environ)
+for name in ('clawops', 'bridge'):
+    for line in (secrets / (name + '.env')).read_text().splitlines():
+        if '=' in line and not line.lstrip().startswith('#'):
+            key, value = line.removeprefix('export ').split('=', 1)
+            env.setdefault(key.strip(), value.strip().strip('\"\''))
+care_secrets = root / '.secrets/care.env'
+if care_secrets.exists():
+    for line in care_secrets.read_text().splitlines():
+        if '=' in line and not line.startswith('#'):
+            key, value = line.split('=', 1)
+            env.setdefault(key, value)
+env['CLAWOPS_PHONE_NUMBER'] = os.environ.get('CARE_PHONE_NUMBER', '07052767277')
+env['AGENT_API_BASE_URL'] = os.environ.get('CARE_API_BASE_URL', 'http://127.0.0.1:18081')
+env['PORT'] = os.environ.get('CARE_PORT', '18081')
+env['HOST'] = '127.0.0.1'
+env['CARE_LEDGER_PATH'] = str(root / '.private/care-ledger.sqlite')
+env.setdefault('COORDINATION_ROUTING_PATH', str(root / '.private/coordination-routing.json'))
+env.setdefault('COORDINATION_VOICE_STATE_PATH', str(root / '.private/coordination-voice.sqlite'))
+env.setdefault('COORDINATION_HEALTH_PORT', '18083')
+env['CLAWOPS_READY_FILE'] = str(root / '.private/clawops-ready')
+(root / '.private').mkdir(mode=0o700, exist_ok=True)
+os.chdir(root)
+if sys.argv[1:] == ['api']:
+    command = ['node', '--import', 'tsx', 'src/server.ts']
+elif sys.argv[1:] == ['voice']:
+    command = [str(Path.home() / '.local/bin/uv'), 'run', '--with', 'clawops[agent,gemini]==0.56.0', 'python', 'scripts/clawops-care-agent.py']
+elif sys.argv[1:] in (['coordination'], ['coordination-check']):
+    from coordination_config import load_routing, normalize_number
+    try:
+        routing = load_routing(env['COORDINATION_ROUTING_PATH'])
+        demo = env.get('COORDINATION_DEMO_MODE') == '1'
+        audience = demo and env.get('COORDINATION_DEMO_ALLOW_AUDIENCE') == '1' and env.get('COORDINATION_DEMO_EXPERIENCE') == 'audience'
+        if (not routing['citizenNumbers'] and not audience) or (not demo and not routing['institutionNumbers']):
+            raise ValueError('ROUTING_ROLES_REQUIRED')
+        citizens = set(routing['citizenNumbers'].values())
+        institutions = set(routing['institutionNumbers'].values())
+        if citizens & institutions:
+            raise ValueError('ROUTING_ROLES_MUST_BE_DISTINCT')
+        if normalize_number(env['CLAWOPS_PHONE_NUMBER']) in routing['allowedNumbers']:
+            raise ValueError('ROUTING_SELF_CALL_FORBIDDEN')
+    except ValueError as error:
+        raise SystemExit(str(error)) from None
+    if sys.argv[1:] == ['coordination-check']:
+        print('Coordination routing preflight PASS; ' + ('demo=True; institution dialing disabled' if demo else 'roles=2') + '; no network call performed')
+        raise SystemExit(0)
+    command = [str(Path.home() / '.local/bin/uv'), 'run', '--with', 'clawops[agent,gemini]==0.56.0', 'python', 'scripts/coordination_voice.py']
+else:
+    raise SystemExit('Usage: run-care-runtime.py api|voice|coordination|coordination-check|backup')
+os.execvpe(command[0], command, env)
+```
+
+## scripts/prove-demo-flow-local.py
+
+SHA256: `930efdc2302587efbc8fe6ebc4a96477ca4de9a35f04b9d190ec7f053d506b74`
+
+```python
+"""Independent local HTTP/Python acceptance proof. Never constructs a telephone client."""
+from __future__ import annotations
+import json
+import os
+from pathlib import Path
+import select
+import subprocess
+import tempfile
+import urllib.error
+import urllib.request
+
+ROOT = Path(__file__).resolve().parents[1]
+TOKEN = 'independent-demo-proof-local-token-' + 'x' * 32
+
+class LocalServer:
+    def __init__(self, ledger: Path, scenario="success", extra_env=None):
+        self.ledger = ledger
+        self.scenario = scenario
+        self.extra_env = dict(extra_env or {})
+        self.process = None
+    def start(self):
+        env = {
+            'PATH': os.environ['PATH'], 'HOME': os.environ['HOME'],
+            'NODE_ENV': 'test', 'AGENT_TOOL_SECRET': TOKEN,
+            'DEMO_WORKFLOW_LEDGER_PATH': str(self.ledger),
+            'DEMO_WORKFLOW_ENABLED': 'true',
+            'DEMO_WORKFLOW_SCENARIO': self.scenario,
+            'COORDINATION_LEDGER_PATH': str(self.ledger.with_name('coordination.sqlite')),
         }
-        const expectedOrigin = configuredOrigin ?? url.origin;
-        const cookieOptions = {secure: expectedOrigin.startsWith('https:')};
-        if (url.pathname === '/api/coordination/session') {
-          if (request.method === 'GET') return sendJson(response,200,{authenticated:operatorSessions.isValid(request.headers.cookie)});
-          if (request.headers.origin !== expectedOrigin) return sendJson(response,403,{error:{code:'FORBIDDEN',message:'담당자 연결이 필요합니다.'}});
-          if (request.method === 'POST') {
-            const body=await readJson(request);
-            const session=operatorSessions.login(body.accessCode,cookieOptions);
-            if (!session) return sendJson(response,403,{error:{code:'FORBIDDEN',message:'접속 정보를 확인해 주세요.'}});
-            response.setHeader('set-cookie',session.cookie);
-            return sendJson(response,200,{authenticated:true});
-          }
-          if (request.method === 'DELETE') {
-            response.setHeader('set-cookie',operatorSessions.logout(request.headers.cookie,cookieOptions));
-            return sendJson(response,200,{authenticated:false});
-          }
-          return sendJson(response,405,{error:{code:'METHOD_NOT_ALLOWED',message:'요청 방식이 올바르지 않습니다.'}});
-        }
-        const cookieAuthorized=operatorSessions.authenticate(request.headers.cookie,request.headers.origin,expectedOrigin,request.method ?? 'GET');
-        const authorization=String(request.headers.authorization ?? (cookieAuthorized ? `Bearer ${roleTokens.OPERATOR}` : ''));
-        const result = coordination(request.method ?? 'GET',url,authorization,
-          ['POST','PATCH'].includes(request.method ?? '') ? await readJson(request) : {});
-        if(result) return sendJson(response,result.status,result.body);
-      }
-      if (request.method === 'GET' && ['/health', '/healthz', '/api/health'].includes(url.pathname)) {
-        return sendJson(response, 200, {
-          ok: true,
-          product: 'care-plan-execution',
-          payment: 'disabled',
-          voice: !operationalEnabled ? 'demo-only' : agentSecret ? 'clawops-bridge-configured' : voice ? 'configured' : 'credential-gated',
-          evidenceClass: 'SYNTHETIC_DEMO',
-          demoWorkflow: { enabled: demoWorkflowEnabled, mode: 'SIMULATION', version: 1 }
-        });
-      }
-      if (url.pathname.startsWith('/api/care/')) {
-        if (!operationalEnabled) return sendJson(response, 503, { error: 'DURABLE_LEDGER_REQUIRED' });
-        const authorization = String(request.headers.authorization ?? '');
-        const role = (Object.keys(roleTokens) as Array<keyof typeof roleTokens>).find(key => safeBearer(authorization, roleTokens[key]));
-        if (!role) return sendJson(response, 403, { error: 'FORBIDDEN' });
-        const scoped = (r: { providerName: string; beneficiaryRef: string }) => role === 'OPERATOR' || (role === 'PROVIDER' ? r.providerName === providerName : r.beneficiaryRef === 'demo-senior-01');
-        if (request.method === 'GET' && url.pathname === '/api/care/inbox') {
-          const requests = (await service.list()).filter(scoped).filter(r => role !== 'OPERATOR' || r.status === 'EXCEPTION' || r.status === 'REQUESTED' || r.dispatch === 'SENDING' || r.dispatch === 'UNKNOWN');
-          const exceptions = role === 'OPERATOR' ? repository.transaction(ledger => Object.values(ledger.calls).filter(c => c.state === 'EXCEPTION').map(c => ({ caseId: c.caseId, reason: c.reason, state: c.state }))) : [];
-          return sendJson(response, 200, { requests, exceptions, synthetic: true });
-        }
-        const match = url.pathname.match(/^\/api\/care\/requests\/(CARE-[a-zA-Z0-9-]+)\/(events|actions|submit|readback)$/);
-        if (!match) return sendJson(response, 404, { error: 'NOT_FOUND' });
-        const caseId = match[1]!;
-        const value = await service.get(caseId);
-        if (!value || !scoped(value)) return sendJson(response, 404, { error: 'NOT_FOUND' });
-        if (request.method === 'GET' && match[2] === 'events') return sendJson(response, 200, { request: value, events: await service.events(caseId), synthetic: true });
-        if (request.method !== 'POST') return sendJson(response, 405, { error: 'METHOD_NOT_ALLOWED' });
-        if (match[2] === 'submit' || match[2] === 'readback') {
-          if (role !== 'PROVIDER') return sendJson(response, 403, { error: 'ROLE_FORBIDDEN' });
-          const result = match[2] === 'submit' ? await dispatcher.submit(caseId) : await dispatcher.readback(caseId);
-          return sendJson(response, 200, { request: result, synthetic: true });
-        }
-        const body = await readJson(request);
-        const result = await service.act(caseId, String(body.action) as Parameters<typeof service.act>[1], typeof body.reason === 'string' ? body.reason : undefined, role);
-        return sendJson(response, 200, { request: result, synthetic: true });
-      }
-      if (url.pathname.startsWith('/internal/care-agent/')) {
-        if (!operationalEnabled) return sendJson(response, 503, { error: 'DURABLE_LEDGER_REQUIRED' });
-        const supplied = String(request.headers.authorization ?? '');
-        if (!safeBearer(supplied, agentSecret)) return sendJson(response, 403, { error: 'FORBIDDEN' });
-        if (request.method !== 'POST') return sendJson(response, 405, { error: 'METHOD_NOT_ALLOWED' });
-        const body = await readJson(request);
-        const callId = typeof body.callId === 'string' ? body.callId : '';
-        if (!/^[A-Za-z0-9_-]{1,160}$/.test(callId)) return sendJson(response, 400, { error: 'INVALID_CALL_ID' });
-        const operation = url.pathname.slice('/internal/care-agent/'.length);
-        const result = operation === 'begin' ? phone.begin(callId)
-          : operation === 'select' ? phone.select(callId, typeof body.text === 'string' ? body.text : '')
-          : operation === 'confirm' ? await phone.confirm(callId, String(body.token ?? ''), String(body.digit ?? ''))
-          : operation === 'end' ? phone.end(callId)
-          : operation === 'status' ? phone.status(callId) : undefined;
-        if (operation === 'confirm' && result?.state === 'CONFIRMED' && result.caseId) {
-          await dispatchConfirmed(result.caseId);
-        }
-        return sendJson(response, result ? 200 : 404, result ?? { error: 'NOT_FOUND' });
-      }
-      if (url.pathname.startsWith('/api/demo/care/')) {
-        const result = await careHandlers({
-          method: request.method ?? 'GET',
-          pathname: url.pathname,
-          ...(request.method === 'POST' ? { body: await readJson(request) } : {})
-        });
-        return sendJson(response, result.status, result.body);
-      }
-      if (request.method === 'POST' && ['/voice/incoming', '/voice/request', '/voice/confirm'].includes(url.pathname)) {
-        if (!voice || !publicBaseUrl) return sendJson(response, 503, { error: 'VOICE_CREDENTIALS_NOT_CONFIGURED' });
-        const verificationParams = await readForm(request);
-        const params = { ...verificationParams };
-        for (const [name, value] of url.searchParams) params[name] = value;
-        const voiceRequest = {
-          signature: String(request.headers['x-twilio-signature'] ?? ''),
-          params,
-          verificationParams,
-          url: `${publicBaseUrl}${url.pathname}${url.search}`
-        };
-        const result = url.pathname === '/voice/incoming'
-          ? voice.incoming(voiceRequest)
-          : url.pathname === '/voice/request'
-            ? await voice.request(voiceRequest)
-            : await voice.confirm(voiceRequest);
-        response.writeHead(result.status, { ...result.headers, ...securityHeaders() });
-        return response.end(result.body);
-      }
-      if (request.method === 'GET' || request.method === 'HEAD') return serveStatic(url, response, request.method === 'HEAD');
-      return sendJson(response, 404, { error: 'NOT_FOUND' });
-    } catch (error) {
-      if (error instanceof CareRequestError) return sendJson(response, error.code === 'ROLE_FORBIDDEN' ? 403 : 409, { error: error.code });
-      if (error instanceof RequestBodyError) return sendJson(response, error.status, { error: error.code });
-      return sendJson(response, 500, { error: 'INTERNAL_SERVER_ERROR' });
-    }
-  });
-  server.on('close', () => { coordinationStore.close(); if (repository instanceof SqliteCareRequestRepository) repository.close(); });
-  return server;
-}
+        env.update(self.extra_env)
+        self.process = subprocess.Popen(
+            ['node', '--import', 'tsx', 'tests/demoAcceptanceServer.ts'], cwd=ROOT,
+            env=env, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+        if not select.select([self.process.stdout], [], [], 15)[0]:
+            self.stop()
+            raise AssertionError('local fixture did not announce its port')
+        line = self.process.stdout.readline()
+        if not line:
+            raise AssertionError('local fixture exited: ' + self.process.stderr.read()[:1000])
+        self.base = 'http://127.0.0.1:' + str(json.loads(line)['port'])
+        return self
+    def call(self, action, body=None, expected=200, authorized=True):
+        headers = {'Content-Type': 'application/json'}
+        if authorized:
+            headers['Authorization'] = 'Bearer ' + TOKEN
+        request = urllib.request.Request(
+            self.base + '/internal/demo-workflow/' + action,
+            data=json.dumps(body).encode() if body is not None else None,
+            headers=headers, method='POST' if body is not None else 'GET')
+        try:
+            response = urllib.request.urlopen(request, timeout=20)
+        except urllib.error.HTTPError as error:
+            response = error
+        result = json.loads(response.read())
+        assert response.status == expected, (action, response.status, result)
+        return result
+    def stop(self):
+        if self.process:
+            self.process.terminate()
+            try:
+                self.process.wait(timeout=5)
+            except subprocess.TimeoutExpired:
+                self.process.kill()
+                self.process.wait(timeout=5)
+            self.process.stdout.close()
+            self.process.stderr.close()
 
-function safeBearer(supplied: string, token: string | undefined): boolean {
-  if (!token || token.length < 32) return false;
-  const expected = Buffer.from(`Bearer ${token}`);
-  const actual = Buffer.from(supplied);
-  return actual.length === expected.length && timingSafeEqual(actual, expected);
-}
+async def proof_scenario(directory: Path, scenario: str, experience="standard"):
+    from unittest.mock import patch as patch_env
+    import asyncio
+    from datetime import datetime, timedelta, timezone
+    import aiohttp
+    from coordination_tools import Journal, Routing
+    from coordination_voice import HttpAPI
+    from demo_voice import DemoVoiceRuntime
+    identity = experience + '-' + scenario
+    ledger = directory / (identity + '.sqlite')
+    server = LocalServer(ledger, scenario).start()
+    journal = Journal(directory / (identity + '-voice.sqlite'))
+    calls = []
+    try:
+        server.call('begin', {'callId': 'unauthorized', 'citizenRef': 'test-citizen'}, expected=403, authorized=False)
+        async with aiohttp.ClientSession(headers={'Authorization': 'Bearer ' + TOKEN}) as session:
+            with patch_env.dict(os.environ, {'COORDINATION_DEMO_EXPERIENCE': experience, 'COORDINATION_DEMO_ALLOW_AUDIENCE': '1'}):
+                runtime = DemoVoiceRuntime(HttpAPI(session, server.base), journal, Routing({
+                    'allowedNumbers': [] if experience == 'audience' else ['+820000000001'],
+                    'citizenNumbers': {} if experience == 'audience' else {'test-citizen': '+820000000001'},
+                    'institutionNumbers': {}}))
+            class FakeCall:
+                def __init__(self, call_id, direction):
+                    self.call_id, self.direction = call_id, direction
+                    self.from_number = '+820000000001'
+                    self.ended_status = 'completed'
+                    self._passive_dtmf_buffer = []
+                    self._passive_dtmf_task = None
+                async def wait(self):
+                    await runtime.transcript(self, 'assistant', 'local fake callback result delivered')
+                    from coordination_tools import ToolError
+                    callback_ctx = journal.get('demo:call:' + self.call_id)
+                    finish = runtime.tools(callback_ctx)[0]
+                    try:
+                        await finish()
+                        raise AssertionError('callback must not finish before actual digit ack')
+                    except ToolError:
+                        pass
+                    await runtime.dtmf(self, '1')
+                    await finish()
+                async def hangup(self):
+                    pass
+            class FakeAgent:
+                _call_sessions = {}
+                async def call(self, number, **kwargs):
+                    calls.append(number)
+                    assert number == '+820000000001'
+                    call = FakeCall('outbound-' + scenario, 'outbound')
+                    await runtime.bind(call)
+                    await runtime.started(call)
+                    return call
+            runtime.agent = FakeAgent()
+            citizen = FakeCall('inbound-' + scenario, 'inbound')
+            ctx = await runtime.bind(citizen)
+            server.call('run', {'callId': citizen.call_id}, expected=409)
+            assert not calls
+            ctx['_heard'] = '식사 한 개가 필요해요. 배달로 부탁드리고 말씀드린 범위의 문의와 신청, 결과 회신에 동의합니다.'
+            patch = {'item': '한 끼 식사', 'quantity': 1, 'region': '서초구',
+                     'neededBy': (datetime.now(timezone.utc) + timedelta(hours=4)).isoformat(),
+                     'maxCostKrw': 0, 'dietaryRestrictions': [], 'alternatives': ['빵'],
+                     'receivingMethod': 'delivery', 'noMatchPreference': 'offer_callback',
+                     'consent': {'contact': True, 'submit': True, 'callback': True}}
+            initial = server.call('status?callId=' + citizen.call_id)
+            assert initial['requirements'] == {} and initial['approved'] is False
+            if experience == 'audience':
+                patch.pop('consent')
+            tools = {tool.__name__: tool for tool in runtime.tools(ctx)}
+            await tools['update_demo_request'](json.dumps(patch), ctx['_heard'])
+            prepared = json.loads(await tools['prepare_demo_approval']())
+            assert 'readback' in prepared and prepared['seedHash']
+            await runtime.transcript(citizen, 'user', '네')
+            assert server.call('status?callId=' + citizen.call_id)['approved'] is False
+            if experience == 'audience':
+                old_hash = prepared['seedHash']
+                await runtime.dtmf(citizen, '2')
+                assert server.call('status?callId=' + citizen.call_id)['approved'] is False
+                ctx['_heard'] = '기한을 다섯 시간 뒤까지로 고쳐 주세요'
+                await tools['update_demo_request'](json.dumps({'neededBy': (datetime.now(timezone.utc) + timedelta(hours=5)).isoformat()}), ctx['_heard'])
+                prepared = json.loads(await tools['prepare_demo_approval']())
+                assert prepared['seedHash'] != old_hash
+            await runtime.dtmf(citizen, '1')
+            assert server.call('status?callId=' + citizen.call_id)['approved'] is True
+            if experience == 'audience':
+                worker = asyncio.create_task(runtime.worker())
+                try:
+                    await runtime.ended(citizen)
+                    deadline = asyncio.get_running_loop().time() + 3
+                    while asyncio.get_running_loop().time() < deadline:
+                        status = server.call('status?callId=' + citizen.call_id)
+                        if status.get('callbackStatus') == 'DELIVERED':
+                            break
+                        await asyncio.sleep(0.01)
+                finally:
+                    worker.cancel()
+                    await asyncio.gather(worker, return_exceptions=True)
+            else:
+                await runtime.ended(citizen)
+                await runtime.dispatch(citizen.call_id)
+            status = server.call('status?callId=' + citizen.call_id)
+            assert status['callbackStatus'] == 'DELIVERED', status
+            assert calls == ['+820000000001'], calls
+            receipt = journal.get('demo:receipt:outbound-' + scenario)
+            assert receipt['answered'] and receipt['acknowledged'] and receipt['completed']
+            assert receipt['events'], receipt
+            await runtime.dispatch(citizen.call_id)
+            assert len(calls) == 1
+        server.stop()
+        server = LocalServer(ledger, scenario).start()
+        restored = server.call('status?callId=' + citizen.call_id)
+        assert restored['callbackStatus'] == 'DELIVERED'
+        assert restored['seedHash'] == prepared['seedHash']
+        import sqlite3
+        with sqlite3.connect(ledger) as connection:
+            saved = json.loads(connection.execute('SELECT body FROM phone_demo_workflows WHERE call_id=?', (citizen.call_id,)).fetchone()[0])
+        if scenario == 'unavailable':
+            if experience == 'standard':
+                assert saved['reservation']['status'] == 'SCHEDULED'
+            else:
+                assert saved.get('reservation') is None
+            assert saved['ev1']['reasons'] == ['NO_MATCH']
+        else:
+            assert saved['receipt']['proof']['mode'] == 'SIMULATION'
+            assert saved['ev1']['pass'] and saved['ev2']['pass']
+        latency = journal.get('demo:callback-latency:' + citizen.call_id)
+        assert latency and latency['seconds'] < 3, latency
+        return {'experience': experience, 'scenario': scenario, 'passed': True,
+                'fakeEndToDialSeconds': latency['seconds'], 'pstnRingVerified': False, 'runtimeWorkerExercised': experience == 'audience', 'fakeCustomerCalls': len(calls),
+                'realCalls': 0, 'restartedCallbackStatus': restored['callbackStatus'],
+                'reservation': saved.get('reservation', {}).get('status'), 'seedHash': prepared['seedHash']}
+    finally:
+        journal.close()
+        server.stop()
 
-async function readJson(request: IncomingMessage): Promise<Record<string, unknown>> {
-  const body = Buffer.concat(await readBoundedBody(request)).toString('utf8');
-  if (!body) return {};
-  try {
-    const value: unknown = JSON.parse(body);
-    if (!value || typeof value !== 'object' || Array.isArray(value)) throw new Error();
-    return value as Record<string, unknown>;
-  } catch {
-    throw new RequestBodyError(400, 'INVALID_JSON');
-  }
-}
+async def main():
+    import asyncio
+    with tempfile.TemporaryDirectory(prefix='malgyeol-independent-http-') as directory:
+        results = []
+        for experience in ['standard', 'audience']:
+            for scenario in ['success', 'unavailable']:
+                results.append(await proof_scenario(Path(directory), scenario, experience))
+        print(json.dumps({'localOnly': True, 'realTelephoneActions': 0, 'results': results}, ensure_ascii=False, indent=2))
 
-async function readForm(request: IncomingMessage): Promise<Record<string, string>> {
-  return Object.fromEntries(new URLSearchParams(Buffer.concat(await readBoundedBody(request)).toString('utf8')).entries());
-}
+if __name__ == '__main__':
+    import asyncio
+    asyncio.run(main())
+```
 
-async function readBoundedBody(request: IncomingMessage, maximumBytes = 1_048_576): Promise<Buffer[]> {
-  const chunks: Buffer[] = [];
-  let total = 0;
-  for await (const chunk of request) {
-    const bytes = Buffer.isBuffer(chunk) ? chunk : Buffer.from(chunk);
-    total += bytes.length;
-    if (total > maximumBytes) throw new RequestBodyError(413, 'REQUEST_BODY_TOO_LARGE');
-    chunks.push(bytes);
-  }
-  return chunks;
-}
+## tests/demoWorkflow.test.ts
 
-class RequestBodyError extends Error {
-  constructor(readonly status: number, readonly code: string) { super(code); }
-}
+SHA256: `50472c0009c3f91528a176f3cf37234fc4539307eed5424e527916424ac0e725`
 
-async function serveStatic(url: URL, response: ServerResponse, headOnly: boolean): Promise<void> {
-  const appRoutes = new Set(['/app', '/ops', '/verify']);
-  const file = url.pathname === '/'
-    ? url.searchParams.has('v') ? 'index.html' : 'landing.html'
-    : appRoutes.has(url.pathname) ? 'index.html'
-      : ['/tech', '/tech.html'].includes(url.pathname) ? 'tech.html'
-        : url.pathname.slice(1);
-  const root = resolve(process.cwd(), 'public');
-  const path = resolve(root, file);
-  const asset = file.startsWith('assets/') && path.startsWith(root + sep) && ['.png', '.webp', '.jpg', '.svg', '.woff2'].includes(extname(file));
-  if (!asset && !['index.html', 'landing.html', 'tech.html', 'app.js', 'landing.js', 'tech.js', 'styles.css', 'tokens.css', 'icons.js'].includes(file)) return sendJson(response, 404, { error: 'NOT_FOUND' });
-  let bytes: Buffer;
-  try { bytes = await readFile(path); } catch { return sendJson(response, 404, { error: 'NOT_FOUND' }); }
-  const contentType = ({ '.png': 'image/png', '.webp': 'image/webp', '.jpg': 'image/jpeg', '.svg': 'image/svg+xml', '.woff2': 'font/woff2' } as Record<string, string>)[extname(file)] ?? (extname(file) === '.css' ? 'text/css; charset=utf-8' : extname(file) === '.js' ? 'text/javascript; charset=utf-8' : 'text/html; charset=utf-8');
-  response.writeHead(200, { 'content-type': contentType, ...securityHeaders() });
-  response.end(headOnly ? undefined : bytes);
-}
-
-function sendJson(response: ServerResponse, status: number, value: unknown): void {
-  response.writeHead(status, { 'content-type': 'application/json; charset=utf-8', 'cache-control': 'no-store', ...securityHeaders() });
-  response.end(JSON.stringify(value));
-}
-
-function securityHeaders(): Record<string, string> {
-  return {
-    'content-security-policy': "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline' https://static.wanted.co.kr https://cdn.jsdelivr.net; font-src 'self' https://static.wanted.co.kr https://cdn.jsdelivr.net; img-src 'self' data:; connect-src 'self'; frame-ancestors 'none'; base-uri 'none'; form-action 'self'",
-    'permissions-policy': 'camera=(), microphone=(), geolocation=()',
-    'referrer-policy': 'no-referrer',
-    'x-content-type-options': 'nosniff',
-    'x-frame-options': 'DENY'
-  };
-}
-````
-
-## 전체 소스: src/server.ts
-
-````typescript
-import { createCareApp } from './careApp.ts';
-
-const port = Number(process.env.PORT ?? 8080);
-const server = createCareApp();
-server.listen(port, process.env.HOST ?? '0.0.0.0', () => {
-  process.stdout.write(`malgyeol listening on ${port}\n`);
-});
-````
-
-## 전체 소스: tests/demoWorkflow.test.ts
-
-````typescript
+```typescript
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { mkdtempSync, rmSync } from 'node:fs';
@@ -1976,11 +2086,47 @@ test('expired next opportunity is not offered as future reservation; pickup resu
  assert.equal(job.nextOpportunity, undefined); assert.doesNotMatch(job.message, /expired instructions|다음 접수는/); assert.match(job.message, /예약 시각은 정하지/); a.store.close();
  const b = setup(); const r = demoRequirements(now); r.receivingMethod = 'pickup'; approve(b.service, 'call1', r); await b.service.run('call1'); assert.match(b.store.read('call1')!.callback!.message, /방문 수령 예정/); b.store.close();
 });
-````
+```
 
-## 전체 소스: tests/demoAcceptance.test.ts
+## tests/demoWorkflowAudience.test.ts
 
-````typescript
+SHA256: `a9943643727e0fab4048a6fcf037cd55d75c194e90eb3d60e4e89212d84e00df`
+
+```typescript
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import { DemoWorkflowService } from '../src/demo-workflow/service.ts';
+import { DemoWorkflowStore } from '../src/demo-workflow/store.ts';
+import { createMockProvider, demoRequirements } from '../src/demo-workflow/mockProvider.ts';
+const now=Date.parse('2026-09-18T01:00:00Z');
+function setup(scenario:'success'|'unavailable'='success'){const store=new DemoWorkflowStore();const service=new DemoWorkflowService(store,createMockProvider(scenario,()=>now),()=>now);return {store,service};}
+test('audience starts empty; draft consent is only activated by actual DTMF',async()=>{
+ const {store,service}=setup();const p=service.begin('presenter','bound-presenter','audience');assert.deepEqual(p.requirements,{});const {consent:ignored,...requirements}=demoRequirements(now);service.update('presenter',requirements,'실제 고객 조건');assert.equal(service.status('presenter').requirements.consent,undefined);
+ service.begin('judge','bound-audience','audience');assert.deepEqual(service.status('judge').requirements,{});assert.throws(()=>service.begin('judge','bound-audience','standard'),/IDENTITY/);
+ const draft=service.prepareSeed('presenter');assert.equal(store.read('presenter')!.requirements.consent,undefined);assert.equal(store.read('presenter')!.seed?.approvalRef,undefined);assert.match(draft.readback,/모의 기관 문의와 모의 신청/);assert.match(draft.readback,/일 번/);await assert.rejects(service.run('presenter'),/APPROVAL/);
+ service.approve('presenter',draft.seedHash!,draft.nonce,'1');assert.deepEqual(service.status('presenter').requirements.consent,{contact:true,submit:true,callback:true});await service.run('presenter');const c=store.read('presenter')!;assert.equal(c.ev2?.pass,true);assert.equal(c.phase,'READY');const job=service.claimCallback('presenter').job!;assert.equal(job.experienceMode,'audience');assert.equal(job.nextOpportunity,undefined);service.answerCallback('presenter',job.id,'1');assert.equal(store.read('presenter')!.reservation,undefined);assert.equal(service.completeCallback('presenter',job.id,{answered:true,acknowledged:true,completed:true,receiptRef:'sdk:receipt'}).delivered,true);store.close();
+});
+test('fixed catalog does not manufacture region, quantity, allergy, deadline or item from Seed',async()=>{
+ for(const patch of [{region:'부산 해운대구'},{quantity:2},{dietaryRestrictions:['땅콩 알레르기']},{neededBy:new Date(now+10000).toISOString()},{item:'의약품'}]){
+  const {store,service}=setup();service.begin('judge','judge','audience');service.update('judge',{...demoRequirements(now),...patch},'실제 사용자 조건');const s=service.prepareSeed('judge');service.approve('judge',s.seedHash!,s.nonce,'1');await service.run('judge');const c=store.read('judge')!;assert.equal(c.receipt,undefined,JSON.stringify(patch));assert.equal(c.ev1?.pass,false);assert.doesNotMatch(c.callback!.message,/예약할까요/);store.close();
+ }
+});
+test('meal aliases match fixed meal without altering unrelated requested items',async()=>{const {store,service}=setup();service.begin('j','j','audience');service.update('j',{...demoRequirements(now),item:'음식'},'음식이 필요해요');const d=service.prepareSeed('j');service.approve('j',d.seedHash!,d.nonce,'1');await service.run('j');assert.equal(store.read('j')!.ev2?.pass,true);assert.equal(store.read('j')!.plan?.terms.item,'한 끼 식사');store.close();});
+test('explicit declined consent is not silently replaced and callback exit never schedules next call',async()=>{const {store,service}=setup('unavailable');service.begin('p','p','audience');service.update('p',demoRequirements(now),'조건');service.update('p',{consent:{contact:false,submit:false,callback:false}},'아니요 동의하지 않아요');assert.throws(()=>service.prepareSeed('p'),/CONSENT_DECLINED/);service.update('p',{consent:{contact:true,submit:true,callback:true},noMatchPreference:'offer_callback'},'조건 수정');const d=service.prepareSeed('p');service.approve('p',d.seedHash!,d.nonce,'1');await service.run('p');const job=service.claimCallback('p').job!;assert.equal(job.nextOpportunity,undefined);assert.doesNotMatch(job.message,/예약할까요/);service.answerCallback('p',job.id,'1');assert.equal(store.read('p')!.reservation,undefined);store.close();});
+test('catalog has fixed 12-hour slots independent of Seeds and skips expired slots',async()=>{
+ let clock=now;const provider=createMockProvider('success',()=>clock);const r=demoRequirements(now);const seed={version:1,hash:'test-seed',requirements:r};const task={id:'B:0',institutionId:'B',institutionName:'B',item:'한 끼 식사',priority:0};
+ const first=await provider.inquire(task,seed,new AbortController().signal);assert.equal(first.kind,'available');if(first.kind!=='available')throw Error();assert.equal(first.terms.promisedBy,new Date(now+1800000).toISOString());
+ clock=now+31*60000;const second=await provider.inquire(task,seed,new AbortController().signal);assert.equal(second.kind,'available');if(second.kind!=='available')throw Error();assert.equal(second.terms.promisedBy,new Date(now+3600000).toISOString());assert.notEqual(second.terms.promisedBy,seed.requirements.neededBy);
+ clock=now+12*3600000;const expired=await provider.inquire(task,{...seed,requirements:{...r,neededBy:new Date(clock+3600000).toISOString()}},new AbortController().signal);assert.equal(expired.kind,'unavailable');
+});
+test('audience readback includes no-match scope and correct non-meal quantity unit',()=>{const {store,service}=setup();service.begin('j','j','audience');service.update('j',{...demoRequirements(now),item:'의약품',noMatchPreference:'offer_callback'},'의약품 필요');const d=service.prepareSeed('j');assert.match(d.readback,/의약품 한 개/);assert.match(d.readback,/다음 가능한 방법/);assert.match(d.readback,/추가 예약은 하지 않습니다/);service.approve('j',d.seedHash!,d.nonce,'2');service.update('j',{noMatchPreference:'stop'},'결과만 알려주세요');assert.match(service.prepareSeed('j').readback,/결과만 안내합니다/);store.close();});
+```
+
+## tests/demoAcceptance.test.ts
+
+SHA256: `a196c472ec0a310f66dd00a6dad07e6ae7ff8617a694d5ec277f8930526c42ed`
+
+```typescript
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { mkdtempSync, rmSync } from 'node:fs';
@@ -2046,11 +2192,53 @@ test('independent: expired next opportunity must not be offered as future callba
  const p=provider(async()=>({kind:'unavailable',reason:'오늘 마감',proof,next:{at:'2029-12-31T00:00:00Z',timezone:'Asia/Seoul',instructions:'만료된 접수 시간',proof}}));const {store,service}=setup(p);
  try{approve(service);await service.run('call');const state=store.read('call')!;assert.equal(state.callback!.next,undefined);assert.ok(!state.callback!.message.includes('12월 31일'));assert.equal(p.submissions.length,0);}finally{store.close();}
 });
-````
+```
 
-## 전체 소스: tests/demoAcceptanceServer.ts
+## tests/audienceAcceptance.test.ts
 
-````typescript
+SHA256: `de1ed60a7aaded19a4d8da7b22760257647e30cce34ca01f2d924139f7d15010`
+
+```typescript
+import { test } from 'node:test';
+import assert from 'node:assert/strict';
+import { DemoWorkflowStore } from '../src/demo-workflow/store.ts';
+import { DemoWorkflowService } from '../src/demo-workflow/service.ts';
+import { createMockProvider, demoRequirements, fixedMockCatalog } from '../src/demo-workflow/mockProvider.ts';
+import type { Requirements } from '../src/demo-workflow/types.ts';
+const now=Date.parse('2030-01-01T00:00:00Z');
+function setup(){const store=new DemoWorkflowStore();const service=new DemoWorkflowService(store,createMockProvider('success',()=>now),()=>now);return{store,service};}
+function seed(service:DemoWorkflowService, id:string, patch:Partial<Requirements>={}){service.update(id,{...demoRequirements(now),...patch},'테스트 고객의 답');return service.prepareSeed(id);}
+function approve(service:DemoWorkflowService,id:string,proposal:ReturnType<DemoWorkflowService['prepareSeed']>){service.approve(id,proposal.seedHash,proposal.nonce,'1');}
+
+test('audience independent: intake begins blank with no implicit consent or execution',async()=>{
+ const {store,service}=setup();try{const a=service.begin('audience','new-sdk-caller','audience');assert.deepEqual(a.requirements,{});assert.equal(a.approved,false);assert.equal(a.requirements.consent,undefined);await assert.rejects(service.run('audience'),/APPROVAL_REQUIRED/);assert.equal(Object.keys(store.read('audience')!.inquiries).length,0);}finally{store.close();}
+});
+
+test('audience independent: proposed consent is not consent until fresh DTMF approval',async()=>{
+ const {store,service}=setup();try{service.begin('a','audience','audience');const {consent,...answers}=demoRequirements(now);service.update('a',answers,'식사가 필요해요');const old=service.prepareSeed('a');assert.equal(store.read('a')!.requirements.consent,undefined);assert.equal(store.read('a')!.seed!.approvalRef,undefined);service.approve('a',old.seedHash,old.nonce,'2');assert.equal(store.read('a')!.phase,'INTERVIEW');service.update('a',{quantity:2},'두 개로 고쳐 주세요');const fresh=service.prepareSeed('a');assert.notEqual(fresh.seedHash,old.seedHash);assert.throws(()=>approve(service,'a',old),/APPROVAL_IDENTITY_MISMATCH/);approve(service,'a',fresh);assert.deepEqual(store.read('a')!.requirements.consent,{contact:true,submit:true,callback:true});}finally{store.close();}
+});
+
+test('audience independent: catalog never fabricates quantity region dietary or requested item',async()=>{
+ for(const patch of [{quantity:999},{region:'부산 해운대구'},{dietaryRestrictions:['밀가루 알레르기']},{item:'냉장고'}]){
+  const {store,service}=setup();try{service.begin('a','audience','audience');const proposal=seed(service,'a',patch);approve(service,'a',proposal);await service.run('a');assert.equal(store.read('a')!.receipt,undefined);assert.equal(store.read('a')!.ev1!.pass,false);assert.equal(store.read('a')!.callback!.next,undefined);}finally{store.close();}
+ }
+});
+
+test('audience independent: accepted offer uses catalog deadline, never caller deadline',async()=>{
+ const {store,service}=setup();try{service.begin('a','audience','audience');const proposal=seed(service,'a',{neededBy:new Date(now+12*3600000).toISOString()});approve(service,'a',proposal);await service.run('a');const saved=store.read('a')!;assert.equal(saved.ev2!.pass,true);assert.equal(saved.receipt!.terms.promisedBy,fixedMockCatalog(now)[0]!.terms.promisedBy);assert.notEqual(saved.receipt!.terms.promisedBy,saved.seed!.requirements.neededBy);const {job}=service.claimCallback('a');assert.ok(job);const result=service.completeCallback('a',job.id,{answered:true,acknowledged:false,completed:true,receiptRef:'fake-no-digit'});assert.equal(result.delivered,false);}finally{store.close();}
+});
+
+test('audience independent: callback digit1 ends delivery, never schedules another call',async()=>{
+ const store=new DemoWorkflowStore();const service=new DemoWorkflowService(store,createMockProvider('unavailable',()=>now),()=>now);
+ try{service.begin('a','audience','audience');const proposal=seed(service,'a');approve(service,'a',proposal);await service.run('a');const {job}=service.claimCallback('a');assert.ok(job);assert.equal(job.nextOpportunity,undefined);assert.doesNotMatch(job.message,/예약할까요|연락받고 싶으신가요/);service.answerCallback('a',job.id,'1');assert.equal(store.read('a')!.reservation,undefined);assert.equal(service.completeCallback('a',job.id,{answered:true,acknowledged:true,completed:true,receiptRef:'fake-digit-one'}).delivered,true);assert.equal(service.claimCallback('a').job,null);}finally{store.close();}
+});
+```
+
+## tests/demoAcceptanceServer.ts
+
+SHA256: `1c058e178c0c687a57bccf92108e5507fb8e3420d2d3b9ab22fad3305367e4d2`
+
+```typescript
 /** Independent local integration fixture. No telephone SDK or provider client. */
 import { createCareApp } from '../src/careApp.ts';
 const server = createCareApp();
@@ -2061,14 +2249,17 @@ server.listen(0, '127.0.0.1', () => {
   }
 });
 process.on('SIGTERM', () => server.close(() => process.exit(0)));
-````
+```
 
-## 전체 소스: tests/python/test_demo_voice.py
+## tests/python/test_demo_voice.py
 
-````python
+SHA256: `5e6d79f4dbd6295bfc769284727925a06764d019acbb3247aec0a78cda7a38e1`
+
+```python
 import asyncio
 import json
 import os
+import subprocess
 from pathlib import Path
 import sys
 import tempfile
@@ -2077,14 +2268,14 @@ import unittest
 from unittest.mock import AsyncMock, patch
 sys.path.insert(0, str(Path(__file__).resolve().parents[2] / 'scripts'))
 from coordination_tools import Journal, Routing, ToolError
-from demo_voice import DemoVoiceRuntime, make_demo_agent_class, OUTBOUND_DEMO
+from demo_voice import DemoVoiceRuntime, make_demo_agent_class, OUTBOUND_DEMO, experience_prompt, callback_prompt
 
 
 class API:
     def __init__(self): self.calls = []
     async def send(self, method, path, body=None):
         self.calls.append((method, path, body))
-        if path.endswith('/begin'): return {'serverNow': '2026-09-18T01:00:00Z', 'timezone': 'Asia/Seoul'}
+        if path.endswith('/begin'): return {'serverNow': '2026-09-18T01:00:00Z', 'timezone': 'Asia/Seoul', 'experienceMode': body.get('experienceMode','standard')}
         if path.endswith('/seed'): return {'seedHash': 'hash', 'nonce': 'nonce', 'expiresAt': 9999999999, 'readback': '쌀 한 개. 승인1 수정2'}
         if path.endswith('/approve'): return {'approved': body['digit'] == '1', 'message': '승인 기록'}
         if path.endswith('/callback/claim'): return {'job': {'id': 'job', 'callId': body['callId'], 'citizenRef': 'citizen-A', 'message': '[시연] 식사 지원이 확정되었습니다.', 'mode': 'SIMULATION'}}
@@ -2220,263 +2411,86 @@ class DemoTests(unittest.IsolatedAsyncioTestCase):
                 c.hangup.assert_awaited_once()
                 self.assertTrue(any(args.args == (2,) for args in delay.await_args_list))
             # No connect, start, serve or call transport method was invoked.
-````
 
-## 전체 소스: scripts/prove-demo-flow-local.py
 
-````python
-"""Independent local HTTP/Python acceptance proof. Never constructs a telephone client."""
-from __future__ import annotations
-import json
-import os
-from pathlib import Path
-import select
-import subprocess
-import tempfile
-import urllib.error
-import urllib.request
+class ExperienceTests(unittest.IsolatedAsyncioTestCase):
+    asyncSetUp = DemoTests.asyncSetUp
+    asyncTearDown = DemoTests.asyncTearDown
+    async def test_unregistered_audience_is_empty_and_requires_opt_in(self):
+        with patch.dict(os.environ, {'COORDINATION_DEMO_EXPERIENCE':'audience', 'COORDINATION_DEMO_ALLOW_AUDIENCE':'1'}):
+            runtime = DemoVoiceRuntime(self.api,self.journal,self.routing)
+            audience = await runtime.bind(call(id='audience',number='01000000099'))
+            self.assertEqual(audience['experienceMode'],'audience')
+            self.assertNotIn('정미경', experience_prompt(audience))
+            self.assertEqual(audience['sourceNumber'],'+821000000099')
+            self.assertFalse(runtime.accepts('sip:01000000099@evil.example'))
+            self.assertFalse(runtime.accepts('anonymous'))
+        with patch.dict(os.environ, {'COORDINATION_DEMO_EXPERIENCE':'audience', 'COORDINATION_DEMO_ALLOW_AUDIENCE':'0'}):
+            runtime = DemoVoiceRuntime(self.api,self.journal,self.routing)
+            self.assertFalse(runtime.accepts('01000000099'))
 
-ROOT = Path(__file__).resolve().parents[1]
-TOKEN = 'independent-demo-proof-local-token-' + 'x' * 32
+    async def test_audience_callback_only_incoming_identity_and_one_to_finish(self):
+        with patch.dict(os.environ, {'COORDINATION_DEMO_EXPERIENCE':'audience', 'COORDINATION_DEMO_ALLOW_AUDIENCE':'1'}):
+            runtime = DemoVoiceRuntime(self.api,self.journal,self.routing)
+        runtime.agent = types.SimpleNamespace(_call_sessions={})
+        c=call(id='source',number='01000000099'); ctx=await runtime.bind(c)
+        await runtime.tools(ctx)[1]()
+        # Spoken yes, denied consent, or unrelated model text cannot approve: no speech approval tool.
+        ctx['_heard']='네 맞아요 아니요 바꿔 주세요'
+        self.assertFalse(any(p.endswith('/approve') for _,p,_ in self.api.calls))
+        await runtime.dtmf(c,'1'); await runtime.ended(c)
+        original_send=self.api.send
+        async def send(method,path,body=None):
+            result=await original_send(method,path,body)
+            if path.endswith('/callback/claim'): result['job']['citizenRef']=ctx['citizenRef']
+            return result
+        self.api.send=send
+        with patch.dict(os.environ, {'COORDINATION_DEMO_EXPERIENCE':'audience', 'COORDINATION_DEMO_ALLOW_AUDIENCE':'1'}):
+            runtime = DemoVoiceRuntime(self.api,self.journal,self.routing)  # Restart: caller identity comes from durable journal.
+        destinations=[]
+        class Agent:
+            _call_sessions={}
+            async def call(self,number,**options):
+                destinations.append(number)
+                out=call(id='audience-out',direction='outbound')
+                callback=await runtime.bind(out)
+                self_prompt=callback_prompt(callback['job'])
+                assert '더 말씀하실' in self_prompt
+                finish=runtime.tools(callback)[0]
+                await runtime.started(out)
+                try: await finish()
+                except ToolError: pass
+                else: raise AssertionError('finish accepted without actual key')
+                await runtime.dtmf(out,'2')
+                assert not runtime.journal.get('demo:ack:audience-out')
+                await runtime.dtmf(out,'1'); await finish()
+                async def wait(): await runtime.ended(out)
+                out.wait=wait
+                return out
+        runtime.agent=Agent()
+        await runtime.dispatch('source')
+        self.assertEqual(destinations,['+821000000099'])
+        metric=self.journal.get('demo:callback-latency:source')
+        self.assertLess(metric['seconds'],3)
+        self.assertEqual(metric['measures'],'call_end_to_sdk_dial_invocation')
 
-class LocalServer:
-    def __init__(self, ledger: Path, scenario="success"):
-        self.ledger = ledger
-        self.scenario = scenario
-        self.process = None
-    def start(self):
-        env = {
-            'PATH': os.environ['PATH'], 'HOME': os.environ['HOME'],
-            'NODE_ENV': 'test', 'AGENT_TOOL_SECRET': TOKEN,
-            'DEMO_WORKFLOW_LEDGER_PATH': str(self.ledger),
-            'DEMO_WORKFLOW_ENABLED': 'true',
-            'DEMO_WORKFLOW_SCENARIO': self.scenario,
-            'COORDINATION_LEDGER_PATH': str(self.ledger.with_name('coordination.sqlite')),
-        }
-        self.process = subprocess.Popen(
-            ['node', '--import', 'tsx', 'tests/demoAcceptanceServer.ts'], cwd=ROOT,
-            env=env, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
-        if not select.select([self.process.stdout], [], [], 15)[0]:
-            self.stop()
-            raise AssertionError('local fixture did not announce its port')
-        line = self.process.stdout.readline()
-        if not line:
-            raise AssertionError('local fixture exited: ' + self.process.stderr.read()[:1000])
-        self.base = 'http://127.0.0.1:' + str(json.loads(line)['port'])
-        return self
-    def call(self, action, body=None, expected=200, authorized=True):
-        headers = {'Content-Type': 'application/json'}
-        if authorized:
-            headers['Authorization'] = 'Bearer ' + TOKEN
-        request = urllib.request.Request(
-            self.base + '/internal/demo-workflow/' + action,
-            data=json.dumps(body).encode() if body is not None else None,
-            headers=headers, method='POST' if body is not None else 'GET')
-        try:
-            response = urllib.request.urlopen(request, timeout=20)
-        except urllib.error.HTTPError as error:
-            response = error
-        result = json.loads(response.read())
-        assert response.status == expected, (action, response.status, result)
-        return result
-    def stop(self):
-        if self.process:
-            self.process.terminate()
-            try:
-                self.process.wait(timeout=5)
-            except subprocess.TimeoutExpired:
-                self.process.kill()
-                self.process.wait(timeout=5)
-            self.process.stdout.close()
-            self.process.stderr.close()
+    async def test_invalid_mode_or_service_number_fails_closed(self):
+        with patch.dict(os.environ, {'COORDINATION_DEMO_EXPERIENCE':'invalid'}):
+            with self.assertRaises(ToolError): DemoVoiceRuntime(self.api,self.journal,self.routing)
+        with patch.dict(os.environ, {'COORDINATION_DEMO_EXPERIENCE':'audience','COORDINATION_DEMO_ALLOW_AUDIENCE':'1','CLAWOPS_PHONE_NUMBER':'07052767277'}):
+            runtime=DemoVoiceRuntime(self.api,self.journal,self.routing)
+            self.assertFalse(runtime.accepts('07052767277'))
 
-async def proof_scenario(directory: Path, scenario: str):
-    import asyncio
-    from datetime import datetime, timedelta, timezone
-    import aiohttp
-    from coordination_tools import Journal, Routing
-    from coordination_voice import HttpAPI
-    from demo_voice import DemoVoiceRuntime
-    ledger = directory / (scenario + '.sqlite')
-    server = LocalServer(ledger, scenario).start()
-    journal = Journal(directory / (scenario + '-voice.sqlite'))
-    calls = []
-    try:
-        server.call('begin', {'callId': 'unauthorized', 'citizenRef': 'test-citizen'}, expected=403, authorized=False)
-        async with aiohttp.ClientSession(headers={'Authorization': 'Bearer ' + TOKEN}) as session:
-            runtime = DemoVoiceRuntime(HttpAPI(session, server.base), journal, Routing({
-                'allowedNumbers': ['+820000000001'], 'citizenNumbers': {'test-citizen': '+820000000001'},
-                'institutionNumbers': {}}))
-            class FakeCall:
-                def __init__(self, call_id, direction):
-                    self.call_id, self.direction = call_id, direction
-                    self.from_number = '+820000000001'
-                    self.ended_status = 'completed'
-                    self._passive_dtmf_buffer = []
-                    self._passive_dtmf_task = None
-                async def wait(self):
-                    await runtime.transcript(self, 'assistant', 'local fake callback result delivered')
-                    await runtime.dtmf(self, '1')
-                async def hangup(self):
-                    pass
-            class FakeAgent:
-                _call_sessions = {}
-                async def call(self, number, **kwargs):
-                    calls.append(number)
-                    assert number == '+820000000001'
-                    call = FakeCall('outbound-' + scenario, 'outbound')
-                    await runtime.bind(call)
-                    await runtime.started(call)
-                    return call
-            runtime.agent = FakeAgent()
-            citizen = FakeCall('inbound-' + scenario, 'inbound')
-            ctx = await runtime.bind(citizen)
-            server.call('run', {'callId': citizen.call_id}, expected=409)
-            assert not calls
-            ctx['_heard'] = '식사 두 개가 필요해요. 배달로 부탁드리고 말씀드린 범위의 문의와 신청, 결과 회신에 동의합니다.'
-            patch = {'item': '식사', 'quantity': 2, 'region': '서초구',
-                     'neededBy': (datetime.now(timezone.utc) + timedelta(hours=4)).isoformat(),
-                     'maxCostKrw': 0, 'dietaryRestrictions': [], 'alternatives': ['빵'],
-                     'receivingMethod': 'delivery', 'noMatchPreference': 'offer_callback',
-                     'consent': {'contact': True, 'submit': True, 'callback': True}}
-            tools = {tool.__name__: tool for tool in runtime.tools(ctx)}
-            await tools['update_demo_request'](json.dumps(patch), ctx['_heard'])
-            prepared = json.loads(await tools['prepare_demo_approval']())
-            assert 'readback' in prepared and prepared['seedHash']
-            await runtime.dtmf(citizen, '1')
-            assert server.call('status?callId=' + citizen.call_id)['approved'] is True
-            await runtime.ended(citizen)
-            await runtime.dispatch(citizen.call_id)
-            status = server.call('status?callId=' + citizen.call_id)
-            assert status['callbackStatus'] == 'DELIVERED', status
-            assert calls == ['+820000000001'], calls
-            receipt = journal.get('demo:receipt:outbound-' + scenario)
-            assert receipt['answered'] and receipt['acknowledged'] and receipt['completed']
-            assert receipt['events'], receipt
-            await runtime.dispatch(citizen.call_id)
-            assert len(calls) == 1
-        server.stop()
-        server = LocalServer(ledger, scenario).start()
-        restored = server.call('status?callId=' + citizen.call_id)
-        assert restored['callbackStatus'] == 'DELIVERED'
-        assert restored['seedHash'] == prepared['seedHash']
-        import sqlite3
-        with sqlite3.connect(ledger) as connection:
-            saved = json.loads(connection.execute('SELECT body FROM phone_demo_workflows WHERE call_id=?', (citizen.call_id,)).fetchone()[0])
-        if scenario == 'unavailable':
-            assert saved['reservation']['status'] == 'SCHEDULED'
-            assert saved['ev1']['reasons'] == ['NO_MATCH']
-        else:
-            assert saved['receipt']['proof']['mode'] == 'SIMULATION'
-            assert saved['ev1']['pass'] and saved['ev2']['pass']
-        return {'scenario': scenario, 'passed': True, 'fakeCustomerCalls': len(calls),
-                'realCalls': 0, 'restartedCallbackStatus': restored['callbackStatus'],
-                'reservation': saved.get('reservation', {}).get('status'), 'seedHash': prepared['seedHash']}
-    finally:
-        journal.close()
-        server.stop()
-
-async def main():
-    import asyncio
-    with tempfile.TemporaryDirectory(prefix='malgyeol-independent-http-') as directory:
-        results = []
-        for scenario in ['success', 'unavailable']:
-            results.append(await proof_scenario(Path(directory), scenario))
-        print(json.dumps({'localOnly': True, 'realTelephoneActions': 0, 'results': results}, ensure_ascii=False, indent=2))
-
-if __name__ == '__main__':
-    import asyncio
-    asyncio.run(main())
-````
-
-## 전체 소스: package.json
-
-````json
-{
-  "name": "malgyeol",
-  "version": "1.0.0",
-  "private": true,
-  "type": "module",
-  "engines": {
-    "node": ">=22 <23"
-  },
-  "packageManager": "npm@10.9.8",
-  "scripts": {
-    "audit:dependencies": "node scripts/check-npm-audit.mjs",
-    "check": "npm run verify",
-    "verify": "npm run typecheck && npm test && npm run audit:dependencies",
-    "test": "node scripts/run-node-tests.mjs",
-    "start": "node --import tsx src/server.ts",
-    "typecheck": "tsc --noEmit",
-    "proof:u4:merchant": "node --import tsx scripts/prove-u4-merchant-sandbox.mjs",
-    "proof:food-phone-demo": "node scripts/capture-food-phone-demo.mjs"
-  },
-  "devDependencies": {
-    "@types/node": "24.13.3",
-    "typescript": "5.9.3"
-  },
-  "dependencies": {
-    "@e965/xlsx": "^0.20.3",
-    "@google-cloud/firestore": "^8.7.0",
-    "tsx": "^4.20.5"
-  },
-  "overrides": {
-    "brace-expansion": "5.0.9",
-    "uuid": "11.1.1"
-  }
-}
-````
-
-## 전체 소스: tsconfig.json
-
-````json
-{
-  "compilerOptions": {
-    "target": "ESNext",
-    "module": "NodeNext",
-    "moduleResolution": "NodeNext",
-    "strict": true,
-    "allowImportingTsExtensions": true,
-    "allowSyntheticDefaultImports": true,
-    "esModuleInterop": true,
-    "exactOptionalPropertyTypes": true,
-    "noImplicitReturns": true,
-    "noFallthroughCasesInSwitch": true,
-    "noEmit": true,
-    "skipLibCheck": true,
-    "types": ["node"]
-  }
-}
-````
-
-## 전체 소스: .env.example
-
-````
-# Payment-free integrated-care runtime
-PORT=8080
-NODE_ENV=development
-HOST=127.0.0.1
-PUBLIC_BASE_URL=https://service.example
-CARE_LEDGER_PATH=.private/care-ledger.sqlite
-# Optional separate coordination ledger; defaults to CARE_LEDGER_PATH.
-COORDINATION_LEDGER_PATH=
-# Private role routing; never commit actual destination numbers.
-COORDINATION_ROUTING_PATH=.private/coordination-routing.json
-COORDINATION_VOICE_STATE_PATH=.private/coordination-voice.sqlite
-COORDINATION_HEALTH_PORT=18083
-# Explicit demo workflow: citizen phone remains real; institutions are simulated.
-# Enable on API and voice together. Existing mode remains unchanged by default.
-DEMO_WORKFLOW_ENABLED=false
-DEMO_WORKFLOW_LEDGER_PATH=.private/phone-demo-workflow.sqlite
-DEMO_WORKFLOW_SCENARIO=success
-# Voice process only: 1 selects the new Seed-to-simulated-result callback path.
-COORDINATION_DEMO_MODE=0
-AGENT_TOOL_SECRET=replace-with-at-least-32-random-characters
-CARE_PROVIDER_TOKEN=replace-with-distinct-provider-token
-CARE_RECIPIENT_TOKEN=replace-with-distinct-recipient-token
-CARE_OPERATOR_TOKEN=replace-with-distinct-operator-token
-CARE_PROVIDER_NAME=찾아가는 푸드마켓
-
-# Twilio is optional locally. Keep credentials in Secret Manager in deployment.
-TWILIO_AUTH_TOKEN=from-secret-manager
-````
+    async def test_demo_preflight_does_not_require_institution_b(self):
+        root=Path(self.tmp.name)
+        for name in ('clawops.env','bridge.env'): (root/name).write_text('')
+        routing=root/'routing.json'
+        routing.write_text(json.dumps({'allowedNumbers':['01000000001'],'citizenNumbers':{'citizen-A':'01000000001'},'institutionNumbers':{}})); routing.chmod(0o600)
+        script=Path(__file__).resolve().parents[2]/'scripts/run-care-runtime.py'
+        env={**os.environ,'CARE_SECRET_DIR':str(root),'COORDINATION_ROUTING_PATH':str(routing),'COORDINATION_DEMO_MODE':'1','COORDINATION_DEMO_EXPERIENCE':'audience','COORDINATION_DEMO_ALLOW_AUDIENCE':'1'}
+        result=subprocess.run([sys.executable,str(script),'coordination-check'],env=env,capture_output=True,text=True)
+        self.assertEqual(result.returncode,0,result.stderr); self.assertIn('institution dialing disabled',result.stdout)
+        env['COORDINATION_DEMO_MODE']='0'
+        result=subprocess.run([sys.executable,str(script),'coordination-check'],env=env,capture_output=True,text=True)
+        self.assertNotEqual(result.returncode,0)
+```

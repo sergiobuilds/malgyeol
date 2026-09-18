@@ -53,7 +53,9 @@ elif sys.argv[1:] in (['coordination'], ['coordination-check']):
     from coordination_config import load_routing, normalize_number
     try:
         routing = load_routing(env['COORDINATION_ROUTING_PATH'])
-        if not routing['citizenNumbers'] or not routing['institutionNumbers']:
+        demo = env.get('COORDINATION_DEMO_MODE') == '1'
+        audience = demo and env.get('COORDINATION_DEMO_ALLOW_AUDIENCE') == '1' and env.get('COORDINATION_DEMO_EXPERIENCE') == 'audience'
+        if (not routing['citizenNumbers'] and not audience) or (not demo and not routing['institutionNumbers']):
             raise ValueError('ROUTING_ROLES_REQUIRED')
         citizens = set(routing['citizenNumbers'].values())
         institutions = set(routing['institutionNumbers'].values())
@@ -64,7 +66,7 @@ elif sys.argv[1:] in (['coordination'], ['coordination-check']):
     except ValueError as error:
         raise SystemExit(str(error)) from None
     if sys.argv[1:] == ['coordination-check']:
-        print('Coordination routing preflight PASS; roles=2; no network call performed')
+        print('Coordination routing preflight PASS; ' + ('demo=True; institution dialing disabled' if demo else 'roles=2') + '; no network call performed')
         raise SystemExit(0)
     command = [str(Path.home() / '.local/bin/uv'), 'run', '--with', 'clawops[agent,gemini]==0.56.0', 'python', 'scripts/coordination_voice.py']
 else:

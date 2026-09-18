@@ -2,6 +2,7 @@ import { timingSafeEqual } from 'node:crypto';
 import { DemoWorkflowStore } from './store.ts';
 import { DemoError, DemoWorkflowService } from './service.ts';
 import { createMockProvider } from './mockProvider.ts';
+import type { ExperienceMode } from './types.ts';
 import { text } from './contracts.ts';
 export interface DemoHttpResult { status: number; body: unknown; }
 export function createDemoWorkflowRoutes(options: { ledgerPath: string; secret: string; scenario?: string }) {
@@ -24,7 +25,7 @@ export function demoRoutesForService(service: DemoWorkflowService, secret: strin
       if (method !== 'POST') return { status: 405, body: { error: 'METHOD_NOT_ALLOWED' } };
       const callId = field('callId'); let result: unknown;
       switch (action) {
-        case 'begin': result = service.begin(callId, field('citizenRef')); break;
+        case 'begin': result = service.begin(callId, field('citizenRef'), (body.experienceMode ?? 'standard') as ExperienceMode); break;
         case 'interview': result = service.update(callId, body.patch, field('evidenceQuote')); break;
         case 'seed': result = service.prepareSeed(callId); break;
         case 'approve': result = service.approve(callId, field('seedHash'), field('nonce'), field('digit')); break;
