@@ -4,8 +4,8 @@ After=network-online.target malgyeol-care-api.service
 
 [Service]
 Type=simple
-WorkingDirectory=/home/campbell/projects/personal/products/malgyeol
-ExecStart=/usr/bin/python3 /home/campbell/projects/personal/products/malgyeol/scripts/run-care-runtime.py coordination
+WorkingDirectory=%h/projects/personal/products/malgyeol
+ExecStart=/usr/bin/python3 %h/projects/personal/products/malgyeol/scripts/run-care-runtime.py coordination
 Restart=on-failure
 RestartSec=5s
 UMask=0077
